@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardviewstorelist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5sp"
+        android:layout_marginTop="1sp"
+        android:layout_marginRight="5sp"
+        android:layout_marginBottom="1sp">
+
+        <LinearLayout
+            android:id="@+id/linear_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.5"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:background="@drawable/cardviewbackground"
+                        android:gravity="center">
+
+                        <!-- <androidx.cardview.widget.CardView
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            android:layout_margin="2sp">-->
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/image_order"
+                                android:layout_width="65dp"
+                                android:layout_height="56dp"></ImageView>
+                        </LinearLayout>
+                        <!-- </androidx.cardview.widget.CardView>-->
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:orientation="vertical">
+               <!--     <TextView
+                        android:id="@+id/textname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mangalam Store"
+                        android:textStyle="bold"
+                        android:layout_gravity="right|left"
+                        android:textColor="@color/black"></TextView>-->
+                    <TextView
+                        android:id="@+id/textname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/monster"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="#666666"
+                        android:lineSpacingExtra="4sp"
+                        android:layout_gravity="right|left"
+                        android:gravity="center_horizontal"
+                        android:text="Mangalam Store"
+                        />
+                   <!-- <TextView
+                        android:id="@+id/textdescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Grocery"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="right|left"></TextView>-->
+                    <TextView
+                        android:id="@+id/textdescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Grocery"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/monster"
+                        android:textStyle="normal"
+                        android:textSize="12sp"
+                        android:textColor="#666666"
+                        android:lineSpacingExtra="3sp"
+                        android:layout_gravity="right|left"
+                        />
+                    <TextView
+                        android:id="@+id/distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.5 KM"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#666666"
+                        android:fontFamily="@font/monster"
+                        android:layout_gravity="right|left"></TextView>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                   <RelativeLayout
+                       android:layout_width="65dp"
+                       android:layout_height="65dp"
+                       android:background="@drawable/round_shape">
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:text="Sale \n on"
+                           android:textSize="12sp"
+                           android:textStyle="bold"
+                           android:textColor="@color/white"
+                           android:layout_marginLeft="35dp"
+                           android:layout_centerInParent="true"
+                           android:textAllCaps="true"></TextView>
+
+                   </RelativeLayout>
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="5sp"
+                android:orientation="horizontal"
+                ></LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

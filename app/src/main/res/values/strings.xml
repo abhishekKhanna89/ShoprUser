@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">SHOPR</string>
+    <string name="appshopdescription">We shop and deliver anything from your local market</string>
+    <string name="appsecdescription">your local market</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="aboutstore">"Amazon world's largest online retailer is known for its vast offering and high quality of service."</string>
+
+    <string name="Address">Plot No-M,03,Sector 18,Noida,Uttar Pradesh 201301</string>
+
+    <string name="facebook_app_id">297800690726297</string>
+    <string name="fb_login_protocol_scheme">fb297800690726297</string>
+
+</resources>
