@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shoper">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.shoppr.shoper">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!--
@@ -17,14 +18,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shoper"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".ProfileActivity"></activity>
-        <activity android:name="activity.AddMoneyActivity" />
-        <activity android:name="activity.WalletActivity" />
-        <activity android:name="activity.MyAccount" />
-        <activity android:name="activity.SotoreDetailsActivity" />
-        <activity android:name=".OtpActivity" />
-        <activity android:name=".RegisterActivity" />
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
+
+        <activity android:name="com.shoppr.shoper.ProfileActivity"/>
+        <activity android:name="com.shoppr.shoper.activity.AddMoneyActivity" />
+        <activity android:name="com.shoppr.shoper.activity.WalletActivity" />
+        <activity android:name="com.shoppr.shoper.activity.MyAccount" />
+        <activity android:name="com.shoppr.shoper.activity.SotoreDetailsActivity" />
+        <activity android:name="com.shoppr.shoper.OtpActivity" />
+        <activity android:name="com.shoppr.shoper.RegisterActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -45,11 +48,11 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name="com.shoppr.shoper.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".StorelistingActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SplashActivity">
+        <activity android:name="com.shoppr.shoper.StorelistingActivity" />
+        <activity android:name="com.shoppr.shoper.LoginActivity" />
+        <activity android:name="com.shoppr.shoper.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

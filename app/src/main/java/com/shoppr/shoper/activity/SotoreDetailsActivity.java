@@ -1,4 +1,4 @@
-package activity;
+package com.shoppr.shoper.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -9,14 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.shoper.R;
+import com.shoppr.shoper.R;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import adapter.SliderAdapter;
+import com.shoppr.shoper.adapter.SliderAdapter;
 import model.Slidermode;
 
 public class SotoreDetailsActivity extends AppCompatActivity {

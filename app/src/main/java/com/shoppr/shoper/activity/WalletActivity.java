@@ -1,4 +1,4 @@
-package activity;
+package com.shoppr.shoper.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -6,11 +6,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.example.shoper.R;
+import com.shoppr.shoper.R;
 
-import adapter.RecyclerAdapter;
+import com.shoppr.shoper.adapter.RecyclerAdapter;
 import model.RecyclerModel;
 
 public class WalletActivity extends AppCompatActivity {
@@ -66,7 +65,7 @@ public class WalletActivity extends AppCompatActivity {
    public boolean onOptionsItemSelected(MenuItem item) {
        // Handle action bar item clicks here. The action bar will
        // automatically handle clicks on the Home/Up button, so long
-       // as you specify a parent activity in AndroidManifest.xml.
+       // as you specify a parent com.example.shoper.activity in AndroidManifest.xml.
 
        //noinspection SimplifiableIfStatement
        int id = item.getItemId();

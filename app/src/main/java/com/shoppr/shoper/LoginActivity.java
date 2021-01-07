@@ -1,9 +1,12 @@
-package com.example.shoper;
+package com.shoppr.shoper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,15 +16,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+
+import java.util.HashMap;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     Button btnsubmit;
@@ -30,30 +37,22 @@ public class LoginActivity extends AppCompatActivity {
     SignInButton signInButton;
     private GoogleApiClient googleApiClient;
     private static final int RC_SIGN_IN = 1;
+    EditText editusername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         GoogleSignInOptions gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
-       /* googleApiClient=new GoogleApiClient.Builder(this)
-                .enableAutoManage(this,this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
-                .build();
-        signInButton=(SignInButton)findViewById(R.id.sign_in_button);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(intent,RC_SIGN_IN);
-            }
-        });*/
-
 
         btnsubmit=findViewById(R.id.btnsubmit);
+        editusername=findViewById(R.id.editusername);
+
+
         textregister=findViewById(R.id.textregister);
         textregister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,9 +89,25 @@ public class LoginActivity extends AppCompatActivity {
         btnsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,MapsActivity.class));
+                if(editusername.getText().toString().isEmpty()){
+                    editusername.setError("Mobile Field Can't be blank");
+                    editusername.requestFocus();
+                }
+                else if(editusername.getText().toString().length()!=10){
+                    editusername.setError("Mobile No. should be 10 digit");
+                    editusername.requestFocus();
+                }
+                else {
+                    hitLoginApi();
+                }
+
+                //startActivity(new Intent(LoginActivity.this,MapsActivity.class));
             }
         });
+    }
+
+    private void hitLoginApi() {
+
     }
    /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -125,4 +140,13 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent=new Intent(LoginActivity.this,ProfileActivity.class);
         startActivity(intent);
     }*/
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id=item.getItemId();
+        if (id==android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

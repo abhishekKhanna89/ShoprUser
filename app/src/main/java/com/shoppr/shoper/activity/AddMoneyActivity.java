@@ -1,11 +1,11 @@
-package activity;
+package com.shoppr.shoper.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.shoper.R;
+import com.shoppr.shoper.R;
 
 public class AddMoneyActivity extends AppCompatActivity {
 

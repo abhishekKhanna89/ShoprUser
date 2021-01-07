@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="activity.SotoreDetailsActivity">
+    tools:context="com.shoppr.shoper.activity.SotoreDetailsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

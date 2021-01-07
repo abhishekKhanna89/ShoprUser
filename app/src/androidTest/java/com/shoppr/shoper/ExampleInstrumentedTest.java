@@ -1,4 +1,4 @@
-package com.example.shoper;
+package com.shoppr.shoper;
 
 import android.content.Context;
 

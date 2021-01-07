@@ -1,4 +1,4 @@
-package activity;
+package com.shoppr.shoper.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.shoper.R;
+import com.shoppr.shoper.R;
 
 public class MyAccount extends AppCompatActivity {
     LinearLayout linarwallet;

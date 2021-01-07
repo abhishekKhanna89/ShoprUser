@@ -1,4 +1,4 @@
-package adapter;
+package com.shoppr.shoper.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,12 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.shoper.R;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-
-import model.Slidermode;
+import com.shoppr.shoper.R;
 
 public class SliderAdapter extends PagerAdapter {
 
