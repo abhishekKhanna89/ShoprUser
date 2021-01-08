@@ -11,6 +11,7 @@ import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.OtpVerifyModel;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
+import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
 import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
 
@@ -43,5 +44,9 @@ public interface ApiService {
     @GET("stores-list")
     Call<StoreListModel>apiStoreList(@Query("lat")String lat,
                                      @Query("lang")String lang);
+    @NonNull
+    @GET("store-details/{id}")
+    Call<StoreListDetailsModel>apiStoreListDetails(@Header("Authorization") String token,
+                                                   @Path("id")int id);
 
 }

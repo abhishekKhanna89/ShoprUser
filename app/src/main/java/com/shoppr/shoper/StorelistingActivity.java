@@ -80,6 +80,8 @@ public class StorelistingActivity extends AppCompatActivity {
                     sessonManager.hideProgress();
                 }
             });
+        }else {
+            CommonUtils.showToastInCenter(StorelistingActivity.this, getString(R.string.please_check_network));
         }
     }
 
@@ -110,8 +112,10 @@ public class StorelistingActivity extends AppCompatActivity {
             holder.cardviewstorelist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intentone = new Intent(StorelistingActivity.this, SotoreDetailsActivity.class);
-                    startActivity(intentone);
+                    startActivity(new Intent(StorelistingActivity.this,SotoreDetailsActivity.class)
+                    .putExtra("storeId",storeList.get(position).getId()));
+                   /* Intent intentone = new Intent(StorelistingActivity.this, SotoreDetailsActivity.class);
+                    startActivity(intentone);*/
                 }
             });
             String isSale=String.valueOf(storeList.get(position).getIsSale());

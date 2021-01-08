@@ -29,19 +29,19 @@ public class StoresDetails {
     private String lang;
     @SerializedName("about_store")
     @Expose
-    private Object aboutStore;
+    private String aboutStore;
     @SerializedName("opening_time")
     @Expose
-    private Object openingTime;
+    private String openingTime;
     @SerializedName("email")
     @Expose
-    private Object email;
+    private String email;
     @SerializedName("mobile")
     @Expose
-    private Object mobile;
+    private String mobile;
     @SerializedName("address")
     @Expose
-    private Object address;
+    private String address;
     @SerializedName("isactive")
     @Expose
     private Integer isactive;
@@ -108,43 +108,43 @@ public class StoresDetails {
         this.lang = lang;
     }
 
-    public Object getAboutStore() {
+    public String getAboutStore() {
         return aboutStore;
     }
 
-    public void setAboutStore(Object aboutStore) {
+    public void setAboutStore(String aboutStore) {
         this.aboutStore = aboutStore;
     }
 
-    public Object getOpeningTime() {
+    public String getOpeningTime() {
         return openingTime;
     }
 
-    public void setOpeningTime(Object openingTime) {
+    public void setOpeningTime(String openingTime) {
         this.openingTime = openingTime;
     }
 
-    public Object getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(Object email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public Object getMobile() {
+    public String getMobile() {
         return mobile;
     }
 
-    public void setMobile(Object mobile) {
+    public void setMobile(String mobile) {
         this.mobile = mobile;
     }
 
-    public Object getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    public void setAddress(Object address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 

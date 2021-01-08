@@ -44,28 +44,30 @@
                                 android:layout_height="200dp">
 
                                 <ImageView
-                                    android:id="@+id/imagedynamic"
+                                    android:id="@+id/imageII"
                                     android:layout_width="match_parent"
                                     android:layout_height="250dp"
                                     android:scaleType="fitXY"
-                                    android:visibility="gone"></ImageView>
+                                    android:visibility="visible"/>
 
                                 <androidx.viewpager.widget.ViewPager
                                     android:id="@+id/viewPage"
+                                    android:visibility="gone"
                                     android:layout_width="match_parent"
                                     android:layout_height="200dp"
-                                    android:layout_gravity="center"></androidx.viewpager.widget.ViewPager>
+                                    android:layout_gravity="center"/>
 
                                 <com.google.android.material.tabs.TabLayout
                                     android:id="@+id/tab_dots"
                                     android:layout_width="match_parent"
                                     android:layout_height="20dp"
+                                    android:visibility="gone"
                                     android:layout_alignParentBottom="true"
                                     android:layout_gravity="bottom"
                                     android:background="@color/white"
                                     app:tabBackground="@drawable/indicator"
                                     app:tabGravity="center"
-                                    app:tabIndicatorHeight="0dp"></com.google.android.material.tabs.TabLayout>
+                                    app:tabIndicatorHeight="0dp"/>
                             </RelativeLayout>
                         </androidx.cardview.widget.CardView>
 
@@ -88,7 +90,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:background="@drawable/ic_about_ico"
-                                    android:backgroundTint="@color/darkbrown"></ImageView>
+                                    android:backgroundTint="@color/darkbrown"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -102,6 +104,7 @@
                             </LinearLayout>
 
                             <TextView
+                                android:id="@+id/aboutText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:lineSpacingExtra="11sp"
@@ -137,6 +140,7 @@
                                         android:text="Store Name" />
                             </LinearLayout>
                             <TextView
+                                android:id="@+id/storeNameText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:lineSpacingExtra="11sp"
@@ -174,6 +178,7 @@
 
                             </LinearLayout>
                             <TextView
+                                android:id="@+id/categoryNameText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:lineSpacingExtra="11sp"
@@ -210,6 +215,7 @@
                                        android:text="Opening Timing" />
                             </LinearLayout>
                             <TextView
+                                android:id="@+id/openingTimeText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:lineSpacingExtra="11sp"
@@ -233,7 +239,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:backgroundTint="@color/darkbrown"
-                                    android:background="@drawable/ic_emailtime"></ImageView>
+                                    android:background="@drawable/ic_emailtime"/>
                                   <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -245,6 +251,7 @@
                                       android:text="Email" />
                             </LinearLayout>
                             <TextView
+                                android:id="@+id/emailText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:lineSpacingExtra="11sp"
@@ -280,6 +287,7 @@
                             </LinearLayout>
 
                             <TextView
+                                android:id="@+id/mobileText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:lineSpacingExtra="11sp"
@@ -314,6 +322,7 @@
                                        android:text="Address" />
                             </LinearLayout>
                             <TextView
+                                android:id="@+id/addressText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:lineSpacingExtra="11sp"
@@ -337,7 +346,7 @@
                             android:fontFamily="@font/monster"
                             android:text="Shop From Here"
                             android:textAllCaps="true"
-                            android:textColor="@color/white"></Button>
+                            android:textColor="@color/white"/>
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>
