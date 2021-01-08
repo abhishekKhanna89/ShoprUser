@@ -1,11 +1,9 @@
 package com.shoppr.shoper.Model;
 
-import android.widget.EditText;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginModel {
+public class UpdateProfileModel {
 
     @SerializedName("status")
     @Expose
@@ -13,8 +11,6 @@ public class LoginModel {
     @SerializedName("message")
     @Expose
     private String message;
-
-
 
     public String getStatus() {
         return status;
