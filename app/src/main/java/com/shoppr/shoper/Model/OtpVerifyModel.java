@@ -1,11 +1,9 @@
 package com.shoppr.shoper.Model;
 
-import android.widget.EditText;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginModel {
+public class OtpVerifyModel {
 
     @SerializedName("status")
     @Expose
@@ -13,8 +11,9 @@ public class LoginModel {
     @SerializedName("message")
     @Expose
     private String message;
-
-
+    @SerializedName("token")
+    @Expose
+    private String token;
 
     public String getStatus() {
         return status;
@@ -30,6 +29,14 @@ public class LoginModel {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
 }

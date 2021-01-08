@@ -1,11 +1,9 @@
-package com.shoppr.shoper.Model;
-
-import android.widget.EditText;
+package com.shoppr.shoper.Model.StoreList;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginModel {
+public class StoreListModel {
 
     @SerializedName("status")
     @Expose
@@ -13,8 +11,9 @@ public class LoginModel {
     @SerializedName("message")
     @Expose
     private String message;
-
-
+    @SerializedName("data")
+    @Expose
+    private Data data;
 
     public String getStatus() {
         return status;
@@ -30,6 +29,14 @@ public class LoginModel {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 
 }

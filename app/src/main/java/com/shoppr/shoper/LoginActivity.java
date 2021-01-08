@@ -1,5 +1,6 @@
 package com.shoppr.shoper;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,13 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
+import com.shoppr.shoper.Model.LoginModel;
+import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.requestdata.LoginRequest;
+import com.shoppr.shoper.util.ApiFactory;
+import com.shoppr.shoper.util.CommonUtils;
+import com.shoppr.shoper.util.SessonManager;
 
 
 import java.util.HashMap;
@@ -38,13 +46,13 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleApiClient googleApiClient;
     private static final int RC_SIGN_IN = 1;
     EditText editusername;
-
+    SessonManager sessonManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        sessonManager = new SessonManager(LoginActivity.this);
         GoogleSignInOptions gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -98,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                     editusername.requestFocus();
                 }
                 else {
-                    hitLoginApi();
+                    MobileEmailAPI();
                 }
 
                 //startActivity(new Intent(LoginActivity.this,MapsActivity.class));
@@ -106,19 +114,61 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+/*
     private void hitLoginApi() {
+        if (CommonUtils.isOnline(LoginActivity.this)) {
+            sessonManager.showProgress(LoginActivity.this);
 
+        }
     }
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }*/
+*/
 
-   /* @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }*/
+
+
+
+    private void MobileEmailAPI() {
+        if (CommonUtils.isOnline(LoginActivity.this)) {
+            sessonManager.showProgress(LoginActivity.this);
+            LoginRequest loginRequest=new LoginRequest();
+            loginRequest.setMobile(editusername.getText().toString());
+            Call<LoginModel>call=ApiExecutor.getApiService(LoginActivity.this)
+                    .loginUser(loginRequest);
+            call.enqueue(new Callback<LoginModel>() {
+                @Override
+                public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
+                    sessonManager.hideProgress();
+                    if (response.body()!=null){
+                        if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
+                            Toast.makeText(LoginActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            if((!editusername.getText().toString().isEmpty())){
+                                startActivity(new Intent(LoginActivity.this,OtpActivity.class)
+                                        .putExtra("type","login")
+                                        .putExtra("mobile",editusername.getText().toString())
+                                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                finish();
+                            }else {
+                                sessonManager.getToken();
+                                //sessonManager.setToken(response.body().getToken());
+                                startActivity(new Intent(LoginActivity.this,MapsActivity.class)
+                                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                finish();
+                            }
+                        }else {
+                            Toast.makeText(LoginActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginModel> call, Throwable t) {
+                    sessonManager.hideProgress();
+                }
+            });
+        }else {
+            CommonUtils.showToastInCenter(LoginActivity.this, getString(R.string.please_check_network));
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
