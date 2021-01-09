@@ -10,25 +10,24 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class SliderAdapter extends PagerAdapter {
-
-
     Context mContext;
+    List<Image>imageList;
 
-    int[] sliderImage;
-
-
-
-    public SliderAdapter(Context mContext, int[] sliderImage) {
+    public SliderAdapter(Context mContext, List<Image>imageList) {
         this.mContext = mContext;
-        this.sliderImage = sliderImage;
+        this.imageList = imageList;
     }
 
     @Override
     public int getCount() {
-        return sliderImage.length;
+        return imageList.size();
     }
 
     @Override
@@ -44,7 +43,8 @@ public class SliderAdapter extends PagerAdapter {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.custom_slide_pager,null);
         ImageView imageView = view.findViewById(R.id.custom_image);
-        imageView.setImageResource(sliderImage[position]);
+        Picasso.get().load(imageList.get(position).getImage()).into(imageView);
+        //imageView.setImageResource(sliderImage[position]);
         container.addView(view);
         return view;
     }

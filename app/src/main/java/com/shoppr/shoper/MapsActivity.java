@@ -6,9 +6,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -67,14 +69,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     List<Address> addresses;
     String city;
     SessonManager sessonManager;
+    //double lat,lon;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        sessonManager=new SessonManager(this);
+        sessonManager = new SessonManager(this);
+
+
         geocoder = new Geocoder(this, Locale.getDefault());
 
-        linearstorelist=findViewById(R.id.linearstorelist);
+        linearstorelist = findViewById(R.id.linearstorelist);
         // getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         // getSupportActionBar().setDisplayUseLogoEnabled(true);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -83,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         linearstorelist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MapsActivity.this,StorelistingActivity.class));
+                startActivity(new Intent(MapsActivity.this, StorelistingActivity.class));
             }
         });
 
@@ -96,12 +103,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-
             if (permissionsToRequest.size() > 0)
                 requestPermissions((String[]) permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
         }
-
 
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -110,7 +114,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnConnectionFailedListener(this)
                 .build();
 
-}
+    }
+
     public void back(View view) {
         onBackPressed();
     }
@@ -150,37 +155,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (!checkPlayServices()) {
             Toast.makeText(this, "Please install Google Play services.", Toast.LENGTH_SHORT).show();
             //latLng.setText("Please install Google Play services.");
-        }else {
-            //Toast.makeText(this, "Permission De Do Bhai...", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+              startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            //Toast.makeText(this, "not enable", Toast.LENGTH_SHORT).show();
             return;
+        } else {
+            //Toast.makeText(this, "enable", Toast.LENGTH_SHORT).show();
+            mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
-        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-
-        if(mLocation!=null)
-        {
-            //Log.d("res","Latitude : "+mLocation.getLatitude()+" , Longitude : "+mLocation.getLongitude());
-            //latLng.setText("Latitude : "+mLocation.getLatitude()+" , Longitude : "+mLocation.getLongitude());
+        if (mLocation != null) {
+            //Toast.makeText(this, "b", Toast.LENGTH_SHORT).show();
         }else {
-            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            //Toast.makeText(this, "Permission Do...", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "c", Toast.LENGTH_SHORT).show();
         }
-
         startLocationUpdates();
 
     }
@@ -198,10 +193,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
 
-        if(location!=null){
+        if (location != null) {
             LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-            sessonManager.setLat(String.valueOf(location.getLatitude()));
-            sessonManager.setLon(String.valueOf(location.getLongitude()));
+            String latitude=String.valueOf(location.getLatitude());
+            String longitude=String.valueOf(location.getLongitude());
+            sessonManager.setLat(latitude);
+            sessonManager.setLon(longitude);
             try {
                 addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
@@ -219,9 +216,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         }
-            //Log.d("res","Latitude : "+location.getLatitude()+" , Longitude : "+location.getLongitude());
-
-
+        //Log.d("res","Latitude : "+location.getLatitude()+" , Longitude : "+location.getLongitude());
 
 
     }
@@ -246,10 +241,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getApplicationContext(), "Enable Permissions", Toast.LENGTH_LONG).show();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
-
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
 
@@ -268,55 +269,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean canMakeSmores() {
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
     }
-
-
-    @TargetApi(Build.VERSION_CODES.M)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        switch (requestCode) {
-
-            case ALL_PERMISSIONS_RESULT:
-                for (Object perms : permissionsToRequest) {
-                    if (!hasPermission((String) perms)) {
-                        permissionsRejected.add(perms);
-                    }
-                }
-
-                if (permissionsRejected.size() > 0) {
-
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (shouldShowRequestPermissionRationale((String) permissionsRejected.get(0))) {
-                            showMessageOKCancel("These permissions are mandatory for the application. Please allow access.",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermissions((String[]) permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
-                                            }
-                                        }
-                                    });
-                            return;
-                        }
-                    }
-
-                }
-
-                break;
-        }
-
-    }
-
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(MapsActivity.this)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

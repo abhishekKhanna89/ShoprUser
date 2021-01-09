@@ -43,16 +43,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp">
 
-                                <ImageView
-                                    android:id="@+id/imageII"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="250dp"
-                                    android:scaleType="fitXY"
-                                    android:visibility="visible"/>
-
                                 <androidx.viewpager.widget.ViewPager
                                     android:id="@+id/viewPage"
-                                    android:visibility="gone"
                                     android:layout_width="match_parent"
                                     android:layout_height="200dp"
                                     android:layout_gravity="center"/>
@@ -61,7 +53,6 @@
                                     android:id="@+id/tab_dots"
                                     android:layout_width="match_parent"
                                     android:layout_height="20dp"
-                                    android:visibility="gone"
                                     android:layout_alignParentBottom="true"
                                     android:layout_gravity="bottom"
                                     android:background="@color/white"
@@ -113,8 +104,7 @@
                                 android:textColor="#333333"
                                 android:textSize="14sp"
                                 android:textStyle="normal"
-                                android:fontFamily="@font/monster"
-                                android:text="@string/aboutstore" />
+                                android:fontFamily="@font/monster"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -137,7 +127,7 @@
                                     android:textSize="16sp"
                                     android:textColor="#333333"
                                     android:lineSpacingExtra="5sp"
-                                        android:text="Store Name" />
+                                    android:text="Store Name" />
                             </LinearLayout>
                             <TextView
                                 android:id="@+id/storeNameText"
@@ -149,8 +139,7 @@
                                 android:textColor="#333333"
                                 android:textSize="14sp"
                                 android:textStyle="normal"
-                                android:fontFamily="@font/monster"
-                                android:text="Mark Spencer" />
+                                android:fontFamily="@font/monster"/>
 
 
                             <LinearLayout
@@ -165,7 +154,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:backgroundTint="@color/darkbrown"
-                                    android:background="@drawable/ic_dashborad"></ImageView>
+                                    android:background="@drawable/ic_dashborad"/>
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -187,8 +176,7 @@
                                 android:textColor="#333333"
                                 android:textSize="14sp"
                                 android:textStyle="normal"
-                                android:fontFamily="@font/monster"
-                                android:text="Clothings" />
+                                android:fontFamily="@font/monster"/>
 
 
                             <LinearLayout
@@ -203,7 +191,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:backgroundTint="@color/darkbrown"
-                                    android:background="@drawable/ic_clock_ico"></ImageView>
+                                    android:background="@drawable/ic_time"/>
                                    <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -224,8 +212,7 @@
                                 android:textColor="#333333"
                                 android:textSize="14sp"
                                 android:textStyle="normal"
-                                android:fontFamily="@font/monster"
-                                android:text="9:00AM to 9:00PM" />
+                                android:fontFamily="@font/monster"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -248,7 +235,7 @@
                                     android:textSize="16sp"
                                     android:textColor="#333333"
                                     android:lineSpacingExtra="5sp"
-                                      android:text="Email" />
+                                    android:text="Email" />
                             </LinearLayout>
                             <TextView
                                 android:id="@+id/emailText"
@@ -260,8 +247,7 @@
                                 android:textColor="#333333"
                                 android:textSize="14sp"
                                 android:textStyle="normal"
-                                android:fontFamily="@font/monster"
-                                android:text="9:00AM to 9:00PM" />
+                                android:fontFamily="@font/monster"/>
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -274,7 +260,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:backgroundTint="@color/darkbrown"
-                                    android:background="@drawable/ic_call"></ImageView>
+                                    android:background="@drawable/ic_call"/>
                                   <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -296,8 +282,7 @@
                                 android:textColor="#333333"
                                 android:textSize="14sp"
                                 android:textStyle="normal"
-                                android:fontFamily="@font/monster"
-                                android:text="9:00AM to 9:00PM" />
+                                android:fontFamily="@font/monster"/>
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -310,7 +295,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:backgroundTint="@color/darkbrown"
-                                    android:background="@drawable/ic_category_map"></ImageView>
+                                    android:background="@drawable/ic_location"/>
                                    <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -331,8 +316,7 @@
                                 android:textColor="#333333"
                                 android:textSize="14sp"
                                 android:textStyle="normal"
-                                android:fontFamily="@font/monster"
-                                android:text="9:00AM to 9:00PM" />
+                                android:fontFamily="@font/monster"/>
                         </LinearLayout>
 
                         <Button

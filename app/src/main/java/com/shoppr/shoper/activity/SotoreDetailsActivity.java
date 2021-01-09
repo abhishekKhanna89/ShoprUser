@@ -5,18 +5,22 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
+import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
 import com.shoppr.shoper.R;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,12 +40,15 @@ public class SotoreDetailsActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager mViewPager;
     Button btnsubmit;
-    ImageView imageII;
     TextView aboutText,storeNameText,
             categoryNameText,openingTimeText,
             emailText,mobileText,addressText;
     SessonManager sessonManager;
     int storeId;
+    /*Todo:- View Pager*/
+    List<Image>imageList;
+    Timer timer;
+    int currentPage = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +67,6 @@ public class SotoreDetailsActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_dots);
         /*Todo:- Button find id*/
         btnsubmit = (Button) findViewById(R.id.btnsubmit);
-        /*Todo:- Image find id*/
-        imageII=findViewById(R.id.imageII);
         /*Todo:- TextView find id*/
         aboutText=findViewById(R.id.aboutText);
         storeNameText=findViewById(R.id.storeNameText);
@@ -94,16 +99,41 @@ public class SotoreDetailsActivity extends AppCompatActivity {
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             StoreListDetailsModel storeListDetailsModel=response.body();
+                            imageList=storeListDetailsModel.getData().getStoresDetails().getImages();
+                            SliderAdapter sliderAdapter=new SliderAdapter(SotoreDetailsActivity.this,imageList);
+                            mViewPager.setAdapter(sliderAdapter);
+                            tabLayout.setupWithViewPager(mViewPager,true);
+                            final Handler handler = new Handler();
+                            final Runnable Update = new Runnable() {
+                                public void run() {
+                                    if (currentPage==imageList.size()){
+                                        currentPage=0;
+                                        //viewPagerOurChanelPartner.setCurrentItem(position);
+                                    }else {
+                                        currentPage++;
+                                    }
+                                    mViewPager.setCurrentItem(currentPage);
+                                }
+                            };
+                            timer = new Timer(); // This will create a new Thread
+                            timer.schedule(new TimerTask() { // task to be scheduled
+                                @Override
+                                public void run() {
+                                    handler.post(Update);
+                                }
+                            }, 2500, 3000);
                             if (storeListDetailsModel.getData().getStoresDetails()!=null){
                                 String about=storeListDetailsModel.getData().getStoresDetails().getAboutStore();
                                 if (about!=null){
                                     aboutText.setText(about);
                                 }
                                 String storeName=storeListDetailsModel.getData().getStoresDetails().getStoreName();
+
                                 if (storeName!=null){
                                     storeNameText.setText(storeName);
                                 }
                                 String categoryName=storeListDetailsModel.getData().getStoresDetails().getStoreType();
+
                                 if (categoryName!=null){
                                     categoryNameText.setText(categoryName);
                                 }
@@ -123,10 +153,7 @@ public class SotoreDetailsActivity extends AppCompatActivity {
                                 if (address!=null){
                                     addressText.setText(address);
                                 }
-                                String image=storeListDetailsModel.getData().getStoresDetails().getImage();
-                                if (image!=null){
-                                    Picasso.get().load(image).into(imageII);
-                                }
+
                             }
                         }
                     }
