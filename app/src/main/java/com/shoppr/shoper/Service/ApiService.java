@@ -43,5 +43,5 @@ public interface ApiService {
     @GET("stores-list")
     Call<StoreListModel>apiStoreList(@Query("lat")String lat,
                                      @Query("lang")String lang);
-
+    
 }
