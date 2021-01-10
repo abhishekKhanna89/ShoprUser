@@ -16,6 +16,7 @@
             android:layout_width = "wrap_content"
             android:layout_height = "match_parent"
             android:visibility="visible"
+            android:onClick="back"
             android:src = "@drawable/ic_left" />
         <TextView
             android:id = "@+id/name"

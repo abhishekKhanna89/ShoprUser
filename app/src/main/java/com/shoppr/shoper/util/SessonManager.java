@@ -13,19 +13,20 @@ import com.shoppr.shoper.R;
 public class SessonManager {
 
     private static SessonManager pref;
-    private SharedPreferences sharedPreference;
-    private SharedPreferences.Editor editor;
+    private final SharedPreferences sharedPreference;
+    private final SharedPreferences.Editor editor;
     public static final String NAME = "MY_PREFERENCES";
     public static final String Token = "token";
-    public Dialog mDialog;
-    public static  String filterList = "FilterList";
+
+    public static final String filterList = "FilterList";
     public static final  String lat="lat";
     public static final String lon="lon";
-
-
+    public static final String walletAmount="walletAmount";
+    public Dialog mDialog;
     public SessonManager(Context ctx) {
         sharedPreference = ctx.getSharedPreferences(NAME, Context.MODE_PRIVATE);
         editor = sharedPreference.edit();
+        editor.apply();
     }
 
 
@@ -36,13 +37,13 @@ public class SessonManager {
         return pref;
     }
 
-    public void setLat(String lat) {
-        editor.putString(lat, lat);
+    public void setLat(String lat1) {
+        editor.putString(lat, lat1);
         editor.commit();
     }
 
-    public void setLon(String lon) {
-        editor.putString(lon, lon);
+    public void setLon(String lon1) {
+        editor.putString(lon, lon1);
         editor.commit();
     }
 
@@ -63,6 +64,14 @@ public class SessonManager {
     public String getToken() {
         return sharedPreference.getString(Token, "");
     }
+
+    public void setWalletAmount(String walletAmount1){
+        editor.putString(walletAmount,walletAmount1);
+        editor.apply();
+    }
+    public String getWalletAmount(){
+        return sharedPreference.getString(walletAmount,"");
+    }
     public void setFilterList(String filterList1) {
 
      //   Log.d("sssss", token);
@@ -74,6 +83,7 @@ public class SessonManager {
         return sharedPreference.getString(filterList, "");
     }
 
+
     public void hideProgress() {
         while (mDialog != null && mDialog.isShowing()){
             mDialog.dismiss();
@@ -81,6 +91,7 @@ public class SessonManager {
         }
 
     }
+
 
     public void showProgress(Context mContext) {
         if(mContext!=null){

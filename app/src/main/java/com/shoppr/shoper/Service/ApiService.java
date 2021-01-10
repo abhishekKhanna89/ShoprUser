@@ -10,14 +10,17 @@ import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.OtpVerifyModel;
+import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
+import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
 import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
 
 import java.util.HashMap;
 import java.util.Map;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -48,5 +51,14 @@ public interface ApiService {
     @GET("store-details/{id}")
     Call<StoreListDetailsModel>apiStoreListDetails(@Header("Authorization") String token,
                                                    @Path("id")int id);
+
+    @NonNull
+    @GET("wallet-history")
+    Call<WalletHistoryModel>apiWalletHistory(@Header("Authorization") String token);
+
+   @NonNull
+   @GET("shoppr-list")
+   Call<ShoprListModel> apiShoprList();
+
 
 }

@@ -27,6 +27,7 @@
                 android:textStyle="bold"
                 android:textSize="15dp"/>
             <TextView
+                android:id="@+id/balanceText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="\u20B9 300.00"

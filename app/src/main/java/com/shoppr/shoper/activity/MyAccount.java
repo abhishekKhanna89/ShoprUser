@@ -75,10 +75,12 @@ public class MyAccount extends AppCompatActivity {
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
                             MyProfileModel myProfileModel=response.body();
                             if(myProfileModel.getData()!=null) {
+                                sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(image_order);
                                 texxname.setText(String.valueOf(myProfileModel.getData().getName()));
                                 textEmail.setText(myProfileModel.getData().getEmail());
                                 walletAmountText.setText(String.valueOf(myProfileModel.getData().getBalance()));
+
                             }
                         }
                     }

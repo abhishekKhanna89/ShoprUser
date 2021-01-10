@@ -10,15 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.shoppr.shoper.Model.WalletHistory.FridayJun262020;
+import com.shoppr.shoper.Model.WalletHistory.History;
 import com.shoppr.shoper.R;
+
+import java.util.List;
 
 import model.RecyclerModel;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder> {
-    RecyclerModel[]recyclerModels;
+    List<FridayJun262020>historyList;
     Context context;
-    public RecyclerAdapter(Context context, RecyclerModel[]recyclerModels){
-        this.recyclerModels=recyclerModels;
+    public RecyclerAdapter(Context context,List<FridayJun262020>historyList){
+        this.historyList=historyList;
         this.context=context;
     }
     @NonNull
@@ -29,22 +33,32 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.Holder holder, int position) {
-        RecyclerModel recyclerModel=recyclerModels[position];
-        holder.button.setText(recyclerModel.getDate());
+        FridayJun262020 history=historyList.get(position);
+        String type=history.getType();
+        holder.button.setText(history.getDate());
         /*Todo:- Green Text*/
-        holder.t.setText(recyclerModel.getAddMoney());
-        holder.tr.setText(recyclerModel.getTransactionId());
-        holder.price.setText("(+) "+recyclerModel.getGreenPrice());
-        holder.bal.setText("Bal : "+recyclerModel.getBalance());
+        holder.t.setText(history.getDescription());
+        holder.tr.setText(history.getRefid());
+        holder.price.setText("(+) "+history.getAmount());
+        holder.bal.setText("Bal : "+history.getAmount());
         /*Todo:- Red Text*/
-        holder.t1.setText(recyclerModel.getReceived());
-        holder.price1.setText("(-) "+recyclerModel.getRedPrice());
-        holder.bal1.setText("Bal : "+recyclerModel.getBalance());
+        holder.t1.setText(history.getDescription()+"\n"+
+                history.getRefid());
+        holder.price1.setText("(-) "+history.getAmount());
+        holder.bal1.setText("Bal : "+history.getAmount());
+        if (type!=null&&type.equalsIgnoreCase("Credit")){
+
+        }else if (type!=null&&type.equalsIgnoreCase("Debit")){
+
+        }
+
+
+
     }
 
     @Override
     public int getItemCount() {
-        return recyclerModels.length;
+        return historyList.size();
     }
 
     public class Holder extends RecyclerView.ViewHolder {

@@ -6,56 +6,79 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
+import com.shoppr.shoper.Model.WalletHistory.FridayJun262020;
+import com.shoppr.shoper.Model.WalletHistory.History;
+import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
 import com.shoppr.shoper.R;
 
+import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.adapter.RecyclerAdapter;
+import com.shoppr.shoper.util.CommonUtils;
+import com.shoppr.shoper.util.SessonManager;
+
+import java.util.List;
+
 import model.RecyclerModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WalletActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-
+    SessonManager sessonManager;
+    TextView balanceText;
+    List<FridayJun262020>historyList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
+        sessonManager=new SessonManager(this);
         recyclerView=findViewById(R.id.recyclerView);
+        balanceText=findViewById(R.id.balanceText);
+
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
         getSupportActionBar().setTitle("Wallet Transaction");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         viewData();
     }
 
     private void viewData() {
-        RecyclerModel[]recyclerModels=new RecyclerModel[]{
-                new RecyclerModel("Thursday,Jul 05,2020",
-                        "Add Money","transaction ID : #000111",
-                        "45,523","45,523",
-                        "5600","Rs 10,000 received from\nMohammad Imran\n(xxxxxx9876)"),
-                new RecyclerModel("Thursday,Jul 05,2020",
-                        "Add Money","transaction ID : #000111",
-                        "45,523","45,523",
-                        "5600","Rs 10,000 received from\nMohammad Imran\n(xxxxxx9876)"),
-                new RecyclerModel("Thursday,Jul 05,2020",
-                        "Add Money","transaction ID : #000111",
-                        "45,523","45,523",
-                        "5600","Rs 10,000 received from\nMohammad Imran\n(xxxxxx9876)"),
-                new RecyclerModel("Thursday,Jul 05,2020",
-                        "Add Money","transaction ID : #000111",
-                        "45,523","45,523",
-                        "5600","Rs 10,000 received from\nMohammad Imran\n(xxxxxx9876)"),
-                new RecyclerModel("Thursday,Jul 05,2020",
-                        "Add Money","transaction ID : #000111",
-                        "45,523","45,523",
-                        "5600","Rs 10,000 received from\nMohammad Imran\n(xxxxxx9876)"),
-                new RecyclerModel("Thursday,Jul 05,2020",
-                        "Add Money","transaction ID : #000111",
-                        "45,523","45,523",
-                        "5600","Rs 10,000 received from\nMohammad Imran\n(xxxxxx9876)"),
+        if (CommonUtils.isOnline(WalletActivity.this)){
+            sessonManager.showProgress(WalletActivity.this);
+            Call<WalletHistoryModel> call= ApiExecutor.getApiService(WalletActivity.this)
+                    .apiWalletHistory("Bearer "+sessonManager.getToken());
+            call.enqueue(new Callback<WalletHistoryModel>() {
+                @Override
+                public void onResponse(Call<WalletHistoryModel> call, Response<WalletHistoryModel> response) {
+                    sessonManager.hideProgress();
+                    if (response.body()!=null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            WalletHistoryModel walletHistoryModel=response.body();
+                            if (walletHistoryModel.getData()!=null){
+                                balanceText.setText("\u20B9 "+walletHistoryModel.getData().getBalance());
+                                historyList= walletHistoryModel.getData().getHistory().getFridayJun262020();
+                                RecyclerAdapter recyclerAdapter=new RecyclerAdapter(WalletActivity.this,historyList);
+                                recyclerView.setAdapter(recyclerAdapter);
+                                recyclerAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
 
-        };
-        RecyclerAdapter recyclerAdapter=new RecyclerAdapter(WalletActivity.this,recyclerModels);
-        recyclerView.setAdapter(recyclerAdapter);
+                @Override
+                public void onFailure(Call<WalletHistoryModel> call, Throwable t) {
+                    sessonManager.hideProgress();
+                }
+            });
+
+        }else {
+            CommonUtils.showToastInCenter(WalletActivity.this, getString(R.string.please_check_network));
+        }
+
     }
 
    /* public void back(View view) {

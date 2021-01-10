@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -34,12 +36,21 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
+import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
+import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.activity.MyAccount;
+import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -70,14 +81,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String city;
     SessonManager sessonManager;
     //double lat,lon;
-
-
+    TextView shoprListText;
+    List<ShoprListModel>shoprListModelList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         sessonManager = new SessonManager(this);
-
+        shoprListText=findViewById(R.id.shoprListText);
 
         geocoder = new Geocoder(this, Locale.getDefault());
 
@@ -114,6 +125,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnConnectionFailedListener(this)
                 .build();
 
+        viewListShopr();
+    }
+
+    private void viewListShopr() {
+        if (CommonUtils.isOnline(MapsActivity.this)) {
+            sessonManager.showProgress(MapsActivity.this);
+            Call<ShoprListModel> call = ApiExecutor.getApiService(this).apiShoprList();
+            call.enqueue(new Callback<ShoprListModel>() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onResponse(Call<ShoprListModel> call, Response<ShoprListModel> response) {
+                    sessonManager.hideProgress();
+                    if (response.body()!=null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            ShoprListModel shoprListModel=response.body();
+                            if (shoprListModel.getData()!=null){
+                                for (int i=0;i<shoprListModel.getData().getShopper().size();i++){
+                                   shoprListText.setText(shoprListModel.getData().getShopper().get(i).getShopprCount()+"\t"+shoprListModel.getData().getShopper().get(i).getLocation());
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ShoprListModel> call, Throwable t) {
+                    sessonManager.hideProgress();
+                }
+            });
+        }else {
+            CommonUtils.showToastInCenter(MapsActivity.this, getString(R.string.please_check_network));
+        }
     }
 
     public void back(View view) {
