@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
-import com.shoppr.shoper.Model.WalletHistory.FridayJun262020;
-import com.shoppr.shoper.Model.WalletHistory.History;
 import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
+import com.shoppr.shoper.Model.WalletHistory.WalletTransaction;
 import com.shoppr.shoper.R;
 
 import com.shoppr.shoper.Service.ApiExecutor;
@@ -21,7 +19,6 @@ import com.shoppr.shoper.util.SessonManager;
 
 import java.util.List;
 
-import model.RecyclerModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +27,7 @@ public class WalletActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     SessonManager sessonManager;
     TextView balanceText;
-    List<FridayJun262020>historyList;
+    List<WalletTransaction>historyList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +57,7 @@ public class WalletActivity extends AppCompatActivity {
                             WalletHistoryModel walletHistoryModel=response.body();
                             if (walletHistoryModel.getData()!=null){
                                 balanceText.setText("\u20B9 "+walletHistoryModel.getData().getBalance());
-                                historyList= walletHistoryModel.getData().getHistory().getFridayJun262020();
+                                historyList= walletHistoryModel.getData().getWalletTransactions();
                                 RecyclerAdapter recyclerAdapter=new RecyclerAdapter(WalletActivity.this,historyList);
                                 recyclerView.setAdapter(recyclerAdapter);
                                 recyclerAdapter.notifyDataSetChanged();

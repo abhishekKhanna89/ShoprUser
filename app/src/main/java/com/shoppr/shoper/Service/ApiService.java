@@ -7,15 +7,20 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.shoppr.shoper.LoginActivity;
+import com.shoppr.shoper.Model.CustomerBalancceModel;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.OtpVerifyModel;
+import com.shoppr.shoper.Model.Recharge.RechargeModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
+import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
 import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
+import com.shoppr.shoper.requestdata.RechargeRequest;
+import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,5 +65,16 @@ public interface ApiService {
    @GET("shoppr-list")
    Call<ShoprListModel> apiShoprList();
 
+   @NonNull
+   @GET("customer-balance")
+    Call<CustomerBalancceModel>apiCustomerbalance(@Header("Authorization") String token);
+
+   @POST("recharge")
+    Call<RechargeModel>apiRecharge(@Header("Authorization") String token,
+                                   @Body RechargeRequest rechargeRequest);
+
+   @POST("verify-recharge")
+    Call<VerifyRechargeModel>apiVerifyRecharge(@Header("Authorization") String token,
+                                               @Body VerifyRechargeRequest verifyRechargeRequest);
 
 }

@@ -49,6 +49,10 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_test_UOxHxOruy0x9uP"          />
+
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />

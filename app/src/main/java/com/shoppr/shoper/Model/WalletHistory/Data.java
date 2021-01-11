@@ -1,23 +1,24 @@
 package com.shoppr.shoper.Model.WalletHistory;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Data {
 
-    @SerializedName("history")
+    @SerializedName("wallet_transactions")
     @Expose
-    private History history;
+    private List<WalletTransaction> walletTransactions = null;
     @SerializedName("balance")
     @Expose
     private Integer balance;
 
-    public History getHistory() {
-        return history;
+    public List<WalletTransaction> getWalletTransactions() {
+        return walletTransactions;
     }
 
-    public void setHistory(History history) {
-        this.history = history;
+    public void setWalletTransactions(List<WalletTransaction> walletTransactions) {
+        this.walletTransactions = walletTransactions;
     }
 
     public Integer getBalance() {

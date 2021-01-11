@@ -13,9 +13,9 @@
         android:textColor="@color/black"
         android:textAlignment="textStart"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/darker_gray"
-        tools:ignore="RtlCompat" />
+        android:backgroundTint="@android:color/darker_gray" />
     <RelativeLayout
+        android:id="@+id/greenLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.cardview.widget.CardView
@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
             android:layout_toStartOf="@+id/price"
             android:layout_toEndOf="@+id/card"
             android:layout_toRightOf="@id/card"
@@ -60,6 +61,7 @@
             android:layout_toRightOf="@id/card"
             android:text="Transaction ID : #000111"
             android:textSize="15sp"
+            android:singleLine="true"
             tools:ignore="RtlCompat" />
 
         <TextView
@@ -81,8 +83,11 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10dp"
             android:text="Bal :5600"/>
+
+
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/redLayout"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content">
@@ -109,6 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
             android:layout_toStartOf="@+id/price1"
             android:layout_toEndOf="@+id/card1"
             android:layout_toRightOf="@id/card1"
@@ -121,15 +127,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/t1"
-            android:visibility="gone"
             android:layout_toStartOf="@+id/bal1"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+            android:singleLine="true"
             android:layout_toEndOf="@+id/card1"
             android:layout_toRightOf="@id/card1"
             android:text="Transaction ID : #000111"
-            android:textSize="15sp"
-            tools:ignore="RtlCompat" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/price1"

@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
@@ -27,6 +29,8 @@ public class MyAccount extends AppCompatActivity {
     TextView texxname,textEmail,walletAmountText,textaddmoney;
     CircleImageView image_order;
     SessonManager sessonManager;
+    LinearLayout logoutLayout;
+    Button btnedit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,12 +41,21 @@ public class MyAccount extends AppCompatActivity {
         sessonManager=new SessonManager(this);
         linarwallet=findViewById(R.id.linarwallet);
         textaddmoney=findViewById(R.id.textaddmoney);
+        logoutLayout=findViewById(R.id.logoutLayout);
         /*Todo:- Text Find Id*/
         texxname=findViewById(R.id.nameText);
         textEmail=findViewById(R.id.textEmail);
         walletAmountText=findViewById(R.id.walletAmountText);
         /*Todo:- CircleImageView find id*/
         image_order=findViewById(R.id.image_order);
+        /*Todo:- Button Edit*/
+        btnedit=findViewById(R.id.btnedit);
+        btnedit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyAccount.this,UpdateProfileActivity.class));
+            }
+        });
 
 
         linarwallet.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +70,16 @@ public class MyAccount extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent=new Intent(MyAccount.this,AddMoneyActivity.class);
                 startActivity(intent);
+            }
+        });
+        logoutLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sessonManager.setToken("");
+                Toast.makeText(MyAccount.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MyAccount.this,LoginActivity.class));
+                finishAffinity();
+
             }
         });
         myProfile();
@@ -78,9 +101,9 @@ public class MyAccount extends AppCompatActivity {
                                 sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(image_order);
                                 texxname.setText(String.valueOf(myProfileModel.getData().getName()));
-                                textEmail.setText(myProfileModel.getData().getEmail());
+                                textEmail.setText(myProfileModel.getData().getMobile());
                                 walletAmountText.setText(String.valueOf(myProfileModel.getData().getBalance()));
-
+                                sessonManager.setMobileNo(myProfileModel.getData().getMobile());
                             }
                         }
                     }

@@ -22,6 +22,7 @@ public class SessonManager {
     public static final  String lat="lat";
     public static final String lon="lon";
     public static final String walletAmount="walletAmount";
+    public static final String mobileNo="mobile";
     public Dialog mDialog;
     public SessonManager(Context ctx) {
         sharedPreference = ctx.getSharedPreferences(NAME, Context.MODE_PRIVATE);
@@ -53,6 +54,14 @@ public class SessonManager {
 
     public  String getLon() {
         return sharedPreference.getString(lon,"");
+    }
+
+    public void setMobileNo(String mobile){
+        editor.putString(mobileNo,mobile);
+        editor.apply();
+    }
+    public String getMobileNo(){
+        return sharedPreference.getString(mobileNo,"");
     }
 
     public void setToken(String token) {

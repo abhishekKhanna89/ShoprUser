@@ -3,7 +3,7 @@ package com.shoppr.shoper.Model.WalletHistory;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class FridayJun262020 {
+public class Transaction {
 
     @SerializedName("amount")
     @Expose
@@ -84,3 +84,4 @@ public class FridayJun262020 {
     }
 
 }
+
