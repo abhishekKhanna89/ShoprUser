@@ -78,9 +78,6 @@ public class WalletActivity extends AppCompatActivity {
 
     }
 
-   /* public void back(View view) {
-        onBackPressed();
-    }*/
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
        // Handle action bar item clicks here. The action bar will

@@ -230,6 +230,9 @@ public class AddMoneyActivity extends AppCompatActivity implements View.OnClickL
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            Intent intent=new Intent(AddMoneyActivity.this,MyAccount.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                             Toast.makeText(AddMoneyActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();
                         }else {
                             Toast.makeText(AddMoneyActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();

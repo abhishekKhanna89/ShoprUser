@@ -139,6 +139,7 @@
                 android:layout_above="@+id/LL"
                 android:background="@color/colorPrimary">
                 <LinearLayout
+                    android:onClick="chats"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

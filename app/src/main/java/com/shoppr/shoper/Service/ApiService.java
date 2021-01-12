@@ -7,23 +7,30 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.shoppr.shoper.LoginActivity;
+import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.CustomerBalancceModel;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.OtpVerifyModel;
 import com.shoppr.shoper.Model.Recharge.RechargeModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
+import com.shoppr.shoper.Model.StartChat.StartChatModel;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
+import com.shoppr.shoper.Model.UpdateProfileModel;
 import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
 import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
 import com.shoppr.shoper.requestdata.RechargeRequest;
+import com.shoppr.shoper.requestdata.UpdateProfileRequest;
 import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.http.Body;
@@ -76,5 +83,16 @@ public interface ApiService {
    @POST("verify-recharge")
     Call<VerifyRechargeModel>apiVerifyRecharge(@Header("Authorization") String token,
                                                @Body VerifyRechargeRequest verifyRechargeRequest);
+    @Multipart
+    @POST("update-profile")
+    Call<JsonObject> apiUpdateProfile(@HeaderMap Map<String, String> token, @Part MultipartBody.Part[] images, @PartMap() Map<String, RequestBody> partMap);
 
+    @NonNull
+    @GET("start-chat")
+    Call<StartChatModel>apiChatStart(@Header("Authorization") String token);
+
+    @NonNull
+    @GET("chat-messages/{chat_id}")
+    Call<ChatMessageModel>apiChatMessage(@Header("Authorization") String token,
+                                         @Path("chat_id")int chat_id);
 }

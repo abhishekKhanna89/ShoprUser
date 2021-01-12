@@ -39,15 +39,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.activity.MyAccount;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,13 +86,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //double lat,lon;
     TextView shoprListText;
     List<ShoprListModel>shoprListModelList;
+    CircleImageView cir_man_hair_cut;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         sessonManager = new SessonManager(this);
         shoprListText=findViewById(R.id.shoprListText);
-
+        cir_man_hair_cut=findViewById(R.id.cir_man_hair_cut);
         geocoder = new Geocoder(this, Locale.getDefault());
 
         linearstorelist = findViewById(R.id.linearstorelist);
@@ -126,6 +130,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .build();
 
         viewListShopr();
+        myProfile();
+    }
+
+    private void myProfile() {
+        if (CommonUtils.isOnline(MapsActivity.this)){
+            //sessonManager.showProgress(MapsActivity.this);
+            Call<MyProfileModel> call = ApiExecutor.getApiService(this).apiMyProfile("Bearer "+sessonManager.getToken());
+            call.enqueue(new Callback<MyProfileModel>() {
+                @Override
+                public void onResponse(Call<MyProfileModel> call, Response<MyProfileModel> response) {
+                    //sessonManager.hideProgress();
+                    if (response.body()!=null){
+                        if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
+                            MyProfileModel myProfileModel=response.body();
+                            if(myProfileModel.getData()!=null) {
+                                //sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
+                                Picasso.get().load(myProfileModel.getData().getImage()).into(cir_man_hair_cut);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MyProfileModel> call, Throwable t) {
+                    //sessonManager.hideProgress();
+                }
+            });
+
+
+        }else {
+            CommonUtils.showToastInCenter(MapsActivity.this, getString(R.string.please_check_network));
+        }
     }
 
     private void viewListShopr() {
@@ -326,5 +362,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
+    }
+
+    public void chats(View view) {
+        startActivity(new Intent(MapsActivity.this, ChatActivity.class));
     }
 }

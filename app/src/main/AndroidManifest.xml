@@ -11,7 +11,8 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +23,9 @@
         android:theme="@style/Theme.Shoper"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".activity.UpdateProfileActivity"/>
+        <activity android:name=".activity.ChatActivity"
+            android:label="Chat"/>
+        <activity android:name=".activity.UpdateProfileActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".activity.AddMoneyActivity" />
         <activity android:name=".activity.WalletActivity" />
@@ -48,10 +51,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="rzp_test_UOxHxOruy0x9uP"          />
+            android:value="rzp_test_UOxHxOruy0x9uP" />
 
         <activity
             android:name=".MapsActivity"

@@ -51,4 +51,5 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     // razorpay sdk
     implementation  'com.razorpay:checkout:1.5.12'
+    implementation 'id.zelory:compressor:2.1.0'
 }
