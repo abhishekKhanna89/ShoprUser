@@ -43,10 +43,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
         for ( int i=0;i<transactionList.size();i++){
             String type=transactionList.get(i).getType();
 
-            if(type.equalsIgnoreCase("Credit")){
-
+            if(type.equalsIgnoreCase("Credit")&&type.equalsIgnoreCase("Debit")){
+                holder.redLayout.setVisibility(View.VISIBLE);
+                holder.greenLayout.setVisibility(View.VISIBLE);
+            }else if (type.equalsIgnoreCase("Credit")){
+                holder.redLayout.setVisibility(View.GONE);
             }else {
-
+                holder.greenLayout.setVisibility(View.GONE);
             }
 
             /*Todo:- Green Text*/
