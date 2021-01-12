@@ -1,12 +1,14 @@
 package com.shoppr.shoper.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -40,6 +42,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
 
         for ( int i=0;i<transactionList.size();i++){
             String type=transactionList.get(i).getType();
+
+            if(type.equalsIgnoreCase("Credit")){
+
+            }else {
+
+            }
+
             /*Todo:- Green Text*/
             holder.t.setText(transactionList.get(i).getDescription());
             holder.tr.setText(transactionList.get(i).getRefid());
