@@ -73,7 +73,7 @@ public class ChatActivity extends AppCompatActivity {
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
             Call<ChatMessageModel>call=ApiExecutor.getApiService(this)
-                    .apiChatMessage("Bearer "+sessonManager.getToken(),id);
+                    .apiChatMessage("Bearer "+sessonManager.getToken(),5);
             call.enqueue(new Callback<ChatMessageModel>() {
                 @Override
                 public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
