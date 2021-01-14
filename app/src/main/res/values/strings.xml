@@ -11,5 +11,6 @@
     <string name="fb_login_protocol_scheme">fb297800690726297</string>
     <string name="please_check_network">Please check your internet connection</string>
     <string name="loading">loading...</string>
+    <string name="slide_to_cancel">"Slide to cancel"</string>
 
 </resources>

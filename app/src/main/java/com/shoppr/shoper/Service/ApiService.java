@@ -7,12 +7,16 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.shoppr.shoper.LoginActivity;
+import com.shoppr.shoper.Model.AcceptModel;
+import com.shoppr.shoper.Model.CancelModel;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.CustomerBalancceModel;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.OtpVerifyModel;
+import com.shoppr.shoper.Model.RatingsModel;
 import com.shoppr.shoper.Model.Recharge.RechargeModel;
+import com.shoppr.shoper.Model.RejectedModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Model.StartChat.StartChatModel;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
@@ -22,6 +26,7 @@ import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
 import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
+import com.shoppr.shoper.requestdata.RatingsRequest;
 import com.shoppr.shoper.requestdata.RechargeRequest;
 import com.shoppr.shoper.requestdata.UpdateProfileRequest;
 import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
@@ -68,19 +73,19 @@ public interface ApiService {
     @GET("wallet-history")
     Call<WalletHistoryModel>apiWalletHistory(@Header("Authorization") String token);
 
-   @NonNull
-   @GET("shoppr-list")
-   Call<ShoprListModel> apiShoprList();
+    @NonNull
+    @GET("shoppr-list")
+    Call<ShoprListModel> apiShoprList();
 
-   @NonNull
-   @GET("customer-balance")
+    @NonNull
+    @GET("customer-balance")
     Call<CustomerBalancceModel>apiCustomerbalance(@Header("Authorization") String token);
 
-   @POST("recharge")
+    @POST("recharge")
     Call<RechargeModel>apiRecharge(@Header("Authorization") String token,
                                    @Body RechargeRequest rechargeRequest);
 
-   @POST("verify-recharge")
+    @POST("verify-recharge")
     Call<VerifyRechargeModel>apiVerifyRecharge(@Header("Authorization") String token,
                                                @Body VerifyRechargeRequest verifyRechargeRequest);
     @Multipart
@@ -95,4 +100,19 @@ public interface ApiService {
     @GET("chat-messages/{chat_id}")
     Call<ChatMessageModel>apiChatMessage(@Header("Authorization") String token,
                                          @Path("chat_id")int chat_id);
+    @NonNull
+    @GET("accept/{message_id}")
+    Call<AcceptModel>apiAccept(@Header("Authorization") String token,
+                               @Path("message_id")int message_id);
+    @NonNull
+    @GET("reject/{message_id}")
+    Call<RejectedModel>apiRejected(@Header("Authorization") String token,
+                                   @Path("message_id")int message_id);
+    @NonNull
+    @GET("cancel/{message_id}")
+    Call<CancelModel>apiCancel(@Header("Authorization") String token,
+                               @Path("message_id")int message_id);
+    @POST("rate-service/{message_id}")
+    Call<RatingsModel>apiRatings(@Header("Authorization") String token,
+                                 @Path("message_id")int message_id,@Body RatingsRequest ratingsRequest);
 }

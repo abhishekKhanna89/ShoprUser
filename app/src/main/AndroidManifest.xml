@@ -12,7 +12,16 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+
+
+        />
+
+
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+
 
     <application
         android:allowBackup="true"
@@ -22,6 +31,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shoper"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="m">
         <activity android:name=".activity.ChatActivity"
             android:label="Chat"/>
