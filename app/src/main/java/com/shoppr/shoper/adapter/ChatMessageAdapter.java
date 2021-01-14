@@ -1,4 +1,4 @@
-package com.shoppr.shoper.adapter;
+ package com.shoppr.shoper.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -40,11 +40,11 @@ public class ChatMessageAdapter  extends RecyclerView.Adapter<ChatMessageAdapter
         if (viewType == SELF) {
             //Inflating the layout self
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.in_msg_layout, parent, false);
+                    .inflate(R.layout.out_msg_layout, parent, false);
         } else{
             //else inflating the layout others
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.out_msg_layout, parent, false);
+                    .inflate(R.layout.in_msg_layout, parent, false);
         }
 
 
