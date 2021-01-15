@@ -3,7 +3,11 @@
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,14 +16,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.appevents.ml.Utils;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.AcceptModel;
@@ -34,8 +50,17 @@ import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.requestdata.RatingsRequest;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
+import com.squareup.picasso.Picasso;
 
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
@@ -43,12 +68,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.os.FileUtils.copy;
+
  public class ChatMessageAdapter  extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
-    List<Chat>chatList;
+     private static final int IO_BUFFER_SIZE = 1;
+     List<Chat>chatList;
     Context context;
     private int SELF = 1;
     View itemView;
     SessonManager sessonManager;
+
     public ChatMessageAdapter(Context context,List<Chat>chatList){
         this.context=context;
         this.chatList=chatList;
@@ -75,12 +104,14 @@ import retrofit2.Response;
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
        Chat chat=chatList.get(position);
        sessonManager=new SessonManager(context);
        if (chat.getType().equalsIgnoreCase("image")){
-           Glide.with(context).load(chat.getFilePath()).into(holder.image);
+           Picasso.get().load(chat.getFilePath()).into(holder.image);
+           //Glide.with(context).load(chat.getFilePath()).into(holder.image);
            holder.imageText.setText(chat.getMessage());
            holder.dateImage.setText(chat.getCreatedAt());
 
@@ -95,7 +126,8 @@ import retrofit2.Response;
            holder.textLayout.setVisibility(View.GONE);
        }
        if (chat.getType().equalsIgnoreCase("product")){
-           Glide.with(context).load(chat.getFilePath()).into(holder.productImage);
+           Picasso.get().load(chat.getFilePath()).into(holder.productImage);
+           //Glide.with(context).load(chat.getFilePath()).into(holder.productImage);
            holder.productMessage.setText(chat.getMessage());
            holder.dateProduct.setText(chat.getCreatedAt());
            holder.pqText.setText("₹"+chat.getPrice()+"-"+chat.getQuantity());
@@ -114,6 +146,22 @@ import retrofit2.Response;
            holder.voicePlayerView.setAudio(chat.getFilePath());
        }else {
            holder.voicePlayerView.setVisibility(View.GONE);
+       }
+
+       if (chat.getType().equalsIgnoreCase("address-request")){
+           String lat = sessonManager.getLat();
+           String lon = sessonManager.getLon();
+           String url ="https://maps.googleapis.com/maps/api/staticmap?";
+           url+="&zoom=14";
+           url+="&size=200x200";
+           url+="&maptype=roadmap";
+           url+="&markers=color:red%7Clabel:%7C"+lat+", "+lon;
+           url+="&key=AIzaSyCHl8Ff_ghqPjWqlT2BXJH5BOYH1q-sw0E";
+           Picasso.get().load(url).into(holder.locationImage);
+           holder.locationText.setText(chat.getMessage());
+           holder.locationDate.setText(chat.getCreatedAt());
+       }else {
+           holder.mapLayout.setVisibility(View.GONE);
        }
 
 
@@ -303,7 +351,9 @@ import retrofit2.Response;
 
     }
 
-    @Override
+
+
+     @Override
     public int getItemCount() {
         return chatList.size();
     }
@@ -326,10 +376,14 @@ import retrofit2.Response;
         return position;
     }
 
-    public class Holder extends RecyclerView.ViewHolder {
+
+
+
+     public class Holder extends RecyclerView.ViewHolder {
         /*Todo:- Location*/
         ImageView locationImage;
-        TextView locationText,dateLocation;
+        TextView locationText,locationDate;
+        LinearLayout mapLayout;
         /*Todo:- Text*/
         TextView message_body,dateText;
         LinearLayout textLayout;
@@ -351,9 +405,10 @@ import retrofit2.Response;
         public Holder(@NonNull View itemView) {
             super(itemView);
             /*Todo:- Location*/
-           /* locationImage=itemView.findViewById(R.id.locationImage);
+            locationImage=itemView.findViewById(R.id.locationImage);
             locationText=itemView.findViewById(R.id.locationText);
-            dateLocation=itemView.findViewById(R.id.dateLocation);*/
+            locationDate=itemView.findViewById(R.id.locationDate);
+            mapLayout=itemView.findViewById(R.id.mapLayout);
             /*Todo:- Text*/
             message_body=itemView.findViewById(R.id.message_body);
             dateText=itemView.findViewById(R.id.dateText);
@@ -383,5 +438,8 @@ import retrofit2.Response;
             voicePlayerView=itemView.findViewById(R.id.voicePlayerView);
 
         }
-    }
+
+
+     }
+
 }

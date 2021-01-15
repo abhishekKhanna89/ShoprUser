@@ -4,13 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -36,6 +40,7 @@ import com.shoppr.shoper.Model.StartChat.StartChatModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.adapter.ChatMessageAdapter;
+import com.shoppr.shoper.notifications.FirebaseMessageReceiver;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 
@@ -63,6 +68,7 @@ public class ChatActivity extends AppCompatActivity {
     int count=0;
 
     MediaRecorder mediaRecorder;
+    BroadcastReceiver reciver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +140,7 @@ public class ChatActivity extends AppCompatActivity {
                     sendMsgBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                             //Toast.makeText(ChatActivity.this, "Send", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -279,4 +286,39 @@ public class ChatActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((reciver),
+                new IntentFilter(FirebaseMessageReceiver.REQUEST_ACCEPT)
+        );
+
+        reciver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try {
+                    //String   value= intent.getStringExtra("title");
+                  Log.d("titlenew===","hello");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+    }
+
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        unregisterReceiver( reciver );
+       // LocalBroadcastManager.getInstance(this).unregisterReceiver(reciver);
+
+    }
+
+
+
+
 }

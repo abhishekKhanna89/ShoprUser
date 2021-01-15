@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.facebook.login.Login;
+import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.util.SessonManager;
 
 
@@ -28,6 +30,7 @@ public class SplashActivity extends AppCompatActivity {
                 else {
                     startActivity(new Intent(SplashActivity.this, MapsActivity.class));
                     finish();
+
                 }
 
                 // This method w

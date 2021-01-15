@@ -23,6 +23,7 @@ public class SessonManager {
     public static final String lon="lon";
     public static final String walletAmount="walletAmount";
     public static final String mobileNo="mobile";
+    public static final String chanelId="CHANEL_ID";
     public Dialog mDialog;
     public SessonManager(Context ctx) {
         sharedPreference = ctx.getSharedPreferences(NAME, Context.MODE_PRIVATE);
@@ -72,6 +73,14 @@ public class SessonManager {
 
     public String getToken() {
         return sharedPreference.getString(Token, "");
+    }
+
+    public void setChanelId(String chanelId1){
+        editor.putString(chanelId,chanelId1);
+        editor.apply();
+    }
+    public String getChanelId(){
+        return sharedPreference.getString(chanelId,"");
     }
 
     public void setWalletAmount(String walletAmount1){

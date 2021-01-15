@@ -2,16 +2,12 @@ package com.shoppr.shoper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -30,17 +26,18 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.ChatActivity;
-import com.shoppr.shoper.activity.MyAccount;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
@@ -131,6 +128,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         viewListShopr();
         myProfile();
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+            String newToken = instanceIdResult.getToken();
+            //Log.e("newToken", newToken);
+            //getActivity().getPreferences(Context.MODE_PRIVATE).edit().putString("fb", newToken).apply();
+        });
+
+        //Log.d("newToken", getActivity().getPreferences(Context.MODE_PRIVATE).getString("fb", "empty :("));
     }
 
     private void myProfile() {
@@ -292,7 +297,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }
             mMap.addMarker(new MarkerOptions().position(sydney).title(city));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+            CameraUpdate center=
+                    CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+            CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+
+            mMap.moveCamera(center);
+            mMap.animateCamera(zoom);
 
         }
         //Log.d("res","Latitude : "+location.getLatitude()+" , Longitude : "+location.getLongitude());
@@ -367,4 +379,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void chats(View view) {
         startActivity(new Intent(MapsActivity.this, ChatActivity.class));
     }
+
 }
