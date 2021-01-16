@@ -771,6 +771,9 @@ public class ChatActivity extends AppCompatActivity {
 
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer "+sessonManager.getToken());
+
+
+
             ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
             iApiServices.apiAudioSend(headers,id,partMap)
                     .enqueue(new Callback<SendModel>() {
