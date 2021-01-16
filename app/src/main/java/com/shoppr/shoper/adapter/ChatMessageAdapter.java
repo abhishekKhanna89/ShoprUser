@@ -2,7 +2,10 @@
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -24,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatRatingBar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -77,7 +81,8 @@ import static android.os.FileUtils.copy;
     private int SELF = 1;
     View itemView;
     SessonManager sessonManager;
-
+     BroadcastReceiver mMessageReceiver;
+     String title,body;
     public ChatMessageAdapter(Context context,List<Chat>chatList){
         this.context=context;
         this.chatList=chatList;
@@ -109,6 +114,26 @@ import static android.os.FileUtils.copy;
     public void onBindViewHolder(@NonNull Holder holder, int position) {
        Chat chat=chatList.get(position);
        sessonManager=new SessonManager(context);
+        recycle();
+        mMessageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getStringExtra("title")!=null||intent.getStringExtra("body")!=null){
+                    holder.textLayout.setVisibility(View.VISIBLE);
+                    title=intent.getStringExtra("title");
+                     body=intent.getStringExtra("body");
+                     holder.message_body.setText(title+"\t"+body);
+                   // Toast.makeText(context, "Title:- "+title+" Body:- "+body, Toast.LENGTH_SHORT).show();
+                }else {
+                    holder.textLayout.setVisibility(View.GONE);
+                }
+            }
+        };
+        IntentFilter i = new IntentFilter();
+        i.addAction("message_subject_intent");
+        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,new IntentFilter(i));
+
+
        if (chat.getType().equalsIgnoreCase("image")){
            Picasso.get().load(chat.getFilePath()).into(holder.image);
            //Glide.with(context).load(chat.getFilePath()).into(holder.image);
@@ -440,6 +465,12 @@ import static android.os.FileUtils.copy;
         }
 
 
+     }
+     public void recycle() {
+         unregisterNotifications();
+     }
+     private void unregisterNotifications() {
+         LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
      }
 
 }

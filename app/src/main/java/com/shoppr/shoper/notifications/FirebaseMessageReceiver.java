@@ -16,17 +16,14 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.activity.ChatActivity;
+import com.shoppr.shoper.util.SessonManager;
 
 public class FirebaseMessageReceiver extends FirebaseMessagingService {
-
-    public static final String REQUEST_ACCEPT = "1";
-    // Override onMessageReceived() method to extract the
-    // title and
-    // body from the message passed in FCM
-    LocalBroadcastManager broadcaster;
+    SessonManager sessonManager;
     @Override
     public void
     onMessageReceived(RemoteMessage remoteMessage) {
+        sessonManager=new SessonManager(this);
         // First case when notifications are received via
         // data event
         // Here, 'title' and 'message' are the assumed names
@@ -49,14 +46,10 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                     remoteMessage.getNotification().getTitle(),
                     remoteMessage.getNotification().getBody());
 
-         //   broadcaster = LocalBroadcastManager.getInstance(getBaseContext());
-
-            Intent intent = new Intent(REQUEST_ACCEPT);
+            Intent intent = new Intent("message_subject_intent");
             intent.putExtra("title", remoteMessage.getNotification().getTitle() );
             intent.putExtra("body", remoteMessage.getNotification().getBody());
-        //    broadcaster.sendBroadcast(intent);
-
-            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         }
     }
@@ -78,7 +71,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     // Method to display the notifications
     public void showNotification(String title,
                                  String message) {
-        Log.d("title",title);
+        //Log.d("title",title);
         // Pass the intent to switch to the MainActivity
         Intent intent
                 = new Intent(this, ChatActivity.class);

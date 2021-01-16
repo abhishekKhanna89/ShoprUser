@@ -176,7 +176,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             partMap.put("email", ApiFactory.getRequestBodyFromString(editEmail.getText().toString()));
 
             MultipartBody.Part[] imageArray1 = new MultipartBody.Part[imagePathList.size()];
-            Log.d("arrayLis",""+imageArray1);
+            //Log.d("arrayLis",""+imageArray1);
 
             for (int i = 0; i < imageArray1.length; i++) {
                 File file = new File(imagePathList.get(i));
