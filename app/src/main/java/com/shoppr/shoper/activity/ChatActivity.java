@@ -60,6 +60,7 @@ import com.shoppr.shoper.util.SessonManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -111,6 +112,7 @@ public class ChatActivity extends AppCompatActivity {
     private MediaRecorder mediaRecorder;
     private String recordFile;
     private Chronometer timer;
+    MultipartBody.Part[] audioPart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +163,30 @@ public class ChatActivity extends AppCompatActivity {
         i.addAction("message_subject_intent");
         LocalBroadcastManager.getInstance(ChatActivity.this).registerReceiver(mMessageReceiver,new IntentFilter(i));
 
+        sendMsgBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                if(isRecording) {
+                    //Stop Recording
+                    stopRecording();
+
+                    // Change button image and set Recording state to false
+                    sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
+                    //sendMsgBtn.setImageDrawable();
+                    isRecording = false;
+                } else {
+                    //Check permission to record audio
+                    if(checkPermissions()) {
+                        //Start Recording
+                        startRecording();
+                        // Change button image and set Recording state to false
+                        sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_recording, null));
+                        isRecording = true;
+                    }
+                }
+            }
+        });
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -172,30 +198,6 @@ public class ChatActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 0) {
                     sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
-                    sendMsgBtn.setOnClickListener(new View.OnClickListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.O)
-                        @Override
-                        public void onClick(View v) {
-                            if(isRecording) {
-                                //Stop Recording
-                                stopRecording();
-                                // Change button image and set Recording state to false
-                                sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
-                                //sendMsgBtn.setImageDrawable();
-                                isRecording = false;
-                            } else {
-                                //Check permission to record audio
-                                if(checkPermissions()) {
-                                    //Start Recording
-                                    startRecording();
-
-                                    // Change button image and set Recording state to false
-                                    sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_recording, null));
-                                    isRecording = true;
-                                }
-                            }
-                        }
-                    });
                     // is only executed if the EditText was directly changed by the user
                 } else {
                     sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.send));
@@ -516,32 +518,6 @@ public class ChatActivity extends AppCompatActivity {
                     sessonManager.hideProgress();
                 }
             });
-
-
-            /*ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
-            iApiServices.apiUpdateProfile(headers,imageArray1,partMap)
-                    .enqueue(new Callback<JsonObject>() {
-                        @Override
-                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            sessonManager.hideProgress();
-                            JsonObject jsonObject = response.body();
-                            String code = jsonObject.get("status").getAsString();
-                            if (code.equals("success")) {
-                                Toast.makeText(UpdateProfileActivity.this, "Profile update successfully", Toast.LENGTH_SHORT).show();
-                                Intent intent=new Intent(UpdateProfileActivity.this,MyAccount.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                            } else {
-                                String msg = jsonObject.get("message").getAsString();
-                                Toast.makeText(UpdateProfileActivity.this, msg, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<JsonObject> call, Throwable t) {
-                            sessonManager.hideProgress();
-                        }
-                    });*/
         }else {
             CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
         }
@@ -761,21 +737,20 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void audioService(String recordFile) {
+
         //Log.d("audioPath",recordFile);
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
             HashMap<String, RequestBody> partMap = new HashMap<>();
             partMap.put("type", ApiFactory.getRequestBodyFromString("audio"));
-            partMap.put("file",ApiFactory.getRequestBodyFromString(recordFile));
-
+            File file = new File(recordFile);
+            String mimeType= URLConnection.guessContentTypeFromName(file.getName());
+            RequestBody requestFile = RequestBody.create(MediaType.parse("audio/*"), file);
 
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer "+sessonManager.getToken());
-
-
-
             ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
-            iApiServices.apiAudioSend(headers,id,partMap)
+            iApiServices.apiAudioSend(headers,id,requestFile,partMap)
                     .enqueue(new Callback<SendModel>() {
                         @Override
                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
@@ -792,6 +767,7 @@ public class ChatActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<SendModel> call, Throwable t) {
+                            Toast.makeText(ChatActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
                             sessonManager.hideProgress();
                         }
                     });
@@ -814,7 +790,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //initialize filename variable with date and time at the end to ensure the new file wont overwrite previous file
         recordFile = "Recording_" + formatter.format(now) + ".3gp";
-        audioPathList.add(recordFile);
+
         //filenameText.setText("Recording, File Name : " + recordFile);
 
         //Setup Media Recorder for recording

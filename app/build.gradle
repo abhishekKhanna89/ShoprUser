@@ -54,6 +54,7 @@ dependencies {
     implementation  'com.razorpay:checkout:1.5.12'
     implementation 'id.zelory:compressor:2.1.0'
 
+
     /*Todo:- ChatVoicePlayer*/
     implementation 'com.github.JagarYousef:ChatVoicePlayer:1.0.7'
 

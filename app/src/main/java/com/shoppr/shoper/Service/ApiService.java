@@ -118,6 +118,6 @@ public interface ApiService {
 
     @Multipart
     @POST("send-message/{chat_id}")
-    Call<SendModel>apiAudioSend(@HeaderMap Map<String, String> token, @Path("chat_id")int chat_id, @PartMap() Map<String, RequestBody> partMap);
+    Call<SendModel>apiAudioSend(@HeaderMap Map<String, String> token, @Path("chat_id")int chat_id,@Part("file") RequestBody song, @PartMap() Map<String, RequestBody> partMap);
 
 }
