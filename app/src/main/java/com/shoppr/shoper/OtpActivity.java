@@ -38,11 +38,11 @@ public class OtpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(editusername.getText().toString().isEmpty()){
-                    editusername.setError("Mobile Field Can't be blank");
+                    editusername.setError("OTP Field Can't be blank");
                     editusername.requestFocus();
                 }
                 else if(editusername.getText().toString().length()!=6){
-                    editusername.setError("Mobile No. should be 10 digit");
+                    editusername.setError("OTP should be 6 digit");
                     editusername.requestFocus();
                 }
                 else {

@@ -112,8 +112,6 @@ public class ChatActivity extends AppCompatActivity {
     private MediaRecorder mediaRecorder;
     private String recordFile;
     private Chronometer timer;
-    MultipartBody.Part[] audioPart;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -329,7 +327,7 @@ public class ChatActivity extends AppCompatActivity {
                                 id=startChatModel.getData().getId();
 
                                 // open when needed
-                               // chatMessageList(id);
+                               chatMessageList(id);
                             }
                         }
                     }
@@ -349,7 +347,7 @@ public class ChatActivity extends AppCompatActivity {
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
             Call<ChatMessageModel>call=ApiExecutor.getApiService(this)
-                    .apiChatMessage("Bearer "+sessonManager.getToken(),5);
+                    .apiChatMessage("Bearer "+sessonManager.getToken(),424);
             call.enqueue(new Callback<ChatMessageModel>() {
                 @Override
                 public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
@@ -725,32 +723,37 @@ public class ChatActivity extends AppCompatActivity {
     private void stopRecording() {
         //Stop Timer, very obvious
         timer.stop();
-
-        audioService(recordFile);
         //Change text on page to file saved
         //filenameText.setText("Recording Stopped, File Saved : " + recordFile);
-
+        audioService(recordFile);
         //Stop media recorder and set it to null for further use to record new audio
         mediaRecorder.stop();
         mediaRecorder.release();
         mediaRecorder = null;
+
     }
 
     private void audioService(String recordFile) {
-
         //Log.d("audioPath",recordFile);
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
             HashMap<String, RequestBody> partMap = new HashMap<>();
             partMap.put("type", ApiFactory.getRequestBodyFromString("audio"));
-            File file = new File(recordFile);
-            String mimeType= URLConnection.guessContentTypeFromName(file.getName());
-            RequestBody requestFile = RequestBody.create(MediaType.parse("audio/*"), file);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("audio/*"), recordFile);
+            // MultipartBody.Part is used to send also the actual file name
+            MultipartBody.Part body =
+                    MultipartBody.Part.createFormData("file", recordFile, requestFile);
+            String descriptionString = "hello, this is description speaking";
+            RequestBody description =
+                    RequestBody.create(
+                            okhttp3.MultipartBody.FORM, descriptionString);
+
+
 
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer "+sessonManager.getToken());
             ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
-            iApiServices.apiAudioSend(headers,id,requestFile,partMap)
+            iApiServices.apiAudioSend(headers,id,body,partMap)
                     .enqueue(new Callback<SendModel>() {
                         @Override
                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
