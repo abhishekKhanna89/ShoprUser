@@ -90,7 +90,6 @@ import static android.os.FileUtils.copy;
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         //if view type is self
         if (viewType == SELF) {
             //Inflating the layout self
@@ -101,9 +100,6 @@ import static android.os.FileUtils.copy;
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_layout, parent, false);
         }
-
-
-
         //returing the view
         return new Holder(itemView);
     }
@@ -380,7 +376,9 @@ import static android.os.FileUtils.copy;
 
      @Override
     public int getItemCount() {
-        return chatList.size();
+         if (chatList != null) {
+             return chatList.size();
+         } else return 0;
     }
      public void refreshEvents(List<Chat> events) {
          this.chatList.clear();

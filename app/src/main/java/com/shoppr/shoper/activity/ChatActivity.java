@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -80,9 +81,10 @@ import retrofit2.Response;
 import static android.media.MediaRecorder.VideoSource.CAMERA;
 
 public class ChatActivity extends AppCompatActivity {
+
+    int id;
     RecyclerView chatRecyclerView;
     SessonManager sessonManager;
-    int id;
     List<Chat> chatList;
     EditText editText;
     ImageView sendMsgBtn,chooseImage;
@@ -98,7 +100,6 @@ public class ChatActivity extends AppCompatActivity {
     Uri photoUri;
     String mCurrentMPath;
     ArrayList<String> imagePathList = new ArrayList<>();
-    ArrayList<String>audioPathList=new ArrayList<>();
     Bitmap bitmap = null;
     private String photoPath;
     String imageEncoded;
@@ -112,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
     private MediaRecorder mediaRecorder;
     private String recordFile;
     private Chronometer timer;
+    String pathforaudio;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,7 +144,8 @@ public class ChatActivity extends AppCompatActivity {
                 if (intent.getStringExtra("title")!=null||intent.getStringExtra("body")!=null){
                     String title=intent.getStringExtra("title");
                     body=intent.getStringExtra("body");
-// Create the initial data list.
+                    chatMessageList1();
+/*// Create the initial data list.
                     // msgDtoList = new ArrayList<ChatModel>();
                     ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_RECEIVED, body);
                     msgDtoList.add(msgDto);
@@ -153,7 +156,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     // Set data adapter to RecyclerView.
                     chatRecyclerView.setAdapter(chatAppMsgAdapter);
-                    //Toast.makeText(ChatActivity.this, "Title:- "+title+" Body:- "+body, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ChatActivity.this, "Title:- "+title+" Body:- "+body, Toast.LENGTH_SHORT).show();*/
                 }
             }
         };
@@ -168,7 +171,6 @@ public class ChatActivity extends AppCompatActivity {
                 if(isRecording) {
                     //Stop Recording
                     stopRecording();
-
                     // Change button image and set Recording state to false
                     sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
                     //sendMsgBtn.setImageDrawable();
@@ -207,35 +209,36 @@ public class ChatActivity extends AppCompatActivity {
                             {
 
                                 if (CommonUtils.isOnline(ChatActivity.this)) {
-                                    sessonManager.showProgress(ChatActivity.this);
+                                    //sessonManager.showProgress(ChatActivity.this);
                                     TextTypeRequest textTypeRequest=new TextTypeRequest();
                                     textTypeRequest.setType("text");
                                     textTypeRequest.setMessage(msgContent);
                                     Call<SendModel>call=ApiExecutor.getApiService(ChatActivity.this)
-                                            .apiSend("Bearer "+sessonManager.getToken(),id,textTypeRequest);
+                                            .apiSend("Bearer "+sessonManager.getToken(),2,textTypeRequest);
                                     call.enqueue(new Callback<SendModel>() {
                                         @Override
                                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
-                                            sessonManager.hideProgress();
+                                            //sessonManager.hideProgress();
                                             if (response.body()!=null) {
                                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                                    Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                                    chatMessageList1();
+                                                    //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                                 }else {
-                                                    Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                                    //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
 
                                         @Override
                                         public void onFailure(Call<SendModel> call, Throwable t) {
-                                            sessonManager.hideProgress();
+                                            //sessonManager.hideProgress();
                                         }
                                     });
                                 }else {
                                     CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
                                 }
                                 // Add a new sent message to the list.
-                                ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_SENT, msgContent);
+                                /*ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_SENT, msgContent);
                                 msgDtoList.add(msgDto);
 
                                 chatAppMsgAdapter = new ChatAppMsgAdapter(msgDtoList);
@@ -248,7 +251,7 @@ public class ChatActivity extends AppCompatActivity {
                                 chatAppMsgAdapter.notifyItemInserted(newMsgPosition);
 
                                 // Scroll RecyclerView to the last message.
-                                chatRecyclerView.scrollToPosition(newMsgPosition);
+                                chatRecyclerView.scrollToPosition(newMsgPosition);*/
 
                                 // Empty the input edit text box.
                                 editText.setText("");
@@ -267,7 +270,43 @@ public class ChatActivity extends AppCompatActivity {
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView);
         chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-        viewStartChat();
+        chatRecyclerView.setHasFixedSize(true);
+        chatRecyclerView.setItemViewCacheSize(20);
+        chatRecyclerView.setDrawingCacheEnabled(true);
+        chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        chatRecyclerView.setNestedScrollingEnabled(false);
+
+        //viewStartChat();
+        chatMessageList();
+    }
+
+    private void chatMessageList1() {
+        Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),2);
+        call.enqueue(new Callback<ChatMessageModel>() {
+            @Override
+            public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
+                //sessonManager.hideProgress();
+                if (response.body()!=null) {
+                    if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                        ChatMessageModel chatMessageModel=response.body();
+                        if (chatMessageModel.getData()!=null){
+                            chatList=chatMessageModel.getData().getChats();
+                            ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
+                            chatRecyclerView.setAdapter(chatMessageAdapter);
+                            chatRecyclerView.scrollToPosition(chatList.size()-1);
+                            chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount());
+                            //chatRecyclerView.getLayoutManager().scrollToPosition(chatList.size()-1);
+                            chatMessageAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChatMessageModel> call, Throwable t) {
+
+            }
+        });
     }
 
     private void startDialog() {
@@ -327,7 +366,7 @@ public class ChatActivity extends AppCompatActivity {
                                 id=startChatModel.getData().getId();
 
                                 // open when needed
-                               chatMessageList(id);
+                               chatMessageList();
                             }
                         }
                     }
@@ -343,11 +382,10 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void chatMessageList(int id) {
+    private void chatMessageList() {
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
-            Call<ChatMessageModel>call=ApiExecutor.getApiService(this)
-                    .apiChatMessage("Bearer "+sessonManager.getToken(),424);
+            Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),2);
             call.enqueue(new Callback<ChatMessageModel>() {
                 @Override
                 public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
@@ -359,6 +397,7 @@ public class ChatActivity extends AppCompatActivity {
                                 chatList=chatMessageModel.getData().getChats();
                                 ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
                                 chatRecyclerView.setAdapter(chatMessageAdapter);
+                                chatRecyclerView.getLayoutManager().scrollToPosition(chatList.size()-1);
                                 chatMessageAdapter.notifyDataSetChanged();
                             }
                         }
@@ -367,7 +406,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ChatMessageModel> call, Throwable t) {
-
+                    sessonManager.showProgress(ChatActivity.this);
                 }
             });
 
@@ -475,7 +514,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void ProfileUpdateAPI() {
         if (CommonUtils.isOnline(ChatActivity.this)) {
-            sessonManager.showProgress(ChatActivity.this);
+            //sessonManager.showProgress(ChatActivity.this);
             HashMap<String, RequestBody> partMap = new HashMap<>();
             partMap.put("type", ApiFactory.getRequestBodyFromString("image"));
             MultipartBody.Part[] imageArray1 = new MultipartBody.Part[imagePathList.size()];
@@ -496,24 +535,25 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer "+sessonManager.getToken());
             ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
-            iApiServices.apiImageSend(headers,id,imageArray1,partMap)
+            iApiServices.apiImageSend(headers,2,imageArray1,partMap)
             .enqueue(new Callback<SendModel>() {
                 @Override
                 public void onResponse(Call<SendModel> call, Response<SendModel> response) {
-                    sessonManager.hideProgress();
+                    //sessonManager.hideProgress();
                    // Log.d("res",response.message());
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            chatMessageList1();
+                            //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                         }else {
-                            Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<SendModel> call, Throwable t) {
-                    sessonManager.hideProgress();
+                    //sessonManager.hideProgress();
                 }
             });
         }else {
@@ -725,53 +765,53 @@ public class ChatActivity extends AppCompatActivity {
         timer.stop();
         //Change text on page to file saved
         //filenameText.setText("Recording Stopped, File Saved : " + recordFile);
-        audioService(recordFile);
         //Stop media recorder and set it to null for further use to record new audio
         mediaRecorder.stop();
         mediaRecorder.release();
         mediaRecorder = null;
 
-    }
+        uploadFile();
 
-    private void audioService(String recordFile) {
-        //Log.d("audioPath",recordFile);
+
+    }
+    private void uploadFile() {
         if (CommonUtils.isOnline(ChatActivity.this)) {
-            sessonManager.showProgress(ChatActivity.this);
+            //sessonManager.showProgress(ChatActivity.this);
+            File file = new File(pathforaudio);
+
+            // Parsing any Media type file
+            RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+            MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+            //RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+
+            ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
+
+            //Call call = getResponse.uploadFile(fileToUpload, filename);
             HashMap<String, RequestBody> partMap = new HashMap<>();
             partMap.put("type", ApiFactory.getRequestBodyFromString("audio"));
-            RequestBody requestFile = RequestBody.create(MediaType.parse("audio/*"), recordFile);
-            // MultipartBody.Part is used to send also the actual file name
-            MultipartBody.Part body =
-                    MultipartBody.Part.createFormData("file", recordFile, requestFile);
-            String descriptionString = "hello, this is description speaking";
-            RequestBody description =
-                    RequestBody.create(
-                            okhttp3.MultipartBody.FORM, descriptionString);
-
-
-
             Map<String, String> headers = new HashMap<>();
-            headers.put("Authorization", "Bearer "+sessonManager.getToken());
-            ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
-            iApiServices.apiAudioSend(headers,id,body,partMap)
+            headers.put("Authorization", "Bearer " + sessonManager.getToken());
+
+            iApiServices.apiAudioSend(headers, 2, fileToUpload, partMap)
                     .enqueue(new Callback<SendModel>() {
                         @Override
                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
-                            sessonManager.hideProgress();
-                            // Log.d("res",response.message());
-                            if (response.body()!=null) {
-                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
-                                }else {
-                                    Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            //sessonManager.hideProgress();
+                            if (response.body() != null) {
+                                if (response.body().getStatus() != null && response.body().getStatus().equalsIgnoreCase("success")) {
+                                    timer.setVisibility(View.GONE);
+                                    timer.stop();
+                                    chatMessageList1();
+                                    Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
 
                         @Override
                         public void onFailure(Call<SendModel> call, Throwable t) {
-                            Toast.makeText(ChatActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
-                            sessonManager.hideProgress();
+                            //sessonManager.hideProgress();
                         }
                     });
         }else {
@@ -779,8 +819,11 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void startRecording() {
         //Start timer from 0
+        timer.setVisibility(View.VISIBLE);
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
 
@@ -801,6 +844,12 @@ public class ChatActivity extends AppCompatActivity {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setOutputFile(recordPath + "/" + recordFile);
+
+
+
+        pathforaudio=recordPath + "/" + recordFile;
+
+        Log.d("recordpath====",recordPath + "/" + recordFile);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {
