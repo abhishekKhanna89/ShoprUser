@@ -28,7 +28,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -61,7 +60,6 @@ import com.shoppr.shoper.util.SessonManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -144,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (intent.getStringExtra("title")!=null||intent.getStringExtra("body")!=null){
                     String title=intent.getStringExtra("title");
                     body=intent.getStringExtra("body");
-                    chatMessageList1();
+                    chatMessageList1(id);
 /*// Create the initial data list.
                     // msgDtoList = new ArrayList<ChatModel>();
                     ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_RECEIVED, body);
@@ -214,14 +212,14 @@ public class ChatActivity extends AppCompatActivity {
                                     textTypeRequest.setType("text");
                                     textTypeRequest.setMessage(msgContent);
                                     Call<SendModel>call=ApiExecutor.getApiService(ChatActivity.this)
-                                            .apiSend("Bearer "+sessonManager.getToken(),2,textTypeRequest);
+                                            .apiSend("Bearer "+sessonManager.getToken(),id,textTypeRequest);
                                     call.enqueue(new Callback<SendModel>() {
                                         @Override
                                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
                                             //sessonManager.hideProgress();
                                             if (response.body()!=null) {
                                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                                    chatMessageList1();
+                                                    chatMessageList1(id);
                                                     //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                                 }else {
                                                     //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
@@ -276,12 +274,12 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
-        //viewStartChat();
-        chatMessageList();
+        viewStartChat();
+        //chatMessageList();
     }
 
-    private void chatMessageList1() {
-        Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),2);
+    private void chatMessageList1(int id) {
+        Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),id);
         call.enqueue(new Callback<ChatMessageModel>() {
             @Override
             public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
@@ -364,9 +362,7 @@ public class ChatActivity extends AppCompatActivity {
                             StartChatModel startChatModel=response.body();
                             if (startChatModel.getData()!=null){
                                 id=startChatModel.getData().getId();
-
-                                // open when needed
-                               chatMessageList();
+                               chatMessageList(id);
                             }
                         }
                     }
@@ -382,10 +378,10 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void chatMessageList() {
+    private void chatMessageList(int id) {
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
-            Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),2);
+            Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),id);
             call.enqueue(new Callback<ChatMessageModel>() {
                 @Override
                 public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
@@ -535,7 +531,7 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer "+sessonManager.getToken());
             ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
-            iApiServices.apiImageSend(headers,2,imageArray1,partMap)
+            iApiServices.apiImageSend(headers,id,imageArray1,partMap)
             .enqueue(new Callback<SendModel>() {
                 @Override
                 public void onResponse(Call<SendModel> call, Response<SendModel> response) {
@@ -543,7 +539,7 @@ public class ChatActivity extends AppCompatActivity {
                    // Log.d("res",response.message());
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            chatMessageList1();
+                            chatMessageList1(id);
                             //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                         }else {
                            // Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
@@ -792,7 +788,7 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer " + sessonManager.getToken());
 
-            iApiServices.apiAudioSend(headers, 2, fileToUpload, partMap)
+            iApiServices.apiAudioSend(headers, id, fileToUpload, partMap)
                     .enqueue(new Callback<SendModel>() {
                         @Override
                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
@@ -801,7 +797,7 @@ public class ChatActivity extends AppCompatActivity {
                                 if (response.body().getStatus() != null && response.body().getStatus().equalsIgnoreCase("success")) {
                                     timer.setVisibility(View.GONE);
                                     timer.stop();
-                                    chatMessageList1();
+                                    chatMessageList1(id);
                                     Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();

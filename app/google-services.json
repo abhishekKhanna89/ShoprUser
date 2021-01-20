@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "718728144019",
-    "project_id": "shoppr-b701d",
-    "storage_bucket": "shoppr-b701d.appspot.com"
+    "project_number": "279884695916",
+    "project_id": "mytestproject-1326f",
+    "storage_bucket": "mytestproject-1326f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:718728144019:android:0886591caf6e8ecb4a1966",
+        "mobilesdk_app_id": "1:279884695916:android:6260fd91c96e0bbaa64b49",
         "android_client_info": {
           "package_name": "com.shoppr.shoper"
         }
       },
       "oauth_client": [
         {
-          "client_id": "718728144019-q69oid75c3idgkdl41g20n6g5kh06a38.apps.googleusercontent.com",
+          "client_id": "279884695916-r8pfinaor9tv0fbei6r8jj823smjtov3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.shoppr.shoper",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "718728144019-bl3l11can6pm258g62n2rqsn0msqnqk4.apps.googleusercontent.com",
+          "client_id": "279884695916-q2h3v3oadet530k27lklr8sqvt0l5j67.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBXig7qAiWCHlJaYve_nzpDSBLvPXIV2Vg"
+          "current_key": "AIzaSyCyRTUDCsEUPAYV23hUvOV0CZrVOPRok2Y"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "718728144019-bl3l11can6pm258g62n2rqsn0msqnqk4.apps.googleusercontent.com",
+              "client_id": "279884695916-q2h3v3oadet530k27lklr8sqvt0l5j67.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

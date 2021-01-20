@@ -1,7 +1,7 @@
 package com.shoppr.shoper.requestdata;
 
 public class OtpVerifyRequest {
-    String mobile,otp,type;
+    String mobile,otp,type,notification_token;
 
     public String getMobile() {
         return mobile;
@@ -25,5 +25,13 @@ public class OtpVerifyRequest {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getNotification_token() {
+        return notification_token;
+    }
+
+    public void setNotification_token(String notification_token) {
+        this.notification_token = notification_token;
     }
 }

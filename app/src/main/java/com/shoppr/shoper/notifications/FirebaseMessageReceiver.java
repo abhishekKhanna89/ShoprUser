@@ -5,6 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -20,6 +23,7 @@ import com.shoppr.shoper.util.SessonManager;
 
 public class FirebaseMessageReceiver extends FirebaseMessagingService {
     SessonManager sessonManager;
+    Uri notification;
     @Override
     public void
     onMessageReceived(RemoteMessage remoteMessage) {
@@ -64,7 +68,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         remoteViews.setTextViewText(R.id.title, title);
         remoteViews.setTextViewText(R.id.message, message);
         remoteViews.setImageViewResource(R.id.icon,
-                R.drawable.shopr);
+                R.mipmap.ic_launcher);
         return remoteViews;
     }
 
@@ -90,16 +94,28 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 
         // Create a Builder object using NotificationCompat
         // class. This will allow control over all the flags
+
+        try {
+            notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         NotificationCompat.Builder builder
                 = new NotificationCompat
                 .Builder(getApplicationContext(),
                 channel_id)
-                .setSmallIcon(R.drawable.shopr)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
                 .setVibrate(new long[]{1000, 1000, 1000,
                         1000, 1000})
                 .setOnlyAlertOnce(true)
+                .setSound(notification)
                 .setContentIntent(pendingIntent);
+
+
 
         // A customized design for the notification can be
         // set only for Android versions 4.1 and above. Thus
