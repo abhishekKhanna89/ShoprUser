@@ -151,7 +151,7 @@ import static android.os.FileUtils.copy;
            //Glide.with(context).load(chat.getFilePath()).into(holder.productImage);
            holder.productMessage.setText(chat.getMessage());
            holder.dateProduct.setText(chat.getCreatedAt());
-           holder.pqText.setText("₹"+chat.getPrice()+"-"+chat.getQuantity());
+           holder.pqText.setText(chat.getQuantity()+" / "+"₹"+chat.getPrice());
        }else {
            holder.productLayout.setVisibility(View.GONE);
        }

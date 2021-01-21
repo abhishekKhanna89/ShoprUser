@@ -34,6 +34,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
@@ -80,7 +82,7 @@ import static android.media.MediaRecorder.VideoSource.CAMERA;
 
 public class ChatActivity extends AppCompatActivity {
 
-    int id;
+    int chat_id;
     RecyclerView chatRecyclerView;
     SessonManager sessonManager;
     List<Chat> chatList;
@@ -142,7 +144,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (intent.getStringExtra("title")!=null||intent.getStringExtra("body")!=null){
                     String title=intent.getStringExtra("title");
                     body=intent.getStringExtra("body");
-                    chatMessageList1(id);
+                    chatMessageList1(2);
 /*// Create the initial data list.
                     // msgDtoList = new ArrayList<ChatModel>();
                     ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_RECEIVED, body);
@@ -212,14 +214,14 @@ public class ChatActivity extends AppCompatActivity {
                                     textTypeRequest.setType("text");
                                     textTypeRequest.setMessage(msgContent);
                                     Call<SendModel>call=ApiExecutor.getApiService(ChatActivity.this)
-                                            .apiSend("Bearer "+sessonManager.getToken(),id,textTypeRequest);
+                                            .apiSend("Bearer "+sessonManager.getToken(),chat_id,textTypeRequest);
                                     call.enqueue(new Callback<SendModel>() {
                                         @Override
                                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
                                             //sessonManager.hideProgress();
                                             if (response.body()!=null) {
                                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                                    chatMessageList1(id);
+                                                    chatMessageList1(chat_id);
                                                     //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                                 }else {
                                                     //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
@@ -274,12 +276,12 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
-        viewStartChat();
-        //chatMessageList();
+        //viewStartChat();
+        chatMessageList(2);
     }
 
-    private void chatMessageList1(int id) {
-        Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),id);
+    private void chatMessageList1(int chat_id) {
+        Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),chat_id);
         call.enqueue(new Callback<ChatMessageModel>() {
             @Override
             public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
@@ -361,8 +363,8 @@ public class ChatActivity extends AppCompatActivity {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             StartChatModel startChatModel=response.body();
                             if (startChatModel.getData()!=null){
-                                id=startChatModel.getData().getId();
-                               chatMessageList(id);
+                                chat_id=startChatModel.getData().getId();
+                                //chatMessageList(chat_id);
                             }
                         }
                     }
@@ -378,10 +380,10 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void chatMessageList(int id) {
+    private void chatMessageList(int chat_id) {
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
-            Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),id);
+            Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),chat_id);
             call.enqueue(new Callback<ChatMessageModel>() {
                 @Override
                 public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
@@ -417,9 +419,22 @@ public class ChatActivity extends AppCompatActivity {
         int id=item.getItemId();
         if (id==android.R.id.home){
             onBackPressed();
+        }else if (id==R.id.action_cart){
+                Intent intent = new Intent(ChatActivity.this, ViewCartActivity.class);
+                intent.putExtra("chatId",chat_id);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
         }
+
         return super.onOptionsItemSelected(item);
     }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_cart, menu);
+        return true;
+    }
+
+
 
     @Override
     protected void onDestroy() {
@@ -531,7 +546,7 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer "+sessonManager.getToken());
             ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
-            iApiServices.apiImageSend(headers,id,imageArray1,partMap)
+            iApiServices.apiImageSend(headers,chat_id,imageArray1,partMap)
             .enqueue(new Callback<SendModel>() {
                 @Override
                 public void onResponse(Call<SendModel> call, Response<SendModel> response) {
@@ -539,7 +554,7 @@ public class ChatActivity extends AppCompatActivity {
                    // Log.d("res",response.message());
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            chatMessageList1(id);
+                            chatMessageList1(chat_id);
                             //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                         }else {
                            // Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
@@ -788,7 +803,7 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer " + sessonManager.getToken());
 
-            iApiServices.apiAudioSend(headers, id, fileToUpload, partMap)
+            iApiServices.apiAudioSend(headers, chat_id, fileToUpload, partMap)
                     .enqueue(new Callback<SendModel>() {
                         @Override
                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
@@ -797,7 +812,7 @@ public class ChatActivity extends AppCompatActivity {
                                 if (response.body().getStatus() != null && response.body().getStatus().equalsIgnoreCase("success")) {
                                     timer.setVisibility(View.GONE);
                                     timer.stop();
-                                    chatMessageList1(id);
+                                    chatMessageList1(chat_id);
                                     Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();

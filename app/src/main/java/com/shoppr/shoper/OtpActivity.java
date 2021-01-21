@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,6 +74,7 @@ public class OtpActivity extends AppCompatActivity {
                             Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             if((!editusername.getText().toString().isEmpty())){
                                 sessonManager.setToken(response.body().getToken());
+                                //Log.d("token",response.body().getToken());
                                 startActivity(new Intent(OtpActivity.this,MapsActivity.class)
                                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                 finish();

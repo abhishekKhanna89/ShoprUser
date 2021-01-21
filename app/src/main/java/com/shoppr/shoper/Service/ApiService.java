@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import com.google.gson.JsonObject;
 import com.shoppr.shoper.Model.AcceptModel;
 import com.shoppr.shoper.Model.CancelModel;
+import com.shoppr.shoper.Model.CartView.CartViewModel;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.CustomerBalancceModel;
 import com.shoppr.shoper.Model.LoginModel;
@@ -119,5 +120,11 @@ public interface ApiService {
     @Multipart
     @POST("send-message/{chat_id}")
     Call<SendModel>apiAudioSend(@HeaderMap Map<String, String> token, @Path("chat_id")int chat_id,@Part MultipartBody.Part file, @PartMap() Map<String, RequestBody> partMap);
+
+    @NonNull
+    @GET("cart/{chat_id}")
+    Call<CartViewModel>apiCartView(@Header("Authorization") String token,
+                                   @Path("chat_id")int chat_id);
+
 
 }
