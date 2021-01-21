@@ -64,6 +64,7 @@ public class ViewCartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_cart);
         sessonManager=new SessonManager(this);
+        progressbar = new Progressbar();
         getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "My Cart" + "</font>")));
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_arrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
