@@ -263,8 +263,8 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
-        //viewStartChat();
-        chatMessageList(2);
+        viewStartChat();
+        //chatMessageList(2);
     }
 
     private void chatMessageList1(int chat_id) {
