@@ -166,23 +166,25 @@ public class ChatActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(ChatActivity.this).registerReceiver(mMessageReceiver,new IntentFilter(i));
 
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint({"UseCompatLoadingForDrawables", "NewApi"})
+            @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onClick(View v) {
                 if(isRecording) {
                     //Stop Recording
+                    sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped));
                     stopRecording();
                     // Change button image and set Recording state to false
-                    sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
+                    //sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
                     //sendMsgBtn.setImageDrawable();
                     isRecording = false;
                 } else {
                     //Check permission to record audio
                     if(checkPermissions()) {
                         //Start Recording
+                        sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_recording));
                         startRecording();
                         // Change button image and set Recording state to false
-                        sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_recording, null));
+                        //sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_recording, null));
                         isRecording = true;
                     }
                 }
@@ -222,6 +224,7 @@ public class ChatActivity extends AppCompatActivity {
                                             //sessonManager.hideProgress();
                                             if (response.body()!=null) {
                                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                                    editText.getText().clear();
                                                     chatMessageList1(chat_id);
                                                     //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                                 }else {
@@ -260,8 +263,8 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
-        viewStartChat();
-        //chatMessageList();
+        //viewStartChat();
+        chatMessageList(2);
     }
 
     private void chatMessageList1(int chat_id) {
