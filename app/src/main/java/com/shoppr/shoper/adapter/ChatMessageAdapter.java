@@ -216,13 +216,13 @@ import static android.os.FileUtils.copy;
            @Override
            public void onClick(View v) {
                if (CommonUtils.isOnline(context)) {
-                   sessonManager.showProgress(context);
+                   //sessonManager.showProgress(context);
                    Call<AcceptModel>call= ApiExecutor.getApiService(context)
                            .apiAccept("Bearer "+sessonManager.getToken(),chat.getId());
                    call.enqueue(new Callback<AcceptModel>() {
                        @Override
                        public void onResponse(Call<AcceptModel> call, Response<AcceptModel> response) {
-                           sessonManager.hideProgress();
+                           //sessonManager.hideProgress();
                            if (response.body()!=null) {
                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                    AcceptModel acceptModel=response.body();
@@ -242,7 +242,7 @@ import static android.os.FileUtils.copy;
 
                        @Override
                        public void onFailure(Call<AcceptModel> call, Throwable t) {
-                           sessonManager.hideProgress();
+                           //sessonManager.hideProgress();
                        }
                    });
                }else
@@ -256,13 +256,13 @@ import static android.os.FileUtils.copy;
            @Override
            public void onClick(View v) {
                if (CommonUtils.isOnline(context)) {
-                   sessonManager.showProgress(context);
+                   //sessonManager.showProgress(context);
                    Call<RejectedModel>call=ApiExecutor.getApiService(context)
                            .apiRejected("Bearer "+sessonManager.getToken(),chat.getId());
                    call.enqueue(new Callback<RejectedModel>() {
                        @Override
                        public void onResponse(Call<RejectedModel> call, Response<RejectedModel> response) {
-                           sessonManager.hideProgress();
+                           //sessonManager.hideProgress();
                            if (response.body()!=null) {
                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                    RejectedModel rejectedModel=response.body();
@@ -282,7 +282,7 @@ import static android.os.FileUtils.copy;
 
                        @Override
                        public void onFailure(Call<RejectedModel> call, Throwable t) {
-                           sessonManager.hideProgress();
+                           //sessonManager.hideProgress();
                        }
                    });
                }else {
@@ -295,13 +295,13 @@ import static android.os.FileUtils.copy;
            @Override
            public void onClick(View v) {
                if (CommonUtils.isOnline(context)) {
-                   sessonManager.showProgress(context);
+                   //sessonManager.showProgress(context);
                    Call<CancelModel>call=ApiExecutor.getApiService(context)
                            .apiCancel("Bearer "+sessonManager.getToken(),chat.getId());
                    call.enqueue(new Callback<CancelModel>() {
                        @Override
                        public void onResponse(Call<CancelModel> call, Response<CancelModel> response) {
-                           sessonManager.hideProgress();
+                           //sessonManager.hideProgress();
                            if (response.body()!=null) {
                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                    CancelModel cancelModel=response.body();
@@ -321,7 +321,7 @@ import static android.os.FileUtils.copy;
 
                        @Override
                        public void onFailure(Call<CancelModel> call, Throwable t) {
-                           sessonManager.hideProgress();
+                           //sessonManager.hideProgress();
                        }
                    });
                }else {
@@ -338,7 +338,7 @@ import static android.os.FileUtils.copy;
                 b=(int)a;
                 String ratingValue=String.valueOf(b);
                 if (CommonUtils.isOnline(context)) {
-                    sessonManager.showProgress(context);
+                    //sessonManager.showProgress(context);
                     RatingsRequest ratingsRequest=new RatingsRequest();
                     ratingsRequest.setRatings(ratingValue);
                     Call<RatingsModel>call=ApiExecutor.getApiService(context)
@@ -346,7 +346,7 @@ import static android.os.FileUtils.copy;
                     call.enqueue(new Callback<RatingsModel>() {
                         @Override
                         public void onResponse(Call<RatingsModel> call, Response<RatingsModel> response) {
-                            sessonManager.hideProgress();
+                            //sessonManager.hideProgress();
                             //Log.d("response",response.body().getStatus());
                             if (response.body()!=null) {
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
@@ -361,7 +361,7 @@ import static android.os.FileUtils.copy;
 
                         @Override
                         public void onFailure(Call<RatingsModel> call, Throwable t) {
-                            sessonManager.hideProgress();
+                            //sessonManager.hideProgress();
                         }
                     });
                 }else {

@@ -129,12 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         viewListShopr();
         myProfile();
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            sessonManager.setNotificationToken(newToken);
-            //Log.e("newToken", newToken);
-            //getActivity().getPreferences(Context.MODE_PRIVATE).edit().putString("fb", newToken).apply();
-        });
+
 
         //Log.d("newToken", getActivity().getPreferences(Context.MODE_PRIVATE).getString("fb", "empty :("));
     }

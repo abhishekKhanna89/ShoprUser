@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -144,7 +145,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (intent.getStringExtra("title")!=null||intent.getStringExtra("body")!=null){
                     String title=intent.getStringExtra("title");
                     body=intent.getStringExtra("body");
-                    chatMessageList1(2);
+                    chatMessageList1(chat_id);
 /*// Create the initial data list.
                     // msgDtoList = new ArrayList<ChatModel>();
                     ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_RECEIVED, body);
@@ -165,7 +166,7 @@ public class ChatActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(ChatActivity.this).registerReceiver(mMessageReceiver,new IntentFilter(i));
 
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint({"UseCompatLoadingForDrawables", "NewApi"})
             @Override
             public void onClick(View v) {
                 if(isRecording) {
@@ -237,24 +238,7 @@ public class ChatActivity extends AppCompatActivity {
                                 }else {
                                     CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
                                 }
-                                // Add a new sent message to the list.
-                                /*ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_SENT, msgContent);
-                                msgDtoList.add(msgDto);
 
-                                chatAppMsgAdapter = new ChatAppMsgAdapter(msgDtoList);
-
-                                // Set data adapter to RecyclerView.
-                                chatRecyclerView.setAdapter(chatAppMsgAdapter);
-                                int newMsgPosition = msgDtoList.size() - 1;
-
-                                // Notify recycler view insert one new data.
-                                chatAppMsgAdapter.notifyItemInserted(newMsgPosition);
-
-                                // Scroll RecyclerView to the last message.
-                                chatRecyclerView.scrollToPosition(newMsgPosition);*/
-
-                                // Empty the input edit text box.
-                                editText.setText("");
                             }
                         }
                     });
@@ -276,8 +260,8 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
-        //viewStartChat();
-        chatMessageList(2);
+        viewStartChat();
+        //chatMessageList();
     }
 
     private void chatMessageList1(int chat_id) {
@@ -364,7 +348,7 @@ public class ChatActivity extends AppCompatActivity {
                             StartChatModel startChatModel=response.body();
                             if (startChatModel.getData()!=null){
                                 chat_id=startChatModel.getData().getId();
-                                //chatMessageList(chat_id);
+                                chatMessageList(chat_id);
                             }
                         }
                     }
