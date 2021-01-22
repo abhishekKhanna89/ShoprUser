@@ -27,6 +27,7 @@ import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
 import com.shoppr.shoper.requestdata.RatingsRequest;
 import com.shoppr.shoper.requestdata.RechargeRequest;
+import com.shoppr.shoper.requestdata.ShareLocationRequest;
 import com.shoppr.shoper.requestdata.TextTypeRequest;
 import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
 
@@ -131,6 +132,10 @@ public interface ApiService {
     @GET("cart-cancel/{message_id}")
     Call<CartCancelModel>apiCartCancel(@Header("Authorization") String token,
                                        @Path("message_id")int chat_id);
+
+    @POST("send-message/{chat_id}")
+    Call<SendModel>apiShareLocation(@Header("Authorization") String token,
+                           @Path("chat_id")int chat_id, @Body ShareLocationRequest shareLocationRequest);
 
 
 }

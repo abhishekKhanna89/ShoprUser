@@ -12,5 +12,6 @@
     <string name="please_check_network">Please check your internet connection</string>
     <string name="loading">loading...</string>
     <string name="slide_to_cancel">"Slide to cancel"</string>
+    <string name="your_string_here"><u>Send location and address.</u></string>
 
 </resources>

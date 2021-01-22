@@ -41,6 +41,12 @@ public class Chat {
     @SerializedName("deleted_at")
     @Expose
     private Object deletedAt;
+    @SerializedName("lat")
+    @Expose
+    private String lat;
+    @SerializedName("lang")
+    @Expose
+    private String lang;
 
     public Integer getId() {
         return id;
@@ -138,4 +144,19 @@ public class Chat {
         this.deletedAt = deletedAt;
     }
 
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getLang() {
+        return lang;
+    }
 }

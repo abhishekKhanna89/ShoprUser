@@ -89,7 +89,8 @@ public class MyAccount extends AppCompatActivity {
     private void myProfile() {
         if (CommonUtils.isOnline(MyAccount.this)){
             sessonManager.showProgress(MyAccount.this);
-            Call<MyProfileModel> call = ApiExecutor.getApiService(this).apiMyProfile("Bearer "+sessonManager.getToken());
+            Call<MyProfileModel> call = ApiExecutor.getApiService(this).
+                    apiMyProfile("Bearer "+sessonManager.getToken());
             call.enqueue(new Callback<MyProfileModel>() {
                 @Override
                 public void onResponse(Call<MyProfileModel> call, Response<MyProfileModel> response) {

@@ -305,5 +305,68 @@
                     android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
+        <!--Todo:- Address Type-->
+        <LinearLayout
+            android:id="@+id/addressLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="#e0ffc6"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/addressText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:text="Please share your delivery address\nAnd share the location on the map."
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/addressLinkText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:text="@string/your_string_here"
+                android:textColor="@android:color/holo_blue_dark" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginRight="5dp"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/addressDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="11:00 AM"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
+        <!--Todo:- Track Location Type-->
+        <LinearLayout
+            android:id="@+id/trackLocationLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="#e0ffc6"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/trackLocationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:gravity="top|left"
+                android:textSize="16sp"
+                android:lines="3"
+                android:text="Please share your delivery address\nAnd share the location on the map."
+                android:textColor="@android:color/holo_blue_dark" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

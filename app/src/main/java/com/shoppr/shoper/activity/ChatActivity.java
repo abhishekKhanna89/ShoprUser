@@ -285,7 +285,7 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setNestedScrollingEnabled(false);
 
         viewStartChat();
-        //chatMessageList(2);
+        //chatMessageList(1);
     }
 
     private void chatMessageList1(int chat_id) {

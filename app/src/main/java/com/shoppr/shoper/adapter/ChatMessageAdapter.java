@@ -29,8 +29,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 import com.facebook.appevents.ml.Utils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,11 +45,16 @@ import com.shoppr.shoper.Model.CancelModel;
 import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.RatingsModel;
 import com.shoppr.shoper.Model.RejectedModel;
+import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.ChatActivity;
+import com.shoppr.shoper.activity.ShareLocationActivity;
+import com.shoppr.shoper.activity.TrackLoactionActivity;
 import com.shoppr.shoper.requestdata.RatingsRequest;
+import com.shoppr.shoper.requestdata.ShareLocationRequest;
+import com.shoppr.shoper.requestdata.TextTypeRequest;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
@@ -170,8 +173,14 @@ import static android.os.FileUtils.copy;
        }
 
        if (chat.getType().equalsIgnoreCase("address-request")){
-           String lat = sessonManager.getLat();
-           String lon = sessonManager.getLon();
+           holder.addressText.setText(chat.getMessage());
+           holder.addressDate.setText(chat.getCreatedAt());
+       }else {
+           holder.addressLayout.setVisibility(View.GONE);
+       }
+       if (chat.getType().equalsIgnoreCase("address")){
+           String lat = chat.getLat();
+           String lon = chat.getLang();
            String url ="https://maps.googleapis.com/maps/api/staticmap?";
            url+="&zoom=14";
            url+="&size=200x200";
@@ -185,6 +194,11 @@ import static android.os.FileUtils.copy;
            holder.mapLayout.setVisibility(View.GONE);
        }
 
+       if (chat.getType().equalsIgnoreCase("track")){
+           holder.trackLocationText.setText(chat.getMessage());
+       }else {
+           holder.trackLocationLayout.setVisibility(View.GONE);
+       }
 
 
        /*Todo:- Visibility Concept*/
@@ -369,6 +383,20 @@ import static android.os.FileUtils.copy;
                 }
             }
         });
+        holder.addressLinkText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, ShareLocationActivity.class)
+                .putExtra("chatId",chat.getChatId()));
+            }
+        });
+
+        holder.trackLocationText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, TrackLoactionActivity.class));
+            }
+        });
 
     }
 
@@ -425,6 +453,15 @@ import static android.os.FileUtils.copy;
         /*Todo:- Audio*/
         VoicePlayerView voicePlayerView;
 
+        /*Todo:- Address*/
+         LinearLayout addressLayout;
+         TextView addressText,addressLinkText
+                 ,addressDate;
+
+         /*Todo:- Track Location*/
+         LinearLayout trackLocationLayout;
+         TextView trackLocationText;
+
         public Holder(@NonNull View itemView) {
             super(itemView);
             /*Todo:- Location*/
@@ -459,6 +496,15 @@ import static android.os.FileUtils.copy;
             ratingBar=itemView.findViewById(R.id.ratingBar);
             /*Todo:- Audio*/
             voicePlayerView=itemView.findViewById(R.id.voicePlayerView);
+            /*Todo:- Address*/
+            addressLayout=itemView.findViewById(R.id.addressLayout);
+            addressText=itemView.findViewById(R.id.addressText);
+            addressLinkText=itemView.findViewById(R.id.addressLinkText);
+            addressDate=itemView.findViewById(R.id.addressDate);
+            /*Todo:- Track Location*/
+            trackLocationLayout=itemView.findViewById(R.id.trackLocationLayout);
+            trackLocationText=itemView.findViewById(R.id.trackLocationText);
+
 
         }
 
