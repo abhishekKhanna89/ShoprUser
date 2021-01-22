@@ -93,7 +93,6 @@ public class ChatActivity extends AppCompatActivity {
     /*Todo:- BroadCast Receiver*/
     BroadcastReceiver mMessageReceiver;
     String body;
-
     List<ChatModel> msgDtoList;
     ChatAppMsgAdapter chatAppMsgAdapter;
     /*Todo:- Image Choose*/
@@ -199,6 +198,29 @@ public class ChatActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 0) {
                     sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped));
+                    sendMsgBtn.setOnClickListener(new View.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.Q)
+                        @SuppressLint("UseCompatLoadingForDrawables")
+                        @Override
+                        public void onClick(View v) {
+                            if (!flag) {
+                                if(checkPermissions()) {
+                                    //Start Recording
+                                    startRecording();
+                                    // Change button image and set Recording state to false
+                                    sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_recording, null));
+                                    flag=true;
+                                }
+                            }
+                            else {
+                                sendMsgBtn.setBackgroundResource(R.drawable.record_btn_stopped);
+                                stopRecording();
+                                flag=false;
+                            }
+                        }
+                    });
+
+
                     //sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
                     // is only executed if the EditText was directly changed by the user
                 } else {
