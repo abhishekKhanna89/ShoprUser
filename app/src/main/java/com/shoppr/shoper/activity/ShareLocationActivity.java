@@ -172,10 +172,6 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                             //sessonManager.hideProgress();
                             if (response.body()!=null) {
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                   /* editText.getText().clear();
-                                    chatMessageList1(chat_id);*/
-                                    startActivity(new Intent(ShareLocationActivity.this,ChatActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                    //finishAffinity();
                                     Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 }else {
                                     Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();

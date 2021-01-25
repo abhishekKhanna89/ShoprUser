@@ -899,4 +899,10 @@ public class ChatActivity extends AppCompatActivity {
             stopRecording();
         }
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        chatMessageList1(chat_id);
+    }
 }
