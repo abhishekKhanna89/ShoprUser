@@ -26,4 +26,7 @@
     <color name="colorDarkBlue">#3D4054</color>
     <color name="gray_light">#D3D3D3</color>
     <color name="safron">#6AA917</color>
+    <!-- Chat Activity -->
+    <color name="localBackground">#827b92</color>
+    <color name="remoteBackground">#484258</color>
 </resources>

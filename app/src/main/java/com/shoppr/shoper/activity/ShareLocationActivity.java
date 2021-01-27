@@ -172,6 +172,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                             //sessonManager.hideProgress();
                             if (response.body()!=null) {
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                    onBackPressed();
                                     Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 }else {
                                     Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();

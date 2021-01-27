@@ -27,6 +27,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    /*sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/libs']
+        }
+    }*/
 }
 
 dependencies {
@@ -69,6 +74,8 @@ dependencies {
 
     implementation 'gun0912.ted:tedpermission:2.2.2'
     implementation 'com.github.TecOrb-Developers:HRMarkerAnimation:fe6f64e75b'
+    implementation 'io.agora.rtc:full-sdk:3.0.0'
+    //implementation files('libs/agora-rtc-sdk.jar')
 
 
 }
