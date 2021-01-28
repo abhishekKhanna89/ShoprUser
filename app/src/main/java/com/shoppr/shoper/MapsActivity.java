@@ -38,6 +38,7 @@ import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.ChatActivity;
+import com.shoppr.shoper.activity.MyAccount;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
@@ -127,6 +128,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .build();
 
         viewListShopr();
+        cir_man_hair_cut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MapsActivity.this, MyAccount.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+        });
+
         myProfile();
 
 

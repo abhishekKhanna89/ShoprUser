@@ -29,12 +29,23 @@
         android:theme="@style/Theme.Shoper"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".activity.VideoChatViewActivity"
+        <activity android:name=".activity.OrderConfirmActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.TrackLoactionActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.ShareLocationActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ChatDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChatHistoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.VideoChatViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.TrackLoactionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ShareLocationActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ViewCartActivity"
             android:screenOrientation="portrait" />
@@ -90,14 +101,17 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".StorelistingActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".SplashActivity">
+        <activity
+            android:name=".SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

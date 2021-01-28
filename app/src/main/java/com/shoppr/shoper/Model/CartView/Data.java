@@ -18,6 +18,9 @@ public class Data {
     @SerializedName("grand_total")
     @Expose
     private Integer grandTotal;
+    @SerializedName("wallet_balance")
+    @Expose
+    private Integer wallet_balance;
 
     public List<Item> getItems() {
         return items;
@@ -51,4 +54,11 @@ public class Data {
         this.grandTotal = grandTotal;
     }
 
+    public Integer getWallet_balance() {
+        return wallet_balance;
+    }
+
+    public void setWallet_balance(Integer wallet_balance) {
+        this.wallet_balance = wallet_balance;
+    }
 }

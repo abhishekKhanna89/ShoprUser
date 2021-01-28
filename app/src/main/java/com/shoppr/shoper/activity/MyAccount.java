@@ -103,7 +103,7 @@ public class MyAccount extends AppCompatActivity {
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(image_order);
                                 texxname.setText(String.valueOf(myProfileModel.getData().getName()));
                                 textEmail.setText(myProfileModel.getData().getMobile());
-                                walletAmountText.setText(String.valueOf(myProfileModel.getData().getBalance()));
+                                walletAmountText.setText("₹ "+String.valueOf(myProfileModel.getData().getBalance()));
                                 sessonManager.setMobileNo(myProfileModel.getData().getMobile());
                             }
                         }
@@ -130,5 +130,9 @@ public class MyAccount extends AppCompatActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void chatHistory(View view) {
+        startActivity(new Intent(MyAccount.this,ChatHistoryActivity.class));
     }
 }

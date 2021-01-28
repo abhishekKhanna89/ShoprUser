@@ -159,6 +159,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:onClick="chatHistory"
+                android:orientation="horizontal">
+                <RelativeLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:paddingStart="10dp"
+                    android:background="@drawable/graycolor"
+                    tools:ignore="RtlCompat">
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/ic_message"/>
+
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chat History"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/graycolor"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:orientation="horizontal">
                 <RelativeLayout
                     android:layout_width="30dp"
@@ -202,7 +234,7 @@
                         android:layout_height="18dp"
                         android:layout_centerInParent="true"
                         android:backgroundTint="@color/white"
-                        android:background="@drawable/ic_home_ico"/>
+                        android:background="@drawable/ic_location"/>
 
                 </RelativeLayout>
                 <TextView

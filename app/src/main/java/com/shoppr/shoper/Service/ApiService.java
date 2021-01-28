@@ -8,8 +8,11 @@ import com.shoppr.shoper.Model.AcceptModel;
 import com.shoppr.shoper.Model.CancelModel;
 import com.shoppr.shoper.Model.CartCancel.CartCancelModel;
 import com.shoppr.shoper.Model.CartView.CartViewModel;
+import com.shoppr.shoper.Model.ChatList.ChatListModel;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.CustomerBalancceModel;
+import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
+import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.OtpVerifyModel;
@@ -23,6 +26,7 @@ import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
 import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
+import com.shoppr.shoper.requestdata.InitiatePaymentRequest;
 import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
 import com.shoppr.shoper.requestdata.RatingsRequest;
@@ -87,6 +91,12 @@ public interface ApiService {
     @POST("update-profile")
     Call<JsonObject> apiUpdateProfile(@HeaderMap Map<String, String> token, @Part MultipartBody.Part[] images, @PartMap() Map<String, RequestBody> partMap);
 
+
+    @NonNull
+    @GET("chats")
+    Call<ChatListModel>apiUserChatList(@Header("Authorization")String token);
+
+
     @NonNull
     @GET("start-chat")
     Call<StartChatModel>apiChatStart(@Header("Authorization") String token);
@@ -136,6 +146,16 @@ public interface ApiService {
     @POST("send-message/{chat_id}")
     Call<SendModel>apiShareLocation(@Header("Authorization") String token,
                            @Path("chat_id")int chat_id, @Body ShareLocationRequest shareLocationRequest);
+
+    @NonNull
+    @GET("initiate-order/{chat_id}")
+    Call<InitiatOrderModel>apiInitiateOrder(@Header("Authorization") String token,
+                                            @Path("chat_id")int chat_id);
+
+    @POST("initiate-payment/{order_id}")
+    Call<InitiatPaymentModel>apiInitiatePayment(@Header("Authorization") String token,
+                                                @Path("order_id")int chat_id,
+                                                @Body InitiatePaymentRequest initiatePaymentRequest);
 
 
 }

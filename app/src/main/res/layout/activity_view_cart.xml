@@ -15,102 +15,151 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_my_cart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </LinearLayout>
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardOrderSummary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardMaxElevation="4dp"
-                app:cardElevation="6dp"
-                android:visibility="gone"
                 android:layout_margin="5dp"
-                app:cardCornerRadius="8dp">
+                android:visibility="gone"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="6dp"
+                app:cardMaxElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Order Summary"
+                        android:textColor="@color/black"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.9"
+                            android:text="Total"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/totalAmountText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:text="Total"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.9"
+                            android:text="Service Charge"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/serviceChargeText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:text="Total"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/gray" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.9"
+                            android:text="Grand Total"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/groundTotalText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:text="Total"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/walletCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="6dp"
+                app:cardMaxElevation="4dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_margin="10dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:textSize="18dp"
-                        android:textColor="@color/black"
-                        android:text="Order Summary"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total"
-                            android:textSize="16dp"
-                            android:layout_weight="1.9"/>
-                        <TextView
-                            android:id="@+id/totalAmountText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total"
-                            android:textSize="16dp"
-                            android:layout_weight="0.1"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Service Charge"
-                            android:textSize="16dp"
-                            android:layout_weight="1.9"/>
-                        <TextView
-                            android:id="@+id/serviceChargeText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total"
-                            android:textSize="16dp"
-                            android:layout_weight="0.1"/>
-                    </LinearLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/gray"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Grand Total"
-                            android:textSize="16dp"
-                            android:layout_weight="1.9"/>
-                        <TextView
-                            android:id="@+id/groundTotalText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total"
-                            android:textSize="16dp"
-                            android:layout_weight="0.1"/>
-                    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Use Wallet"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingLeft="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -119,49 +168,52 @@
         android:id="@+id/imge_cart_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_centerInParent="true"
-        android:src="@drawable/cartimgmg"/>
+        android:src="@drawable/cartimgmg"
+        android:visibility="gone" />
 
 
     <Button
+        android:id="@+id/btn_continue_shoping"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Continue"
-        android:visibility="gone"
-        android:textColor="@color/white"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
-        android:id="@+id/btn_continue_shoping"/>
+        android:text="Continue"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/liner_order"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:visibility="visible"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="1sp"
             android:layout_height="match_parent"
-            android:background="@color/gray_light"/>
+            android:background="@color/gray_light" />
+
         <Button
             android:id="@+id/btn_cod"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_marginRight="4dp"
+            android:layout_weight="1"
             android:backgroundTint="@color/green"
             android:gravity="center"
             android:text="COD"
             android:textColor="@color/white"
             android:textSize="15sp" />
+
         <Button
             android:id="@+id/btn_payNow"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_marginLeft="4dp"
+            android:layout_weight="1"
             android:backgroundTint="@color/colorPrimary"
             android:gravity="center"
             android:text="Pay Now"

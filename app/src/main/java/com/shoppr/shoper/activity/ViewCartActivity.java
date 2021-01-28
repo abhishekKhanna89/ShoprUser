@@ -4,50 +4,38 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.CartCancel.CartCancelModel;
 import com.shoppr.shoper.Model.CartView.CartViewModel;
 import com.shoppr.shoper.Model.CartView.Item;
-import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
-import com.shoppr.shoper.Model.StoreListDetails.Image;
+import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
+import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
-import com.shoppr.shoper.adapter.ChatMessageAdapter;
+import com.shoppr.shoper.requestdata.InitiatePaymentRequest;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.Progressbar;
 import com.shoppr.shoper.util.SessonManager;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,7 +53,9 @@ public class ViewCartActivity extends AppCompatActivity {
     Integer productId;
     int chatId;
     CartViewModel cartViewModel;
-    CardView cardOrderSummary;
+    CardView cardOrderSummary,walletCardView;
+    CheckBox checkbox;
+    int value;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +65,13 @@ public class ViewCartActivity extends AppCompatActivity {
         getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "My Cart" + "</font>")));
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_arrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        chatId=getIntent().getIntExtra("chatId",0);
+
         RvMyCart = (RecyclerView) findViewById(R.id.rv_my_cart);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ViewCartActivity.this, 1);
+        RvMyCart.setLayoutManager(layoutManager);
+
         btn_payNow = (Button) findViewById(R.id.btn_payNow);
         btn_continue = (Button) findViewById(R.id.btn_continue_shoping);
         linrBottomOrder =findViewById(R.id.liner_order);
@@ -85,6 +81,89 @@ public class ViewCartActivity extends AppCompatActivity {
         groundTotalText = findViewById(R.id.groundTotalText);
         imgCart = (ImageView) findViewById(R.id.imge_cart_img);
         cardOrderSummary=findViewById(R.id.cardOrderSummary);
+        walletCardView=findViewById(R.id.walletCardView);
+
+        /*Todo:- CheckBox Button*/
+        checkbox=findViewById(R.id.checkbox);
+        checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkbox.isChecked())
+                {
+                   value=1;
+
+                }
+                else
+                {
+                    value=0;
+
+                }
+            }
+        });
+
+        btn_payNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CommonUtils.isOnline(ViewCartActivity.this)) {
+                    progressbar.showProgress(ViewCartActivity.this);
+                    Call<InitiatOrderModel>call=ApiExecutor.getApiService(ViewCartActivity.this)
+                            .apiInitiateOrder("Bearer "+sessonManager.getToken(),chatId);
+                    call.enqueue(new Callback<InitiatOrderModel>() {
+                        @Override
+                        public void onResponse(Call<InitiatOrderModel> call, Response<InitiatOrderModel> response) {
+                            progressbar.hideProgress();
+                            if (response.body()!=null) {
+                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                    InitiatOrderModel initiatOrderModel=response.body();
+                                    int orderId=initiatOrderModel.getData().getOrderId();
+                                    String online="online";
+                                    initiatPayment(orderId,online);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<InitiatOrderModel> call, Throwable t) {
+                            progressbar.hideProgress();
+                        }
+                    });
+                }else {
+                    CommonUtils.showToastInCenter(ViewCartActivity.this, getString(R.string.please_check_network));
+                }
+            }
+        });
+        btn_cod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CommonUtils.isOnline(ViewCartActivity.this)) {
+                    progressbar.showProgress(ViewCartActivity.this);
+                    Call<InitiatOrderModel>call=ApiExecutor.getApiService(ViewCartActivity.this)
+                            .apiInitiateOrder("Bearer "+sessonManager.getToken(),chatId);
+                    call.enqueue(new Callback<InitiatOrderModel>() {
+                        @Override
+                        public void onResponse(Call<InitiatOrderModel> call, Response<InitiatOrderModel> response) {
+                            progressbar.hideProgress();
+                            if (response.body()!=null) {
+                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                    InitiatOrderModel initiatOrderModel=response.body();
+                                    int orderId=initiatOrderModel.getData().getOrderId();
+                                    String cod="cod";
+                                    initiatPayment(orderId,cod);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<InitiatOrderModel> call, Throwable t) {
+                            progressbar.hideProgress();
+                        }
+                    });
+                }else {
+                    CommonUtils.showToastInCenter(ViewCartActivity.this, getString(R.string.please_check_network));
+                }
+            }
+        });
+
 
         btn_continue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,9 +174,45 @@ public class ViewCartActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        chatId=getIntent().getIntExtra("chatId",0);
+
         hitCartDetailsApi(chatId);
+
     }
+
+    private void initiatPayment(int orderId, String type) {
+        if (CommonUtils.isOnline(ViewCartActivity.this)) {
+            progressbar.showProgress(ViewCartActivity.this);
+            InitiatePaymentRequest initiatePaymentRequest=new InitiatePaymentRequest();
+            initiatePaymentRequest.setType(type);
+            initiatePaymentRequest.setUse_balance(value);
+            Call<InitiatPaymentModel>call= ApiExecutor.getApiService(this).apiInitiatePayment("Bearer "+sessonManager.getToken(),orderId,initiatePaymentRequest);
+            call.enqueue(new Callback<InitiatPaymentModel>() {
+                @Override
+                public void onResponse(Call<InitiatPaymentModel> call, Response<InitiatPaymentModel> response) {
+                    progressbar.hideProgress();
+                    if (response.body()!=null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            InitiatPaymentModel initiatPaymentModel=response.body();
+                            if (initiatPaymentModel.getData().getPaymentDone().equalsIgnoreCase("No")){
+
+                            }else {
+                                startActivity(new Intent(ViewCartActivity.this,OrderConfirmActivity.class));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<InitiatPaymentModel> call, Throwable t) {
+                    progressbar.hideProgress();
+                }
+            });
+
+        }else {
+            CommonUtils.showToastInCenter(ViewCartActivity.this, getString(R.string.please_check_network));
+        }
+    }
+
     public void hitCartDetailsApi(int chatId){
         if (CommonUtils.isOnline(ViewCartActivity.this)) {
             progressbar.showProgress(ViewCartActivity.this);
@@ -113,7 +228,15 @@ public class ViewCartActivity extends AppCompatActivity {
                                 totalAmountText.setText("₹ " +cartViewModel.getData().getTotal());
                                 serviceChargeText.setText("₹ " +cartViewModel.getData().getServiceCharge());
                                 groundTotalText.setText("₹ " +cartViewModel.getData().getGrandTotal());
+                                if (0<cartViewModel.getData().getWallet_balance()){
+                                    walletCardView.setVisibility(View.VISIBLE);
+                                    checkbox.setText("₹ " +cartViewModel.getData().getWallet_balance());
+                                }else {
+                                    walletCardView.setVisibility(View.GONE);
+                                }
+
                                 arrCartItemList = (ArrayList<Item>) cartViewModel.getData().getItems();
+
                                 if (arrCartItemList.isEmpty()){
                                     btn_continue.setVisibility(View.VISIBLE);
                                     imgCart.setVisibility(View.VISIBLE);
@@ -125,8 +248,6 @@ public class ViewCartActivity extends AppCompatActivity {
                                     RvMyCart.setItemViewCacheSize(20);
                                     RvMyCart.setDrawingCacheEnabled(true);
                                     RvMyCart.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-                                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ViewCartActivity.this, 1);
-                                    RvMyCart.setLayoutManager(layoutManager);
                                     MyCartAdapter myCartAdapter = new MyCartAdapter(ViewCartActivity.this, arrCartItemList);
                                     RvMyCart.setAdapter(myCartAdapter);
 
@@ -169,6 +290,7 @@ public class ViewCartActivity extends AppCompatActivity {
             holder.nameProductText.setText(arList.get(position).getType());
             holder.priceProductText.setText("\u20B9 "+arList.get(position).getPrice());
             holder.quantityProductText.setText(arList.get(position).getQuantity());
+
 
 
         }

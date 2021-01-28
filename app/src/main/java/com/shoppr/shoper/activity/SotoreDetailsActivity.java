@@ -49,6 +49,7 @@ public class SotoreDetailsActivity extends AppCompatActivity {
     List<Image>imageList;
     Timer timer;
     int currentPage = 0;
+    int shopId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +80,8 @@ public class SotoreDetailsActivity extends AppCompatActivity {
         btnsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SotoreDetailsActivity.this,MyAccount.class));
+                //startActivity(new Intent(SotoreDetailsActivity.this,ChatActivity.class)
+                //.putExtra("shopId",shopId));
             }
         });
         viewDetails();
@@ -100,6 +102,7 @@ public class SotoreDetailsActivity extends AppCompatActivity {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             StoreListDetailsModel storeListDetailsModel=response.body();
                             imageList=storeListDetailsModel.getData().getStoresDetails().getImages();
+                            shopId=storeListDetailsModel.getData().getStoresDetails().getId();
                             SliderAdapter sliderAdapter=new SliderAdapter(SotoreDetailsActivity.this,imageList);
                             mViewPager.setAdapter(sliderAdapter);
                             tabLayout.setupWithViewPager(mViewPager,true);

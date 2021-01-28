@@ -42,11 +42,8 @@ import android.view.View;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.razorpay.G__G_;
 import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.ChatModel;
@@ -84,7 +81,7 @@ import retrofit2.Response;
 
 import static android.media.MediaRecorder.VideoSource.CAMERA;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatDetailsActivity extends AppCompatActivity {
     boolean flag=false;
     public static int chat_id;
     RecyclerView chatRecyclerView;
@@ -121,16 +118,16 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_chat_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager = new SessonManager(this);
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
 
         shopId=getIntent().getIntExtra("shopId",0);
-        //chat_id=getIntent().getIntExtra("id",0);
+        chat_id=getIntent().getIntExtra("id",0);
         //Log.d("res",""+shopId);
-        viewStartChat();
-        //chatMessageList(1);
+        //viewStartChat();
+        chatMessageList(chat_id);
 
 
         editText = findViewById(R.id.editText);
@@ -174,7 +171,7 @@ public class ChatActivity extends AppCompatActivity {
         };
         IntentFilter i = new IntentFilter();
         i.addAction("message_subject_intent");
-        LocalBroadcastManager.getInstance(ChatActivity.this).registerReceiver(mMessageReceiver,new IntentFilter(i));
+        LocalBroadcastManager.getInstance(ChatDetailsActivity.this).registerReceiver(mMessageReceiver,new IntentFilter(i));
 
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -243,12 +240,12 @@ public class ChatActivity extends AppCompatActivity {
                             if(!TextUtils.isEmpty(msgContent))
                             {
 
-                                if (CommonUtils.isOnline(ChatActivity.this)) {
+                                if (CommonUtils.isOnline(ChatDetailsActivity.this)) {
                                     //sessonManager.showProgress(ChatActivity.this);
                                     TextTypeRequest textTypeRequest=new TextTypeRequest();
                                     textTypeRequest.setType("text");
                                     textTypeRequest.setMessage(msgContent);
-                                    Call<SendModel>call=ApiExecutor.getApiService(ChatActivity.this)
+                                    Call<SendModel> call= ApiExecutor.getApiService(ChatDetailsActivity.this)
                                             .apiSend("Bearer "+sessonManager.getToken(),chat_id,textTypeRequest);
                                     call.enqueue(new Callback<SendModel>() {
                                         @Override
@@ -271,7 +268,7 @@ public class ChatActivity extends AppCompatActivity {
                                         }
                                     });
                                 }else {
-                                    CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
+                                    CommonUtils.showToastInCenter(ChatDetailsActivity.this, getString(R.string.please_check_network));
                                 }
 
                             }
@@ -294,40 +291,7 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setDrawingCacheEnabled(true);
         chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         chatRecyclerView.setNestedScrollingEnabled(false);
-
-
     }
-
-    /*private void chatMessageList1(int chat_id) {
-        Log.d("ress",""+chat_id);
-        Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),chat_id);
-        call.enqueue(new Callback<ChatMessageModel>() {
-            @Override
-            public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
-                //sessonManager.hideProgress();
-                if (response.body()!=null) {
-                    if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                        ChatMessageModel chatMessageModel=response.body();
-                        if (chatMessageModel.getData()!=null){
-                            chatList=chatMessageModel.getData().getChats();
-                            ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
-                            chatRecyclerView.setAdapter(chatMessageAdapter);
-                            chatRecyclerView.scrollToPosition(chatList.size()-1);
-                            chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount());
-                            //chatRecyclerView.getLayoutManager().scrollToPosition(chatList.size()-1);
-                            chatMessageAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ChatMessageModel> call, Throwable t) {
-
-            }
-        });
-    }*/
-
     private void startDialog() {
         AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
         myAlertDialog.setTitle("Upload Pictures Option");
@@ -336,7 +300,7 @@ public class ChatActivity extends AppCompatActivity {
         myAlertDialog.setPositiveButton("Gallery", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_IMAGE_MULTIPLE);
+                    ActivityCompat.requestPermissions(ChatDetailsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_IMAGE_MULTIPLE);
 
                 } else {
                     Intent intent = new Intent();
@@ -353,7 +317,7 @@ public class ChatActivity extends AppCompatActivity {
         myAlertDialog.setNegativeButton("Camera", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_IMAGE_MULTIPLE);
+                    ActivityCompat.requestPermissions(ChatDetailsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_IMAGE_MULTIPLE);
 
                 } else {
                     try {
@@ -370,8 +334,8 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private void viewStartChat() {
-        if (CommonUtils.isOnline(ChatActivity.this)) {
-            sessonManager.showProgress(ChatActivity.this);
+        if (CommonUtils.isOnline(ChatDetailsActivity.this)) {
+            sessonManager.showProgress(ChatDetailsActivity.this);
             Call<StartChatModel>call= ApiExecutor.getApiService(this)
                     .apiChatStart("Bearer "+sessonManager.getToken());
             call.enqueue(new Callback<StartChatModel>() {
@@ -395,12 +359,12 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }else {
-            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
+            CommonUtils.showToastInCenter(ChatDetailsActivity.this, getString(R.string.please_check_network));
         }
     }
 
     private void chatMessageList(int chat_id) {
-        if (CommonUtils.isOnline(ChatActivity.this)) {
+        if (CommonUtils.isOnline(ChatDetailsActivity.this)) {
             //sessonManager.showProgress(ChatActivity.this);
             Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),chat_id);
             call.enqueue(new Callback<ChatMessageModel>() {
@@ -412,7 +376,7 @@ public class ChatActivity extends AppCompatActivity {
                             ChatMessageModel chatMessageModel=response.body();
                             if (chatMessageModel.getData()!=null){
                                 chatList=chatMessageModel.getData().getChats();
-                                ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
+                                ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatDetailsActivity.this,chatList);
                                 chatRecyclerView.setAdapter(chatMessageAdapter);
                                 chatRecyclerView.scrollToPosition(chatList.size()-1);
                                 chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount());
@@ -430,7 +394,7 @@ public class ChatActivity extends AppCompatActivity {
             });
 
         }else {
-            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
+            CommonUtils.showToastInCenter(ChatDetailsActivity.this, getString(R.string.please_check_network));
         }
     }
 
@@ -441,13 +405,13 @@ public class ChatActivity extends AppCompatActivity {
         if (id==android.R.id.home){
             onBackPressed();
         }else if (id==R.id.action_cart){
-                Intent intent = new Intent(ChatActivity.this, ViewCartActivity.class);
-                intent.putExtra("chatId",chat_id);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+            Intent intent = new Intent(ChatDetailsActivity.this, ViewCartActivity.class);
+            intent.putExtra("chatId",chat_id);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }else if (id==R.id.action_video){
-            startActivity(new Intent(ChatActivity.this,VideoChatViewActivity.class)
-            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            startActivity(new Intent(ChatDetailsActivity.this,VideoChatViewActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
 
         return super.onOptionsItemSelected(item);
@@ -496,7 +460,7 @@ public class ChatActivity extends AppCompatActivity {
                 //Log.d("checkexcep", ex.getMessage());
             }
             photoFile = createFile();
-            photoUri = FileProvider.getUriForFile(ChatActivity.this, getPackageName() + ".provider", photoFile);
+            photoUri = FileProvider.getUriForFile(ChatDetailsActivity.this, getPackageName() + ".provider", photoFile);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(takePictureIntent, 1);
         }
@@ -524,7 +488,7 @@ public class ChatActivity extends AppCompatActivity {
             imagePathList.add(photoPath);
 
             // Log.d("ress",""+imagePathList);
-            bitmap = MediaStore.Images.Media.getBitmap(ChatActivity.this.getContentResolver(), photoUri);
+            bitmap = MediaStore.Images.Media.getBitmap(ChatDetailsActivity.this.getContentResolver(), photoUri);
             bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
 
             if (Build.VERSION.SDK_INT > 23) {
@@ -545,7 +509,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void ProfileUpdateAPI() {
-        if (CommonUtils.isOnline(ChatActivity.this)) {
+        if (CommonUtils.isOnline(ChatDetailsActivity.this)) {
             //sessonManager.showProgress(ChatActivity.this);
             HashMap<String, RequestBody> partMap = new HashMap<>();
             partMap.put("type", ApiFactory.getRequestBodyFromString("image"));
@@ -555,7 +519,7 @@ public class ChatActivity extends AppCompatActivity {
             for (int i = 0; i < imageArray1.length; i++) {
                 File file = new File(imagePathList.get(i));
                 try {
-                    File compressedfile = new Compressor(ChatActivity.this).compressToFile(file);
+                    File compressedfile = new Compressor(ChatDetailsActivity.this).compressToFile(file);
                     RequestBody requestBodyArray = RequestBody.create(MediaType.parse("image/*"), compressedfile);
                     imageArray1[i] = MultipartBody.Part.createFormData("file", compressedfile.getName(), requestBodyArray);
 
@@ -568,28 +532,28 @@ public class ChatActivity extends AppCompatActivity {
             headers.put("Authorization", "Bearer "+sessonManager.getToken());
             ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
             iApiServices.apiImageSend(headers,chat_id,imageArray1,partMap)
-            .enqueue(new Callback<SendModel>() {
-                @Override
-                public void onResponse(Call<SendModel> call, Response<SendModel> response) {
-                    //sessonManager.hideProgress();
-                   // Log.d("res",response.message());
-                    if (response.body()!=null) {
-                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            chatMessageList(chat_id);
-                            //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
-                        }else {
-                           // Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                    .enqueue(new Callback<SendModel>() {
+                        @Override
+                        public void onResponse(Call<SendModel> call, Response<SendModel> response) {
+                            //sessonManager.hideProgress();
+                            // Log.d("res",response.message());
+                            if (response.body()!=null) {
+                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                    chatMessageList(chat_id);
+                                    //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                }else {
+                                    // Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<SendModel> call, Throwable t) {
-                    //sessonManager.hideProgress();
-                }
-            });
+                        @Override
+                        public void onFailure(Call<SendModel> call, Throwable t) {
+                            //sessonManager.hideProgress();
+                        }
+                    });
         }else {
-            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
+            CommonUtils.showToastInCenter(ChatDetailsActivity.this, getString(R.string.please_check_network));
         }
     }
 
@@ -604,7 +568,7 @@ public class ChatActivity extends AppCompatActivity {
                     int imageCount = data.getClipData().getItemCount();
                     for (int i = 0; i < imageCount; i++) {
                         Uri mImageUri = data.getClipData().getItemAt(i).getUri();
-                        photoPath = Helper.pathFromUri(ChatActivity.this, mImageUri);
+                        photoPath = Helper.pathFromUri(ChatDetailsActivity.this, mImageUri);
                         imagePathList.add(photoPath);
 
 
@@ -638,7 +602,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 } else {
                     Uri mImageUri = data.getData();
-                    photoPath = Helper.pathFromUri(ChatActivity.this, mImageUri);
+                    photoPath = Helper.pathFromUri(ChatDetailsActivity.this, mImageUri);
                     imagePathList.add(photoPath);
 
                     // Get the cursor
@@ -776,15 +740,15 @@ public class ChatActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), permission) != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(ChatActivity.this, permission)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(ChatDetailsActivity.this, permission)) {
 
                 //This is called if user has denied the permission before
                 //In this case I am just asking the permission again
-                ActivityCompat.requestPermissions(ChatActivity.this, new String[]{permission}, requestCode);
+                ActivityCompat.requestPermissions(ChatDetailsActivity.this, new String[]{permission}, requestCode);
 
             } else {
 
-                ActivityCompat.requestPermissions(ChatActivity.this, new String[]{permission}, requestCode);
+                ActivityCompat.requestPermissions(ChatDetailsActivity.this, new String[]{permission}, requestCode);
             }
         } else {
 //            Toast.makeText(this, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
@@ -807,7 +771,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
     private void uploadFile() {
-        if (CommonUtils.isOnline(ChatActivity.this)) {
+        if (CommonUtils.isOnline(ChatDetailsActivity.this)) {
             //sessonManager.showProgress(ChatActivity.this);
             File file = new File(pathforaudio);
 
@@ -834,9 +798,9 @@ public class ChatActivity extends AppCompatActivity {
                                     timer.setVisibility(View.GONE);
                                     timer.stop();
                                     chatMessageList(chat_id);
-                                    Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ChatDetailsActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ChatDetailsActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -847,7 +811,7 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
         }else {
-            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
+            CommonUtils.showToastInCenter(ChatDetailsActivity.this, getString(R.string.please_check_network));
         }
     }
 
@@ -918,5 +882,4 @@ public class ChatActivity extends AppCompatActivity {
         super.onRestart();
         chatMessageList(chat_id);
     }
-
 }
