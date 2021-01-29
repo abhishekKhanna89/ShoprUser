@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.MyOrderActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myOrderRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/emptyOrderText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Order Empty"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:gravity="center"
+        android:textColor="@android:color/holo_red_dark"/>
+</LinearLayout>

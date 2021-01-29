@@ -15,7 +15,9 @@ import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
+import com.shoppr.shoper.Model.OrdersList.OrdersListModel;
 import com.shoppr.shoper.Model.OtpVerifyModel;
+import com.shoppr.shoper.Model.PaymentSuccess.PaymentSuccessModel;
 import com.shoppr.shoper.Model.RatingsModel;
 import com.shoppr.shoper.Model.Recharge.RechargeModel;
 import com.shoppr.shoper.Model.RejectedModel;
@@ -29,6 +31,7 @@ import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
 import com.shoppr.shoper.requestdata.InitiatePaymentRequest;
 import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
+import com.shoppr.shoper.requestdata.PaymentSuccessRequest;
 import com.shoppr.shoper.requestdata.RatingsRequest;
 import com.shoppr.shoper.requestdata.RechargeRequest;
 import com.shoppr.shoper.requestdata.ShareLocationRequest;
@@ -156,6 +159,14 @@ public interface ApiService {
     Call<InitiatPaymentModel>apiInitiatePayment(@Header("Authorization") String token,
                                                 @Path("order_id")int chat_id,
                                                 @Body InitiatePaymentRequest initiatePaymentRequest);
+
+    @POST("verify-payment")
+    Call<PaymentSuccessModel>apiPaymentSuccess(@Header("Authorization") String token,
+                                               @Body PaymentSuccessRequest paymentSuccessRequest);
+
+    @NonNull
+    @GET("orders")
+    Call<OrdersListModel>apiMyOrder(@Header("Authorization") String token);
 
 
 }

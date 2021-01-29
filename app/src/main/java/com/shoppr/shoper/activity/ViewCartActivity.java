@@ -6,10 +6,12 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,18 +24,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.CartCancel.CartCancelModel;
 import com.shoppr.shoper.Model.CartView.CartViewModel;
 import com.shoppr.shoper.Model.CartView.Item;
 import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
+import com.shoppr.shoper.Model.PaymentSuccess.PaymentSuccessModel;
+import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.InitiatePaymentRequest;
+import com.shoppr.shoper.requestdata.PaymentSuccessRequest;
+import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.Progressbar;
 import com.shoppr.shoper.util.SessonManager;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -41,7 +52,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViewCartActivity extends AppCompatActivity {
+public class ViewCartActivity extends AppCompatActivity implements PaymentResultWithDataListener {
     SessonManager sessonManager;
     Progressbar progressbar;
     RecyclerView RvMyCart;
@@ -55,7 +66,8 @@ public class ViewCartActivity extends AppCompatActivity {
     CartViewModel cartViewModel;
     CardView cardOrderSummary,walletCardView;
     CheckBox checkbox;
-    int value;
+    int value,total;
+    String razorpay_order_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,9 +206,12 @@ public class ViewCartActivity extends AppCompatActivity {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             InitiatPaymentModel initiatPaymentModel=response.body();
                             if (initiatPaymentModel.getData().getPaymentDone().equalsIgnoreCase("No")){
-
+                                razorpay_order_id=initiatPaymentModel.getData().getRazorpayOrderId();
+                                total=initiatPaymentModel.getData().getTotal();
+                                startPayment(total);
                             }else {
-                                startActivity(new Intent(ViewCartActivity.this,OrderConfirmActivity.class));
+                                startActivity(new Intent(ViewCartActivity.this,OrderConfirmActivity.class)
+                                .putExtra("refid",initiatPaymentModel.getData().getRefid()));
                             }
                         }
                     }
@@ -241,15 +256,18 @@ public class ViewCartActivity extends AppCompatActivity {
                                     btn_continue.setVisibility(View.VISIBLE);
                                     imgCart.setVisibility(View.VISIBLE);
                                     cardOrderSummary.setVisibility(View.GONE);
+                                    walletCardView.setVisibility(View.GONE);
                                 }else {
                                     cardOrderSummary.setVisibility(View.VISIBLE);
                                     linrBottomOrder.setVisibility(View.VISIBLE);
+                                    walletCardView.setVisibility(View.VISIBLE);
                                     RvMyCart.setHasFixedSize(true);
                                     RvMyCart.setItemViewCacheSize(20);
                                     RvMyCart.setDrawingCacheEnabled(true);
                                     RvMyCart.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
                                     MyCartAdapter myCartAdapter = new MyCartAdapter(ViewCartActivity.this, arrCartItemList);
                                     RvMyCart.setAdapter(myCartAdapter);
+
 
                                 }
 
@@ -268,6 +286,85 @@ public class ViewCartActivity extends AppCompatActivity {
             CommonUtils.showToastInCenter(ViewCartActivity.this, getString(R.string.please_check_network));
         }
     }
+    /*Todo:- RazorPay*/
+    private void startPayment(int amount) {
+        final Activity activity = this;
+        final Checkout co = new Checkout();
+        try {
+            JSONObject options = new JSONObject();
+            options.put("name", "Shoppr");
+            options.put("description", "App Payment");
+            //You can omit the image option to fetch the image from dashboard
+            options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
+            options.put("currency", "INR");
+            options.put("order_id", razorpay_order_id);
+            String payment = String.valueOf(amount);
+            // amount is in paise so please multiple it by 100
+            //Payment failed Invalid amount (should be passed in integer paise. Minimum value is 100 paise, i.e. ₹ 1)
+            double total = Double.parseDouble(payment);
+            total = total * 100;
+            options.put("amount", total);
+            JSONObject preFill = new JSONObject();
+            preFill.put("email", "");
+            preFill.put("contact", "");
+            options.put("prefill", preFill);
+            co.open(activity, options);
+        } catch (Exception e) {
+            Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+        String orderId=paymentData.getOrderId();
+        String paymentId=paymentData.getPaymentId();
+        String signature=paymentData.getSignature();
+        if (CommonUtils.isOnline(ViewCartActivity.this)) {
+            sessonManager.showProgress(ViewCartActivity.this);
+            PaymentSuccessRequest paymentSuccessRequest=new PaymentSuccessRequest();
+            paymentSuccessRequest.setRazorpay_order_id(orderId);
+            paymentSuccessRequest.setRazorpay_payment_id(paymentId);
+            paymentSuccessRequest.setRazorpay_signature(signature);
+            Call<PaymentSuccessModel>call=ApiExecutor.getApiService(this)
+                    .apiPaymentSuccess("Bearer "+sessonManager.getToken(),paymentSuccessRequest);
+            call.enqueue(new Callback<PaymentSuccessModel>() {
+                @Override
+                public void onResponse(Call<PaymentSuccessModel> call, Response<PaymentSuccessModel> response) {
+                    sessonManager.hideProgress();
+                    if (response.body()!=null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            PaymentSuccessModel paymentSuccessModel=response.body();
+                            //Toast.makeText(ViewCartActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(ViewCartActivity.this,OrderConfirmActivity.class)
+                                    .putExtra("refid",paymentSuccessModel.getData().getRefid()));
+                        }else {
+                            Toast.makeText(ViewCartActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PaymentSuccessModel> call, Throwable t) {
+                    sessonManager.hideProgress();
+                }
+            });
+
+        }else {
+            CommonUtils.showToastInCenter(ViewCartActivity.this, getString(R.string.please_check_network));
+        }
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+        try {
+            Toast.makeText(this, "Payment error please try again", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("OnPaymentError", "Exception in onPaymentError", e);
+        }
+    }
+
     public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder> {
         Context context;
         ArrayList<Item> arList;
@@ -344,11 +441,12 @@ public class ViewCartActivity extends AppCompatActivity {
                 public void onResponse(Call<CartCancelModel> call, Response<CartCancelModel> response) {
                     progressbar.hideProgress();
                     if (response.body().getStatus().equalsIgnoreCase("success")){
-                        hitCartDetailsApi(2);
+                        hitCartDetailsApi(chatId);
                     }else {
                         btn_continue.setVisibility(View.VISIBLE);
                         imgCart.setVisibility(View.VISIBLE);
                         cardOrderSummary.setVisibility(View.GONE);
+                        walletCardView.setVisibility(View.GONE);
                     }
                 }
 
@@ -371,8 +469,15 @@ public class ViewCartActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onPause() {
+        super.onPause();
+        cardOrderSummary.setVisibility(View.GONE);
+        walletCardView.setVisibility(View.GONE);
+        RvMyCart.setVisibility(View.GONE);
+        hitAddtoCartApi(chatId);
+
     }
+
 }

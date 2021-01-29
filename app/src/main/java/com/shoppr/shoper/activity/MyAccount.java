@@ -135,4 +135,8 @@ public class MyAccount extends AppCompatActivity {
     public void chatHistory(View view) {
         startActivity(new Intent(MyAccount.this,ChatHistoryActivity.class));
     }
+
+    public void MyOrder(View view) {
+        startActivity(new Intent(MyAccount.this,MyOrderActivity.class));
+    }
 }

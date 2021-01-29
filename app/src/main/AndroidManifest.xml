@@ -29,8 +29,16 @@
         android:theme="@style/Theme.Shoper"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".activity.OrderConfirmActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.OrderDetailsActivity"
+            android:screenOrientation="portrait"
+            android:label="Order Details"/>
+        <activity
+            android:name=".activity.MyOrderActivity"
+            android:label="My Order"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.OrderConfirmActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatDetailsActivity"
             android:screenOrientation="portrait" />
