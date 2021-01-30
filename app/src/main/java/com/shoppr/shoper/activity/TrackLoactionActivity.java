@@ -1,16 +1,29 @@
 package com.shoppr.shoper.activity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.AvoidType;
+import com.akexorcist.googledirection.constant.TransportMode;
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Route;
+import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -20,230 +33,147 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.shoppr.shoper.Model.TrackLoaction.TrackLoactionModel;
+import com.shoppr.shoper.OtpActivity;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.util.CommonUtils;
+import com.shoppr.shoper.util.SessonManager;
 import com.tecorb.hrmovecarmarkeranimation.AnimationClass.HRMarkerAnimation;
 import com.tecorb.hrmovecarmarkeranimation.CallBacks.UpdateLocationCallBack;
 
-public class TrackLoactionActivity extends AppCompatActivity implements OnMapReadyCallback,
-        LocationListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
-    private static final String TAG = "TrackLoactionActivity";
-    private static final long INTERVAL = 2000; //1.5 min
-    private static final long FASTEST_INTERVAL = 1000; //1.5 min
-    private static final long DISPLACEMENT = 5; //5 meter
-    private LocationRequest mLocationRequest;
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
-    private Location oldLocation;
-    private Context context;
-    private int markerCount=0;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static java.security.AccessController.getContext;
+
+public class TrackLoactionActivity extends AppCompatActivity implements OnMapReadyCallback,DirectionCallback
+       /* LocationListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener*/{
     private SupportMapFragment mapFragment;
-    private static final int REQUEST_LOCATION = 0;
-    private boolean isFirstTime = true;
     private GoogleMap mMap;
     private Marker marker;
+    SessonManager sessonManager;
+    int messageId;
+    public static  double lat,lang;
+    LatLng sydney,india,point;
+    private Polyline mPolyline;
+    ArrayList<LatLng> mMarkerPoints;
+    private String serverKey = "AIzaSyCHl8Ff_ghqPjWqlT2BXJH5BOYH1q-sw0E";
+    private String[] colors = {"#7fff7272", "#7f31c7c5", "#7fff8a00"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_loaction);
-        context=this;
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this).build();
-        createLocationRequest();
-        markerCount = 0;
+        sessonManager=new SessonManager(this);
+
+        messageId=getIntent().getIntExtra("messageId",0);
 
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(TrackLoactionActivity.this);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+        mMarkerPoints = new ArrayList<>();
+        viewTrackLoaction();
+        requestDirection();
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
+
+    private void viewTrackLoaction() {
+        if (CommonUtils.isOnline(TrackLoactionActivity.this)) {
+            Call<TrackLoactionModel>call= ApiExecutor.getApiService(this)
+                    .apiTrackLocation("Bearer "+sessonManager.getToken(),messageId);
+            call.enqueue(new Callback<TrackLoactionModel>() {
+                @Override
+                public void onResponse(Call<TrackLoactionModel> call, Response<TrackLoactionModel> response) {
+                    if (response.body()!=null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            TrackLoactionModel trackLoactionModel=response.body();
+                            if (trackLoactionModel.getData().getShoppr()!=null){
+                                 lat=trackLoactionModel.getData().getShoppr().getLat();
+                                 lang=trackLoactionModel.getData().getShoppr().getLang();
+                                 india=new LatLng(lat,lang);
+                                 mMap.addMarker(new MarkerOptions().position(india).title("Marker in Sydney"))
+                                 .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car));
+                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(india, 15));
+                                 //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(india,12f));
+                                //mMap.setPadding(2000, 4000, 2000, 4000);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<TrackLoactionModel> call, Throwable t) {
+
+                }
+            });
+
+        }else {
+            CommonUtils.showToastInCenter(TrackLoactionActivity.this, getString(R.string.please_check_network));
         }
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        markerCount = 0;
-        stopLocationUpdates();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mGoogleApiClient.isConnected()) {
-            startLocationUpdates();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    protected void createLocationRequest() {
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setInterval(INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        //mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
-    }
-
-    private boolean isGooglePlayServicesAvailable() {
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (ConnectionResult.SUCCESS == status) {
-            return true;
-        } else {
-            GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
-            return false;
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnected - isConnected ...............: " +
-                mGoogleApiClient.isConnected());
-        startLocationUpdates();
-        displayLocation();
-    }
-
-    protected void startLocationUpdates() {
-        try {
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            Log.d(TAG, "Location update started ..............: ");
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-        Log.d(TAG, "Connection failed: " + connectionResult.toString());
-    }
-
-    @Override
-    public void onLocationChanged(Location currentL) {
-        mLastLocation = currentL;
-        displayLocation();
-    }
-
-    protected void stopLocationUpdates() {
-        try {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-            Log.d(TAG, "Location update stopped .......................");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void onMapReady(final GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        try {
-            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.mapstyle));
+        // Add a marker in Sydney and move the camera
+        sydney = new LatLng(28.7041, 77.1025);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,12f));
+       // mMap.setPadding(2000, 4000, 2000, 4000);
 
-            if (!success) {
-                Log.e(TAG, "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
+
+
+    }
+
+    private void requestDirection() {
+        GoogleDirection.withServerKey(serverKey)
+                .from(india)
+                .to(sydney)
+                .transportMode(TransportMode.WALKING)
+                .alternativeRoute(true)
+                .execute(this);
+    }
+
+
+    @Override
+    public void onDirectionSuccess(@Nullable Direction direction) {
+        Toast.makeText(this, ""+direction, Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < direction.getRouteList().size(); i++) {
+            Route route = direction.getRouteList().get(i);
+            String color = colors[i % colors.length];
+            ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
+            mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.parseColor(color)));
         }
     }
 
-    public void addMarker(GoogleMap googleMap, double lat, double lon) {
+    @Override
+    public void onDirectionFailure(@NonNull Throwable t) {
 
-        try {
-
-            if (markerCount == 1) {
-                if (oldLocation != null) {
-                    new HRMarkerAnimation(googleMap,1000, new UpdateLocationCallBack() {
-                        @Override
-                        public void onUpdatedLocation(Location updatedLocation) {
-                            oldLocation = updatedLocation;
-                        }
-                    }).animateMarker(mLastLocation, oldLocation, marker);
-                } else {
-                    oldLocation = mLastLocation;
-                }
-            } else if (markerCount == 0) {
-                if (marker != null) {
-                    marker.remove();
-                }
-                mMap = googleMap;
-
-                LatLng latLng = new LatLng(lat, lon);
-
-                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));
-                mMap.setPadding(2000, 4000, 2000, 4000);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
-
-                /*################### Set Marker Count to 1 after first marker is created ###################*/
-
-                markerCount = 1;
-
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    return;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void displayLocation() {
-        try {
-
-            if (ActivityCompat.checkSelfPermission(context,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(context,
-                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                // Check Permissions Now
-                ActivityCompat.requestPermissions(TrackLoactionActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_LOCATION);
-            } else {
-
-
-                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-                if (mLastLocation != null && mLastLocation.getLongitude() != 0.0 && mLastLocation.getLongitude() != 0.0) {
-
-                    if (mMap != null) {
-                        addMarker(mMap, mLastLocation.getLatitude(), mLastLocation.getLongitude());
-
-                    }
-
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

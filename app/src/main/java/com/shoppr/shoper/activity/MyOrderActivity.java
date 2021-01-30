@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class MyOrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_order);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager=new SessonManager(this);
         myOrderRecycler=findViewById(R.id.myOrderRecycler);
         emptyOrderText=findViewById(R.id.emptyOrderText);
@@ -98,7 +100,7 @@ public class MyOrderActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull Holder holder, int position) {
             Order order=orderList.get(position);
-            holder.rfIdText.setText("Ref Id :"+order.getRefid());
+            holder.rfIdText.setText("Order Id :"+order.getRefid());
             holder.dateText.setText("Date :"+order.getCreatedAt());
             holder.totalText.setText("Total :"+order.getTotal());
             holder.serviceChargeText.setText("Service Charge :"+order.getServiceCharge());
@@ -110,7 +112,7 @@ public class MyOrderActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(context,OrderDetailsActivity.class)
-                    .putExtra("position",position));
+                    .putExtra("orderId",order.getId()));
                 }
             });
 
@@ -134,5 +136,14 @@ public class MyOrderActivity extends AppCompatActivity {
                 statusText=itemView.findViewById(R.id.statusText);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id==android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

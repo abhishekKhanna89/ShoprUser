@@ -15,6 +15,7 @@ import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
+import com.shoppr.shoper.Model.OrderDetails.OrdersDetailsModel;
 import com.shoppr.shoper.Model.OrdersList.OrdersListModel;
 import com.shoppr.shoper.Model.OtpVerifyModel;
 import com.shoppr.shoper.Model.PaymentSuccess.PaymentSuccessModel;
@@ -26,6 +27,7 @@ import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Model.StartChat.StartChatModel;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
+import com.shoppr.shoper.Model.TrackLoaction.TrackLoactionModel;
 import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
 import com.shoppr.shoper.requestdata.InitiatePaymentRequest;
@@ -168,5 +170,13 @@ public interface ApiService {
     @GET("orders")
     Call<OrdersListModel>apiMyOrder(@Header("Authorization") String token);
 
+    @NonNull
+    @GET("order-details/{order_id}")
+    Call<OrdersDetailsModel>apiOrderDetails(@Header("Authorization") String token,
+                                            @Path("order_id")int order_id);
 
+    @NonNull
+    @GET("track-location/{message_id}")
+    Call<TrackLoactionModel>apiTrackLocation(@Header("Authorization") String token,
+                                             @Path("message_id")int message_id);
 }

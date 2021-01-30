@@ -13,7 +13,7 @@ public class Detail {
     private Integer chatId;
     @SerializedName("message")
     @Expose
-    private Object message;
+    private String message;
     @SerializedName("direction")
     @Expose
     private Integer direction;
@@ -40,16 +40,16 @@ public class Detail {
     private String updatedAt;
     @SerializedName("deleted_at")
     @Expose
-    private Object deletedAt;
+    private String deletedAt;
     @SerializedName("order_id")
     @Expose
     private Integer orderId;
     @SerializedName("lat")
     @Expose
-    private Object lat;
+    private String lat;
     @SerializedName("lang")
     @Expose
-    private Object lang;
+    private String lang;
 
     public Integer getId() {
         return id;
@@ -67,11 +67,11 @@ public class Detail {
         this.chatId = chatId;
     }
 
-    public Object getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(Object message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 
@@ -143,7 +143,7 @@ public class Detail {
         return deletedAt;
     }
 
-    public void setDeletedAt(Object deletedAt) {
+    public void setDeletedAt(String deletedAt) {
         this.deletedAt = deletedAt;
     }
 
@@ -155,19 +155,19 @@ public class Detail {
         this.orderId = orderId;
     }
 
-    public Object getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(Object lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 
-    public Object getLang() {
+    public String getLang() {
         return lang;
     }
 
-    public void setLang(Object lang) {
+    public void setLang(String lang) {
         this.lang = lang;
     }
 

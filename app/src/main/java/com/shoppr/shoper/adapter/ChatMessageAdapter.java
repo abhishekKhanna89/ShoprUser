@@ -394,7 +394,8 @@ import static android.os.FileUtils.copy;
         holder.trackLocationText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, TrackLoactionActivity.class));
+                context.startActivity(new Intent(context, TrackLoactionActivity.class)
+                        .putExtra("messageId",chat.getChatId()));
             }
         });
 

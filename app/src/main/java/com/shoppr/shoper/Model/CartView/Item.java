@@ -13,7 +13,7 @@ public class Item {
     private Integer chatId;
     @SerializedName("message")
     @Expose
-    private Object message;
+    private String message;
     @SerializedName("direction")
     @Expose
     private Integer direction;
@@ -64,11 +64,11 @@ public class Item {
         this.chatId = chatId;
     }
 
-    public Object getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(Object message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 

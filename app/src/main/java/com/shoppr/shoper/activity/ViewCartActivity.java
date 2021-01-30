@@ -43,6 +43,7 @@ import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.Progressbar;
 import com.shoppr.shoper.util.SessonManager;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -79,6 +80,7 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         chatId=getIntent().getIntExtra("chatId",0);
+        //Log.d("resssssss",""+chatId);
 
         RvMyCart = (RecyclerView) findViewById(R.id.rv_my_cart);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ViewCartActivity.this, 1);
@@ -261,15 +263,10 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                                     cardOrderSummary.setVisibility(View.VISIBLE);
                                     linrBottomOrder.setVisibility(View.VISIBLE);
                                     walletCardView.setVisibility(View.VISIBLE);
-                                    RvMyCart.setHasFixedSize(true);
-                                    RvMyCart.setItemViewCacheSize(20);
-                                    RvMyCart.setDrawingCacheEnabled(true);
-                                    RvMyCart.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-                                    MyCartAdapter myCartAdapter = new MyCartAdapter(ViewCartActivity.this, arrCartItemList);
-                                    RvMyCart.setAdapter(myCartAdapter);
-
-
                                 }
+                                MyCartAdapter myCartAdapter = new MyCartAdapter(ViewCartActivity.this, arrCartItemList);
+                                RvMyCart.setAdapter(myCartAdapter);
+                                myCartAdapter.notifyDataSetChanged();
 
                             }
                         }
@@ -336,7 +333,6 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             PaymentSuccessModel paymentSuccessModel=response.body();
-                            //Toast.makeText(ViewCartActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(ViewCartActivity.this,OrderConfirmActivity.class)
                                     .putExtra("refid",paymentSuccessModel.getData().getRefid()));
                         }else {
@@ -381,10 +377,8 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
 
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-            Glide.with(context)
-                    .load(arList.get(position).getFilePath())
-                    .into(holder.productImage);
-            holder.nameProductText.setText(arList.get(position).getType());
+            Picasso.get().load(arList.get(position).getFilePath()).into(holder.productImage);
+            holder.nameProductText.setText(arList.get(position).getMessage());
             holder.priceProductText.setText("\u20B9 "+arList.get(position).getPrice());
             holder.quantityProductText.setText(arList.get(position).getQuantity());
 
@@ -469,15 +463,9 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
         return super.onOptionsItemSelected(item);
     }
 
+    /*@Override
+    protected void onDestroy() {
+        super.onDestroy();
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        cardOrderSummary.setVisibility(View.GONE);
-        walletCardView.setVisibility(View.GONE);
-        RvMyCart.setVisibility(View.GONE);
-        hitAddtoCartApi(chatId);
-
-    }
-
+    }*/
 }
