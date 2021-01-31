@@ -77,7 +77,6 @@ dependencies {
     implementation 'io.agora.rtc:full-sdk:3.0.0'
     //implementation files('libs/agora-rtc-sdk.jar')
 
-    implementation 'com.akexorcist:google-direction-library:1.2.1'
 
 
 }

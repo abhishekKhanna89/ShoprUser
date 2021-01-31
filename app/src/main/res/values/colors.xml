@@ -29,4 +29,5 @@
     <!-- Chat Activity -->
     <color name="localBackground">#827b92</color>
     <color name="remoteBackground">#484258</color>
+    <color name="skyLight">#e2f0f1</color>
 </resources>

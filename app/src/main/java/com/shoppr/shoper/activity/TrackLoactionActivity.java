@@ -1,57 +1,42 @@
 package com.shoppr.shoper.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.akexorcist.googledirection.DirectionCallback;
-import com.akexorcist.googledirection.GoogleDirection;
-import com.akexorcist.googledirection.constant.AvoidType;
-import com.akexorcist.googledirection.constant.TransportMode;
-import com.akexorcist.googledirection.model.Direction;
-import com.akexorcist.googledirection.model.Route;
-import com.akexorcist.googledirection.util.DirectionConverter;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.shoppr.shoper.Model.TrackLoaction.TrackLoactionModel;
-import com.shoppr.shoper.OtpActivity;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.Service.DirectionsParser;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
-import com.tecorb.hrmovecarmarkeranimation.AnimationClass.HRMarkerAnimation;
-import com.tecorb.hrmovecarmarkeranimation.CallBacks.UpdateLocationCallBack;
 
-import org.json.JSONArray;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -59,18 +44,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static java.security.AccessController.getContext;
 
-public class TrackLoactionActivity extends AppCompatActivity implements OnMapReadyCallback,DirectionCallback
+
+public class TrackLoactionActivity extends AppCompatActivity implements OnMapReadyCallback
        /* LocationListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener*/{
     private SupportMapFragment mapFragment;
@@ -79,11 +66,13 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
     SessonManager sessonManager;
     int messageId;
     public static  double lat,lang;
-    LatLng sydney,india,point;
-    private Polyline mPolyline;
-    ArrayList<LatLng> mMarkerPoints;
+    LatLng sydney,india,aaa;
     private String serverKey = "AIzaSyCHl8Ff_ghqPjWqlT2BXJH5BOYH1q-sw0E";
     private String[] colors = {"#7fff7272", "#7f31c7c5", "#7fff8a00"};
+
+    String str_dest,str_org,url;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    CountDownTimer countDownTimer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,16 +80,10 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
         sessonManager=new SessonManager(this);
 
         messageId=getIntent().getIntExtra("messageId",0);
-
-
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        assert mapFragment != null;
         mapFragment.getMapAsync(this);
-        mMarkerPoints = new ArrayList<>();
         viewTrackLoaction();
-        requestDirection();
     }
-
     private void viewTrackLoaction() {
         if (CommonUtils.isOnline(TrackLoactionActivity.this)) {
             Call<TrackLoactionModel>call= ApiExecutor.getApiService(this)
@@ -119,7 +102,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                                  .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car));
                                  mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(india, 15));
                                  //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(india,12f));
-                                //mMap.setPadding(2000, 4000, 2000, 4000);
+                                 mMap.setPadding(2000, 4000, 2000, 4000);
                             }
                         }
                     }
@@ -138,42 +121,218 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
 
+        viewTrackLoaction();
+
+        countDownTimer =  new CountDownTimer(20000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                //viewTrackLoaction();
+
+            }
+
+            public void onFinish() {
+                viewTrackLoaction();
+                countDownTimer.start();
+
+            }
+        };
+        countDownTimer.start();
         // Add a marker in Sydney and move the camera
         sydney = new LatLng(28.7041, 77.1025);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+        mMap.setPadding(2000, 4000, 2000, 4000);
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,12f));
        // mMap.setPadding(2000, 4000, 2000, 4000);
-
-
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                aaa=new LatLng(lat,lang);
+                if (aaa!=null){
+                    getRequestUrl(sydney,aaa);
+                    getDeviceLocation(sydney,aaa);
+                }
+            }
+        },2000);
 
     }
+    /*AIzaSyBq0kgTo_fwzmQpo-z901CFaXfKVqZXma8*/
+    private String getRequestUrl(LatLng sydney, LatLng aaa) {
+        if (sydney !=null||aaa!=null){
+            Log.d("LocationService", sydney +":"+aaa);
+            str_org = "origin="+ sydney.latitude+","+ sydney.longitude;
+            str_dest = "destination="+aaa.latitude+","+aaa.longitude;
 
-    private void requestDirection() {
-        GoogleDirection.withServerKey(serverKey)
-                .from(india)
-                .to(sydney)
-                .transportMode(TransportMode.WALKING)
-                .alternativeRoute(true)
-                .execute(this);
+            String sensor =  "sensor=true";
+            String mode = "mode=driving";
+            String output = "json";
+            String key = "key=AIzaSyCHl8Ff_ghqPjWqlT2BXJH5BOYH1q-sw0E";
+            String param = str_org+"&"+str_dest+"&"+sensor+"&"+mode;
+            url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+param+"&"+key;
+
+        }
+        return url;
+    }
+    private String requestDirection(String reqUrl) throws IOException {
+        String responseString = "";
+        InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+        try {
+            URL url = new URL(reqUrl);
+            httpURLConnection = (HttpURLConnection)url.openConnection();
+            httpURLConnection.connect();
+
+            ////////////Get Response
+            inputStream = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            StringBuffer stringBuffer = new StringBuffer();
+            String line = "";
+            while ((line=bufferedReader.readLine())!=null){
+                stringBuffer.append(line);
+            }
+
+            responseString = stringBuffer.toString();
+            bufferedReader.close();
+            inputStreamReader.close();
+
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(inputStream!=null){
+                inputStream.close();
+            }
+            httpURLConnection.disconnect();
+        }
+        return responseString;
     }
 
+    public class TaskRequestDirections extends AsyncTask<String,Void,String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            String responseString = "";
+            try {
+                responseString = requestDirection(strings[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return responseString;
+        }
 
-    @Override
-    public void onDirectionSuccess(@Nullable Direction direction) {
-        Toast.makeText(this, ""+direction, Toast.LENGTH_SHORT).show();
-        for (int i = 0; i < direction.getRouteList().size(); i++) {
-            Route route = direction.getRouteList().get(i);
-            String color = colors[i % colors.length];
-            ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
-            mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.parseColor(color)));
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //Parse json here
+            TaskParser taskParser = new TaskParser();
+            taskParser.execute(s);
         }
     }
 
-    @Override
-    public void onDirectionFailure(@NonNull Throwable t) {
+    public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>> > {
 
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+            JSONObject jsonObject = null;
+            List<List<HashMap<String, String>>> routes = null;
+            try {
+                jsonObject = new JSONObject(strings[0]);
+                DirectionsParser directionsParser = new DirectionsParser();
+                routes = directionsParser.parse(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+            //Get list route and display it into the map
+
+            ArrayList points = null;
+
+            PolylineOptions polylineOptions = null;
+
+            for (List<HashMap<String, String>> path : lists) {
+                points = new ArrayList();
+                polylineOptions = new PolylineOptions();
+
+                for (HashMap<String, String> point : path) {
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lon = Double.parseDouble(point.get("lon"));
+
+                    points.add(new LatLng(lat,lon));
+                }
+
+                polylineOptions.addAll(points);
+                polylineOptions.width(30);
+                polylineOptions.color(Color.BLUE);
+                polylineOptions.geodesic(true);
+            }
+
+            if (polylineOptions!=null) {
+                mMap.addPolyline(polylineOptions);
+            } else {
+                Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
+    public void getDeviceLocation(LatLng sydney, LatLng aaa) {
+        final ArrayList<LatLng> listPoints = new ArrayList<>();
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        try {
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            // Log.d(TAG, "onComplete: found location!");
+
+                            listPoints.add(sydney);
+                            listPoints.add(aaa);
+
+                            if (listPoints.size() == 2) {
+                                //Create the URL to get request from first marker to second marker
+                                String url = getRequestUrl(listPoints.get(0), listPoints.get(1));
+                                TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                                taskRequestDirections.execute(url);
+                            }
+
+
+                        } else {
+                            Log.d("TAG", "onComplete: current location is null");
+                            Toast.makeText(TrackLoactionActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+        } catch (SecurityException e) {
+            Log.e("TAG", "getDeviceLocation: SecurityException: " + e.getMessage());
+        }
+    }
+
+
+
+    @Override
+    protected void onPause() {
+        countDownTimer.cancel();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        countDownTimer.cancel();
+        super.onDestroy();
+    }
+
 }

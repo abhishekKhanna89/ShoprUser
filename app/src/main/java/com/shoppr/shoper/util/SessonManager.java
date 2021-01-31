@@ -25,6 +25,10 @@ public class SessonManager {
     public static final String mobileNo="mobile";
     public static final String chanelId="CHANEL_ID";
     public static final String NOTIFICATION_TOKEN="notification_token";
+    
+    public static final String driver_latitude="latitude";
+    public  static final String driver_longitude="longitude";
+    
     public Dialog mDialog;
     public SessonManager(Context ctx) {
         sharedPreference = ctx.getSharedPreferences(NAME, Context.MODE_PRIVATE);
@@ -110,6 +114,21 @@ public class SessonManager {
     }
 
 
+    public void setDriver_latitude(String Latitude){
+        editor.putString(driver_latitude,Latitude);
+        editor.apply();
+    }
+    public void setDriver_longitude(String Longitude){
+        editor.putString(driver_longitude,Longitude);
+        editor.apply();
+    }
+    
+    public  String getDriver_latitude(){
+        return sharedPreference.getString(driver_latitude,"");
+    }
+    public String getDriver_longitude(){
+        return sharedPreference.getString(driver_longitude,"");
+    }
     public void hideProgress() {
         while (mDialog != null && mDialog.isShowing()){
             mDialog.dismiss();
