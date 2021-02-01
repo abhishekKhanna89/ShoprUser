@@ -46,6 +46,7 @@
             android:backgroundTint="@color/white"/>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -54,81 +55,99 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <LinearLayout
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/monster"
-                    android:textStyle="bold"
-                    android:textSize="29sp"
-                    android:textColor="#333333"
-                    android:lineSpacingExtra="11sp"
-                    android:gravity="center_horizontal"
-                    android:text="We Shop and deliver\nAnything"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/monster"
-                    android:textStyle="normal"
-                    android:textSize="20sp"
-                    android:textColor="#333333"
-                    android:lineSpacingExtra="4sp"
-                    android:gravity="center_horizontal"
-                    android:text="From your local market!"/>
-
-
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="10dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="5dp"
+                app:cardMaxElevation="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/cardviewbackground"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_location"
-                        android:paddingStart="10dp"
-                        android:paddingLeft="10dp"
-                        android:backgroundTint="@color/brown"/>
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="Lajpat Nagar"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/browncardviewlayout"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                        android:fontFamily="@font/monster"
+                        android:gravity="center_horizontal"
+                        android:lineSpacingExtra="11sp"
+                        android:text="We Shop and deliver\nAnything"
+                        android:textColor="#333333"
+                        android:textSize="29sp"
+                        android:textStyle="bold" />
+
                     <TextView
-                        android:id="@+id/shoprListText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="10dp"
-                        android:paddingLeft="10dp"
-                        android:text="9 shoppers at this location"/>
+                        android:fontFamily="@font/monster"
+                        android:gravity="center_horizontal"
+                        android:lineSpacingExtra="4sp"
+                        android:text="From your local market!"
+                        android:textColor="#333333"
+                        android:textSize="20sp"
+                        android:textStyle="normal" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="30dp"
+                        android:background="@drawable/cardviewbackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_location"
+                            android:backgroundTint="@color/brown"
+                            android:paddingStart="10dp"
+                            android:paddingLeft="10dp" />
+
+                        <TextView
+                            android:id="@+id/addressText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="Lajpat Nagar" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="30dp"
+                        android:background="@drawable/browncardviewlayout"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/shoprListText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="10dp"
+                            android:paddingLeft="10dp"
+                            android:text="9 shoppers at this location" />
+                    </LinearLayout>
+
                 </LinearLayout>
-
-            </LinearLayout>
-
+            </androidx.cardview.widget.CardView>
             <LinearLayout
+                android:id="@+id/lqq"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -137,29 +156,29 @@
                 android:layout_marginTop="100dp"
                 android:orientation="vertical"
                 android:layout_above="@+id/LL"
-                android:background="@color/colorPrimary">
+                android:background="@color/textColor">
                 <LinearLayout
                     android:onClick="chats"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/monster"
-                    android:textStyle="bold"
-                    android:textSize="26sp"
-                    android:textColor="#ffffff"
-                    android:lineSpacingExtra="7sp"
-                    android:gravity="center_horizontal"
-                    android:text="Upload Shopping List"
-                    />
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_below="@+id/textshpng"
-                    android:background="@drawable/ic_shoppingcart"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/monster"
+                        android:textStyle="bold"
+                        android:textSize="26sp"
+                        android:textColor="#ffffff"
+                        android:lineSpacingExtra="7sp"
+                        android:gravity="center_horizontal"
+                        android:text="Upload Shopping List"
+                        />
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_below="@+id/textshpng"
+                        android:background="@drawable/ic_shoppingcart"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -169,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:background="@color/white"
+                android:background="@color/colorPrimary"
                 android:layout_alignParentBottom="true">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -187,6 +206,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
+                        android:textColor="@color/white"
                         android:text="Notification"/>
                 </LinearLayout>
                 <LinearLayout
@@ -206,6 +226,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Store List"
+                        android:textColor="@color/white"
                         android:layout_marginLeft="10dp"/>
                 </LinearLayout>
             </LinearLayout>

@@ -1,321 +1,377 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
+
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="end"
-    android:layout_margin="5dp"
-    android:orientation="vertical">
-    <!--Todo:- Image Type-->
-    <LinearLayout
-        android:id="@+id/imageLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:background="#e0ffc6"
-        android:orientation="vertical">
-        <ImageView
-            android:id="@+id/Image"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:padding="5dp"
-            android:scaleType="fitXY"/>
-        <TextView
-            android:id="@+id/Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Location"
-            android:textColor="#000000" />
-        <TextView
-            android:id="@+id/dateImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_gravity="end"
-            android:text="11:00 AM"
-            android:textColor="#000000"
-            android:textSize="10sp" />
-    </LinearLayout>
-    <!--Todo:- Text Type-->
-    <LinearLayout
-        android:id="@+id/textLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_margin="5dp"
-        android:background="#e0ffc6"
         android:orientation="vertical">
-        <TextView
+        <!--Todo:- Image Type-->
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/imageLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/message_body"
-            android:textColor="#000"
-            android:padding="10dp"
-            android:elevation="2dp"
-            android:textSize="18dp"
-            android:layout_gravity="end" />
-
-        <TextView
-            android:id="@+id/dateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_gravity="end"
-            android:text="11:00 AM"
-            android:textColor="#000000"
-            android:textSize="10sp" />
-    </LinearLayout>
-    <!--Todo:- Product Type-->
-    <LinearLayout
-        android:id="@+id/productLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="5dp"
-        android:background="#e0ffc6"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/productImage"
-                    android:layout_width="200dp"
-                    android:layout_height="150dp"
-                    android:scaleType="centerCrop"/>
-
-                <LinearLayout
-                    android:id="@+id/greenLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:gravity="center"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Added to\nshoping bag"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/green_right" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/closeRedLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/close_red" />
-                </LinearLayout>
-
-            </LinearLayout>
-            <TextView
-                android:id="@+id/productMessage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Location"
-                android:textColor="#000000" />
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff"
-                android:padding="5dip">
-                <TextView
-                    android:id="@+id/pqText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:textColor="@android:color/black"
-                    android:text="5/₹ 500"/>
-                <TextView
-                    android:id="@+id/acceptText"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:lines="1"
-                    android:textStyle="bold"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/green"
-                    android:text="Accept" />
-                <TextView
-                    android:id="@+id/rejectText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:textStyle="bold"
-                    android:gravity="right"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:text="Reject" />
-
-                <TextView
-                    android:id="@+id/cancelText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:visibility="gone"
-                    android:textStyle="bold"
-                    android:gravity="end"
-                    android:textColor="#C9A1A1A1"
-                    android:text="Cancel" />
-            </LinearLayout>
-            <!--<LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_weight="3"
-                android:background="@drawable/layout_bg">
-                <TextView
-                    android:id="@+id/pqText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:layout_weight="1"
-                    android:text="₹ 500 -5 kg"/>
-                <TextView
-                    android:id="@+id/acceptText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/green"
-                    android:textStyle="bold"
-                    android:text="Accept"
-                    />
-                <TextView
-                    android:id="@+id/rejectText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:textStyle="bold"
-                    android:text="Reject"
-                    />
-                <TextView
-                    android:id="@+id/cancelText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:visibility="gone"
-                    android:gravity="center"
-                    android:layout_marginRight="5dp"
-                    android:textColor="#C9A1A1A1"
-                    android:textStyle="bold"
-                    android:text="Cancel"
-                    />
-            </LinearLayout>-->
+            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="5dp"
+            app:cmv_arrowPosition="left"
+            android:layout_gravity="end">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginRight="5dp"
-                android:gravity="end"
-                android:orientation="horizontal">
-
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/Image"
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"
+                    android:padding="5dp"
+                    android:scaleType="fitXY" />
                 <TextView
-                    android:id="@+id/dateProduct"
+                    android:id="@+id/Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Location"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/dateImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
                     android:padding="5dp"
                     android:text="11:00 AM"
                     android:textColor="#000000"
                     android:textSize="10sp" />
             </LinearLayout>
-
-        </LinearLayout>
-    </LinearLayout>
-    <!--Todo:- Ratings Type-->
-    <LinearLayout
-        android:id="@+id/ratingLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:background="#e0ffc6"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/ratingsMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Location"
-            android:textColor="#000000" />
-        <androidx.appcompat.widget.AppCompatRatingBar
-            android:id="@+id/ratingBar"
-            android:stepSize="1"
-            android:numStars="5"
-            android:secondaryProgressTint="@android:color/transparent"
-            android:progressTint="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/dateRating"
+        </me.himanshusoni.chatmessageview.ChatMessageView>
+        <!--Todo:- Text Type-->
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/textLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_gravity="start"
-            android:text="11:00 AM"
-            android:textColor="#000000"
-            android:textSize="10sp" />
-    </LinearLayout>
-        <!--Todo:- Audio -->
-            <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
-                android:id="@+id/voicePlayerView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:enableVisualizer="true"
-                android:layout_gravity="right"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                app:visualizationPlayedColor="#ff7700"
-                app:visualizationNotPlayedColor="#727171"
-                app:playPauseBackgroundColor="#ff7700"
-                app:timingBackgroundColor="#6AFF7700"
-                app:seekBarProgressColor="#000"
-                app:shareCornerRadius="100"
-                app:showShareButton="false"
-                app:playPauseCornerRadius="100"
-                app:showTiming="true"
-
-                app:viewCornerRadius="100"
-                app:viewBackground="#C6C4CF"
-                app:progressTimeColor="#000"
-                app:seekBarThumbColor="#FFC107"
-                app:playProgressbarColor="#ff7700" />
-
-
-        <!--Todo:- Map Type-->
+            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:layout_margin="5dp"
+            app:cmv_arrowPosition="left"
+            android:layout_gravity="end">
         <LinearLayout
-            android:id="@+id/mapLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background="#e0ffc6"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/message_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:elevation="2dp"
+                android:padding="10dp"
+                android:textColor="#000"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/dateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="5dp"
+                android:text="11:00 AM"
+                android:textColor="#000000"
+                android:textSize="10sp" />
+        </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
+        <!--Todo:- Product Type-->
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/productLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:layout_margin="5dp"
+            app:cmv_arrowPosition="left"
+            android:layout_gravity="end">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/productImage"
+                        android:layout_width="200dp"
+                        android:layout_height="150dp"
+                        android:scaleType="centerCrop" />
+
+                    <LinearLayout
+                        android:id="@+id/greenLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Added to\nshoping bag"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@drawable/green_right" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/closeRedLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@drawable/close_red" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/productMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Location"
+                    android:textColor="#000000" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:orientation="horizontal"
+                    android:padding="5dip">
+
+                    <TextView
+                        android:id="@+id/pqText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:text="5/₹ 500"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:id="@+id/acceptText"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:lines="1"
+                        android:text="Accept"
+                        android:textColor="@color/green"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/rejectText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:lines="1"
+                        android:text="Reject"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/cancelText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:lines="1"
+                        android:text="Cancel"
+                        android:textColor="#C9A1A1A1"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </LinearLayout>
+                <!--<LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:layout_weight="3"
+                    android:background="@drawable/layout_bg">
+                    <TextView
+                        android:id="@+id/pqText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:text="₹ 500 -5 kg"/>
+                    <TextView
+                        android:id="@+id/acceptText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/green"
+                        android:textStyle="bold"
+                        android:text="Accept"
+                        />
+                    <TextView
+                        android:id="@+id/rejectText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:textStyle="bold"
+                        android:text="Reject"
+                        />
+                    <TextView
+                        android:id="@+id/cancelText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:textColor="#C9A1A1A1"
+                        android:textStyle="bold"
+                        android:text="Cancel"
+                        />
+                </LinearLayout>-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="5dp"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/dateProduct"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="11:00 AM"
+                        android:textColor="#000000"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
+        <!--Todo:- Ratings Type-->
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/ratingLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:layout_margin="5dp"
+            app:cmv_arrowPosition="left"
+            android:layout_gravity="end">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ratingsMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Location"
+                android:textColor="#000000" />
+
+            <androidx.appcompat.widget.AppCompatRatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:progressTint="@color/black"
+                android:secondaryProgressTint="@android:color/transparent"
+                android:stepSize="1" />
+
+            <TextView
+                android:id="@+id/dateRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:padding="5dp"
+                android:text="11:00 AM"
+                android:textColor="#000000"
+                android:textSize="10sp" />
+        </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
+        <!--Todo:- Audio -->
+
+        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+            android:id="@+id/voicePlayerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:enableVisualizer="true"
+            app:playPauseBackgroundColor="#ff7700"
+            app:playPauseCornerRadius="100"
+            app:playProgressbarColor="#ff7700"
+            app:progressTimeColor="#000"
+            app:seekBarProgressColor="#000"
+            app:seekBarThumbColor="#FFC107"
+            app:shareCornerRadius="100"
+            app:showShareButton="false"
+            app:showTiming="true"
+
+            app:timingBackgroundColor="#6AFF7700"
+            app:viewBackground="#C6C4CF"
+            app:viewCornerRadius="100"
+            app:visualizationNotPlayedColor="#727171"
+            app:visualizationPlayedColor="#ff7700" />
+
+
+        <!--Todo:- Map Type-->
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/mapLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:layout_margin="5dp"
+            app:cmv_arrowPosition="left"
+            android:layout_gravity="end">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:orientation="vertical">
 
             <ImageView
@@ -324,6 +380,7 @@
                 android:layout_height="150dp"
                 android:padding="5dp"
                 android:scaleType="fitXY" />
+
             <TextView
                 android:id="@+id/locationText"
                 android:layout_width="match_parent"
@@ -331,6 +388,7 @@
                 android:padding="10dp"
                 android:text="Location"
                 android:textColor="#000000" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -349,31 +407,43 @@
                     android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
         <!--Todo:- Address Type-->
-        <LinearLayout
+        <me.himanshusoni.chatmessageview.ChatMessageView
             android:id="@+id/addressLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:layout_margin="5dp"
+            app:cmv_arrowPosition="left"
+            android:layout_gravity="end">
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background="#e0ffc6"
-            android:layout_marginTop="5dp"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/addressText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:textSize="16sp"
                 android:text="Please share your delivery address\nAnd share the location on the map."
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
             <TextView
                 android:id="@+id/addressLinkText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:textSize="16sp"
                 android:text="@string/your_string_here"
-                android:textColor="@android:color/holo_blue_dark" />
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="16sp" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -392,25 +462,35 @@
                     android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
         <!--Todo:- Track Location Type-->
-        <LinearLayout
+        <me.himanshusoni.chatmessageview.ChatMessageView
             android:id="@+id/trackLocationLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:layout_margin="5dp"
+            app:cmv_arrowPosition="left"
+            android:layout_gravity="end">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background="#e0ffc6"
-            android:layout_marginTop="5dp"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/trackLocationText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:gravity="top|left"
-                android:textSize="16sp"
                 android:lines="3"
+                android:padding="10dp"
                 android:text="Please share your delivery address\nAnd share the location on the map."
-                android:textColor="@android:color/holo_blue_dark" />
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="16sp" />
         </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
     </LinearLayout>
 </ScrollView>

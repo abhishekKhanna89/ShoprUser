@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/layout_bg">
+        android:background="@color/textColor">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:text="Available Balance"
                 android:textStyle="bold"
+                android:textColor="@color/white"
                 android:textSize="15dp"/>
             <TextView
                 android:id="@+id/balanceText"
@@ -32,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="\u20B9 300.00"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="18dp"/>
         </LinearLayout>

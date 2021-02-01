@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:clipToPadding="false"
-    android:background="#FAF6E3"
+    android:background="@drawable/chat_background"
     android:focusableInTouchMode="true"
     tools:context=".activity.ChatDetailsActivity">
 
@@ -54,7 +54,7 @@
             android:layout_marginRight="5dp"
             android:padding="10dp"
             android:imeOptions="actionDone"
-            android:background="@drawable/eddittext"
+            android:background="@drawable/rounded_edit"
             android:hint="Write a message"
             android:textColorHint="@color/black"
             android:inputType="textCapSentences"

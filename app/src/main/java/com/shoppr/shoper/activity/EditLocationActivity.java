@@ -6,7 +6,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,13 +14,10 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -37,7 +33,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,16 +46,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.gson.Gson;
+import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.ShareLocationRequest;
-import com.shoppr.shoper.requestdata.TextTypeRequest;
 import com.shoppr.shoper.util.CheckNetwork;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
@@ -71,25 +61,22 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class ShareLocationActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener{
-
+public class EditLocationActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener{
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final String TAG = "ShareLocationActivity";
     AutoCompleteTextView autoCompleteTextViewLoaction;
     Button addBTN;
-    LatLng getlatLng;
+    public static LatLng latLng;
     Marker marker;
     Location currentLocation;
-    String latitude, longitude,location_address;
+    public static String latitude, longitude,location_address;
     double lateee;
     double lngeee;
     Circle circle;
@@ -106,7 +93,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_share_location);
+        setContentView(R.layout.activity_edit_location);
         sessonManager=new SessonManager(this);
         addBTN=findViewById(R.id.btn_map_address);
         imgClose=findViewById(R.id.imgClose);
@@ -119,7 +106,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
             public void onClick(View view) {
                 location_address= autoCompleteTextViewLoaction.getText().toString();
 
-                Geocoder coder = new Geocoder(ShareLocationActivity.this);
+                Geocoder coder = new Geocoder(EditLocationActivity.this);
                 List<Address> address;
 
                 try {
@@ -132,10 +119,11 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                         //Lets take first possibility from the all possibilities.
                         try {
                             Address location = address.get(0);
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
                             latitude = String.valueOf(latLng.latitude);
                             longitude = String.valueOf(latLng.longitude);
+
 
                             //sharedPreferences.edit().putString("lat", ""+latitude).apply();
                             //sharedPreferences.edit().putString("lng", ""+longitude).apply();
@@ -145,10 +133,13 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                             mMap.addMarker(new MarkerOptions().position(latLng));
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
 
+
+
+
 //                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
                             getAddress(latLng.latitude,latLng.longitude);
                         } catch (IndexOutOfBoundsException er) {
-                            Toast.makeText(ShareLocationActivity.this, "Location isn't available", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditLocationActivity.this, "Location isn't available", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -158,14 +149,17 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     e.printStackTrace();
                 }
 
-                if (CommonUtils.isOnline(ShareLocationActivity.this)) {
+
+               onBackPressed();
+
+                /*if (CommonUtils.isOnline(EditLocationActivity.this)) {
                     //sessonManager.showProgress(ChatActivity.this);
                     ShareLocationRequest shareLocationRequest=new ShareLocationRequest();
                     shareLocationRequest.setType("address");
                     shareLocationRequest.setAddress(location_address);
                     shareLocationRequest.setLat(latitude);
                     shareLocationRequest.setLang(longitude);
-                    Call<SendModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
+                    Call<SendModel> call= ApiExecutor.getApiService(EditLocationActivity.this)
                             .apiShareLocation("Bearer "+sessonManager.getToken(),chat_id,shareLocationRequest);
                     call.enqueue(new Callback<SendModel>() {
                         @Override
@@ -174,9 +168,9 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                             if (response.body()!=null) {
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                     onBackPressed();
-                                    Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EditLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 }else {
-                                    Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EditLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -187,8 +181,8 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                         }
                     });
                 }else {
-                    CommonUtils.showToastInCenter(ShareLocationActivity.this, getString(R.string.please_check_network));
-                }
+                    CommonUtils.showToastInCenter(EditLocationActivity.this, getString(R.string.please_check_network));
+                }*/
 
 
             }
@@ -245,9 +239,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             getLocationPermission();
         }
-
     }
-
     public void goToLocationFromAddress(String strAddress) {
         mMap.clear();
         //Create coder with Activity context - this
@@ -264,7 +256,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                 //Lets take first possibility from the all possibilities.
                 try {
                     Address location = address.get(0);
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
                     latitude = String.valueOf(latLng.latitude);
                     longitude = String.valueOf(latLng.longitude);
@@ -293,7 +285,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void getAddress(double lat, double log) {
-        Geocoder geocoder = new Geocoder(ShareLocationActivity.this);
+        Geocoder geocoder = new Geocoder(EditLocationActivity.this);
 
         //  String addresses = String.valueOf(geocoder.getFromLocation(lat, log, 1));
 
@@ -382,7 +374,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         }) {
         };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(ShareLocationActivity.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(EditLocationActivity.this);
         requestQueue.add(stringRequest);
     }
 
@@ -430,7 +422,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                                 //sharedPreferences.edit().putString("lat", ""+latitude).apply();
                                 //sharedPreferences.edit().putString("lng", ""+longitude).apply();
 
-                                Geocoder geocoder = new Geocoder(ShareLocationActivity.this);
+                                Geocoder geocoder = new Geocoder(EditLocationActivity.this);
                                 List<Address> list = null;
                                 try {
                                     list = geocoder.getFromLocation(lateee, lngeee, 1);
@@ -457,7 +449,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(ShareLocationActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditLocationActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -478,4 +470,5 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         return mMap.addCircle(circleOptions);
 
     }
+
 }

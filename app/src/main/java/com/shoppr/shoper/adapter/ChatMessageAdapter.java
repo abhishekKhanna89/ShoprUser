@@ -70,6 +70,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import me.himanshusoni.chatmessageview.ChatMessageView;
 import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -435,32 +436,33 @@ import static android.os.FileUtils.copy;
         /*Todo:- Location*/
         ImageView locationImage;
         TextView locationText,locationDate;
-        LinearLayout mapLayout;
+         ChatMessageView mapLayout;
         /*Todo:- Text*/
         TextView message_body,dateText;
-        LinearLayout textLayout;
+         ChatMessageView textLayout;
         /*Todo:- Product*/
         ImageView productImage;
         TextView pqText,dateProduct,productMessage,acceptText,rejectText,cancelText;
-        LinearLayout productLayout,greenLayout,closeRedLayout;
+         LinearLayout greenLayout,closeRedLayout;
+         ChatMessageView productLayout;
         /*Todo:- Image*/
         ImageView image;
         TextView imageText,dateImage;
-        LinearLayout imageLayout;
+         ChatMessageView imageLayout;
         /*Todo:- Rating*/
-        LinearLayout ratingLayout;
+        ChatMessageView ratingLayout;
         TextView ratingsMessage,dateRating;
         AppCompatRatingBar ratingBar;
         /*Todo:- Audio*/
         VoicePlayerView voicePlayerView;
 
         /*Todo:- Address*/
-         LinearLayout addressLayout;
+        ChatMessageView addressLayout;
          TextView addressText,addressLinkText
                  ,addressDate;
 
          /*Todo:- Track Location*/
-         LinearLayout trackLocationLayout;
+         ChatMessageView trackLocationLayout;
          TextView trackLocationText;
 
         public Holder(@NonNull View itemView) {

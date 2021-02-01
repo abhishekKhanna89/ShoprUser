@@ -1,4 +1,5 @@
 package com.shoppr.shoper;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,6 +7,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,6 +43,7 @@ public class StorelistingActivity extends AppCompatActivity {
     Storeadapter storeadapter;
     List<Store> storeList;
     SessonManager sessonManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,30 +51,41 @@ public class StorelistingActivity extends AppCompatActivity {
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+        TextView textAddress = findViewById(R.id.textAddress);
+        ImageView back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        String address = getIntent().getStringExtra("address");
+        textAddress.setText(address);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        sessonManager=new SessonManager(this);
-        storerecyclerview=findViewById(R.id.storerecyclerview);
+        sessonManager = new SessonManager(this);
+        storerecyclerview = findViewById(R.id.storerecyclerview);
         storerecyclerview.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new GridLayoutManager(StorelistingActivity.this,1);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(StorelistingActivity.this, 1);
         storerecyclerview.setLayoutManager(layoutManager);
 
         setmethod();
     }
-    private void setmethod(){
+
+    private void setmethod() {
         if (CommonUtils.isOnline(StorelistingActivity.this)) {
             sessonManager.showProgress(StorelistingActivity.this);
-            Call<StoreListModel>call= ApiExecutor.getApiService(this)
-                    .apiStoreList(sessonManager.getLat(),sessonManager.getLon());
+            Call<StoreListModel> call = ApiExecutor.getApiService(this)
+                    .apiStoreList(sessonManager.getLat(), sessonManager.getLon());
             call.enqueue(new Callback<StoreListModel>() {
                 @Override
                 public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {
                     sessonManager.hideProgress();
-                    if (response.body()!=null){
-                        if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
-                            StoreListModel storeListModel=response.body();
-                            if(storeListModel.getData().getStores()!=null) {
-                                storeList=storeListModel.getData().getStores();
-                                storeadapter=new Storeadapter(storeList,StorelistingActivity.this);
+                    if (response.body() != null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            StoreListModel storeListModel = response.body();
+                            if (storeListModel.getData().getStores() != null) {
+                                storeList = storeListModel.getData().getStores();
+                                storeadapter = new Storeadapter(storeList, StorelistingActivity.this);
                                 storerecyclerview.setAdapter(storeadapter);
                                 storeadapter.notifyDataSetChanged();
                             }
@@ -84,7 +98,7 @@ public class StorelistingActivity extends AppCompatActivity {
                     sessonManager.hideProgress();
                 }
             });
-        }else {
+        } else {
             CommonUtils.showToastInCenter(StorelistingActivity.this, getString(R.string.please_check_network));
         }
     }
@@ -93,8 +107,8 @@ public class StorelistingActivity extends AppCompatActivity {
         onBackPressed();
     }
 
-    public class Storeadapter extends RecyclerView.Adapter<Storeadapter.ViewHolder>{
-        List<Store>storeList;
+    public class Storeadapter extends RecyclerView.Adapter<Storeadapter.ViewHolder> {
+        List<Store> storeList;
         Context mcontext;
 
         public Storeadapter(List<Store> storeList, Context mcontext) {
@@ -106,30 +120,31 @@ public class StorelistingActivity extends AppCompatActivity {
         @Override
         public Storeadapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view;
-            LayoutInflater minflater=LayoutInflater.from(mcontext);
-            view=minflater.inflate(R.layout.itemstoringlist,parent,false);
+            LayoutInflater minflater = LayoutInflater.from(mcontext);
+            view = minflater.inflate(R.layout.itemstoringlist, parent, false);
             return new Storeadapter.ViewHolder(view);
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull Storeadapter.ViewHolder holder, final int position) {
             Picasso.get().load(storeList.get(position).getImage()).into(holder.imageview);
             holder.textname.setText(storeList.get(position).getStoreName());
             holder.textdescription.setText(storeList.get(position).getStoreType());
-            holder.distance.setText(String.valueOf(storeList.get(position).getDistance()));
+            holder.distance.setText(storeList.get(position).getDistance() + " Km");
             holder.cardviewstorelist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(StorelistingActivity.this,SotoreDetailsActivity.class)
-                    .putExtra("storeId",storeList.get(position).getId()));
+                    startActivity(new Intent(StorelistingActivity.this, SotoreDetailsActivity.class)
+                            .putExtra("storeId", storeList.get(position).getId()));
                    /* Intent intentone = new Intent(StorelistingActivity.this, SotoreDetailsActivity.class);
                     startActivity(intentone);*/
                 }
             });
-            String isSale=String.valueOf(storeList.get(position).getIsSale());
-            if (isSale!=null&&isSale.equalsIgnoreCase("1")){
+            String isSale = String.valueOf(storeList.get(position).getIsSale());
+            if (isSale != null && isSale.equalsIgnoreCase("1")) {
                 holder.saleOnLayout.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 holder.saleOnLayout.setVisibility(View.GONE);
             }
         }
@@ -138,19 +153,21 @@ public class StorelistingActivity extends AppCompatActivity {
         public int getItemCount() {
             return storeList.size();
         }
-        public class ViewHolder extends RecyclerView.ViewHolder{
-            TextView textname,distance,textdescription,textcancel,textsave;
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView textname, distance, textdescription, textcancel, textsave;
             ImageView imageview;
             CardView cardviewstorelist;
             RelativeLayout saleOnLayout;
+
             public ViewHolder(@NonNull final View itemView) {
                 super(itemView);
-                imageview=itemView.findViewById(R.id.image_order);
+                imageview = itemView.findViewById(R.id.image_order);
                 textname = itemView.findViewById(R.id.textname);
                 textdescription = itemView.findViewById(R.id.textdescription);
                 distance = itemView.findViewById(R.id.distance);
-                cardviewstorelist=itemView.findViewById(R.id.cardviewstorelist);
-                saleOnLayout=itemView.findViewById(R.id.saleOnLayout);
+                cardviewstorelist = itemView.findViewById(R.id.cardviewstorelist);
+                saleOnLayout = itemView.findViewById(R.id.saleOnLayout);
                 cardviewstorelist.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -158,7 +175,8 @@ public class StorelistingActivity extends AppCompatActivity {
                         startActivity(intentone);
                     }
                 });
-            }}
+            }
+        }
     }
 
 }

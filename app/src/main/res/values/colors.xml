@@ -7,9 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFF</color>
-    <color name="orange">#F44336</color>
+    <color name="orange">#9ec844</color>
     <color name="darkorange">#F8A9A3</color>
-    <color name="colorPrimary">#d83c3c</color>
+    <color name="colorPrimary">#91be55</color>
     <color name="green">#2fc8a3</color>
     <color name="lightgreen">#e5faf5</color>
     <color name="brown">#C9A1A1A1</color>
@@ -30,4 +30,5 @@
     <color name="localBackground">#827b92</color>
     <color name="remoteBackground">#484258</color>
     <color name="skyLight">#e2f0f1</color>
+    <color name="textColor">#53a3a4</color>
 </resources>

@@ -315,6 +315,7 @@
                                 android:paddingLeft="30dp"
                                 android:textColor="#333333"
                                 android:textSize="14sp"
+                                android:layout_marginBottom="5dp"
                                 android:textStyle="normal"
                                 android:fontFamily="@font/monster"/>
                         </LinearLayout>
@@ -329,22 +330,89 @@
                             android:background="@color/colorPrimary"
                             android:fontFamily="@font/monster"
                             android:text="Shop From Here"
+                            android:layout_marginBottom="10dp"
                             android:textAllCaps="true"
                             android:textColor="@color/white"/>
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>
-
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/LL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/colorPrimary"
+            android:layout_alignParentBottom="true">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:background="@drawable/eddittext">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_notifications"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/white"
+                    android:text="Notification"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:background="@drawable/eddittext">
 
-        <LinearLayout
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_home" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Home"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:background="@drawable/eddittext">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_shopping" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shop"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+        </LinearLayout>
+       <!-- <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
-            android:layout_weight="10"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -370,7 +438,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
-                    android:text="Notification" />
+                    android:text="Notification"
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
             <LinearLayout
@@ -395,7 +464,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Home" />
+                    android:text="Home"
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
             <LinearLayout
@@ -420,8 +490,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Shop" />
+                    android:text="Shop"
+                    android:textColor="@color/white"/>
             </LinearLayout>
-        </LinearLayout>
+        </LinearLayout>-->
     </LinearLayout>
 </LinearLayout>
