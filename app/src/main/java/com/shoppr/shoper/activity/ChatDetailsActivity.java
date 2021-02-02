@@ -411,6 +411,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
             startActivity(intent);
         }else if (id==R.id.action_video){
             startActivity(new Intent(ChatDetailsActivity.this,VideoChatViewActivity.class)
+                    .putExtra("chatId",chat_id)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
 

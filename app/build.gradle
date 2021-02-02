@@ -78,6 +78,7 @@ dependencies {
     //implementation files('libs/agora-rtc-sdk.jar')
     implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
     implementation 'com.github.stfalcon:chatkit:0.3.3'
+    implementation 'com.android.volley:volley:1.1.1'
 
 }
 apply plugin: 'com.google.gms.google-services'

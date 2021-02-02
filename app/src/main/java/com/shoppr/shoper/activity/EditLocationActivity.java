@@ -70,10 +70,10 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final String TAG = "ShareLocationActivity";
+    private static final String TAG = "EditLocationActivity";
     AutoCompleteTextView autoCompleteTextViewLoaction;
     Button addBTN;
-    public static LatLng latLng;
+    LatLng latLng;
     Marker marker;
     Location currentLocation;
     public static String latitude, longitude,location_address;

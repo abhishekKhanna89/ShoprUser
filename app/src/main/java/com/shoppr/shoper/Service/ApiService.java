@@ -13,6 +13,7 @@ import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.CustomerBalancceModel;
 import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
+import com.shoppr.shoper.Model.InitiateVideoCall.InitiateVideoCallModel;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.OrderDetails.OrdersDetailsModel;
@@ -30,6 +31,7 @@ import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
 import com.shoppr.shoper.Model.TrackLoaction.TrackLoactionModel;
 import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
+import com.shoppr.shoper.requestdata.AgoraRequest;
 import com.shoppr.shoper.requestdata.InitiatePaymentRequest;
 import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
@@ -45,6 +47,7 @@ import java.util.Map;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.HeaderMap;
@@ -179,4 +182,9 @@ public interface ApiService {
     @GET("track-location/{message_id}")
     Call<TrackLoactionModel>apiTrackLocation(@Header("Authorization") String token,
                                              @Path("message_id")int message_id);
+
+    @NonNull
+    @GET("initiate-video-call/{chat_id}")
+    Call<InitiateVideoCallModel>apiInitiateVideoCall(@Header("Authorization") String token,
+                                                     @Path("chat_id")int chat_id,@Query("channel_name") String channel_name);
 }

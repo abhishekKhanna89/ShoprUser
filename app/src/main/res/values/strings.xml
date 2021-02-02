@@ -14,5 +14,6 @@
     <string name="slide_to_cancel">"Slide to cancel"</string>
     <string name="your_string_here"><u>Send location and address.</u></string>
 
-    <string name="agora_app_id">94b0ec88c8f543c3bc2af9e0e9ecac2a</string>
+    <string name="agora_app_id">b39ff59abf8e48728d42ac518e72c844</string>
+    <string name="agora_access_token">006b39ff59abf8e48728d42ac518e72c844IAD9VDpuRpKqPP0ZIo5nJLDKOqLSTD/QVeLdh5iNlCubBoyMjVZqM6UaIgC6LQEA6U0aYAQAAQBDAAAAAwBDAAAAAgBDAAAABABDAAAA</string>
 </resources>

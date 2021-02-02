@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -17,12 +18,27 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
+import com.shoppr.shoper.Model.InitiateVideoCall.InitiateVideoCallModel;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.adapter.ChatMessageAdapter;
+import com.shoppr.shoper.requestdata.AgoraRequest;
+import com.shoppr.shoper.util.CommonUtils;
+import com.shoppr.shoper.util.SessonManager;
 
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class VideoChatViewActivity extends AppCompatActivity {
     private static final String LOG_TAG = VideoChatViewActivity.class.getSimpleName();
@@ -63,19 +79,62 @@ public class VideoChatViewActivity extends AppCompatActivity {
             });
         }
     };
+    SessonManager sessonManager;
+    String token,channel_name;
+    int chatId,userId;
+    String channel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_chat_view);
+        sessonManager=new SessonManager(this);
+        chatId=getIntent().getIntExtra("chatId",0);
+
+        viewIniateVideoCall(chatId);
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO) && checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA)) {
             initAgoraEngineAndJoinChannel();
         }
     }
+
+    private void viewIniateVideoCall(int chatId) {
+        //Log.d("chatId",""+chatId);
+        if (CommonUtils.isOnline(VideoChatViewActivity.this)) {
+
+            Call<InitiateVideoCallModel>call=ApiExecutor.getApiService(this)
+                    .apiInitiateVideoCall("Bearer "+sessonManager.getToken(),chatId,"");
+            call.enqueue(new Callback<InitiateVideoCallModel>() {
+                @Override
+                public void onResponse(Call<InitiateVideoCallModel> call, Response<InitiateVideoCallModel> response) {
+                    if (response.body()!=null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            InitiateVideoCallModel initiateVideoCallModel = response.body();
+                            if (initiateVideoCallModel.getData()!=null){
+                                 token=initiateVideoCallModel.getData().getToken();
+                                 channel_name=initiateVideoCallModel.getData().getChannelName();
+                                 userId=initiateVideoCallModel.getData().getUser_id();
+                                 mRtcEngine.joinChannel("006b39ff59abf8e48728d42ac518e72c844IADEgcNfCvYNcB93mmFZToK34EmCbPPVbO5qYWk28RivneXmXe2bjtJtIgBk/QAAQKoaYAQAAQAAAAAAAwAAAAAAAgAAAAAABAAAAAAA",channel_name, "Extra Optional Data", userId);
+                                //joinChannel(token,channel_name);
+                                Log.d("alll",token+channel_name+userId);
+                            }
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Call<InitiateVideoCallModel> call, Throwable t) {
+
+                }
+            });
+        }else {
+            CommonUtils.showToastInCenter(VideoChatViewActivity.this, getString(R.string.please_check_network));
+        }
+    }
+
     private void initAgoraEngineAndJoinChannel() {
         initializeAgoraEngine();     // Tutorial Step 1
         setupVideoProfile();         // Tutorial Step 2
         setupLocalVideo();           // Tutorial Step 3
-        joinChannel();               // Tutorial Step 4
+        viewIniateVideoCall(chatId);
+                    // Tutorial Step 4
     }
 
     public boolean checkSelfPermission(String permission, int requestCode) {
@@ -217,8 +276,14 @@ public class VideoChatViewActivity extends AppCompatActivity {
     }
 
     // Tutorial Step 4
-    private void joinChannel() {
-        mRtcEngine.joinChannel(null, "demoChannel1", "Extra Optional Data", 0); // if you do not specify the uid, we will generate the uid for you
+    private void joinChannel(String token, String channel_name) {
+        if (token!=null||channel_name!=null){
+
+        }else {
+            Toast.makeText(this, "Please create id...", Toast.LENGTH_SHORT).show();
+        }
+
+        // if you do not specify the uid, we will generate the uid for you
     }
 
     // Tutorial Step 5
