@@ -91,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements
         addressText=findViewById(R.id.addressText);
         cir_man_hair_cut = findViewById(R.id.cir_man_hair_cut);
 
+        Log.d("sss",sessonManager.getToken());
 
         linearstorelist = findViewById(R.id.linearstorelist);
 
@@ -101,9 +102,6 @@ public class MapsActivity extends FragmentActivity implements
                 if (address!=null){
                     startActivity(new Intent(MapsActivity.this, StorelistingActivity.class)
                             .putExtra("address",address));
-                }else if (EditLocationActivity.location_address!=null) {
-                    startActivity(new Intent(MapsActivity.this, StorelistingActivity.class)
-                            .putExtra("address",EditLocationActivity.location_address));
                 }else {
                     Toast.makeText(MapsActivity.this, "Please wait....", Toast.LENGTH_SHORT).show();
                 }
@@ -271,17 +269,12 @@ public class MapsActivity extends FragmentActivity implements
             MarkerOptions markerOptions = new MarkerOptions();
             if (latLng!=null){
                 markerOptions.position(latLng);
-            }else if (EditLocationActivity.latLng!=null){
-                markerOptions.position(EditLocationActivity.latLng);
             }
-
             if (address!=null){
                 markerOptions.title(address);
-            }else if (EditLocationActivity.location_address!=null){
-                markerOptions.title(EditLocationActivity.location_address);
             }
 
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+           // markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo));
             currLocationMarker = mGoogleMap.addMarker(markerOptions);
         }else {
             showGPSDisabledAlertToUser();
@@ -335,9 +328,6 @@ public class MapsActivity extends FragmentActivity implements
         if (latLng!=null){
             sessonManager.setLat(latitude);
             sessonManager.setLon(longitude);
-        }else if (EditLocationActivity.latLng!=null){
-            sessonManager.setLat(EditLocationActivity.latitude);
-            sessonManager.setLon(EditLocationActivity.longitude);
         }
 
 
@@ -364,15 +354,11 @@ public class MapsActivity extends FragmentActivity implements
         MarkerOptions markerOptions = new MarkerOptions();
         if (latLng!=null){
             markerOptions.position(latLng);
-        }else if (EditLocationActivity.latLng!=null){
-            markerOptions.position(EditLocationActivity.latLng);
         }
 
 
         if (address!=null){
             markerOptions.title(address);
-        }else if (EditLocationActivity.location_address!=null){
-            markerOptions.title(EditLocationActivity.location_address);
         }
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo));
         currLocationMarker = mGoogleMap.addMarker(markerOptions);
@@ -382,10 +368,7 @@ public class MapsActivity extends FragmentActivity implements
         //zoom to current position:
         if (latLng!=null){
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
-        }else if (EditLocationActivity.latLng!=null){
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EditLocationActivity.latLng,15));
         }
-
 
         //If you only need one location, unregister the listener
         //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
