@@ -112,7 +112,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
                                  token=initiateVideoCallModel.getData().getToken();
                                  channel_name=initiateVideoCallModel.getData().getChannelName();
                                  userId=initiateVideoCallModel.getData().getUser_id();
-                                 mRtcEngine.joinChannel("006b39ff59abf8e48728d42ac518e72c844IADEgcNfCvYNcB93mmFZToK34EmCbPPVbO5qYWk28RivneXmXe2bjtJtIgBk/QAAQKoaYAQAAQAAAAAAAwAAAAAAAgAAAAAABAAAAAAA",channel_name, "Extra Optional Data", userId);
+                                 mRtcEngine.joinChannel(token,channel_name, "Extra Optional Data", userId);
                                 //joinChannel(token,channel_name);
                                 Log.d("alll",token+channel_name+userId);
                             }
