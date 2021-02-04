@@ -44,6 +44,7 @@ import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.activity.EditLocationActivity;
 import com.shoppr.shoper.activity.MyAccount;
+import com.shoppr.shoper.activity.NotificationListActivity;
 import com.shoppr.shoper.activity.ShareLocationActivity;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
@@ -394,5 +395,9 @@ public class MapsActivity extends FragmentActivity implements
                 });
         android.app.AlertDialog alert = alertDialogBuilder.create();
         alert.show();
+    }
+
+    public void NotificationList(View view) {
+        startActivity(new Intent(MapsActivity.this, NotificationListActivity.class));
     }
 }

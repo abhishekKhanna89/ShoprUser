@@ -1,4 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/laaa"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        android:layout_centerVertical="true"
+        app:civ_border_width="1dp"
+        app:civ_border_color="@color/white"
+        android:id="@+id/itemImage" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout_customer_name"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_margin="5dp"
+        android:paddingTop="5dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/rfIdText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_toLeftOf="@id/itemDate"
+                android:textStyle="bold"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/itemDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/totalText"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"  />
+        <TextView
+            android:id="@+id/serviceChargeText"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"  />
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"  />
+    </LinearLayout>
+</LinearLayout>
+<!--
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -45,4 +108,4 @@
             android:layout_height="wrap_content"
             />
     </LinearLayout>
-</RelativeLayout>
+</RelativeLayout>-->

@@ -46,7 +46,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;

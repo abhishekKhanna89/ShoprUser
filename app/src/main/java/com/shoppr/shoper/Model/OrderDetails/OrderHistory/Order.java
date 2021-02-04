@@ -1,5 +1,6 @@
-package com.shoppr.shoper.Model.OrdersList;
+package com.shoppr.shoper.Model.OrderDetails.OrderHistory;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,12 +18,18 @@ public class Order {
     @SerializedName("service_charge")
     @Expose
     private String serviceCharge;
-    @SerializedName("created_at")
-    @Expose
-    private String createdAt;
     @SerializedName("status")
     @Expose
     private String status;
+    @SerializedName("payment_status")
+    @Expose
+    private String paymentStatus;
+    @SerializedName("balance_used")
+    @Expose
+    private String balanceUsed;
+    @SerializedName("details")
+    @Expose
+    private List<Detail> details = null;
 
     public Integer getId() {
         return id;
@@ -56,20 +63,36 @@ public class Order {
         this.serviceCharge = serviceCharge;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getBalanceUsed() {
+        return balanceUsed;
+    }
+
+    public void setBalanceUsed(String balanceUsed) {
+        this.balanceUsed = balanceUsed;
+    }
+
+    public List<Detail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<Detail> details) {
+        this.details = details;
     }
 
 }

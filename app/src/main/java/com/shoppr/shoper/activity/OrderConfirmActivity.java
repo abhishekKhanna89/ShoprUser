@@ -8,8 +8,7 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shoppr.shoper.MapsActivity;
-import com.shoppr.shoper.Model.OrderDetails.Order;
+
 import com.shoppr.shoper.R;
 
 public class OrderConfirmActivity extends AppCompatActivity {
@@ -27,7 +26,7 @@ public class OrderConfirmActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, MyAccount.class));
-        finish();
+        startActivity(new Intent(this, MyAccount.class)
+        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 }

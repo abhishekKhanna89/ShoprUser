@@ -1,9 +1,9 @@
-package com.shoppr.shoper.Model.OrdersList;
+package com.shoppr.shoper.Model.OrderDetails;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class OrdersListModel {
+public class OrderDetailsModel {
 
     @SerializedName("status")
     @Expose

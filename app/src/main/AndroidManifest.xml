@@ -29,9 +29,13 @@
         android:theme="@style/Theme.Shoper"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".activity.EditLocationActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+        <activity android:name=".activity.NotificationListActivity"
+            android:label="Notification"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.EditLocationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".activity.OrderDetailsActivity"
             android:label="Order Details"

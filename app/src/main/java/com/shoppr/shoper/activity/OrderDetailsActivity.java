@@ -15,11 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.shoppr.shoper.Model.CartView.Item;
-import com.shoppr.shoper.Model.OrderDetails.Detail;
-import com.shoppr.shoper.Model.OrderDetails.Order;
-import com.shoppr.shoper.Model.OrderDetails.OrdersDetailsModel;
+import com.shoppr.shoper.Model.OrderDetails.OrderHistory.Detail;
+import com.shoppr.shoper.Model.OrderDetails.OrderHistory.OrderHistoryModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.util.CommonUtils;
@@ -44,8 +41,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
             groundTotalText,
             walletAmountText,
             totalPaidText;
-    ArrayList<Detail> arrCartItemList=new ArrayList<>();
+    ArrayList<Detail> arrCartItemList;
     double total_paid;
+    TextView emptyDeatils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,27 +58,30 @@ public class OrderDetailsActivity extends AppCompatActivity {
         /*Todo:- CardView*/
         cardOrderSummary=findViewById(R.id.cardOrderSummary);
         /*Todo:- TextView*/
+        emptyDeatils=findViewById(R.id.emptyDeatils);
+
         orderIdText=findViewById(R.id.orderIdText);
         totalAmountText=findViewById(R.id.totalAmountText);
         serviceChargeText=findViewById(R.id.serviceChargeText);
         groundTotalText=findViewById(R.id.groundTotalText);
         walletAmountText=findViewById(R.id.walletAmountText);
         totalPaidText=findViewById(R.id.totalPaidText);
+
         viewOrderDetails(orderId);
     }
 
     private void viewOrderDetails(int orderId) {
         if (CommonUtils.isOnline(OrderDetailsActivity.this)) {
             sessonManager.showProgress(OrderDetailsActivity.this);
-            Call<OrdersDetailsModel>call= ApiExecutor.getApiService(this)
+            Call<OrderHistoryModel> call= ApiExecutor.getApiService(this)
                     .apiOrderDetails("Bearer "+sessonManager.getToken(),orderId);
-            call.enqueue(new Callback<OrdersDetailsModel>() {
+            call.enqueue(new Callback<OrderHistoryModel>() {
                 @Override
-                public void onResponse(Call<OrdersDetailsModel> call, Response<OrdersDetailsModel> response) {
+                public void onResponse(Call<OrderHistoryModel> call, Response<OrderHistoryModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            OrdersDetailsModel ordersDetailsModel=response.body();
+                            OrderHistoryModel ordersDetailsModel=response.body();
                             if (ordersDetailsModel.getData()!=null){
                                 orderIdText.setText(ordersDetailsModel.getData().getOrder().getRefid());
                                 totalAmountText.setText("₹ " +ordersDetailsModel.getData().getOrder().getTotal());
@@ -106,8 +107,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
                                 if (arrCartItemList.isEmpty()){
                                     cardOrderSummary.setVisibility(View.GONE);
+                                    emptyDeatils.setVisibility(View.VISIBLE);
                                 }else {
                                     cardOrderSummary.setVisibility(View.VISIBLE);
+                                    emptyDeatils.setVisibility(View.GONE);
                                 }
                                 OrderDetailsAdapter orderDetailsAdapter=new OrderDetailsAdapter(OrderDetailsActivity.this,
                                         arrCartItemList);
@@ -119,7 +122,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<OrdersDetailsModel> call, Throwable t) {
+                public void onFailure(Call<OrderHistoryModel> call, Throwable t) {
                     sessonManager.hideProgress();
                 }
             });

@@ -1,4 +1,5 @@
-package com.shoppr.shoper.Model.OrderDetails;
+package com.shoppr.shoper.Model.OrderDetails.OrderHistory;
+
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

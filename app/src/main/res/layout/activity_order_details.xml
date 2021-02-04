@@ -223,6 +223,18 @@
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/emptyDeatils"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Details Empty"
+                android:textSize="20sp"
+                android:visibility="gone"
+                android:textColor="@android:color/holo_red_dark"
+                android:gravity="center"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

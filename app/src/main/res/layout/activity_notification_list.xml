@@ -5,12 +5,11 @@
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MyOrderActivity">
+    tools:context=".activity.NotificationListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myOrderRecycler"
+        android:id="@+id/rv_notification"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-

@@ -112,7 +112,8 @@ public class VideoChatViewActivity extends AppCompatActivity {
                                  token=initiateVideoCallModel.getData().getToken();
                                  channel_name=initiateVideoCallModel.getData().getChannelName();
                                  userId=initiateVideoCallModel.getData().getUser_id();
-                                 mRtcEngine.joinChannel(token,channel_name, "Extra Optional Data", userId);
+                                 String rtm_token=initiateVideoCallModel.getData().getRtm_token();
+                                 mRtcEngine.joinChannel(token,channel_name, rtm_token, userId);
                                 //joinChannel(token,channel_name);
                                 Log.d("alll",token+channel_name+userId);
                             }

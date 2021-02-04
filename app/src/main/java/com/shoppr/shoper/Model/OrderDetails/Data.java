@@ -1,20 +1,21 @@
 package com.shoppr.shoper.Model.OrderDetails;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Data {
 
-    @SerializedName("order")
+    @SerializedName("orders")
     @Expose
-    private Order order;
+    private List<Order> orders = null;
 
-    public Order getOrder() {
-        return order;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
 }
