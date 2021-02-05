@@ -28,7 +28,10 @@ public class SessonManager {
     
     public static final String driver_latitude="latitude";
     public  static final String driver_longitude="longitude";
-    
+
+
+    public static final String editaddress="editaddress";
+
     public Dialog mDialog;
     public SessonManager(Context ctx) {
         sharedPreference = ctx.getSharedPreferences(NAME, Context.MODE_PRIVATE);
@@ -42,6 +45,14 @@ public class SessonManager {
             pref = new SessonManager(ctx);
         }
         return pref;
+    }
+
+    public void setEditaddress(String editaddress1){
+        editor.putString(editaddress,editaddress1);
+        editor.apply();
+    }
+    public String getEditaddress(){
+        return sharedPreference.getString(editaddress,"");
     }
 
     public void setLat(String lat1) {

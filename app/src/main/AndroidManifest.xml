@@ -42,7 +42,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MyOrderActivity"
-            android:label="My Order"
+            android:label="Order"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.OrderConfirmActivity"

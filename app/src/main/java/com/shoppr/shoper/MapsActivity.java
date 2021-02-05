@@ -83,6 +83,9 @@ public class MapsActivity extends FragmentActivity implements
     Geocoder geocoder;
     List<Address> addresses;
     String city,address;
+    int value;
+    String location_address;
+    boolean myLocationEnable=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +99,8 @@ public class MapsActivity extends FragmentActivity implements
 
         linearstorelist = findViewById(R.id.linearstorelist);
 
+        value=getIntent().getIntExtra("value",0);
+        location_address=getIntent().getStringExtra("location_address");
 
         linearstorelist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,11 +232,61 @@ public class MapsActivity extends FragmentActivity implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mGoogleMap.setMyLocationEnabled(true);
 
-        buildGoogleApiClient();
+        if (myLocationEnable){
+            myLocationEnable=false;
+            Geocoder coder = new Geocoder(MapsActivity.this);
+            List<Address> address;
 
-        mGoogleApiClient.connect();
+            try {
+                //Get latLng from String
+                address = coder.getFromLocationName(location_address, 5);
+
+                //check for null
+                if (address != null) {
+
+                    //Lets take first possibility from the all possibilities.
+                    try {
+                        Address address1 = address.get(0);
+                        LatLng latLng = new LatLng(address1.getLatitude(), address1.getLongitude());
+                        addressText.setText(address1.getAddressLine(0));
+                        //latitude = String.valueOf(latLng.latitude);
+                        //longitude = String.valueOf(latLng.longitude);
+
+
+                        //sharedPreferences.edit().putString("lat", ""+latitude).apply();
+                        //sharedPreferences.edit().putString("lng", ""+longitude).apply();
+
+                        //   mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        // mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                        mGoogleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo)));
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
+
+
+
+
+//                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
+                        //getAddress(latLng.latitude,latLng.longitude);
+                    } catch (IndexOutOfBoundsException er) {
+                        Toast.makeText(MapsActivity.this, "Location isn't available", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            myLocationEnable=true;
+            addressText.setText("");
+            mGoogleMap.setMyLocationEnabled(myLocationEnable);
+            buildGoogleApiClient();
+            mGoogleApiClient.connect();
+        }
+
+
+
 
     }
 
@@ -318,61 +373,102 @@ public class MapsActivity extends FragmentActivity implements
 
         //place marker at current position
         //mGoogleMap.clear();
-        if (currLocationMarker != null) {
-            currLocationMarker.remove();
-        }
-        latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        String latitude=String.valueOf(location.getLatitude());
-        String longitude=String.valueOf(location.getLongitude());
-
-        //Log.d("loaction: ",""+latitude+" : "+longitude);
-        if (latLng!=null){
-            sessonManager.setLat(latitude);
-            sessonManager.setLon(longitude);
-        }
 
 
-        try {
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            if (address!=null){
-                addressText.setText(address);
-            }else if (EditLocationActivity.location_address!=null){
-                addressText.setText(EditLocationActivity.location_address);
-                addressText.setText("");
+        if (value==1){
+            Geocoder coder = new Geocoder(MapsActivity.this);
+            List<Address> address;
+
+            try {
+                //Get latLng from String
+                address = coder.getFromLocationName(location_address, 5);
+
+                //check for null
+                if (address != null) {
+
+                    //Lets take first possibility from the all possibilities.
+                    try {
+                        Address address1 = address.get(0);
+                        LatLng latLng = new LatLng(address1.getLatitude(), address1.getLongitude());
+                        addressText.setText(address1.getAddressLine(0));
+                        //latitude = String.valueOf(latLng.latitude);
+                        //longitude = String.valueOf(latLng.longitude);
+
+
+                        //sharedPreferences.edit().putString("lat", ""+latitude).apply();
+                        //sharedPreferences.edit().putString("lng", ""+longitude).apply();
+
+                        //   mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        // mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                        mGoogleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo)));
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
+
+
+
+
+//                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
+                        //getAddress(latLng.latitude,latLng.longitude);
+                    } catch (IndexOutOfBoundsException er) {
+                        Toast.makeText(MapsActivity.this, "Location isn't available", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            if (currLocationMarker != null) {
+                currLocationMarker.remove();
+            }
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            String latitude=String.valueOf(location.getLatitude());
+            String longitude=String.valueOf(location.getLongitude());
+
+            //Log.d("loaction: ",""+latitude+" : "+longitude);
+            if (latLng!=null){
+                sessonManager.setLat(latitude);
+                sessonManager.setLon(longitude);
             }
 
-            city = addresses.get(0).getLocality();
-            String state = addresses.get(0).getAdminArea();
-            String country = addresses.get(0).getCountryName();
-            String postalCode = addresses.get(0).getPostalCode();
-            String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            try {
+                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                if (address!=null){
+                    addressText.setText(address);
+                }
+
+                city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            MarkerOptions markerOptions = new MarkerOptions();
+            if (latLng!=null){
+                markerOptions.position(latLng);
+            }
+
+
+            if (address!=null){
+                markerOptions.title(address);
+            }
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo));
+            currLocationMarker = mGoogleMap.addMarker(markerOptions);
+
+            //Toast.makeText(this,"Location Changed",Toast.LENGTH_SHORT).show();
+
+            //zoom to current position:
+            if (latLng!=null){
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
+            }
         }
-
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        if (latLng!=null){
-            markerOptions.position(latLng);
-        }
-
-
-        if (address!=null){
-            markerOptions.title(address);
-        }
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo));
-        currLocationMarker = mGoogleMap.addMarker(markerOptions);
-
-        //Toast.makeText(this,"Location Changed",Toast.LENGTH_SHORT).show();
-
-        //zoom to current position:
-        if (latLng!=null){
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
-        }
-
-        //If you only need one location, unregister the listener
-        //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
     }
     private void showGPSDisabledAlertToUser(){

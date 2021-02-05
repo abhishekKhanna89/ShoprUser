@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
@@ -104,6 +105,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
             @Override
             public void onClick(View view) {
                 location_address= autoCompleteTextViewLoaction.getText().toString();
+                /*location_address= autoCompleteTextViewLoaction.getText().toString();
 
                 Geocoder coder = new Geocoder(EditLocationActivity.this);
                 List<Address> address;
@@ -146,42 +148,15 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
-
-
-               onBackPressed();
-
-                /*if (CommonUtils.isOnline(EditLocationActivity.this)) {
-                    //sessonManager.showProgress(ChatActivity.this);
-                    ShareLocationRequest shareLocationRequest=new ShareLocationRequest();
-                    shareLocationRequest.setType("address");
-                    shareLocationRequest.setAddress(location_address);
-                    shareLocationRequest.setLat(latitude);
-                    shareLocationRequest.setLang(longitude);
-                    Call<SendModel> call= ApiExecutor.getApiService(EditLocationActivity.this)
-                            .apiShareLocation("Bearer "+sessonManager.getToken(),chat_id,shareLocationRequest);
-                    call.enqueue(new Callback<SendModel>() {
-                        @Override
-                        public void onResponse(Call<SendModel> call, retrofit2.Response<SendModel> response) {
-                            //sessonManager.hideProgress();
-                            if (response.body()!=null) {
-                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    onBackPressed();
-                                    Toast.makeText(EditLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
-                                }else {
-                                    Toast.makeText(EditLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<SendModel> call, Throwable t) {
-                            //sessonManager.hideProgress();
-                        }
-                    });
-                }else {
-                    CommonUtils.showToastInCenter(EditLocationActivity.this, getString(R.string.please_check_network));
                 }*/
+
+                startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
+                        .putExtra("location_address",location_address)
+                        .putExtra("value",1)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+               //onBackPressed();
+
 
 
             }

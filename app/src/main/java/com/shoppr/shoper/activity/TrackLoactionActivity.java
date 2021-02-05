@@ -98,8 +98,8 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                                  lat=trackLoactionModel.getData().getShoppr().getLat();
                                  lang=trackLoactionModel.getData().getShoppr().getLang();
                                  india=new LatLng(lat,lang);
-                                 mMap.addMarker(new MarkerOptions().position(india).title("Marker in Sydney"))
-                                 .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car));
+                                 mMap.addMarker(new MarkerOptions().position(india))
+                                 .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.scooter));
                                  mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(india, 15));
                                  //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(india,12f));
                                  mMap.setPadding(2000, 4000, 2000, 4000);
@@ -141,7 +141,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
         countDownTimer.start();
         // Add a marker in Sydney and move the camera
         sydney = new LatLng(28.7041, 77.1025);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.addMarker(new MarkerOptions().position(sydney));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
         mMap.setPadding(2000, 4000, 2000, 4000);
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,12f));

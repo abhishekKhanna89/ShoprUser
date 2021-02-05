@@ -15,7 +15,6 @@
         android:id="@+id/itemImage" />
 
     <LinearLayout
-        android:id="@+id/linear_layout_customer_name"
         android:layout_width="0dp"
         android:layout_weight="3"
         android:layout_margin="5dp"
