@@ -10,8 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.Model.OtpVerifyModel;
+import com.shoppr.shoper.SendBird.BaseApplication;
+import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
 import com.shoppr.shoper.util.CommonUtils;
@@ -71,13 +75,23 @@ public class OtpActivity extends AppCompatActivity {
                     sessonManager.hideProgress();
                     if (response.body()!=null){
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
-                            Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            OtpVerifyModel otpVerifyModel=response.body();
+                            String userId=otpVerifyModel.getUser_id();
+                            String sendbird_token=otpVerifyModel.getSendbird_token();
+                            String savedAppId = PrefUtils.getAppId(OtpActivity.this);
                             if((!editusername.getText().toString().isEmpty())){
                                 sessonManager.setToken(response.body().getToken());
-                                //Log.d("token",response.body().getToken());
-                                startActivity(new Intent(OtpActivity.this,MapsActivity.class)
-                                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                finish();
+                                if (((BaseApplication)getApplication()).initSendBirdCall(savedAppId)) {
+                                    AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
+                                        if (isSuccess) {
+                                            setResult(RESULT_OK, null);
+                                            Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(OtpActivity.this, MapsActivity.class)
+                                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                            finish();
+                                        }
+                                    });
+                                }
                             }
                         }else {
                             Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();

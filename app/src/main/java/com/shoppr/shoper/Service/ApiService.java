@@ -185,7 +185,7 @@ public interface ApiService {
     @NonNull
     @GET("initiate-video-call/{chat_id}")
     Call<InitiateVideoCallModel>apiInitiateVideoCall(@Header("Authorization") String token,
-                                                     @Path("chat_id")int chat_id,@Query("channel_name") String channel_name);
+                                                     @Path("chat_id")int chat_id);
 
     @NonNull
     @GET("notifications")

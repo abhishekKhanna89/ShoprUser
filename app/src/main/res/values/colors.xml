@@ -19,6 +19,7 @@
     <color name="layout_bg">#FF018786</color>
     <color name="all_layout">#f8f8f8</color>
     <color name="greenbtn">#d0f8dd</color>
+    <color name="callBackground">#2c2c2c</color>
     <color name="redbtn">#ffeded</color>
     <color name="blue">#0000FF</color>
     <color name="dark_grey">#A9A9A9</color>
@@ -31,4 +32,5 @@
     <color name="remoteBackground">#484258</color>
     <color name="skyLight">#e2f0f1</color>
     <color name="textColor">#53a3a4</color>
+
 </resources>

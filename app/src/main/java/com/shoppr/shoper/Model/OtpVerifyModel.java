@@ -14,6 +14,12 @@ public class OtpVerifyModel {
     @SerializedName("token")
     @Expose
     private String token;
+    @SerializedName("user_id")
+    @Expose
+    private String user_id;
+    @SerializedName("sendbird_token")
+    @Expose
+    private String sendbird_token;
 
     public String getStatus() {
         return status;
@@ -38,5 +44,19 @@ public class OtpVerifyModel {
     public void setToken(String token) {
         this.token = token;
     }
+    public String getUser_id() {
+        return user_id;
+    }
 
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getSendbird_token() {
+        return sendbird_token;
+    }
+
+    public void setSendbird_token(String sendbird_token) {
+        this.sendbird_token = sendbird_token;
+    }
 }

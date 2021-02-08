@@ -235,52 +235,11 @@ public class MapsActivity extends FragmentActivity implements
 
         if (myLocationEnable){
             myLocationEnable=false;
-            Geocoder coder = new Geocoder(MapsActivity.this);
-            List<Address> address;
 
-            try {
-                //Get latLng from String
-                address = coder.getFromLocationName(location_address, 5);
-
-                //check for null
-                if (address != null) {
-
-                    //Lets take first possibility from the all possibilities.
-                    try {
-                        Address address1 = address.get(0);
-                        LatLng latLng = new LatLng(address1.getLatitude(), address1.getLongitude());
-                        addressText.setText(address1.getAddressLine(0));
-                        //latitude = String.valueOf(latLng.latitude);
-                        //longitude = String.valueOf(latLng.longitude);
-
-
-                        //sharedPreferences.edit().putString("lat", ""+latitude).apply();
-                        //sharedPreferences.edit().putString("lng", ""+longitude).apply();
-
-                        //   mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                        // mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                        mGoogleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo)));
-                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
-
-
-
-
-//                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
-                        //getAddress(latLng.latitude,latLng.longitude);
-                    } catch (IndexOutOfBoundsException er) {
-                        Toast.makeText(MapsActivity.this, "Location isn't available", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }else {
             myLocationEnable=true;
             addressText.setText("");
-            mGoogleMap.setMyLocationEnabled(myLocationEnable);
+            //mGoogleMap.setMyLocationEnabled(myLocationEnable);
             buildGoogleApiClient();
             mGoogleApiClient.connect();
         }
@@ -376,6 +335,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
         if (value==1){
+            mGoogleMap.clear();
             Geocoder coder = new Geocoder(MapsActivity.this);
             List<Address> address;
 
@@ -419,6 +379,7 @@ public class MapsActivity extends FragmentActivity implements
                 e.printStackTrace();
             }
         }else {
+            mGoogleMap.clear();
             if (currLocationMarker != null) {
                 currLocationMarker.remove();
             }
