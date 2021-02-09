@@ -11,6 +11,7 @@ import com.shoppr.shoper.Model.CartView.CartViewModel;
 import com.shoppr.shoper.Model.ChatList.ChatListModel;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.CustomerBalancceModel;
+import com.shoppr.shoper.Model.GetRegisterMerchant.GetRegisterMerchantModel;
 import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
 import com.shoppr.shoper.Model.InitiateVideoCall.InitiateVideoCallModel;
@@ -192,5 +193,13 @@ public interface ApiService {
     @GET("notifications")
     Call<NotificationListModel>apiNotificationList(@Header("Authorization") String token,
                                                    @Query("page")int page);
+
+    @Multipart
+    @POST("register-as-merchant")
+    Call<JsonObject> apiRegisterMerchant(@HeaderMap Map<String, String> token, @Part MultipartBody.Part[] images, @PartMap() Map<String, RequestBody> partMap);
+
+    @NonNull
+    @GET("view-application")
+    Call<GetRegisterMerchantModel>apiGetMerchantRegister(@Header("Authorization") String token);
 
 }

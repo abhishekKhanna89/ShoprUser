@@ -31,9 +31,13 @@
         android:theme="@style/Theme.Shoper"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".activity.NotificationListActivity"
+        <activity android:name=".activity.RegisterMerchantActivity"
+            android:screenOrientation="portrait"
+            android:label="Register as a Merchant"/>
+        <activity
+            android:name=".activity.NotificationListActivity"
             android:label="Notification"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.EditLocationActivity"
             android:screenOrientation="portrait"
@@ -149,24 +153,23 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".SendBird.call.VideoCallActivity"
             android:configChanges="orientation|smallestScreenSize|screenSize|screenLayout"
-            android:theme="@style/CallTheme"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"
-            />
+            android:theme="@style/CallTheme"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".SendBird.call.VoiceCallActivity"
             android:configChanges="orientation|smallestScreenSize|screenSize|screenLayout"
-            android:theme="@style/CallTheme"
             android:screenOrientation="portrait"
+            android:theme="@style/CallTheme"
             tools:ignore="LockedOrientationActivity" />
-        <service android:name=".SendBird.call.CallService"
+
+        <service
+            android:name=".SendBird.call.CallService"
             android:stopWithTask="false" />
-
-
-
         <service
             android:name=".SendBird.fcm.MyFirebaseMessagingService"
             android:exported="false">
@@ -174,6 +177,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

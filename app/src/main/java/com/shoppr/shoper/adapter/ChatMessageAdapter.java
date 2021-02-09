@@ -407,16 +407,13 @@ import static android.os.FileUtils.copy;
         holder.locationImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(context);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCanceledOnTouchOutside(true);
-                dialog.setContentView(R.layout.image_layout);
-                ImageView imageFirst= (ImageView) dialog.findViewById(R.id.imageView);
-                Picasso.get().load(chat.getFilePath()).into(imageFirst);
-                PhotoViewAttacher pAttacher;
-                pAttacher = new PhotoViewAttacher(imageFirst);
-                pAttacher.update();
-                dialog.show();
+
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q="+chat.getLat()+","+chat.getLang());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                context.startActivity(mapIntent);
+
+
             }
         });
 

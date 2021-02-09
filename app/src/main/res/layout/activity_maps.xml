@@ -38,11 +38,11 @@
             android:id="@+id/imagedashbord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="back"
+            android:onClick="menu"
             android:layout_marginRight="20dp"
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_dashborad"
+            android:src="@drawable/ic_baseline_menu"
             android:backgroundTint="@color/white"/>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>

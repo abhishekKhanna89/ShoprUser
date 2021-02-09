@@ -90,6 +90,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     String locality,subLocality;
     SessonManager sessonManager;
     int chat_id;
+    String merchant;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +100,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         imgClose=findViewById(R.id.imgClose);
         chat_id=getIntent().getIntExtra("chatId",0);
 
+        merchant=getIntent().getStringExtra("merchant");
         autoCompleteTextViewLoaction = findViewById(R.id.AutoComplte_tv_home);
 
         addBTN.setOnClickListener(new View.OnClickListener() {
@@ -150,10 +152,17 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                     e.printStackTrace();
                 }*/
 
-                startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
-                        .putExtra("location_address",location_address)
-                        .putExtra("value",1)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                if (merchant!=null){
+                    startActivity(new Intent(EditLocationActivity.this, RegisterMerchantActivity.class)
+                            .putExtra("location_address",location_address)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                }else {
+                    startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
+                            .putExtra("location_address",location_address)
+                            .putExtra("value",1)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                }
+
 
                //onBackPressed();
 

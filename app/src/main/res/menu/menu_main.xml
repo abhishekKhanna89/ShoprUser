@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_registerMerchant"
+        android:title="Register as a MERCHANT"
+        android:icon="@drawable/ic_baseline_info"/>
+    <item
+        android:id="@+id/action_help"
+        android:title="Help"
+        android:icon="@drawable/ic_baseline_help" />
+    <item
+        android:id="@+id/action_feedback"
+        android:title="Feedback"
+        android:icon="@drawable/ic_baseline_feedback"/>
+    <item
+        android:id="@+id/action_shareApp"
+        android:title="Share this app for a FREE Delivery !"
+        android:icon="@drawable/ic_baseline_share"/>
+</menu>

@@ -2,6 +2,7 @@ package com.shoppr.shoper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -14,10 +15,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,12 +49,18 @@ import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.activity.EditLocationActivity;
 import com.shoppr.shoper.activity.MyAccount;
 import com.shoppr.shoper.activity.NotificationListActivity;
+import com.shoppr.shoper.activity.RegisterMerchantActivity;
 import com.shoppr.shoper.activity.ShareLocationActivity;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -62,6 +72,7 @@ import retrofit2.Response;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static java.security.AccessController.getContext;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -86,6 +97,7 @@ public class MapsActivity extends FragmentActivity implements
     int value;
     String location_address;
     boolean myLocationEnable=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -210,9 +222,7 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
-    public void back(View view) {
-        onBackPressed();
-    }
+
 
     public void chats(View view) {
         startActivity(new Intent(MapsActivity.this, ChatActivity.class));
@@ -456,5 +466,63 @@ public class MapsActivity extends FragmentActivity implements
 
     public void NotificationList(View view) {
         startActivity(new Intent(MapsActivity.this, NotificationListActivity.class));
+    }
+
+    public void menu(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+        /*  The below code in try catch is responsible to display icons*/
+        try {
+            Field[] fields = popup.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popup);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+                .inflate(R.menu.menu_main, popup.getMenu());
+        //registering popup with OnMenuItemClickListener
+        //implement click events
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_registerMerchant:
+                        startActivity(new Intent(MapsActivity.this, RegisterMerchantActivity.class));
+                        break;
+                    case R.id.action_help:
+
+                        break;
+                    case R.id.action_feedback:
+
+                        break;
+                    case R.id.action_shareApp:
+                        try {
+                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_SUBJECT,getResources().getString(R.string.app_name));
+                            String shareMessage= "Let me recommend you this application\n\n";
+                            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID ;
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+                            startActivity(Intent.createChooser(shareIntent, "choose one"));
+                        } catch(Exception e) {
+                            //e.toString();
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
+
+        popup.show(); //showing popup menu
+
     }
 }
