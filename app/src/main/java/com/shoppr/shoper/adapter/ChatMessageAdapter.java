@@ -2,6 +2,7 @@
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -75,6 +77,7 @@ import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 import static android.os.FileUtils.copy;
 
@@ -400,6 +403,54 @@ import static android.os.FileUtils.copy;
             }
         });
 
+        /*Todo:-   Zoom Image*/
+        holder.locationImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(context);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setContentView(R.layout.image_layout);
+                ImageView imageFirst= (ImageView) dialog.findViewById(R.id.imageView);
+                Picasso.get().load(chat.getFilePath()).into(imageFirst);
+                PhotoViewAttacher pAttacher;
+                pAttacher = new PhotoViewAttacher(imageFirst);
+                pAttacher.update();
+                dialog.show();
+            }
+        });
+
+        holder.productImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(context);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setContentView(R.layout.image_layout);
+                ImageView imageFirst= (ImageView) dialog.findViewById(R.id.imageView);
+                Picasso.get().load(chat.getFilePath()).into(imageFirst);
+                PhotoViewAttacher pAttacher;
+                pAttacher = new PhotoViewAttacher(imageFirst);
+                pAttacher.update();
+                dialog.show();
+            }
+        });
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(context);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setContentView(R.layout.image_layout);
+                ImageView imageFirst= (ImageView) dialog.findViewById(R.id.imageView);
+                Picasso.get().load(chat.getFilePath()).into(imageFirst);
+                PhotoViewAttacher pAttacher;
+                pAttacher = new PhotoViewAttacher(imageFirst);
+                pAttacher.update();
+                dialog.show();
+            }
+        });
+
     }
 
 
@@ -410,11 +461,6 @@ import static android.os.FileUtils.copy;
              return chatList.size();
          } else return 0;
     }
-     public void refreshEvents(List<Chat> events) {
-         this.chatList.clear();
-         this.chatList.addAll(events);
-         notifyDataSetChanged();
-     }
     @Override
     public int getItemViewType(int position) {
         //getting message object of current position
