@@ -105,8 +105,9 @@ public interface ApiService {
 
 
     @NonNull
-    @GET("start-chat")
-    Call<StartChatModel>apiChatStart(@Header("Authorization") String token);
+    @GET("start-chat/{store_id}")
+    Call<StartChatModel>apiChatStart(@Header("Authorization") String token,
+                                     @Path("store_id")int store_id);
 
     @NonNull
     @GET("chat-messages/{chat_id}")

@@ -121,7 +121,7 @@ public class ChatActivity extends AppCompatActivity {
     private String recordFile;
     private Chronometer timer;
     String pathforaudio;
-    int shopId,chatId;
+    int shopId;
     String calleeId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +134,7 @@ public class ChatActivity extends AppCompatActivity {
         shopId=getIntent().getIntExtra("shopId",0);
         //chat_id=getIntent().getIntExtra("id",0);
         //Log.d("res",""+shopId);
-        viewStartChat();
+        viewStartChat(shopId);
         //chatMessageList(1);
 
 
@@ -374,11 +374,11 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    private void viewStartChat() {
+    private void viewStartChat(int shopId) {
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
             Call<StartChatModel>call= ApiExecutor.getApiService(this)
-                    .apiChatStart("Bearer "+sessonManager.getToken());
+                    .apiChatStart("Bearer "+sessonManager.getToken(),shopId);
             call.enqueue(new Callback<StartChatModel>() {
                 @Override
                 public void onResponse(Call<StartChatModel> call, Response<StartChatModel> response) {

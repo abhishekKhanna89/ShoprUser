@@ -80,8 +80,8 @@ public class SotoreDetailsActivity extends AppCompatActivity {
         btnsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(SotoreDetailsActivity.this,ChatActivity.class)
-                //.putExtra("shopId",shopId));
+                startActivity(new Intent(SotoreDetailsActivity.this,ChatActivity.class)
+                .putExtra("shopId",shopId).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
         viewDetails();

@@ -117,7 +117,6 @@ public class ChatDetailsActivity extends AppCompatActivity {
     private String recordFile;
     private Chronometer timer;
     String pathforaudio;
-    int shopId,chatId;
     String calleeId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,9 +126,9 @@ public class ChatDetailsActivity extends AppCompatActivity {
         sessonManager = new SessonManager(this);
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
 
-        shopId=getIntent().getIntExtra("shopId",0);
+
         chat_id=getIntent().getIntExtra("id",0);
-        //Log.d("res",""+shopId);
+
         //viewStartChat();
         chatMessageList(chat_id);
 
@@ -337,7 +336,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
     }
 
 
-    private void viewStartChat() {
+    /*private void viewStartChat() {
         if (CommonUtils.isOnline(ChatDetailsActivity.this)) {
             sessonManager.showProgress(ChatDetailsActivity.this);
             Call<StartChatModel>call= ApiExecutor.getApiService(this)
@@ -365,7 +364,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
         }else {
             CommonUtils.showToastInCenter(ChatDetailsActivity.this, getString(R.string.please_check_network));
         }
-    }
+    }*/
 
     private void chatMessageList(int chat_id) {
         if (CommonUtils.isOnline(ChatDetailsActivity.this)) {

@@ -95,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements
         addressText=findViewById(R.id.addressText);
         cir_man_hair_cut = findViewById(R.id.cir_man_hair_cut);
 
-        Log.d("sss",sessonManager.getToken());
+        //Log.d("Token",sessonManager.getToken());
 
         linearstorelist = findViewById(R.id.linearstorelist);
 
