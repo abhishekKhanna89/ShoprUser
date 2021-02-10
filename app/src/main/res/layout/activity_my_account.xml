@@ -92,7 +92,7 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_centerInParent="true"
-                          android:background="@drawable/ic_wallet_ico"/>
+                          android:src="@drawable/ic_wallet"/>
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -147,6 +147,8 @@
             android:text="My Account"
             android:textStyle="bold"
             android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:textColor="@color/black"
             android:paddingStart="10dp"
             tools:ignore="RtlCompat"/>
@@ -164,7 +166,8 @@
                 <RelativeLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:paddingStart="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:background="@drawable/graycolor"
                     tools:ignore="RtlCompat">
                     <ImageView
@@ -186,6 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/graycolor"/>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -196,7 +200,8 @@
                 <RelativeLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:paddingStart="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:background="@drawable/graycolor"
                     tools:ignore="RtlCompat">
                     <ImageView
@@ -218,6 +223,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/graycolor"/>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -227,7 +233,8 @@
                 <RelativeLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:paddingStart="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:background="@drawable/graycolor"
                     tools:ignore="RtlCompat">
                     <ImageView
@@ -250,6 +257,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/graycolor"/>
             <LinearLayout
                 android:id="@+id/logoutLayout"
@@ -260,7 +268,8 @@
                 <RelativeLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:paddingStart="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:background="@drawable/graycolor"
                     tools:ignore="RtlCompat">
                     <ImageView

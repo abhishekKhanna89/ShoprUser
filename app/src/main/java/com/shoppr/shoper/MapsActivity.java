@@ -114,12 +114,13 @@ public class MapsActivity extends FragmentActivity implements
         value=getIntent().getIntExtra("value",0);
         location_address=getIntent().getStringExtra("location_address");
 
+        address=addressText.getText().toString();
         linearstorelist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (address!=null){
                     startActivity(new Intent(MapsActivity.this, StorelistingActivity.class)
-                            .putExtra("address",address));
+                            .putExtra("address",addressText.getText().toString()));
                 }else {
                     Toast.makeText(MapsActivity.this, "Please wait....", Toast.LENGTH_SHORT).show();
                 }
@@ -361,6 +362,14 @@ public class MapsActivity extends FragmentActivity implements
                         Address address1 = address.get(0);
                         LatLng latLng = new LatLng(address1.getLatitude(), address1.getLongitude());
                         addressText.setText(address1.getAddressLine(0));
+                        String latitude=String.valueOf(address1.getLatitude());
+                        String longitude=String.valueOf(address1.getLongitude());
+
+                        //Log.d("loaction: ",""+latitude+" : "+longitude);
+                        if (latLng!=null){
+                            sessonManager.setLat(latitude);
+                            sessonManager.setLon(longitude);
+                        }
                         //latitude = String.valueOf(latLng.latitude);
                         //longitude = String.valueOf(latLng.longitude);
 
@@ -524,5 +533,11 @@ public class MapsActivity extends FragmentActivity implements
 
         popup.show(); //showing popup menu
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        myProfile();
     }
 }

@@ -47,6 +47,8 @@ import com.shoppr.shoper.util.Helper;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +76,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
     /*Todo:- ImageView*/
     ImageView choseImage;
     /*Todo:- EditText*/
-    EditText editName,editEmail,editMobile;
+    EditText editName, editEmail, editMobile;
     /*Todo:- Button*/
     Button updateBtn;
     /*Todo:- Image Choose*/
@@ -86,39 +88,37 @@ public class UpdateProfileActivity extends AppCompatActivity {
     Bitmap bitmap = null;
     private String photoPath;
     String imageEncoded;
-    private static String baseUrl="http://shoppr.avaskmcompany.xyz/api/";
+    private static String baseUrl = "http://shoppr.avaskmcompany.xyz/api/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
-        sessonManager=new SessonManager(this);
-        String mobile=sessonManager.getMobileNo();
+        sessonManager = new SessonManager(this);
+        String mobile = sessonManager.getMobileNo();
         /*Todo:- CircleImageView find id*/
-        circleImage=findViewById(R.id.circleImage);
+        circleImage = findViewById(R.id.circleImage);
         /*Todo:- ImageView find id*/
-        choseImage=findViewById(R.id.choseImage);
+        choseImage = findViewById(R.id.choseImage);
         /*Todo:- EditText find id*/
-        editName=findViewById(R.id.editName);
-        editEmail=findViewById(R.id.editEmail);
-        editMobile=findViewById(R.id.editMobile);
+        editName = findViewById(R.id.editName);
+        editEmail = findViewById(R.id.editEmail);
+        editMobile = findViewById(R.id.editMobile);
         /*Todo:- Mobile No. set*/
         editMobile.setText(mobile);
         /*Todo:- Button find id*/
-        updateBtn=findViewById(R.id.updateBtn);
+        updateBtn = findViewById(R.id.updateBtn);
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editName.getText().toString().isEmpty()){
+                if (editName.getText().toString().isEmpty()) {
                     editName.setError("Name Field Can't be blank");
                     editName.requestFocus();
-                }
-                else if(editEmail.getText().toString().isEmpty()){
+                } else if (editEmail.getText().toString().isEmpty()) {
                     editEmail.setError("Email Field Can't be blank");
                     editEmail.requestFocus();
-                }
-                else {
+                } else {
                     ProfileUpdateAPI();
                 }
             }
@@ -135,17 +135,17 @@ public class UpdateProfileActivity extends AppCompatActivity {
     }
 
     private void myProfile() {
-        if (CommonUtils.isOnline(UpdateProfileActivity.this)){
+        if (CommonUtils.isOnline(UpdateProfileActivity.this)) {
             sessonManager.showProgress(UpdateProfileActivity.this);
-            Call<MyProfileModel> call = ApiExecutor.getApiService(this).apiMyProfile("Bearer "+sessonManager.getToken());
+            Call<MyProfileModel> call = ApiExecutor.getApiService(this).apiMyProfile("Bearer " + sessonManager.getToken());
             call.enqueue(new Callback<MyProfileModel>() {
                 @Override
                 public void onResponse(Call<MyProfileModel> call, Response<MyProfileModel> response) {
                     sessonManager.hideProgress();
-                    if (response.body()!=null){
-                        if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
-                            MyProfileModel myProfileModel=response.body();
-                            if(myProfileModel.getData()!=null) {
+                    if (response.body() != null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            MyProfileModel myProfileModel = response.body();
+                            if (myProfileModel.getData() != null) {
                                 //sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(circleImage);
                                 editName.setText(String.valueOf(myProfileModel.getData().getName()));
@@ -163,7 +163,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             });
 
 
-        }else {
+        } else {
             CommonUtils.showToastInCenter(UpdateProfileActivity.this, getString(R.string.please_check_network));
         }
     }
@@ -191,33 +191,33 @@ public class UpdateProfileActivity extends AppCompatActivity {
             }
 
             Map<String, String> headers = new HashMap<>();
-            headers.put("Authorization", "Bearer "+sessonManager.getToken());
+            headers.put("Authorization", "Bearer " + sessonManager.getToken());
 
+            Log.d("token", sessonManager.getToken());
             ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
-            iApiServices.apiUpdateProfile(headers,imageArray1,partMap)
-            .enqueue(new Callback<JsonObject>() {
-                @Override
-                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    sessonManager.hideProgress();
-                    JsonObject jsonObject = response.body();
-                    String code = jsonObject.get("status").getAsString();
-                    if (code.equals("success")) {
-                        Toast.makeText(UpdateProfileActivity.this, "Profile update successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(UpdateProfileActivity.this,MyAccount.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    } else {
-                        String msg = jsonObject.get("message").getAsString();
-                        Toast.makeText(UpdateProfileActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JsonObject> call, Throwable t) {
-                    sessonManager.hideProgress();
-                }
-            });
-        }else {
+            iApiServices.apiUpdateProfile(headers, imageArray1, partMap)
+                    .enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            sessonManager.hideProgress();
+                            JsonObject jsonObject = response.body();
+                            String code = jsonObject.get("status").getAsString();
+                            if (code.equals("success")) {
+                                Toast.makeText(UpdateProfileActivity.this, "Profile update successfully", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(UpdateProfileActivity.this, MyAccount.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            } else {
+                                String msg = jsonObject.get("message").getAsString();
+                                Toast.makeText(UpdateProfileActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+                            sessonManager.hideProgress();
+                        }
+                    });
+        } else {
             CommonUtils.showToastInCenter(UpdateProfileActivity.this, getString(R.string.please_check_network));
         }
 
@@ -320,7 +320,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         try {
             String photoPath = photoFile.getAbsolutePath();
             imagePathList.add(photoPath);
-           // Log.d("ress",""+imagePathList);
+            // Log.d("ress",""+imagePathList);
             bitmap = MediaStore.Images.Media.getBitmap(UpdateProfileActivity.this.getContentResolver(), photoUri);
             bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
 
@@ -340,7 +340,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
         }
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -367,11 +366,11 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         imageEncoded = cursor1.getString(columnIndex1);
 
                         if (Build.VERSION.SDK_INT > 23) {
-                           // Log.d("inelswe", "inelse");
+                            // Log.d("inelswe", "inelse");
                             bitmap = handleSamplingAndRotationBitmap(getApplicationContext(), mImageUri);
 
                         } else {
-                           // Log.d("inelse", "inelse");
+                            // Log.d("inelse", "inelse");
                             bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mImageUri);
                             bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
 
@@ -520,6 +519,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         img.recycle();
         return rotatedImg;
     }
+
     private void askForPermissioncamera(String permission, Integer requestCode) {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), permission) != PackageManager.PERMISSION_GRANTED) {
 

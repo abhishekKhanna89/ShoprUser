@@ -45,6 +45,7 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
     MyOrderAdapter myOrderAdapter;
     LinearLayoutManager linearLayoutManager;
     public static List<Order>orderList=new ArrayList<>();
+    TextView orderEmptyText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
         Log.d("token",sessonManager.getToken());
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         myOrderRecycler = (RecyclerView) findViewById(R.id.myOrderRecycler);
+        orderEmptyText=findViewById(R.id.orderEmptyText);
         linearLayoutManager = new LinearLayoutManager(this);
         myOrderRecycler.setLayoutManager(linearLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(myOrderRecycler.getContext(),
@@ -86,6 +88,13 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             OrderDetailsModel orderDetailsModel=response.body();
                             if (orderDetailsModel.getData().getOrders()!=null){
+                                if (orderDetailsModel.getData().getOrders().size()==0){
+                                    orderEmptyText.setVisibility(View.VISIBLE);
+                                    myOrderRecycler.setVisibility(View.GONE);
+                                }else {
+                                    orderEmptyText.setVisibility(View.GONE);
+                                    myOrderRecycler.setVisibility(View.VISIBLE);
+                                }
                                 orderList=orderDetailsModel.getData().getOrders();
                                 myOrderAdapter=new MyOrderAdapter(MyOrderActivity.this,orderList);
                                 myOrderRecycler.setAdapter(myOrderAdapter);

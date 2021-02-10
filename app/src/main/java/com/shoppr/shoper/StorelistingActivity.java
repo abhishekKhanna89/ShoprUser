@@ -60,6 +60,7 @@ public class StorelistingActivity extends AppCompatActivity {
             }
         });
         String address = getIntent().getStringExtra("address");
+        //Log.d("ress",address);
         textAddress.setText(address);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         sessonManager = new SessonManager(this);
@@ -76,6 +77,7 @@ public class StorelistingActivity extends AppCompatActivity {
             sessonManager.showProgress(StorelistingActivity.this);
             Call<StoreListModel> call = ApiExecutor.getApiService(this)
                     .apiStoreList(sessonManager.getLat(), sessonManager.getLon());
+            Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
             call.enqueue(new Callback<StoreListModel>() {
                 @Override
                 public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {

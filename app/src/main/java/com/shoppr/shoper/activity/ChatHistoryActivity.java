@@ -79,6 +79,13 @@ public class ChatHistoryActivity extends AppCompatActivity {
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
                             ChatListModel chatsListModel=response.body();
                             if(chatsListModel.getData().getUserchats()!=null) {
+                                if (chatsListModel.getData().getUserchats().size()==0){
+                                    historyEmptyText.setVisibility(View.VISIBLE);
+                                    recyclerChatHistory.setVisibility(View.GONE);
+                                }else {
+                                    historyEmptyText.setVisibility(View.GONE);
+                                    recyclerChatHistory.setVisibility(View.VISIBLE);
+                                }
                                 chatsListModelList = chatsListModel.getData().getUserchats();
                                 ChatHistoryAdapter chatHistoryAdapter=new ChatHistoryAdapter(ChatHistoryActivity.this,chatsListModelList);
                                 recyclerChatHistory.setAdapter(chatHistoryAdapter);

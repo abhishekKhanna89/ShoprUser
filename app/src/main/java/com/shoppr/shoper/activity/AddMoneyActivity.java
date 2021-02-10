@@ -1,5 +1,6 @@
 package com.shoppr.shoper.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -38,14 +40,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddMoneyActivity extends AppCompatActivity implements View.OnClickListener, PaymentResultWithDataListener {
+public class AddMoneyActivity extends AppCompatActivity implements  PaymentResultWithDataListener {
     private static final String TAG ="" ;
     TextView customerBalance,selectedBalance;
-    LinearLayout firstBalance,secondBalance,thirdBalance;
+    TextView TvOneThousnads, TvTwoThousnads, TvThreeThousnads;
     Button btnsubmit;
     SessonManager sessonManager;
-    TextView firstBalanceText,secondBalanceText,thirdBalanceText;
-    String first,second,third;
     String order_id,email,mobile,amount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +58,14 @@ public class AddMoneyActivity extends AppCompatActivity implements View.OnClickL
         customerBalance=findViewById(R.id.customerBalance);
         selectedBalance=findViewById(R.id.selectedBalance);
         /*Todo:- LinearLayout find id*/
-        firstBalance=findViewById(R.id.firstBalance);
-        secondBalance=findViewById(R.id.secondBalance);
-        thirdBalance=findViewById(R.id.thirdBalance);
+        TvOneThousnads = (TextView) findViewById(R.id.tv_one_thousands);
+        TvTwoThousnads = (TextView)findViewById(R.id.tv_two_thousands);
+        TvThreeThousnads = (TextView) findViewById(R.id.tv_three_thousands);
         btnsubmit=findViewById(R.id.btnsubmit);
-        firstBalance.setOnClickListener(this);
-        secondBalance.setOnClickListener(this);
-        thirdBalance.setOnClickListener(this);
 
-        firstBalanceText=findViewById(R.id.firstBalanceText);
-        secondBalanceText=findViewById(R.id.secondBalanceText);
-        thirdBalanceText=findViewById(R.id.thirdBalanceText);
+        TvOneThousnads.setText("+ " + "\u20B9 " + 300);
+        TvTwoThousnads.setText("+ " + "\u20B9 " + 500);
+        TvThreeThousnads.setText("+ " + "\u20B9 " + 1000);
 
         btnsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +78,57 @@ public class AddMoneyActivity extends AppCompatActivity implements View.OnClickL
 
             }
         });
+
+        TvOneThousnads.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View view) {
+                TvTwoThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
+                TvThreeThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
+                TvOneThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.one_thansouns));
+                TvOneThousnads.setTextColor(getResources().getColor(R.color.white));
+                TvTwoThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
+                TvThreeThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
+                selectedBalance.setText("₹ 300");
+                amount = "300";
+                // Log.d("aaaaAmountAaa1",amount);
+
+            }
+        });
+
+        TvTwoThousnads.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View view) {
+                TvOneThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
+                TvThreeThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
+                TvTwoThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.one_thansouns));
+                TvTwoThousnads.setTextColor(getResources().getColor(R.color.white));
+                TvOneThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
+                TvThreeThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
+                selectedBalance.setText("₹ 500");
+                amount = "500";
+                //   Log.d("aaaaAmountAaa2",amount);
+            }
+        });
+
+        TvThreeThousnads.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View view) {
+                TvOneThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
+                TvTwoThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
+                TvThreeThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.one_thansouns));
+                TvThreeThousnads.setTextColor(getResources().getColor(R.color.white));
+                TvOneThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
+                TvTwoThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
+                selectedBalance.setText("₹ 1000");
+                amount = "1000";
+                //Log.d("aaaaAmountAaa3",amount);
+            }
+        });
+
+
 
         viewCustomerBalance();
     }
@@ -188,7 +236,7 @@ public class AddMoneyActivity extends AppCompatActivity implements View.OnClickL
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.firstBalance:
@@ -209,7 +257,7 @@ public class AddMoneyActivity extends AppCompatActivity implements View.OnClickL
                 break;
             }
 
-    }
+    }*/
 
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {

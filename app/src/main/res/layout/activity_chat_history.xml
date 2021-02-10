@@ -5,20 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.ChatHistoryActivity">
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/SwipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerChatHistory"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="#fff"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <TextView
         android:id="@+id/historyEmptyText"
         android:layout_width="match_parent"
@@ -33,5 +20,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/SwipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerChatHistory"
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+            android:divider="#fff"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

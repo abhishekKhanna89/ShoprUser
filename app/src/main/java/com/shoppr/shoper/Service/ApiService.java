@@ -39,6 +39,7 @@ import com.shoppr.shoper.requestdata.OtpVerifyRequest;
 import com.shoppr.shoper.requestdata.PaymentSuccessRequest;
 import com.shoppr.shoper.requestdata.RatingsRequest;
 import com.shoppr.shoper.requestdata.RechargeRequest;
+import com.shoppr.shoper.requestdata.RegisterRequest;
 import com.shoppr.shoper.requestdata.ShareLocationRequest;
 import com.shoppr.shoper.requestdata.TextTypeRequest;
 import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
@@ -62,6 +63,10 @@ import okhttp3.RequestBody;
 public interface ApiService {
     @POST("login-with-otp")
     Call<LoginModel> loginUser(@Body LoginRequest requestBody);
+
+    @POST("register")
+    Call<LoginModel>registerUser(@Body RegisterRequest registerRequest);
+
     @POST("verify-otp")
     Call<OtpVerifyModel>otpService(@Body OtpVerifyRequest verifyRequest);
     @NonNull

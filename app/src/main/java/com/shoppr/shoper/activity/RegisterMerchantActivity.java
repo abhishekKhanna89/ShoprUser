@@ -87,6 +87,7 @@ public class RegisterMerchantActivity extends AppCompatActivity {
     Double latitude,longitude;
     Button updateBtn;
     TextView msgPrintText;
+    private int mRequestCode = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,38 +116,8 @@ public class RegisterMerchantActivity extends AppCompatActivity {
 
         msgPrintText=findViewById(R.id.msgPrintText);
 
-        location_address=getIntent().getStringExtra("location_address");
-        if (location_address!=null){
-            Geocoder coder = new Geocoder(RegisterMerchantActivity.this);
-            List<Address> address;
+        //location_address=getIntent().getStringExtra("location_address");
 
-            try {
-                //Get latLng from String
-                address = coder.getFromLocationName(location_address, 5);
-
-                //check for null
-                if (address != null) {
-
-                    //Lets take first possibility from the all possibilities.
-                    try {
-                        Address location = address.get(0);
-                        latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-                        latitude = latLng.latitude;
-                        longitude = latLng.longitude;
-                        getAddress(latLng.latitude,latLng.longitude);
-                    } catch (IndexOutOfBoundsException er) {
-                        Toast.makeText(RegisterMerchantActivity.this, "Location isn't available", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +149,6 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                 }
             }
         });
-
         viewMerchantRegister();
 
     }
@@ -210,7 +180,6 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                                 editAboutStore.setText(getRegisterMerchantModel.getData().getApplication().getAboutStore());
                                 editAddress.setText(getRegisterMerchantModel.getData().getApplication().getAddress());
                                 msgPrintText.setText(getRegisterMerchantModel.getData().getMessage());
-
                             }
                         }
                     }
@@ -221,31 +190,6 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                     sessonManager.hideProgress();
                 }
             });
-            /*Call<MyProfileModel> call = ApiExecutor.getApiService(this).apiMyProfile("Bearer "+sessonManager.getToken());
-            call.enqueue(new Callback<MyProfileModel>() {
-                @Override
-                public void onResponse(Call<MyProfileModel> call, Response<MyProfileModel> response) {
-                    sessonManager.hideProgress();
-                    if (response.body()!=null){
-                        if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
-                            MyProfileModel myProfileModel=response.body();
-                            if(myProfileModel.getData()!=null) {
-                                //sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
-                                Picasso.get().load(myProfileModel.getData().getImage()).into(circleImage);
-                                editName.setText(String.valueOf(myProfileModel.getData().getName()));
-                                editEmail.setText(myProfileModel.getData().getEmail());
-                                //sessonManager.setMobileNo(myProfileModel.getData().getMobile());
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<MyProfileModel> call, Throwable t) {
-                    sessonManager.hideProgress();
-                }
-            });*/
-
 
         }else {
             CommonUtils.showToastInCenter(RegisterMerchantActivity.this, getString(R.string.please_check_network));
@@ -254,7 +198,7 @@ public class RegisterMerchantActivity extends AppCompatActivity {
 
 
     private void getAddress(double latitude, double longitude) {
-
+        //Log.d("ressssssLocation",""+latitude+longitude);
         Geocoder geocoder = new Geocoder(RegisterMerchantActivity.this);
         List<Address> list = null;
         try {
@@ -310,6 +254,7 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                             //Log.d("responseJson",""+jsonObject);
                             if (code.equals("success")) {
                                 String msg = jsonObject.get("message").getAsString();
+
                                 Toast.makeText(RegisterMerchantActivity.this, msg, Toast.LENGTH_SHORT).show();
                             } else {
                                 String msg = jsonObject.get("message").getAsString();
@@ -392,6 +337,42 @@ public class RegisterMerchantActivity extends AppCompatActivity {
 
         } else if ((requestCode == 786)) {
             selectFromGallery(data);
+        }
+        if(requestCode == mRequestCode && resultCode == RESULT_OK){
+            location_address= data.getStringExtra("location_address");
+            if (location_address!=null){
+                Geocoder coder = new Geocoder(RegisterMerchantActivity.this);
+                List<Address> address;
+
+                try {
+                    //Get latLng from String
+                    address = coder.getFromLocationName(location_address, 5);
+
+                    //check for null
+                    if (address != null) {
+
+                        //Lets take first possibility from the all possibilities.
+                        try {
+                            Address location = address.get(0);
+                            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                            latitude = latLng.latitude;
+                            longitude = latLng.longitude;
+                            getAddress(latLng.latitude,latLng.longitude);
+                        } catch (IndexOutOfBoundsException er) {
+                            Toast.makeText(RegisterMerchantActivity.this, "Location isn't available", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            //editAddress.setText(location_address);
+            //Log.d("location_addressResss",editTextString);
         }
 
     }
@@ -655,7 +636,10 @@ public class RegisterMerchantActivity extends AppCompatActivity {
     }
 
     public void Map(View view) {
-        startActivity(new Intent(RegisterMerchantActivity.this,EditLocationActivity.class)
-        .putExtra("merchant","merchant"));
+       /* startActivity(new Intent(RegisterMerchantActivity.this,EditLocationActivity.class)
+        .putExtra("merchant","merchant"));*/
+        startActivityForResult(new Intent(RegisterMerchantActivity.this,EditLocationActivity.class)
+                .putExtra("merchant","merchant"),mRequestCode);
     }
+
 }

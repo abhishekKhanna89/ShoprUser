@@ -1,6 +1,7 @@
 package com.shoppr.shoper.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -66,7 +67,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class EditLocationActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener{
+public class EditLocationActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -76,7 +77,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     LatLng latLng;
     Marker marker;
     Location currentLocation;
-    public static String latitude, longitude,location_address;
+    public static String latitude, longitude, location_address;
     double lateee;
     double lngeee;
     Circle circle;
@@ -87,26 +88,27 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     ArrayAdapter<String> arrayAdapter_stateLocation;
     ArrayList<String> arrListLocation = new ArrayList<>();
     ImageView imgClose;
-    String locality,subLocality;
+    String locality, subLocality;
     SessonManager sessonManager;
     int chat_id;
     String merchant;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
-        sessonManager=new SessonManager(this);
-        addBTN=findViewById(R.id.btn_map_address);
-        imgClose=findViewById(R.id.imgClose);
-        chat_id=getIntent().getIntExtra("chatId",0);
+        sessonManager = new SessonManager(this);
+        addBTN = findViewById(R.id.btn_map_address);
+        imgClose = findViewById(R.id.imgClose);
+        chat_id = getIntent().getIntExtra("chatId", 0);
 
-        merchant=getIntent().getStringExtra("merchant");
+        merchant = getIntent().getStringExtra("merchant");
         autoCompleteTextViewLoaction = findViewById(R.id.AutoComplte_tv_home);
 
         addBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                location_address= autoCompleteTextViewLoaction.getText().toString();
+                location_address = autoCompleteTextViewLoaction.getText().toString();
                 /*location_address= autoCompleteTextViewLoaction.getText().toString();
 
                 Geocoder coder = new Geocoder(EditLocationActivity.this);
@@ -152,20 +154,29 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                     e.printStackTrace();
                 }*/
 
-                if (merchant!=null){
-                    startActivity(new Intent(EditLocationActivity.this, RegisterMerchantActivity.class)
-                            .putExtra("location_address",location_address)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                }else {
+                if (merchant != null) {
+                   /* startActivity(new Intent(EditLocationActivity.this, RegisterMerchantActivity.class)
+                            .putExtra("location_address", location_address)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
+
+                    /*Intent intent = new Intent();
+                    intent.putExtra("location_address", location_address);
+                    setResult(1, intent);*/
+                    Intent intent = new Intent();
+                    intent.putExtra("location_address", location_address);
+                    setResult(RESULT_OK, intent);
+                    finish();
+
+
+                } else {
                     startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
-                            .putExtra("location_address",location_address)
-                            .putExtra("value",1)
+                            .putExtra("location_address", location_address)
+                            .putExtra("value", 1)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 }
 
 
-               //onBackPressed();
-
+                //onBackPressed();
 
 
             }
@@ -174,7 +185,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!autoCompleteTextViewLoaction.getText().toString().isEmpty()){
+                if (!autoCompleteTextViewLoaction.getText().toString().isEmpty()) {
                     autoCompleteTextViewLoaction.getText().clear();
                 }
 
@@ -223,6 +234,10 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
             getLocationPermission();
         }
     }
+
+
+
+
     public void goToLocationFromAddress(String strAddress) {
         mMap.clear();
         //Create coder with Activity context - this
@@ -254,7 +269,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
 
 //                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
-                    getAddress(latLng.latitude,latLng.longitude);
+                    getAddress(latLng.latitude, latLng.longitude);
                 } catch (IndexOutOfBoundsException er) {
                     Toast.makeText(this, "Location isn't available", Toast.LENGTH_SHORT).show();
                 }
@@ -312,6 +327,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
+
     private void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -416,7 +432,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                                 Address address = list.get(0);
                                 String localitys = address.getLocality();
                                 location_address = address.getAddressLine(0);
-                                locality =  address.getLocality();
+                                locality = address.getLocality();
                                 subLocality = address.getSubLocality();
                                 autoCompleteTextViewLoaction.setText(address.getAddressLine(0));
 
