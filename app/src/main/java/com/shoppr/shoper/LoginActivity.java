@@ -139,12 +139,14 @@ public class LoginActivity extends AppCompatActivity {
                                         .putExtra("type","login")
                                         .putExtra("mobile",editusername.getText().toString())
                                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                finishAffinity();
                                 finish();
                             }else {
                                 sessonManager.getToken();
                                 //sessonManager.setToken(response.body().getToken());
                                 startActivity(new Intent(LoginActivity.this,MapsActivity.class)
                                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                finishAffinity();
                                 finish();
                             }
                         }else {
@@ -192,4 +194,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

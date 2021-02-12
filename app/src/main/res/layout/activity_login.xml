@@ -63,7 +63,7 @@
                 android:textColor="@color/white"
                 android:textAllCaps="true"
                 android:background="@color/colorPrimary"
-                android:fontFamily="sans-serif"></Button>
+                android:fontFamily="sans-serif"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

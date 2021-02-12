@@ -19,26 +19,21 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.activity.ChatActivity;
+import com.shoppr.shoper.activity.ChatDetailsActivity;
 import com.shoppr.shoper.util.SessonManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FirebaseMessageReceiver extends FirebaseMessagingService {
     SessonManager sessonManager;
     Uri notification;
+    String chat_id;
+    Intent intent;
     @Override
     public void
     onMessageReceived(RemoteMessage remoteMessage) {
         sessonManager=new SessonManager(this);
-        // First case when notifications are received via
-        // data event
-        // Here, 'title' and 'message' are the assumed names
-        // of JSON
-        // attributes. Since here we do not have any data
-        // payload, This section is commented out. It is
-        // here only for reference purposes.
-        /*if(remoteMessage.getData().size()>0){
-            showNotification(remoteMessage.getData().get("title"),
-                          remoteMessage.getData().get("message"));
-        }*/
 
         // Second case when notification payload is
         // received.
@@ -48,11 +43,11 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
             // directly as below.
             showNotification(
                     remoteMessage.getNotification().getTitle(),
-                    remoteMessage.getNotification().getBody());
+                    remoteMessage.getNotification().getBody(),
+                    remoteMessage);
 
             Intent intent = new Intent("message_subject_intent");
-            intent.putExtra("title", remoteMessage.getNotification().getTitle() );
-            intent.putExtra("body", remoteMessage.getNotification().getBody());
+            intent.putExtra("chat_id",chat_id);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         }
@@ -73,12 +68,19 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     }
 
     // Method to display the notifications
-    public void showNotification(String title,
-                                 String message) {
+    public void showNotification(String title, String message, RemoteMessage remoteMessage) {
         //Log.d("title",title);
         // Pass the intent to switch to the MainActivity
-        Intent intent
-                = new Intent(this, ChatActivity.class);
+        JSONObject jsonObject=new JSONObject(remoteMessage.getData());
+        try {
+            chat_id=jsonObject.getString("chat_id");
+            intent
+                    = new Intent(this, ChatDetailsActivity.class);
+            sessonManager.setChatId(chat_id);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         // Assign channel ID
         String channel_id = "notification_channel";
         // Here FLAG_ACTIVITY_CLEAR_TOP flag is set to clear

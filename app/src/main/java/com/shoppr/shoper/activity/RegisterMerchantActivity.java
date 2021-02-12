@@ -143,6 +143,8 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                 }else if(editAddress.getText().toString().isEmpty()){
                     editAddress.setError("Address Field Can't be blank");
                     editAddress.requestFocus();
+                }else if (imagePathList.size()==0){
+                    Toast.makeText(RegisterMerchantActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     UpdateAPI();
@@ -254,8 +256,8 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                             //Log.d("responseJson",""+jsonObject);
                             if (code.equals("success")) {
                                 String msg = jsonObject.get("message").getAsString();
-
                                 Toast.makeText(RegisterMerchantActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                viewMerchantRegister();
                             } else {
                                 String msg = jsonObject.get("message").getAsString();
                                 Toast.makeText(RegisterMerchantActivity.this, msg, Toast.LENGTH_SHORT).show();

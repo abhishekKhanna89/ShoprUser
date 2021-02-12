@@ -31,6 +31,7 @@ public class SessonManager {
 
 
     public static final String editaddress="editaddress";
+    public static final String CHAT_ID="chat_id";
 
     public Dialog mDialog;
     public SessonManager(Context ctx) {
@@ -140,6 +141,16 @@ public class SessonManager {
     public String getDriver_longitude(){
         return sharedPreference.getString(driver_longitude,"");
     }
+
+    public void setChatId(String chatId){
+        editor.putString(CHAT_ID,chatId);
+        editor.apply();
+    }
+
+    public String getChatId(){
+        return sharedPreference.getString(CHAT_ID,"");
+    }
+
     public void hideProgress() {
         while (mDialog != null && mDialog.isShowing()){
             mDialog.dismiss();

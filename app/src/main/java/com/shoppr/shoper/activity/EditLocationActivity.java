@@ -230,6 +230,8 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            mLocationPermissionsGranted = true;
+            initMap();
         } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             getLocationPermission();
         }

@@ -75,12 +75,14 @@ public class RegisterActivity extends AppCompatActivity {
                                         .putExtra("type","register")
                                         .putExtra("mobile",editmobile.getText().toString())
                                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                finishAffinity();
                                 finish();
                             }else {
                                 sessonManager.getToken();
                                 //sessonManager.setToken(response.body().getToken());
                                 startActivity(new Intent(RegisterActivity.this,MapsActivity.class)
                                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                finishAffinity();
                                 finish();
                             }
                         }else {
@@ -97,5 +99,9 @@ public class RegisterActivity extends AppCompatActivity {
         }else {
             CommonUtils.showToastInCenter(RegisterActivity.this, getString(R.string.please_check_network));
         }
+    }
+
+    public void login(View view) {
+        startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
     }
 }
