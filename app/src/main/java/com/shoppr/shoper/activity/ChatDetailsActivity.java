@@ -336,36 +336,6 @@ public class ChatDetailsActivity extends AppCompatActivity {
     }
 
 
-    /*private void viewStartChat() {
-        if (CommonUtils.isOnline(ChatDetailsActivity.this)) {
-            sessonManager.showProgress(ChatDetailsActivity.this);
-            Call<StartChatModel>call= ApiExecutor.getApiService(this)
-                    .apiChatStart("Bearer "+sessonManager.getToken());
-            call.enqueue(new Callback<StartChatModel>() {
-                @Override
-                public void onResponse(Call<StartChatModel> call, Response<StartChatModel> response) {
-                    sessonManager.hideProgress();
-                    if (response.body()!=null) {
-                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            StartChatModel startChatModel=response.body();
-                            if (startChatModel.getData()!=null){
-                                chat_id=startChatModel.getData().getId();
-                                chatMessageList(chat_id);
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<StartChatModel> call, Throwable t) {
-                    sessonManager.hideProgress();
-                }
-            });
-        }else {
-            CommonUtils.showToastInCenter(ChatDetailsActivity.this, getString(R.string.please_check_network));
-        }
-    }*/
-
     private void chatMessageList(int chat_id) {
         if (CommonUtils.isOnline(ChatDetailsActivity.this)) {
             //sessonManager.showProgress(ChatActivity.this);
@@ -437,12 +407,10 @@ public class ChatDetailsActivity extends AppCompatActivity {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             InitiateVideoCallModel initiateVideoCallModel = response.body();
                             if (initiateVideoCallModel.getData()!=null){
-                                String savedCalleeId = initiateVideoCallModel.getData().getUser_id();
                                 String savedUserId=initiateVideoCallModel.getData().getUser_id();
-                                calleeId=savedCalleeId;
-                                calleeId=savedUserId;
-                                CallService.dial(ChatDetailsActivity.this, calleeId, true);
-                                PrefUtils.setCalleeId(ChatDetailsActivity.this, calleeId);
+                                PrefUtils.setCalleeId(ChatDetailsActivity.this, savedUserId);
+                                String savedCalleeId = PrefUtils.getCalleeId(ChatDetailsActivity.this);
+                                CallService.dial(ChatDetailsActivity.this, savedCalleeId, true);
                             }
                         }
                     }
@@ -469,12 +437,10 @@ public class ChatDetailsActivity extends AppCompatActivity {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             InitiateVideoCallModel initiateVideoCallModel = response.body();
                             if (initiateVideoCallModel.getData()!=null){
-                                String savedCalleeId = initiateVideoCallModel.getData().getUser_id();
                                 String savedUserId=initiateVideoCallModel.getData().getUser_id();
-                                calleeId=savedCalleeId;
-                                calleeId=savedUserId;
-                                CallService.dial(ChatDetailsActivity.this, calleeId, false);
-                                PrefUtils.setCalleeId(ChatDetailsActivity.this, calleeId);
+                                PrefUtils.setCalleeId(ChatDetailsActivity.this, savedUserId);
+                                String savedCalleeId = PrefUtils.getCalleeId(ChatDetailsActivity.this);
+                                CallService.dial(ChatDetailsActivity.this, savedCalleeId, false);
                             }
                         }
                     }

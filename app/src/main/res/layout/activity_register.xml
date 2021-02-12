@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="250dp"
             android:layout_gravity="center"
-            android:background="@drawable/login_top_image"></ImageView>
+            android:background="@drawable/login_top_image"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="450dp"
