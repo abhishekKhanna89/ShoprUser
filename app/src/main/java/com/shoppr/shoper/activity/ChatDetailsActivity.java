@@ -130,15 +130,17 @@ public class ChatDetailsActivity extends AppCompatActivity {
 
 
         chat_id = getIntent().getIntExtra("id", 0);
-
-        chatMessageList(chat_id);
+        //Log.d("ChatId+",""+chat_id);
 
         if (sessonManager.getChatId().isEmpty()){
+            sessonManager.setChatId("");
             chatMessageList(chat_id);
         }else {
             String cId=sessonManager.getChatId();
             int a=Integer.parseInt(cId);
+            sessonManager.setChatId("");
             chatMessageList(a);
+           // Log.d("ChatId+",""+a);
         }
         //chatMessageList(chat_id);
 

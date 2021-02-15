@@ -228,13 +228,34 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
             }
         });
 
+
+
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+        if (locationManager!=null){
+            mLocationPermissionsGranted = true;
+            initMap();
+        }else {
+            if (ContextCompat.checkSelfPermission(EditLocationActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                if (ActivityCompat.shouldShowRequestPermissionRationale(EditLocationActivity.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)){
+                    ActivityCompat.requestPermissions(EditLocationActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                }else{
+                    ActivityCompat.requestPermissions(EditLocationActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                }
+            }
+        }
+
+       /* if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             mLocationPermissionsGranted = true;
             initMap();
         } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             getLocationPermission();
-        }
+        }*/
     }
 
 
@@ -470,6 +491,23 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         // .strokeWidth()
         return mMap.addCircle(circleOptions);
 
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults){
+        switch (requestCode){
+            case 1: {
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    if (ContextCompat.checkSelfPermission(EditLocationActivity.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+                        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
     }
 
 }
