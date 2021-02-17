@@ -87,10 +87,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.media.MediaRecorder.VideoSource.CAMERA;
+import static java.lang.Integer.parseInt;
 
 public class ChatActivity extends AppCompatActivity {
     boolean flag=false;
-    public static int chat_id;
+    public static int chat_id, chatid;
     RecyclerView chatRecyclerView;
     SessonManager sessonManager;
     List<Chat> chatList;
@@ -122,7 +123,7 @@ public class ChatActivity extends AppCompatActivity {
     private Chronometer timer;
     String pathforaudio;
     int shopId;
-    String calleeId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,11 +133,21 @@ public class ChatActivity extends AppCompatActivity {
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
 
         shopId=getIntent().getIntExtra("shopId",0);
-        //chat_id=getIntent().getIntExtra("id",0);
-        //Log.d("res",""+shopId);
         viewStartChat(shopId);
-        //chatMessageList(1);
+        int Chat_id=getIntent().getIntExtra("Chat_id",0);
 
+
+        if (sessonManager.getChatId().isEmpty()){
+            sessonManager.setChatId("");
+            chat_id=Chat_id;
+        }else {
+            String cId=sessonManager.getChatId();
+            int a= Integer.parseInt(cId);
+            chat_id=a;
+            sessonManager.setChatId("");
+        }
+
+        Log.d("ChatIdForTesting",sessonManager.getChatId());
 
         editText = findViewById(R.id.editText);
         sendMsgBtn = findViewById(R.id.sendMsgBtn);
@@ -162,6 +173,7 @@ public class ChatActivity extends AppCompatActivity {
                     String title=intent.getStringExtra("title");
                     body=intent.getStringExtra("body");
                     chatMessageList(chat_id);
+                    chatMessageList1(chatid);
 /*// Create the initial data list.
                     // msgDtoList = new ArrayList<ChatModel>();
                     ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_RECEIVED, body);
@@ -300,38 +312,10 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
+        chatMessageList(chat_id);
 
     }
 
-    /*private void chatMessageList1(int chat_id) {
-        Log.d("ress",""+chat_id);
-        Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),chat_id);
-        call.enqueue(new Callback<ChatMessageModel>() {
-            @Override
-            public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
-                //sessonManager.hideProgress();
-                if (response.body()!=null) {
-                    if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                        ChatMessageModel chatMessageModel=response.body();
-                        if (chatMessageModel.getData()!=null){
-                            chatList=chatMessageModel.getData().getChats();
-                            ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
-                            chatRecyclerView.setAdapter(chatMessageAdapter);
-                            chatRecyclerView.scrollToPosition(chatList.size()-1);
-                            chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount());
-                            //chatRecyclerView.getLayoutManager().scrollToPosition(chatList.size()-1);
-                            chatMessageAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ChatMessageModel> call, Throwable t) {
-
-            }
-        });
-    }*/
 
     private void startDialog() {
         AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
@@ -373,7 +357,6 @@ public class ChatActivity extends AppCompatActivity {
         myAlertDialog.show();
     }
 
-
     private void viewStartChat(int shopId) {
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
@@ -387,8 +370,8 @@ public class ChatActivity extends AppCompatActivity {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             StartChatModel startChatModel=response.body();
                             if (startChatModel.getData()!=null){
-                                chat_id=startChatModel.getData().getId();
-                                chatMessageList(chat_id);
+                                chatid=startChatModel.getData().getId();
+                                chatMessageList1(chatid);
                             }
                         }
                     }
@@ -399,6 +382,41 @@ public class ChatActivity extends AppCompatActivity {
                     sessonManager.hideProgress();
                 }
             });
+        }else {
+            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
+        }
+    }
+
+    private void chatMessageList1(int chatid) {
+        if (CommonUtils.isOnline(ChatActivity.this)) {
+            //sessonManager.showProgress(ChatActivity.this);
+            Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),chatid);
+            call.enqueue(new Callback<ChatMessageModel>() {
+                @Override
+                public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
+                    //sessonManager.hideProgress();
+                    if (response.body()!=null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            ChatMessageModel chatMessageModel=response.body();
+                            if (chatMessageModel.getData()!=null){
+                                chatList=chatMessageModel.getData().getChats();
+                                ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
+                                chatRecyclerView.setAdapter(chatMessageAdapter);
+                                chatRecyclerView.scrollToPosition(chatList.size()-1);
+                                chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount());
+                                //chatRecyclerView.getLayoutManager().scrollToPosition(chatList.size()-1);
+                                chatMessageAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ChatMessageModel> call, Throwable t) {
+                    //sessonManager.showProgress(ChatActivity.this);
+                }
+            });
+
         }else {
             CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
         }

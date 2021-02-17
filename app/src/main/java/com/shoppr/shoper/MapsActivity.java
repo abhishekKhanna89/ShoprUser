@@ -47,6 +47,7 @@ import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.activity.EditLocationActivity;
+import com.shoppr.shoper.activity.FindingShopprActivity;
 import com.shoppr.shoper.activity.MyAccount;
 import com.shoppr.shoper.activity.NotificationListActivity;
 import com.shoppr.shoper.activity.RegisterMerchantActivity;
@@ -79,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements
     LinearLayout linearstorelist;
     SessonManager sessonManager;
     //double lat,lon;
-    TextView shoprListText,addressText;
+    TextView shoprListText, addressText;
     CircleImageView cir_man_hair_cut;
 
     /*Todo:- Google Map And Current Location*/
@@ -93,10 +94,10 @@ public class MapsActivity extends FragmentActivity implements
     /*Todo:- Address*/
     Geocoder geocoder;
     List<Address> addresses;
-    String city,address;
+    String city, address;
     int value;
     String location_address;
-    boolean myLocationEnable=false;
+    boolean myLocationEnable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,24 +105,24 @@ public class MapsActivity extends FragmentActivity implements
         setContentView(R.layout.activity_maps);
         sessonManager = new SessonManager(this);
         shoprListText = findViewById(R.id.shoprListText);
-        addressText=findViewById(R.id.addressText);
+        addressText = findViewById(R.id.addressText);
         cir_man_hair_cut = findViewById(R.id.cir_man_hair_cut);
 
-        //Log.d("Token",sessonManager.getToken());
+        Log.d("Token", sessonManager.getToken());
 
         linearstorelist = findViewById(R.id.linearstorelist);
 
-        value=getIntent().getIntExtra("value",0);
-        location_address=getIntent().getStringExtra("location_address");
+        value = getIntent().getIntExtra("value", 0);
+        location_address = getIntent().getStringExtra("location_address");
 
-        address=addressText.getText().toString();
+        address = addressText.getText().toString();
         linearstorelist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (address!=null){
+                if (address != null) {
                     startActivity(new Intent(MapsActivity.this, StorelistingActivity.class)
-                            .putExtra("address",addressText.getText().toString()));
-                }else {
+                            .putExtra("address", addressText.getText().toString()));
+                } else {
                     Toast.makeText(MapsActivity.this, "Please wait....", Toast.LENGTH_SHORT).show();
                 }
 
@@ -132,7 +133,7 @@ public class MapsActivity extends FragmentActivity implements
         addressText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 startActivity(new Intent(MapsActivity.this, EditLocationActivity.class)
+                startActivity(new Intent(MapsActivity.this, EditLocationActivity.class)
                 );
             }
         });
@@ -224,9 +225,9 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
-
     public void chats(View view) {
-        startActivity(new Intent(MapsActivity.this, ChatActivity.class));
+        startActivity(new Intent(MapsActivity.this, FindingShopprActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     /*Todo:- Google Map and Loaction*/
@@ -244,18 +245,16 @@ public class MapsActivity extends FragmentActivity implements
             return;
         }
 
-        if (myLocationEnable){
-            myLocationEnable=false;
+        if (myLocationEnable) {
+            myLocationEnable = false;
 
-        }else {
-            myLocationEnable=true;
+        } else {
+            myLocationEnable = true;
             addressText.setText("");
             //mGoogleMap.setMyLocationEnabled(myLocationEnable);
             buildGoogleApiClient();
             mGoogleApiClient.connect();
         }
-
-
 
 
     }
@@ -282,7 +281,7 @@ public class MapsActivity extends FragmentActivity implements
             // for ActivityCompat#requestPermissions for more details.
 
             return;
-        }else {
+        } else {
 
         }
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
@@ -293,16 +292,16 @@ public class MapsActivity extends FragmentActivity implements
             latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
             MarkerOptions markerOptions = new MarkerOptions();
-            if (latLng!=null){
+            if (latLng != null) {
                 markerOptions.position(latLng);
             }
-            if (address!=null){
+            if (address != null) {
                 markerOptions.title(address);
             }
 
-           // markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo));
+            // markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo));
             currLocationMarker = mGoogleMap.addMarker(markerOptions);
-        }else {
+        } else {
             showGPSDisabledAlertToUser();
         }
 
@@ -325,17 +324,16 @@ public class MapsActivity extends FragmentActivity implements
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
 
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Toast.makeText(this,"onConnectionSuspended",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "onConnectionSuspended", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(this,"onConnectionFailed",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "onConnectionFailed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -345,7 +343,7 @@ public class MapsActivity extends FragmentActivity implements
         //mGoogleMap.clear();
 
 
-        if (value==1){
+        if (value == 1) {
             mGoogleMap.clear();
             Geocoder coder = new Geocoder(MapsActivity.this);
             List<Address> address;
@@ -362,11 +360,11 @@ public class MapsActivity extends FragmentActivity implements
                         Address address1 = address.get(0);
                         LatLng latLng = new LatLng(address1.getLatitude(), address1.getLongitude());
                         addressText.setText(address1.getAddressLine(0));
-                        String latitude=String.valueOf(address1.getLatitude());
-                        String longitude=String.valueOf(address1.getLongitude());
+                        String latitude = String.valueOf(address1.getLatitude());
+                        String longitude = String.valueOf(address1.getLongitude());
 
                         //Log.d("loaction: ",""+latitude+" : "+longitude);
-                        if (latLng!=null){
+                        if (latLng != null) {
                             sessonManager.setLat(latitude);
                             sessonManager.setLon(longitude);
                         }
@@ -383,8 +381,6 @@ public class MapsActivity extends FragmentActivity implements
                         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
 
 
-
-
 //                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
                         //getAddress(latLng.latitude,latLng.longitude);
                     } catch (IndexOutOfBoundsException er) {
@@ -397,17 +393,17 @@ public class MapsActivity extends FragmentActivity implements
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             mGoogleMap.clear();
             if (currLocationMarker != null) {
                 currLocationMarker.remove();
             }
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            String latitude=String.valueOf(location.getLatitude());
-            String longitude=String.valueOf(location.getLongitude());
+            String latitude = String.valueOf(location.getLatitude());
+            String longitude = String.valueOf(location.getLongitude());
 
             //Log.d("loaction: ",""+latitude+" : "+longitude);
-            if (latLng!=null){
+            if (latLng != null) {
                 sessonManager.setLat(latitude);
                 sessonManager.setLon(longitude);
             }
@@ -416,7 +412,7 @@ public class MapsActivity extends FragmentActivity implements
             try {
                 addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                if (address!=null){
+                if (address != null) {
                     addressText.setText(address);
                 }
 
@@ -431,12 +427,12 @@ public class MapsActivity extends FragmentActivity implements
 
 
             MarkerOptions markerOptions = new MarkerOptions();
-            if (latLng!=null){
+            if (latLng != null) {
                 markerOptions.position(latLng);
             }
 
 
-            if (address!=null){
+            if (address != null) {
                 markerOptions.title(address);
             }
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_logo));
@@ -445,27 +441,28 @@ public class MapsActivity extends FragmentActivity implements
             //Toast.makeText(this,"Location Changed",Toast.LENGTH_SHORT).show();
 
             //zoom to current position:
-            if (latLng!=null){
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
+            if (latLng != null) {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
             }
         }
 
     }
-    private void showGPSDisabledAlertToUser(){
+
+    private void showGPSDisabledAlertToUser() {
         android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
                 .setCancelable(false)
                 .setPositiveButton("Goto Settings Page To Enable GPS",
-                        new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialog, int id){
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 Intent callGPSSettingIntent = new Intent(
                                         android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                 startActivity(callGPSSettingIntent);
                             }
                         });
         alertDialogBuilder.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int id){
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
@@ -517,12 +514,12 @@ public class MapsActivity extends FragmentActivity implements
                         try {
                             Intent shareIntent = new Intent(Intent.ACTION_SEND);
                             shareIntent.setType("text/plain");
-                            shareIntent.putExtra(Intent.EXTRA_SUBJECT,getResources().getString(R.string.app_name));
-                            String shareMessage= "Let me recommend you this application\n\n";
-                            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID ;
+                            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name));
+                            String shareMessage = "Let me recommend you this application\n\n";
+                            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID;
                             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
                             startActivity(Intent.createChooser(shareIntent, "choose one"));
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             //e.toString();
                         }
                         break;

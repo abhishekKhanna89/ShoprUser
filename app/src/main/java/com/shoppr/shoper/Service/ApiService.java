@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.shoppr.shoper.Model.AcceptModel;
+import com.shoppr.shoper.Model.AutoAssign.AutoAssignModel;
 import com.shoppr.shoper.Model.CancelModel;
 import com.shoppr.shoper.Model.CartCancel.CartCancelModel;
 import com.shoppr.shoper.Model.CartView.CartViewModel;
@@ -114,7 +115,9 @@ public interface ApiService {
     @GET("start-chat/{store_id}")
     Call<StartChatModel>apiChatStart(@Header("Authorization") String token,
                                      @Path("store_id")int store_id);
-
+    @NonNull
+    @GET("start-chat/{store_id}")
+    Call<StartChatModel>apiChatStart(@Header("Authorization") String token);
     @NonNull
     @GET("chat-messages/{chat_id}")
     Call<ChatMessageModel>apiChatMessage(@Header("Authorization") String token,
@@ -206,5 +209,12 @@ public interface ApiService {
     @NonNull
     @GET("view-application")
     Call<GetRegisterMerchantModel>apiGetMerchantRegister(@Header("Authorization") String token);
+
+    @NonNull
+    @GET("auto-assign/{chat_id}")
+    Call<AutoAssignModel>apiAutoAssign(@Header("Authorization") String token,
+                                       @Path("chat_id")int chat_id);
+
+
 
 }

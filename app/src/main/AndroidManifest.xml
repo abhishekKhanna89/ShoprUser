@@ -31,9 +31,13 @@
         android:theme="@style/Theme.Shoper"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".activity.RegisterMerchantActivity"
-            android:screenOrientation="portrait"
-            android:label="Register as a Merchant"/>
+        <activity android:name=".activity.FindingShopprActivity"
+            android:theme="@style/FindingTheme"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.RegisterMerchantActivity"
+            android:label="Register as a Merchant"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.NotificationListActivity"
             android:label="Notification"
@@ -92,12 +96,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".OtpActivity"
-            android:screenOrientation="portrait"
-            android:label="OTP Verify"/>
+            android:label="OTP Verify"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
-            android:screenOrientation="portrait"
-            android:label="Register"/>
+            android:label="Register"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -129,8 +133,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:label="Login"/>
+            android:label="Login"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait">
@@ -143,9 +147,20 @@
 
         <service android:name=".notifications.FirebaseMessageReceiver">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+       <!-- <activity
+            android:name="com.hallo.hallobasket.activity.Notification_Activity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="notification_screen"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>-->
 
         <provider
             android:name="androidx.core.content.FileProvider"

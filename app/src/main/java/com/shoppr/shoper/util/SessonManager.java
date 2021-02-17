@@ -33,6 +33,9 @@ public class SessonManager {
     public static final String editaddress="editaddress";
     public static final String CHAT_ID="chat_id";
 
+
+
+
     public Dialog mDialog;
     public SessonManager(Context ctx) {
         sharedPreference = ctx.getSharedPreferences(NAME, Context.MODE_PRIVATE);
@@ -150,6 +153,9 @@ public class SessonManager {
     public String getChatId(){
         return sharedPreference.getString(CHAT_ID,"");
     }
+
+
+
 
     public void hideProgress() {
         while (mDialog != null && mDialog.isShowing()){
