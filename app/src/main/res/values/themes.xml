@@ -15,8 +15,13 @@
     </style>
     <style name="CallTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/callBackground</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
     <style name="FindingTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="ChatTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
 

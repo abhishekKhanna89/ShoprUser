@@ -131,7 +131,8 @@ public class ChatHistoryActivity extends AppCompatActivity {
                     context.startActivity(new Intent(context, ChatDetailsActivity.class)
                             .putExtra("id", userchat.getId())
                             .putExtra("image",userchat.getImage())
-                            .putExtra("name",userchat.getName()));
+                            .putExtra("name",userchat.getName())
+                           .putExtra("checkfornavigation","1"));
                 }
             });
         }

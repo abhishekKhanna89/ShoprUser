@@ -37,7 +37,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     public static String chat_id;
     Intent intent;
     String type;
-
+    String a;
 
     @Override
     public void
@@ -83,25 +83,26 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         //Log.d("title",title);
         // Pass the intent to switch to the MainActivity
         JSONObject jsonObject = new JSONObject(remoteMessage.getData());
-
+        Log.d("ChatId+",""+jsonObject);
         try {
             chat_id = jsonObject.getString("chat_id");
             //Log.d("ChatId+",chat_id);
             type = jsonObject.getString("type");
-            if (title.equalsIgnoreCase("Shoppr Assigned")){
-                startActivity(new Intent(this, ChatActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            if (type.equalsIgnoreCase("chat-assigned")){
+                startActivity(new Intent(this, ChatActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
                 sessonManager.setChatId("");
                 sessonManager.setChatId(chat_id);
             }
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        intent = new Intent(this, ChatActivity.class);
-        sessonManager.setChatId("");
+        intent = new Intent(this, ChatDetailsActivity.class);
+
+        intent.putExtra("whattodo", chat_id);
+        intent.putExtra("checkfornavigation","0");
+// add this:
+        intent.setAction("showmessage");
         sessonManager.setChatId(chat_id);
         // Assign channel ID
         String channel_id = "notification_channel";
@@ -121,11 +122,13 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 
         try {
             notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-            r.play();
+            //Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            //r.play();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
 
         @SuppressLint("WrongConstant") NotificationCompat.Builder builder
                 = new NotificationCompat
@@ -137,8 +140,10 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                         1000, 1000})
                 .setOnlyAlertOnce(true)
                 .setSound(notification)
-                .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setContentIntent(pendingIntent);
+
+
+
 
 
         // A customized design for the notification can be

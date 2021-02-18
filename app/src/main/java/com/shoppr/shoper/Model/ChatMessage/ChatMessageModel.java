@@ -16,6 +16,7 @@ public class ChatMessageModel {
     @Expose
     private Data data;
 
+
     public String getStatus() {
         return status;
     }

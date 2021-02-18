@@ -6,15 +6,22 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.app.DownloadManager;
 import android.content.Context;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.developer.kalert.KAlertDialog;
 import com.shoppr.shoper.Model.OrderDetails.OrderHistory.Detail;
 import com.shoppr.shoper.Model.OrderDetails.OrderHistory.OrderHistoryModel;
 import com.shoppr.shoper.R;
@@ -44,6 +51,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
     ArrayList<Detail> arrCartItemList;
     double total_paid;
     TextView emptyDeatils;
+    String refId;
+    String invoice_link;
+    TextView invoiceDownload;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +70,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
         /*Todo:- TextView*/
         emptyDeatils=findViewById(R.id.emptyDeatils);
 
+        invoiceDownload=findViewById(R.id.invoiceDownload);
+
         orderIdText=findViewById(R.id.orderIdText);
         totalAmountText=findViewById(R.id.totalAmountText);
         serviceChargeText=findViewById(R.id.serviceChargeText);
@@ -67,10 +79,28 @@ public class OrderDetailsActivity extends AppCompatActivity {
         walletAmountText=findViewById(R.id.walletAmountText);
         totalPaidText=findViewById(R.id.totalPaidText);
 
+
+
         viewOrderDetails(orderId);
+
+        invoiceDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (invoice_link.equalsIgnoreCase("0")){
+                }else {
+                    DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                    Uri uri = Uri.parse(ApiExecutor.baseUrl+"download-invoice/"+refId);
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    Long ref = downloadManager.enqueue(request);
+                }
+            }
+        });
+
     }
 
     private void viewOrderDetails(int orderId) {
+        Log.d("orderId",""+orderId);
         if (CommonUtils.isOnline(OrderDetailsActivity.this)) {
             sessonManager.showProgress(OrderDetailsActivity.this);
             Call<OrderHistoryModel> call= ApiExecutor.getApiService(this)
@@ -83,6 +113,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             OrderHistoryModel ordersDetailsModel=response.body();
                             if (ordersDetailsModel.getData()!=null){
+                                refId=ordersDetailsModel.getData().getOrder().getRefid();
+                                invoice_link=ordersDetailsModel.getData().getShow_invoice_link();
                                 orderIdText.setText(ordersDetailsModel.getData().getOrder().getRefid());
                                 totalAmountText.setText("₹ " +ordersDetailsModel.getData().getOrder().getTotal());
                                 serviceChargeText.setText("₹ " +ordersDetailsModel.getData().getOrder().getServiceCharge());
@@ -140,6 +172,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
     public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.Holder>{
         List<Detail>detailList;
         Context context;

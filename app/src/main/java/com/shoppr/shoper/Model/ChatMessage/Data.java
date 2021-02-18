@@ -12,6 +12,9 @@ public class Data {
     @SerializedName("chat_id")
     @Expose
     private String chatId;
+    @SerializedName("shoppr")
+    @Expose
+    private Shoppr shoppr;
 
     public List<Chat> getChats() {
         return chats;
@@ -28,5 +31,11 @@ public class Data {
     public void setChatId(String chatId) {
         this.chatId = chatId;
     }
+    public Shoppr getShoppr() {
+        return shoppr;
+    }
 
+    public void setShoppr(Shoppr shoppr) {
+        this.shoppr = shoppr;
+    }
 }

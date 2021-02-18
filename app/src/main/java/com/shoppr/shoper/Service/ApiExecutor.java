@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiExecutor {
 
-    private static String baseUrl="http://shoppr.avaskmcompany.xyz/api/";
+    public static String baseUrl="http://shoppr.avaskmcompany.xyz/api/";
     private static Retrofit retrofit;
 
     public static ApiService getApiService(Context mContext) {

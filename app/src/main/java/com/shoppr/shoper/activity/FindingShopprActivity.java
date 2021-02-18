@@ -53,9 +53,9 @@ public class FindingShopprActivity extends AppCompatActivity {
         //mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         //textViewShowTime = (TextView) findViewById(R.id.tvTimeCount);
 
-        //setTimer();
+        setTimer();
 
-        viewStartChat1();
+
 
     }
 
@@ -68,7 +68,7 @@ public class FindingShopprActivity extends AppCompatActivity {
     }
 
     private void startTimer() {
-        countDownTimer = new CountDownTimer(totalTimeCountInMilliseconds, 500) {
+        countDownTimer = new CountDownTimer(0, 100000) {
             // 500 means, onTick function will be called at every 500
             // milliseconds
 
@@ -166,10 +166,11 @@ public class FindingShopprActivity extends AppCompatActivity {
                                 Toast.makeText(FindingShopprActivity.this, ""+autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 if (sessonManager.getChatId().isEmpty()){
                                     sessonManager.setChatId("");
-                                    startActivity(new Intent(FindingShopprActivity.this, ChatActivity.class)
+                                    /*startActivity(new Intent(FindingShopprActivity.this, ChatActivity.class)
                                             .putExtra("Chat_id", chat_id)
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                    finish();
+                                    finish();*/
                                 }else {
                                     sessonManager.setChatId("");
                                 }
@@ -189,5 +190,11 @@ public class FindingShopprActivity extends AppCompatActivity {
         } else {
             CommonUtils.showToastInCenter(FindingShopprActivity.this, getString(R.string.please_check_network));
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        FindingShopprActivity.this.finish();
     }
 }

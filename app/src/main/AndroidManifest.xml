@@ -41,7 +41,13 @@
         <activity
             android:name=".activity.NotificationListActivity"
             android:label="Notification"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+
+        </activity>
+
+
+
+
         <activity
             android:name=".activity.EditLocationActivity"
             android:screenOrientation="portrait"
@@ -59,10 +65,22 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatDetailsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/ChatTheme"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true">
+
+
+        </activity>
         <activity
             android:name=".activity.ChatHistoryActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="chat_screen"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.TrackLoactionActivity"
             android:screenOrientation="portrait" />
@@ -74,7 +92,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatActivity"
-            android:label="Chat"
+            android:theme="@style/ChatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.UpdateProfileActivity"
@@ -145,12 +163,15 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".notifications.FirebaseMessageReceiver">
+        <service android:name=".notifications.FirebaseMessageReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-       <!-- <activity
+
+        <!-- <activity
             android:name="com.hallo.hallobasket.activity.Notification_Activity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"

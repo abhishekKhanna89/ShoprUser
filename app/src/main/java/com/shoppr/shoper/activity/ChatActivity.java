@@ -1,6 +1,5 @@
 package com.shoppr.shoper.activity;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -37,17 +36,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.razorpay.G__G_;
 import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.ChatModel;
@@ -66,6 +61,7 @@ import com.shoppr.shoper.util.ApiFactory;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.Helper;
 import com.shoppr.shoper.util.SessonManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +74,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -123,12 +120,14 @@ public class ChatActivity extends AppCompatActivity {
     private Chronometer timer;
     String pathforaudio;
     int shopId;
-
+    /*Todo:- UserDP*/
+    CircleImageView userDp;
+    TextView userName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager = new SessonManager(this);
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
 
@@ -148,6 +147,9 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         Log.d("ChatIdForTesting",sessonManager.getChatId());
+        /*Todo:- UserDP*/
+        userDp=findViewById(R.id.userDp);
+        userName=findViewById(R.id.userName);
 
         editText = findViewById(R.id.editText);
         sendMsgBtn = findViewById(R.id.sendMsgBtn);
@@ -435,6 +437,8 @@ public class ChatActivity extends AppCompatActivity {
                             ChatMessageModel chatMessageModel=response.body();
                             if (chatMessageModel.getData()!=null){
                                 chatList=chatMessageModel.getData().getChats();
+                                Picasso.get().load(chatMessageModel.getData().getShoppr().getImage()).into(userDp);
+                                userName.setText(chatMessageModel.getData().getShoppr().getName());
                                 ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
                                 chatRecyclerView.setAdapter(chatMessageAdapter);
                                 chatRecyclerView.scrollToPosition(chatList.size()-1);
@@ -458,7 +462,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
         if (id==android.R.id.home){
@@ -473,13 +477,13 @@ public class ChatActivity extends AppCompatActivity {
         }
         else if (id==R.id.action_video){
             initializationVideo(chat_id);
-           /* startActivity(new Intent(ChatDetailsActivity.this,VideoChatViewActivity.class)
+           *//* startActivity(new Intent(ChatDetailsActivity.this,VideoChatViewActivity.class)
                     .putExtra("chatId",chat_id)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*//*
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     private void initializationVideo(int chat_id) {
         if (CommonUtils.isOnline(this)) {
@@ -1006,6 +1010,18 @@ public class ChatActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         chatMessageList(chat_id);
+        ChatActivity.this.finish();
     }
 
+    public void initializationVoice(View view) {
+        initializationVoice(chat_id);
+    }
+
+    public void initializationVideo(View view) {
+        initializationVideo(chat_id);
+    }
+
+    public void back(View view) {
+        onBackPressed();
+    }
 }

@@ -10,6 +10,62 @@
     android:focusableInTouchMode="true"
     tools:context=".activity.ChatActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:onClick="back"
+                android:layout_centerInParent="true"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/back_arrow"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/userDp"
+                android:layout_width="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@+id/back" />
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/userDp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/audioCall"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/monster"
+                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/audioCall"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:onClick="initializationVoice"
+                android:layout_marginRight="10dp"
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@+id/videoCall"
+                android:src="@drawable/btn_call_voice"/>
+
+            <ImageView
+                android:id="@+id/videoCall"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:onClick="initializationVideo"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/btn_call_video"/>
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/chatRecyclerView"
