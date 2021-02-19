@@ -61,7 +61,7 @@ public class SotoreDetailsActivity extends AppCompatActivity {
         sessonManager=new SessonManager(this);
 
         storeId=getIntent().getIntExtra("storeId",0);
-
+        Log.d("ShoprId",""+storeId);
 
         /*Todo:- ViewPager With TabLayout find id*/
         mViewPager = (ViewPager)findViewById(R.id.viewPage);
@@ -103,6 +103,7 @@ public class SotoreDetailsActivity extends AppCompatActivity {
                             StoreListDetailsModel storeListDetailsModel=response.body();
                             imageList=storeListDetailsModel.getData().getStoresDetails().getImages();
                             shopId=storeListDetailsModel.getData().getStoresDetails().getId();
+                            Log.d("ShopId",""+shopId);
                             SliderAdapter sliderAdapter=new SliderAdapter(SotoreDetailsActivity.this,imageList);
                             mViewPager.setAdapter(sliderAdapter);
                             tabLayout.setupWithViewPager(mViewPager,true);
@@ -183,4 +184,9 @@ public class SotoreDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void galleryImage(View view) {
+        startActivity(new Intent(this,ImageZoomActivity.class)
+                .putExtra("shopId",shopId)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
 }

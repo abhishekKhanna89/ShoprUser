@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class StorelistingActivity extends AppCompatActivity {
             sessonManager.showProgress(StorelistingActivity.this);
             Call<StoreListModel> call = ApiExecutor.getApiService(this)
                     .apiStoreList(sessonManager.getLat(), sessonManager.getLon());
-            Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
+            //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
             call.enqueue(new Callback<StoreListModel>() {
                 @Override
                 public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {
@@ -107,6 +108,14 @@ public class StorelistingActivity extends AppCompatActivity {
 
     public void back(View view) {
         onBackPressed();
+    }
+
+    public void sort(View view) {
+        Toast.makeText(this, "Sort", Toast.LENGTH_SHORT).show();
+    }
+
+    public void filter(View view) {
+        Toast.makeText(this, "Filter", Toast.LENGTH_SHORT).show();
     }
 
     public class Storeadapter extends RecyclerView.Adapter<Storeadapter.ViewHolder> {

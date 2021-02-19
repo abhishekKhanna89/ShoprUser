@@ -39,11 +39,33 @@
                 android:layout_toRightOf="@id/userDp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/audioCall"
+                android:layout_toLeftOf="@+id/helpRelative"
                 android:textSize="20dp"
                 android:textColor="@color/white"
                 android:fontFamily="@font/monster"
                 android:textStyle="bold" />
+
+            <RelativeLayout
+                android:id="@+id/helpRelative"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:onClick="help"
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@+id/audioCall"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_help">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Help"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/monster"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"/>
+            </RelativeLayout>
+
             <ImageView
                 android:id="@+id/audioCall"
                 android:layout_width="40dp"
@@ -65,15 +87,16 @@
                 android:src="@drawable/btn_call_video"/>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2">
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/chatRecyclerView"
-        android:layout_weight="2"
         android:divider="#fff"
-
-        android:layout_height="wrap_content" />
-
+        android:layout_height="match_parent" />
+    </RelativeLayout>
     <Chronometer
         android:id="@+id/record_timer"
         app:layout_constraintStart_toStartOf="parent"

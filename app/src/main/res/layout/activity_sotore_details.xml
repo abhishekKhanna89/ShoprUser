@@ -59,6 +59,17 @@
                                     app:tabBackground="@drawable/indicator"
                                     app:tabGravity="center"
                                     app:tabIndicatorHeight="0dp"/>
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/gallery"
+                                    android:layout_margin="10dp"
+                                    android:onClick="galleryImage"
+                                    android:scaleType="fitXY"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_alignParentRight="true"/>
+
                             </RelativeLayout>
                         </androidx.cardview.widget.CardView>
 

@@ -47,6 +47,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         // Second case when notification payload is
         // received.
         if (remoteMessage.getNotification() != null) {
+
             // Since the notification is received directly from
             // FCM, the title and the body can be fetched
             // directly as below.
@@ -78,31 +79,26 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 
     // Method to display the notifications
     public void showNotification(String title, String message, RemoteMessage remoteMessage) {
-
-
         //Log.d("title",title);
         // Pass the intent to switch to the MainActivity
         JSONObject jsonObject = new JSONObject(remoteMessage.getData());
         Log.d("ChatId+",""+jsonObject);
         try {
             chat_id = jsonObject.getString("chat_id");
+            sessonManager.setChatId(chat_id);
             //Log.d("ChatId+",chat_id);
             type = jsonObject.getString("type");
             if (type.equalsIgnoreCase("chat-assigned")){
-                startActivity(new Intent(this, ChatActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                sessonManager.setChatId("");
-                sessonManager.setChatId(chat_id);
+                startActivity(new Intent(this, ChatDetailsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                //sessonManager.setChatId("");
+                //sessonManager.setChatId(chat_id);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         intent = new Intent(this, ChatDetailsActivity.class);
-
-        intent.putExtra("whattodo", chat_id);
-        intent.putExtra("checkfornavigation","0");
-// add this:
-        intent.setAction("showmessage");
         sessonManager.setChatId(chat_id);
         // Assign channel ID
         String channel_id = "notification_channel";

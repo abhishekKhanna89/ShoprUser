@@ -171,24 +171,34 @@ public class ChatActivity extends AppCompatActivity {
         mMessageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getStringExtra("title")!=null||intent.getStringExtra("body")!=null){
-                    String title=intent.getStringExtra("title");
-                    body=intent.getStringExtra("body");
-                    chatMessageList(chat_id);
-                    chatMessageList1(chatid);
-/*// Create the initial data list.
-                    // msgDtoList = new ArrayList<ChatModel>();
-                    ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_RECEIVED, body);
-                    msgDtoList.add(msgDto);
+                if (intent.getStringExtra("chat_id")!=null){
+                    chat_id=intent.getIntExtra("chat_id",0);
+                    if (sessonManager.getChatId()!=null){
+                        String chatid=String.valueOf(sessonManager.getChatId());
+                        //Log.d("RecieveChatId",chatid);
+                        chatMessageList(Integer.parseInt(chatid));
+                    }
 
-
-                    // Create the data adapter with above data list.
-                    chatAppMsgAdapter = new ChatAppMsgAdapter(msgDtoList);
-
-                    // Set data adapter to RecyclerView.
-                    chatRecyclerView.setAdapter(chatAppMsgAdapter);
-                    //Toast.makeText(ChatActivity.this, "Title:- "+title+" Body:- "+body, Toast.LENGTH_SHORT).show();*/
                 }
+
+
+//                if (intent.getStringExtra("title")!=null||intent.getStringExtra("body")!=null){
+//                    String title=intent.getStringExtra("title");
+//                    body=intent.getStringExtra("body");
+//                    chatMessageList(chat_id);
+//                    chatMessageList1(chatid);
+//                    // msgDtoList = new ArrayList<ChatModel>();
+//                    ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_RECEIVED, body);
+//                    msgDtoList.add(msgDto);
+//
+//
+//                    // Create the data adapter with above data list.
+//                    chatAppMsgAdapter = new ChatAppMsgAdapter(msgDtoList);
+//
+//                    // Set data adapter to RecyclerView.
+//                    chatRecyclerView.setAdapter(chatAppMsgAdapter);
+//                    //Toast.makeText(ChatActivity.this, "Title:- "+title+" Body:- "+body, Toast.LENGTH_SHORT).show();*/
+//                }
             }
         };
         IntentFilter i = new IntentFilter();
@@ -254,6 +264,16 @@ public class ChatActivity extends AppCompatActivity {
                     //sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
                     // is only executed if the EditText was directly changed by the user
                 } else {
+                    if (sessonManager.getChatId().isEmpty()){
+                        sessonManager.setChatId("");
+                        chat_id=Chat_id;
+                    }else {
+                        String cId=sessonManager.getChatId();
+                        int a= Integer.parseInt(cId);
+                        chat_id=a;
+                        sessonManager.setChatId("");
+                    }
+
                     sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.send));
                     sendMsgBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1010,7 +1030,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         chatMessageList(chat_id);
-        ChatActivity.this.finish();
+        //ChatActivity.this.finish();
     }
 
     public void initializationVoice(View view) {
@@ -1023,5 +1043,10 @@ public class ChatActivity extends AppCompatActivity {
 
     public void back(View view) {
         onBackPressed();
+    }
+
+    public void help(View view) {
+        startActivity(new Intent(ChatActivity.this,HelpActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 }

@@ -118,7 +118,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
     private Chronometer timer;
     String pathforaudio;
     String calleeId;
-    int chat_id,chatId;
+    int chat_id;
 
     /*Todo:- UserDP*/
     CircleImageView userDp;
@@ -138,27 +138,20 @@ public class ChatDetailsActivity extends AppCompatActivity {
        // Log.d("checkvalue===",str);
 
 
-        //chat_id = getIntent().getIntExtra("id", 0);
+        chat_id = getIntent().getIntExtra("id", 0);
 
-       String  checkfornavigation=getIntent().getStringExtra("checkfornavigation");
+       /*String  checkfornavigation=getIntent().getStringExtra("checkfornavigation");
 
        if(checkfornavigation!=null&&checkfornavigation.equalsIgnoreCase("1")) {
            chat_id = getIntent().getIntExtra("id", 0);
+           //Log.d("Chat_historyId",""+chat_id);
        }
        else
        {
-           //String str=getIntent().getStringExtra("whattodo");
            chat_id = Integer.parseInt(getIntent().getStringExtra("whattodo"));
+           //Log.d("Chat_notificationId",""+chat_id);
+       }*/
 
-       }
-
-
-
-        /*if (String.valueOf(chat_id)!=null){
-
-        }else if (str!=null){
-
-        }*/
 
 
 
@@ -272,6 +265,28 @@ public class ChatDetailsActivity extends AppCompatActivity {
                     //sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
                     // is only executed if the EditText was directly changed by the user
                 } else {
+                    if (sessonManager.getChatId().isEmpty()){
+                        sessonManager.setChatId("");
+                        chat_id = getIntent().getIntExtra("id", 0);
+                        //chatMessageList(chat_id);
+                    }else {
+                        String cId=sessonManager.getChatId();
+                        int a= Integer.parseInt(cId);
+                        chat_id=a;
+                        sessonManager.setChatId("");
+                    }
+                    /*String  checkfornavigation=getIntent().getStringExtra("checkfornavigation");
+
+                    if(checkfornavigation!=null&&checkfornavigation.equalsIgnoreCase("1")) {
+                        chat_id = getIntent().getIntExtra("id", 0);
+                        //Log.d("Chat_historyId",""+chat_id);
+                    }
+                    else
+                    {
+                        chat_id = Integer.parseInt(getIntent().getStringExtra("whattodo"));
+                        //Log.d("Chat_notificationId",""+chat_id);
+                    }*/
+
                     sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.send));
                     sendMsgBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -976,5 +991,10 @@ public class ChatDetailsActivity extends AppCompatActivity {
 
     public void initializationVideo(View view) {
         initializationVideo(chat_id);
+    }
+
+    public void help(View view) {
+        startActivity(new Intent(ChatDetailsActivity.this,HelpActivity.class)
+        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 }

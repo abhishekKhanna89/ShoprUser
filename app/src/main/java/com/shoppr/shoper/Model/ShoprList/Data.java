@@ -9,6 +9,9 @@ public class Data {
     @SerializedName("shopper")
     @Expose
     private List<Shopper> shopper = null;
+    @SerializedName("categories")
+    @Expose
+    private List<Category> categories = null;
 
     public List<Shopper> getShopper() {
         return shopper;
@@ -17,5 +20,11 @@ public class Data {
     public void setShopper(List<Shopper> shopper) {
         this.shopper = shopper;
     }
+    public List<Category> getCategories() {
+        return categories;
+    }
 
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
 }

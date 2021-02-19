@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_history);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager=new SessonManager(this);
         recyclerChatHistory=findViewById(R.id.recyclerChatHistory);
         swipeRefreshLayout=findViewById(R.id.SwipeRefresh);
@@ -132,7 +134,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
                             .putExtra("id", userchat.getId())
                             .putExtra("image",userchat.getImage())
                             .putExtra("name",userchat.getName())
-                           .putExtra("checkfornavigation","1"));
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 }
             });
         }
@@ -155,5 +157,13 @@ public class ChatHistoryActivity extends AppCompatActivity {
             }
         }
     }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 }
