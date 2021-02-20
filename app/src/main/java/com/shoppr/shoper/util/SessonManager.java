@@ -33,6 +33,7 @@ public class SessonManager {
     public static final String editaddress="editaddress";
     public static final String CHAT_ID="chat_id";
 
+    public static final String strList="sList";
 
 
 
@@ -154,7 +155,14 @@ public class SessonManager {
         return sharedPreference.getString(CHAT_ID,"");
     }
 
+    public void setStringList(String stringList){
+        editor.putString(strList,stringList);
+        editor.apply();
+    }
 
+    public String getStrList(){
+        return sharedPreference.getString(strList,"");
+    }
 
 
     public void hideProgress() {

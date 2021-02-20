@@ -45,6 +45,7 @@ import com.shoppr.shoper.requestdata.ShareLocationRequest;
 import com.shoppr.shoper.requestdata.TextTypeRequest;
 import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -76,7 +77,15 @@ public interface ApiService {
     @NonNull
     @GET("stores-list")
     Call<StoreListModel>apiStoreList(@Query("lat")String lat,
+                                     @Query("lang")String lang,
+                                     @Query("category_id[]") List<String> category_id,
+                                     @Query("search")String search);
+
+    @NonNull
+    @GET("stores-list")
+    Call<StoreListModel>apiStoreCategoryList(@Query("lat")String lat,
                                      @Query("lang")String lang);
+
     @NonNull
     @GET("store-details/{id}")
     Call<StoreListDetailsModel>apiStoreListDetails(@Header("Authorization") String token,

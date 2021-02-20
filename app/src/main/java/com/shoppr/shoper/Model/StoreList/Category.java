@@ -1,4 +1,4 @@
-package com.shoppr.shoper.Model.ShoprList;
+package com.shoppr.shoper.Model.StoreList;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

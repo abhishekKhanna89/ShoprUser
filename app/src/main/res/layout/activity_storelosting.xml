@@ -12,13 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="Search Here"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/cardviewbackground"
-        android:iconifiedByDefault="false"
-        android:layout_alignParentTop="true"/>
+        android:iconifiedByDefault="false" />
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,7 +61,10 @@
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CFCDCD"/>
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:minHeight="?attr/actionBarSize"
