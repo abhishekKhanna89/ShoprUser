@@ -79,7 +79,8 @@ public interface ApiService {
     Call<StoreListModel>apiStoreList(@Query("lat")String lat,
                                      @Query("lang")String lang,
                                      @Query("category_id[]") List<String> category_id,
-                                     @Query("search")String search);
+                                     @Query("search")String search,
+                                     @Query("sortby")String sortby);
 
     @NonNull
     @GET("stores-list")

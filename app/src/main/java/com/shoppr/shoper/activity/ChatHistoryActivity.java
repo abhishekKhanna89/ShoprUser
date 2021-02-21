@@ -130,8 +130,10 @@ public class ChatHistoryActivity extends AppCompatActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    context.startActivity(new Intent(context, ChatDetailsActivity.class)
-                            .putExtra("id", userchat.getId())
+
+                    context.startActivity(new Intent(context, ChatActivity.class)
+                            .putExtra("findingchatid", userchat.getId())
+                            .putExtra("chat_status","0")
                             .putExtra("image",userchat.getImage())
                             .putExtra("name",userchat.getName())
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));

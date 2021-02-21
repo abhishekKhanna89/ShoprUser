@@ -74,12 +74,6 @@
             android:label="Chat History"
             android:screenOrientation="portrait">
 
-            <!--
-            <intent-filter>
-                <action android:name="chat_screen"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".activity.TrackLoactionActivity"
@@ -93,7 +87,13 @@
         <activity
             android:name=".activity.ChatActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ChatTheme" />
+            android:launchMode = "singleInstance"
+            android:theme="@style/ChatTheme" >
+            <intent-filter>
+                <action android:name="chat_screen"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.UpdateProfileActivity"
             android:screenOrientation="portrait" />
@@ -221,6 +221,11 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+
+
+
+
     </application>
 
 </manifest>

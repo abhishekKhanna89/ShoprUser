@@ -56,8 +56,11 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                     remoteMessage.getNotification().getBody(),
                     remoteMessage);
 
+
+            Log.d("chatid===",chat_id);
+
             Intent intent = new Intent("message_subject_intent");
-            intent.putExtra("chat_id", chat_id);
+           // intent.putExtra("findingchatid", chat_id);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         }
@@ -85,21 +88,30 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         Log.d("ChatId+",""+jsonObject);
         try {
             chat_id = jsonObject.getString("chat_id");
-            sessonManager.setChatId(chat_id);
-            //Log.d("ChatId+",chat_id);
+
+
+          // sessonManager.setChatId(chat_id);
+            Log.d("ChatId+",chat_id);
             type = jsonObject.getString("type");
-            if (type.equalsIgnoreCase("chat-assigned")){
+           /* if (type.equalsIgnoreCase("chat-assigned")){
                 startActivity(new Intent(this, ChatDetailsActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
                 //sessonManager.setChatId("");
                 //sessonManager.setChatId(chat_id);
-            }
+            }*/
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        intent = new Intent(this, ChatDetailsActivity.class);
-        sessonManager.setChatId(chat_id);
+        intent = new Intent(FirebaseMessageReceiver.this, ChatActivity.class);
+
+        intent.putExtra("findingchatid",chat_id);
+        intent.putExtra("chat_status","1");
+        intent.setAction(Intent.ACTION_MAIN);
+
+
+        Log.d("checkchatid+",chat_id);
+      //  sessonManager.setChatId(chat_id);
         // Assign channel ID
         String channel_id = "notification_channel";
         // Here FLAG_ACTIVITY_CLEAR_TOP flag is set to clear
@@ -111,8 +123,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                 = PendingIntent.getActivity(
                 this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         // Create a Builder object using NotificationCompat
         // class. This will allow control over all the flags
 

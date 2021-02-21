@@ -1,18 +1,16 @@
 package com.shoppr.shoper;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,21 +22,22 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.shoppr.shoper.Model.StoreList.Category;
-import com.shoppr.shoper.Model.ShoprList.Data;
 import com.shoppr.shoper.Model.StoreList.Store;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Service.ApiExecutor;
@@ -58,7 +57,10 @@ public class StorelistingActivity extends AppCompatActivity {
     SessonManager sessonManager;
     List<Category>categoryList;
     ArrayList<String> checkedFriends ;
+    String radioName;
 
+    private SearchView searchView;
+    String search;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,8 @@ public class StorelistingActivity extends AppCompatActivity {
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+        searchView=findViewById(R.id.searchView);
+
         TextView textAddress = findViewById(R.id.textAddress);
         ImageView back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -86,20 +90,38 @@ public class StorelistingActivity extends AppCompatActivity {
         checkedFriends=new ArrayList<String>();
         setmethod();
 
+        /*Todo:Search Method*/
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                search=query;
+                setmethod();
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String query) {
+                search=query;
+                setmethod();
+                return false;
+            }
+        });
 
     }
-
     public void setmethod() {
-        Toast.makeText(this, ""+checkedFriends, Toast.LENGTH_SHORT).show();
         if (CommonUtils.isOnline(StorelistingActivity.this)) {
-            sessonManager.showProgress(StorelistingActivity.this);
+            //sessonManager.showProgress(StorelistingActivity.this);
             Call<StoreListModel> call = ApiExecutor.getApiService(this)
-                    .apiStoreList(sessonManager.getLat(), sessonManager.getLon(),checkedFriends,"");
+                    .apiStoreList(sessonManager.getLat(), sessonManager.getLon(),checkedFriends,search,radioName);
             //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
             call.enqueue(new Callback<StoreListModel>() {
                 @Override
                 public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {
-                    sessonManager.hideProgress();
+                    //sessonManager.hideProgress();
                     if (response.body() != null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             StoreListModel storeListModel = response.body();
@@ -107,6 +129,7 @@ public class StorelistingActivity extends AppCompatActivity {
                                 storeList = storeListModel.getData().getStores();
                                 storeadapter = new Storeadapter(storeList, StorelistingActivity.this);
                                 storerecyclerview.setAdapter(storeadapter);
+
                                 storeadapter.notifyDataSetChanged();
                             }
                         }
@@ -115,7 +138,7 @@ public class StorelistingActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<StoreListModel> call, Throwable t) {
-                    sessonManager.hideProgress();
+                    //sessonManager.hideProgress();
                 }
             });
         } else {
@@ -128,21 +151,52 @@ public class StorelistingActivity extends AppCompatActivity {
     }
 
     public void sort(View view) {
+        bottomSheetDailog();
+    }
 
+    private void bottomSheetDailog() {
+        BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(getLayoutInflater().inflate(R.layout.bottom_sheet_layout,null));
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        RadioGroup radioGroup=bottomSheetDialog.findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton radio=group.findViewById(checkedId);
+                if (null!=radio&&checkedId>-1){
+                    String name=radio.getText().toString();
+                    if (name.equalsIgnoreCase("By Name")){
+                         radioName="name";
+                         setmethod();
+                         bottomSheetDialog.dismiss();
+                    }else if(name.equalsIgnoreCase("By Distance")){
+                        radioName="distance";
+                        setmethod();
+                        bottomSheetDialog.dismiss();
+                    }
+                }
+
+
+            }
+        });
+
+        /*Todo:- Radio Button event*/
+        bottomSheetDialog.show();
     }
 
     public void filter(View view) {
 
       if(checkedFriends.size()>0)
       {
-
           checkedFriends.clear();
       }
-        showCallingDailouge();
+        fullScreenDailouge();
     }
 
     /*Todo:- FullScreen*/
-    private void showCallingDailouge() {
+    private void fullScreenDailouge() {
         final Dialog dialog = new Dialog(StorelistingActivity.this, R.style.FullScreenDialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(getLayoutInflater().inflate(R.layout.fullscreen_filter_layout
@@ -228,20 +282,11 @@ public class StorelistingActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        Log.d("hello", "abcd");
                         checkedFriends.add(String.valueOf(categoryList.get(position).getId()));
-
                         //String check = String.valueOf(categoryList.get(position).getId());
                     } else {
-
-
-
-                       // checkedFriends.clear();
-
-                       // Log.d("hello", checkedFriends.remove(position));
-                        if(checkedFriends.size()>0) {
-                            checkedFriends.remove(position);
-                            Log.d("hello", String.valueOf(checkedFriends));
+                        for (int i=0;i<checkedFriends.size();i++){
+                            checkedFriends.remove(i);
                         }
                     }
                 }
@@ -264,13 +309,13 @@ public class StorelistingActivity extends AppCompatActivity {
 
 
     /*Todo:-Main Response*/
-    public class Storeadapter extends RecyclerView.Adapter<Storeadapter.ViewHolder> {
+    public class Storeadapter extends RecyclerView.Adapter<Storeadapter.ViewHolder>  {
         List<Store> storeList;
         Context mcontext;
-
         public Storeadapter(List<Store> storeList, Context mcontext) {
             this.storeList = storeList;
             this.mcontext = mcontext;
+
         }
 
         @NonNull

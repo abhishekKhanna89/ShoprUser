@@ -43,6 +43,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.ChatModel;
@@ -123,6 +124,8 @@ public class ChatActivity extends AppCompatActivity {
     /*Todo:- UserDP*/
     CircleImageView userDp;
     TextView userName;
+
+     String TAG="lakshmi";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,22 +134,64 @@ public class ChatActivity extends AppCompatActivity {
         sessonManager = new SessonManager(this);
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
 
-        shopId=getIntent().getIntExtra("shopId",0);
-        viewStartChat(shopId);
-        int Chat_id=getIntent().getIntExtra("Chat_id",0);
+        Bundle extras = getIntent().getExtras();
+        if (extras!=null)
+        {
+           String chat_status = getIntent().getStringExtra("chat_status");
+           if (chat_status!=null&&chat_status.equalsIgnoreCase("1")){
+               Log.d("hello",chat_status);
+               chat_id = Integer.parseInt(extras.getString("findingchatid"));
+               chatMessageList(chat_id);
+           }
+
+           else if(chat_status!=null&&chat_status.equalsIgnoreCase("0")) {
+
+               // Log.d("Chsgss", String.valueOf(chat_id));
+               chat_id = getIntent().getIntExtra("findingchatid", 0);
+               chatMessageList(chat_id);
+           }
+
+           else if(chat_status!=null&&chat_status.equalsIgnoreCase("2")) {
+
+               // Log.d("Chsgss", String.valueOf(chat_id));
+               chat_id = getIntent().getIntExtra("findingchatid", 0);
+               chatMessageList(chat_id);
+           }
+           /*else if(chat_status!=null&&chat_status.equalsIgnoreCase("3")) {
+               Log.d("hello","hellobcdefgh");
+
+               int  shopId = getIntent().getIntExtra("shopId",0);
+               Log.d("hello", String.valueOf(shopId));
+               viewStartChat(shopId);
+
+               // Log.d("Chsgss", String.valueOf(chat_id));
+              // chat_id = getIntent().getIntExtra("findingchatid", 0);
+           }*/
+           else{
+
+               String  value = String.valueOf(getIntent().getExtras().get("chat_id"));
+               chat_id= Integer.parseInt(value);
+               chatMessageList(chat_id);
+               Log.d(TAG, "Key: " + "abcd" + " Value: " + value);
+           }
 
 
-        if (sessonManager.getChatId().isEmpty()){
-            sessonManager.setChatId("");
-            chat_id=Chat_id;
-        }else {
-            String cId=sessonManager.getChatId();
-            int a= Integer.parseInt(cId);
-            chat_id=a;
-            sessonManager.setChatId("");
+
+
+           /* for (String key : getIntent().getExtras().keySet()) {
+                Object value = getIntent().getExtras().get(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+
+
+            }*/
+
+
+
         }
 
-        Log.d("ChatIdForTesting",sessonManager.getChatId());
+
+
+        Log.d("ChatIdForTesting","" +chat_id);
         /*Todo:- UserDP*/
         userDp=findViewById(R.id.userDp);
         userName=findViewById(R.id.userName);
@@ -171,15 +216,25 @@ public class ChatActivity extends AppCompatActivity {
         mMessageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getStringExtra("chat_id")!=null){
+
+
+               // chat_id=intent.getIntExtra("findingchatid",0);
+
+                Log.d("chatidreciver==",""+chat_id);
+                chatMessageList(Integer.parseInt(String.valueOf(chat_id)));
+
+              /*  if (intent.getStringExtra("chat_id")!=null){
                     chat_id=intent.getIntExtra("chat_id",0);
-                    if (sessonManager.getChatId()!=null){
+                    chatMessageList(Integer.parseInt(String.valueOf(chat_id)));
+
+
+                  *//*  if (sessonManager.getChatId()!=null){
                         String chatid=String.valueOf(sessonManager.getChatId());
                         //Log.d("RecieveChatId",chatid);
                         chatMessageList(Integer.parseInt(chatid));
                     }
-
-                }
+*//*
+                }*/
 
 
 //                if (intent.getStringExtra("title")!=null||intent.getStringExtra("body")!=null){
@@ -264,7 +319,7 @@ public class ChatActivity extends AppCompatActivity {
                     //sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
                     // is only executed if the EditText was directly changed by the user
                 } else {
-                    if (sessonManager.getChatId().isEmpty()){
+                   /* if (sessonManager.getChatId().isEmpty()){
                         sessonManager.setChatId("");
                         chat_id=Chat_id;
                     }else {
@@ -272,7 +327,7 @@ public class ChatActivity extends AppCompatActivity {
                         int a= Integer.parseInt(cId);
                         chat_id=a;
                         sessonManager.setChatId("");
-                    }
+                    }*/
 
                     sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.send));
                     sendMsgBtn.setOnClickListener(new View.OnClickListener() {
@@ -282,6 +337,8 @@ public class ChatActivity extends AppCompatActivity {
                             if(!TextUtils.isEmpty(msgContent))
                             {
 
+
+                                Log.d("verfy===", String.valueOf(chat_id));
                                 if (CommonUtils.isOnline(ChatActivity.this)) {
                                     //sessonManager.showProgress(ChatActivity.this);
                                     TextTypeRequest textTypeRequest=new TextTypeRequest();
@@ -292,6 +349,10 @@ public class ChatActivity extends AppCompatActivity {
                                     call.enqueue(new Callback<SendModel>() {
                                         @Override
                                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
+                                            SendModel sendModel=response.body();
+                                            Gson gson=new Gson();
+                                            String js=gson.toJson(sendModel);
+                                            Log.d("responseSend",js);
                                             //sessonManager.hideProgress();
                                             if (response.body()!=null) {
                                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
@@ -334,7 +395,7 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
-        chatMessageList(chat_id);
+
 
     }
 
@@ -379,7 +440,13 @@ public class ChatActivity extends AppCompatActivity {
         myAlertDialog.show();
     }
 
-    private void viewStartChat(int shopId) {
+
+
+
+
+
+
+    /*private void viewStartChat(int shopId) {
         if (CommonUtils.isOnline(ChatActivity.this)) {
             sessonManager.showProgress(ChatActivity.this);
             Call<StartChatModel>call= ApiExecutor.getApiService(this)
@@ -392,8 +459,13 @@ public class ChatActivity extends AppCompatActivity {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             StartChatModel startChatModel=response.body();
                             if (startChatModel.getData()!=null){
-                                chatid=startChatModel.getData().getId();
-                                chatMessageList1(chatid);
+
+
+
+                                chat_id=startChatModel.getData().getId();
+
+                                Log.d("abcdef", String.valueOf(chat_id));
+                               chatMessageList(chat_id);
                             }
                         }
                     }
@@ -407,44 +479,13 @@ public class ChatActivity extends AppCompatActivity {
         }else {
             CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
         }
-    }
+    }*/
 
-    private void chatMessageList1(int chatid) {
-        if (CommonUtils.isOnline(ChatActivity.this)) {
-            //sessonManager.showProgress(ChatActivity.this);
-            Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),chatid);
-            call.enqueue(new Callback<ChatMessageModel>() {
-                @Override
-                public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
-                    //sessonManager.hideProgress();
-                    if (response.body()!=null) {
-                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            ChatMessageModel chatMessageModel=response.body();
-                            if (chatMessageModel.getData()!=null){
-                                chatList=chatMessageModel.getData().getChats();
-                                ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
-                                chatRecyclerView.setAdapter(chatMessageAdapter);
-                                chatRecyclerView.scrollToPosition(chatList.size()-1);
-                                chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount());
-                                //chatRecyclerView.getLayoutManager().scrollToPosition(chatList.size()-1);
-                                chatMessageAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<ChatMessageModel> call, Throwable t) {
-                    //sessonManager.showProgress(ChatActivity.this);
-                }
-            });
-
-        }else {
-            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
-        }
-    }
 
     private void chatMessageList(int chat_id) {
+
+        Log.d("chatiddssss", String.valueOf(chat_id));
         if (CommonUtils.isOnline(ChatActivity.this)) {
             //sessonManager.showProgress(ChatActivity.this);
             Call<ChatMessageModel>call=ApiExecutor.getApiService(this).apiChatMessage("Bearer "+sessonManager.getToken(),chat_id);
@@ -457,8 +498,8 @@ public class ChatActivity extends AppCompatActivity {
                             ChatMessageModel chatMessageModel=response.body();
                             if (chatMessageModel.getData()!=null){
                                 chatList=chatMessageModel.getData().getChats();
-                                Picasso.get().load(chatMessageModel.getData().getShoppr().getImage()).into(userDp);
-                                userName.setText(chatMessageModel.getData().getShoppr().getName());
+                               // Picasso.get().load(chatMessageModel.getData().getShoppr().getImage()).into(userDp);
+                              //  userName.setText(chatMessageModel.getData().getShoppr().getName());
                                 ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
                                 chatRecyclerView.setAdapter(chatMessageAdapter);
                                 chatRecyclerView.scrollToPosition(chatList.size()-1);
@@ -482,28 +523,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    /*@Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id=item.getItemId();
-        if (id==android.R.id.home){
-            onBackPressed();
-        }else if (id==R.id.action_cart){
-                Intent intent = new Intent(ChatActivity.this, ViewCartActivity.class);
-                intent.putExtra("chatId",chat_id);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-        }else if (id==R.id.action_audio){
-            initializationVoice(chat_id);
-        }
-        else if (id==R.id.action_video){
-            initializationVideo(chat_id);
-           *//* startActivity(new Intent(ChatDetailsActivity.this,VideoChatViewActivity.class)
-                    .putExtra("chatId",chat_id)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*//*
-        }
 
-        return super.onOptionsItemSelected(item);
-    }*/
 
     private void initializationVideo(int chat_id) {
         if (CommonUtils.isOnline(this)) {
@@ -1029,7 +1049,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        chatMessageList(chat_id);
+        //chatMessageList(chat_id);
         //ChatActivity.this.finish();
     }
 

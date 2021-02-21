@@ -52,8 +52,10 @@ public class FindingShopprActivity extends AppCompatActivity {
         //shopId = getIntent().getIntExtra("shopId", 0);
         //mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         //textViewShowTime = (TextView) findViewById(R.id.tvTimeCount);
+        int shopId=getIntent().getIntExtra("shopId",0);
+        viewStartChat1(shopId);
 
-        setTimer();
+       // setTimer();
 
 
 
@@ -110,7 +112,10 @@ public class FindingShopprActivity extends AppCompatActivity {
                 //mProgressBar.setVisibility(View.GONE);
                 //rippleBackground.stopRippleAnimation();
                 //centerImage.setVisibility(View.GONE);
-                viewStartChat1();
+
+                Log.d("lakshmi","lakshmi");
+
+              //  viewStartChat1();
 
                 //countDownTimer.cancel();
             }
@@ -118,11 +123,11 @@ public class FindingShopprActivity extends AppCompatActivity {
         }.start();
     }
 
-    private void viewStartChat1() {
+    private void viewStartChat1(int shopId) {
         if (CommonUtils.isOnline(FindingShopprActivity.this)) {
             //sessonManager.showProgress(FindingShopprActivity.this);
             Call<StartChatModel> call = ApiExecutor.getApiService(this)
-                    .apiChatStart("Bearer " + sessonManager.getToken());
+                    .apiChatStart("Bearer " + sessonManager.getToken(),shopId);
             call.enqueue(new Callback<StartChatModel>() {
                 @Override
                 public void onResponse(Call<StartChatModel> call, Response<StartChatModel> response) {
@@ -132,8 +137,12 @@ public class FindingShopprActivity extends AppCompatActivity {
                             StartChatModel startChatModel = response.body();
                             if (startChatModel.getData() != null) {
                                 chat_id = startChatModel.getData().getId();
+
+
+                                Log.d("chatid",""+chat_id);
                                 String aa=String.valueOf(chat_id);
-                                sessonManager.setChatId(aa);
+                                // chahanges by lk
+                                //sessonManager.setChatId(aa);
                                 autoAssign(chat_id);
 
 
@@ -164,16 +173,11 @@ public class FindingShopprActivity extends AppCompatActivity {
                             AutoAssignModel autoAssignModel=response.body();
                             if (autoAssignModel!=null){
                                 Toast.makeText(FindingShopprActivity.this, ""+autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                if (sessonManager.getChatId().isEmpty()){
-                                    sessonManager.setChatId("");
-                                    /*startActivity(new Intent(FindingShopprActivity.this, ChatActivity.class)
-                                            .putExtra("Chat_id", chat_id)
-                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                    finish();*/
-                                }else {
-                                    sessonManager.setChatId("");
-                                }
+                               startActivity(new Intent(FindingShopprActivity.this, ChatActivity.class)
+                                       .putExtra("chat_status","2").putExtra("findingchatid", chat_id).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+                               finish();
+
                             }else {
                                 Toast.makeText(FindingShopprActivity.this, ""+autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -192,9 +196,5 @@ public class FindingShopprActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        FindingShopprActivity.this.finish();
-    }
+
 }
