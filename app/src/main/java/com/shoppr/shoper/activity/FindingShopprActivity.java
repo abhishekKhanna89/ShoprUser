@@ -40,7 +40,7 @@ public class FindingShopprActivity extends AppCompatActivity {
     private boolean blink; // controls the blinking .. on and off
     SessonManager sessonManager;
     int chat_id;
-
+    int shopId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +52,10 @@ public class FindingShopprActivity extends AppCompatActivity {
         //shopId = getIntent().getIntExtra("shopId", 0);
         //mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         //textViewShowTime = (TextView) findViewById(R.id.tvTimeCount);
-        int shopId=getIntent().getIntExtra("shopId",0);
-        viewStartChat1(shopId);
+        shopId=getIntent().getIntExtra("shopId",0);
+        //viewStartChat1(shopId);
 
-       // setTimer();
+        setTimer();
 
 
 
@@ -114,7 +114,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                 //centerImage.setVisibility(View.GONE);
 
                 Log.d("lakshmi","lakshmi");
-
+                viewStartChat1(shopId);
               //  viewStartChat1();
 
                 //countDownTimer.cancel();

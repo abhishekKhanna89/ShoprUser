@@ -441,48 +441,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-    /*private void viewStartChat(int shopId) {
-        if (CommonUtils.isOnline(ChatActivity.this)) {
-            sessonManager.showProgress(ChatActivity.this);
-            Call<StartChatModel>call= ApiExecutor.getApiService(this)
-                    .apiChatStart("Bearer "+sessonManager.getToken(),shopId);
-            call.enqueue(new Callback<StartChatModel>() {
-                @Override
-                public void onResponse(Call<StartChatModel> call, Response<StartChatModel> response) {
-                    sessonManager.hideProgress();
-                    if (response.body()!=null) {
-                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            StartChatModel startChatModel=response.body();
-                            if (startChatModel.getData()!=null){
-
-
-
-                                chat_id=startChatModel.getData().getId();
-
-                                Log.d("abcdef", String.valueOf(chat_id));
-                               chatMessageList(chat_id);
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<StartChatModel> call, Throwable t) {
-                    sessonManager.hideProgress();
-                }
-            });
-        }else {
-            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
-        }
-    }*/
-
-
-
     private void chatMessageList(int chat_id) {
 
         Log.d("chatiddssss", String.valueOf(chat_id));
@@ -498,8 +456,8 @@ public class ChatActivity extends AppCompatActivity {
                             ChatMessageModel chatMessageModel=response.body();
                             if (chatMessageModel.getData()!=null){
                                 chatList=chatMessageModel.getData().getChats();
-                               // Picasso.get().load(chatMessageModel.getData().getShoppr().getImage()).into(userDp);
-                              //  userName.setText(chatMessageModel.getData().getShoppr().getName());
+                                Picasso.get().load(chatMessageModel.getData().getShoppr().getImage()).into(userDp);
+                                userName.setText(chatMessageModel.getData().getShoppr().getName());
                                 ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
                                 chatRecyclerView.setAdapter(chatMessageAdapter);
                                 chatRecyclerView.scrollToPosition(chatList.size()-1);

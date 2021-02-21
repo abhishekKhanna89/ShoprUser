@@ -27,9 +27,9 @@
                 android:src="@drawable/back_arrow"/>
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/userDp"
-                android:layout_width="40dp"
+                android:layout_width="50dp"
                 android:layout_marginLeft="10dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:layout_centerInParent="true"
                 android:layout_toRightOf="@+id/back" />
             <TextView
@@ -41,6 +41,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/helpRelative"
                 android:textSize="20dp"
+                android:layout_centerInParent="true"
                 android:textColor="@color/white"
                 android:fontFamily="@font/monster"
                 android:textStyle="bold" />
