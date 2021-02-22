@@ -53,7 +53,9 @@ public class FindingShopprActivity extends AppCompatActivity {
         //mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         //textViewShowTime = (TextView) findViewById(R.id.tvTimeCount);
         shopId=getIntent().getIntExtra("shopId",0);
-        //viewStartChat1(shopId);
+        viewStartChat1(shopId);
+
+
 
         setTimer();
 
@@ -63,63 +65,25 @@ public class FindingShopprActivity extends AppCompatActivity {
 
     private void setTimer() {
         //int time = 1;
-        totalTimeCountInMilliseconds = 20  * 1000;
+       // totalTimeCountInMilliseconds = 60  * 1000;
 
-        timeBlinkInMilliseconds = 10 * 1000;
+       // timeBlinkInMilliseconds = 120 * 1000;
         startTimer();
     }
 
     private void startTimer() {
-        countDownTimer = new CountDownTimer(0, 100000) {
-            // 500 means, onTick function will be called at every 500
-            // milliseconds
-
-            @SuppressLint({"SetTextI18n", "DefaultLocale"})
+        new CountDownTimer(5000,1000) {
             @Override
-            public void onTick(long leftTimeInMilliseconds) {
-                long seconds = leftTimeInMilliseconds / 1000;
-                //i++;
-                //Setting the Progress Bar to decrease wih the timer
-                //mProgressBar.setProgress((int) (leftTimeInMilliseconds / 1000));
-
-
-                if (leftTimeInMilliseconds < timeBlinkInMilliseconds) {
-
-                    // change the style of the textview .. giving a red
-                    // alert style
-
-                    if (blink) {
-                        //textViewShowTime.setVisibility(View.VISIBLE);
-                        // if blink is true, textview will be visible
-                    } else {
-                        //textViewShowTime.setVisibility(View.INVISIBLE);
-                    }
-
-                    blink = !blink; // toggle the value of blink
-                }
-
-                //textViewShowTime.setText(String.format("%02d", seconds / 60)+ ":" + String.format("%02d", seconds % 60));
-                // format the textview to show the easily readable format
-
+            public void onTick(long millisUntilFinished) {
+               // counttime.setText(String.valueOf(counter));
+               // counter++;
             }
-
-            @SuppressLint("SetTextI18n")
             @Override
             public void onFinish() {
-                // this function will be called when the timecount is finished
-                //textViewShowTime.setText("Time up!");
-                //textViewShowTime.setVisibility(View.VISIBLE);
-                //mProgressBar.setVisibility(View.GONE);
-                //rippleBackground.stopRippleAnimation();
-                //centerImage.setVisibility(View.GONE);
 
-                Log.d("lakshmi","lakshmi");
-                viewStartChat1(shopId);
-              //  viewStartChat1();
-
-                //countDownTimer.cancel();
+                autoAssign(chat_id);
+              //  counttime.setText("Finished");
             }
-
         }.start();
     }
 
@@ -143,7 +107,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                                 String aa=String.valueOf(chat_id);
                                 // chahanges by lk
                                 //sessonManager.setChatId(aa);
-                                autoAssign(chat_id);
+                               // autoAssign(chat_id);
 
 
                             }
