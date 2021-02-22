@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,7 +23,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -34,12 +40,20 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +76,7 @@ import com.shoppr.shoper.util.ApiFactory;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.Helper;
 import com.shoppr.shoper.util.SessonManager;
+
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -77,6 +92,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -126,13 +142,16 @@ public class ChatActivity extends AppCompatActivity {
     TextView userName;
 
      String TAG="lakshmi";
+    PopupWindow popUp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager = new SessonManager(this);
+
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
+        popUp = new PopupWindow(this);
 
         Bundle extras = getIntent().getExtras();
         if (extras!=null)
@@ -483,65 +502,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
-    private void initializationVideo(int chat_id) {
-        if (CommonUtils.isOnline(this)) {
-            Call<InitiateVideoCallModel>call= ApiExecutor.getApiService(this)
-                    .apiInitiateVideoCall("Bearer "+sessonManager.getToken(),chat_id);
-            call.enqueue(new Callback<InitiateVideoCallModel>() {
-                @Override
-                public void onResponse(Call<InitiateVideoCallModel> call, Response<InitiateVideoCallModel> response) {
-                    if (response.body()!=null) {
-                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            InitiateVideoCallModel initiateVideoCallModel = response.body();
-                            if (initiateVideoCallModel.getData()!=null){
-                                String savedUserId=initiateVideoCallModel.getData().getUser_id();
-                                PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
-                                String savedCalleeId = PrefUtils.getCalleeId(ChatActivity.this);
-                                CallService.dial(ChatActivity.this, savedCalleeId, true);
-                            }
-                        }
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<InitiateVideoCallModel> call, Throwable t) {
-
-                }
-            });
-        }else {
-            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
-        }
-    }
-
-    private void initializationVoice(int chat_id) {
-        if (CommonUtils.isOnline(this)) {
-            Call<InitiateVideoCallModel>call= ApiExecutor.getApiService(this)
-                    .apiInitiateVideoCall("Bearer "+sessonManager.getToken(),chat_id);
-            call.enqueue(new Callback<InitiateVideoCallModel>() {
-                @Override
-                public void onResponse(Call<InitiateVideoCallModel> call, Response<InitiateVideoCallModel> response) {
-                    if (response.body()!=null) {
-                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            InitiateVideoCallModel initiateVideoCallModel = response.body();
-                            if (initiateVideoCallModel.getData()!=null){
-                                String savedUserId=initiateVideoCallModel.getData().getUser_id();
-                                PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
-                                String savedCalleeId = PrefUtils.getCalleeId(ChatActivity.this);
-                                CallService.dial(ChatActivity.this, savedCalleeId, false);
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<InitiateVideoCallModel> call, Throwable t) {
-
-                }
-            });
-        }else {
-            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
-        }
-    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -1007,16 +968,8 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        //chatMessageList(chat_id);
+        chatMessageList(chat_id);
         //ChatActivity.this.finish();
-    }
-
-    public void initializationVoice(View view) {
-        initializationVoice(chat_id);
-    }
-
-    public void initializationVideo(View view) {
-        initializationVideo(chat_id);
     }
 
     public void back(View view) {
@@ -1026,5 +979,104 @@ public class ChatActivity extends AppCompatActivity {
     public void help(View view) {
         startActivity(new Intent(ChatActivity.this,HelpActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
+
+    public void MyCart(View view) {
+        startActivity(new Intent(ChatActivity.this,ViewCartActivity.class)
+                .putExtra("chat_id",chat_id)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
+
+    public void calling(View view) {
+// inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.layout_caling_popup, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(view, Gravity.TOP|Gravity.END, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
+
+    }
+
+    public void initializationVoice(View view) {
+        initializationVoice(chat_id);
+    }
+
+    public void initializationVideo(View view) {
+        initializationVideo(chat_id);
+    }
+    private void initializationVideo(int chat_id) {
+        if (CommonUtils.isOnline(this)) {
+            Call<InitiateVideoCallModel>call= ApiExecutor.getApiService(this)
+                    .apiInitiateVideoCall("Bearer "+sessonManager.getToken(),chat_id);
+            call.enqueue(new Callback<InitiateVideoCallModel>() {
+                @Override
+                public void onResponse(Call<InitiateVideoCallModel> call, Response<InitiateVideoCallModel> response) {
+                    if (response.body()!=null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            InitiateVideoCallModel initiateVideoCallModel = response.body();
+                            if (initiateVideoCallModel.getData()!=null){
+                                String savedUserId=initiateVideoCallModel.getData().getUser_id();
+                                PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
+                                String savedCalleeId = PrefUtils.getCalleeId(ChatActivity.this);
+                                CallService.dial(ChatActivity.this, savedCalleeId, true);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<InitiateVideoCallModel> call, Throwable t) {
+
+                }
+            });
+        }else {
+            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
+        }
+    }
+
+    private void initializationVoice(int chat_id) {
+        if (CommonUtils.isOnline(this)) {
+            Call<InitiateVideoCallModel>call= ApiExecutor.getApiService(this)
+                    .apiInitiateVideoCall("Bearer "+sessonManager.getToken(),chat_id);
+            call.enqueue(new Callback<InitiateVideoCallModel>() {
+                @Override
+                public void onResponse(Call<InitiateVideoCallModel> call, Response<InitiateVideoCallModel> response) {
+                    if (response.body()!=null) {
+                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            InitiateVideoCallModel initiateVideoCallModel = response.body();
+                            if (initiateVideoCallModel.getData()!=null){
+                                String savedUserId=initiateVideoCallModel.getData().getUser_id();
+                                PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
+                                String savedCalleeId = PrefUtils.getCalleeId(ChatActivity.this);
+                                CallService.dial(ChatActivity.this, savedCalleeId, false);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<InitiateVideoCallModel> call, Throwable t) {
+
+                }
+            });
+        }else {
+            CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
+        }
     }
 }

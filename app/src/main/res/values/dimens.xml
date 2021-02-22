@@ -19,4 +19,10 @@
     <dimen name="control_bottom_margin">24dp</dimen>
     <dimen name="control_bottom_horizontal_margin">30dp</dimen>
     <dimen name="progress_text_size">15sp</dimen>
+
+    <!--hxdhdh-->
+    <dimen name="speech_bubble_corners">10dp</dimen>
+    <dimen name="speech_bubble_corners_plus_tail">15dp</dimen>
+    <dimen name="speech_bubble_spacing">5dp</dimen>
+    <dimen name="speech_bubble_tail">5dp</dimen>
 </resources>

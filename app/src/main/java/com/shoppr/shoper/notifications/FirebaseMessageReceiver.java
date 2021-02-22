@@ -110,7 +110,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         intent.setAction(Intent.ACTION_MAIN);
 
 
-        Log.d("checkchatid+",chat_id);
+        //Log.d("checkchatid+",chat_id);
       //  sessonManager.setChatId(chat_id);
         // Assign channel ID
         String channel_id = "notification_channel";

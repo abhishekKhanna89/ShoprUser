@@ -87,7 +87,6 @@
         <activity
             android:name=".activity.ChatActivity"
             android:screenOrientation="portrait"
-            android:launchMode = "singleInstance"
             android:theme="@style/ChatTheme" >
             <intent-filter>
                 <action android:name="chat_screen"/>

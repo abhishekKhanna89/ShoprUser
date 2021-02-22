@@ -1,7 +1,7 @@
 package com.shoppr.shoper.requestdata;
 
 public class RatingsRequest {
-    String ratings;
+    String ratings,comment;
 
     public String getRatings() {
         return ratings;
@@ -9,5 +9,13 @@ public class RatingsRequest {
 
     public void setRatings(String ratings) {
         this.ratings = ratings;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

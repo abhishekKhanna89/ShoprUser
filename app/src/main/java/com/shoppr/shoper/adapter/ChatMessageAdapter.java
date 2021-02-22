@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -51,6 +53,7 @@ import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.StorelistingActivity;
 import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.activity.ShareLocationActivity;
 import com.shoppr.shoper.activity.TrackLoactionActivity;
@@ -90,6 +93,7 @@ import static android.os.FileUtils.copy;
     SessonManager sessonManager;
      BroadcastReceiver mMessageReceiver;
      String title,body;
+     String ratingValue;
     public ChatMessageAdapter(Context context,List<Chat>chatList){
         this.context=context;
         this.chatList=chatList;
@@ -125,7 +129,7 @@ import static android.os.FileUtils.copy;
                     holder.textLayout.setVisibility(View.VISIBLE);
                     title=intent.getStringExtra("title");
                      body=intent.getStringExtra("body");
-                     holder.message_body.setText(title+"\t"+body);
+                     //holder.message_body.setText(title+"\t"+body);
                    // Toast.makeText(context, "Title:- "+title+" Body:- "+body, Toast.LENGTH_SHORT).show();
                 }else {
                     holder.textLayout.setVisibility(View.GONE);
@@ -162,7 +166,7 @@ import static android.os.FileUtils.copy;
        }else {
            holder.productLayout.setVisibility(View.GONE);
        }
-       if (chat.getType().equalsIgnoreCase("ratings")){
+       if (chat.getType().equalsIgnoreCase("rating")){
            holder.ratingsMessage.setText(chat.getMessage());
            holder.dateRating.setText(chat.getCreatedAt());
            holder.ratingBar.setRating(Float.parseFloat(chat.getQuantity()));
@@ -212,7 +216,9 @@ import static android.os.FileUtils.copy;
            holder.rejectText.setVisibility(View.GONE);
            holder.cancelText.setVisibility(View.VISIBLE);
            holder.acceptText.setVisibility(View.GONE);
+           holder.ratingLayout.setEnabled(false);
            holder.ratingBar.setIsIndicator(true);
+
        }
        if (chat.getStatus().equalsIgnoreCase("rejected")){
            holder.closeRedLayout.setVisibility(View.VISIBLE);
@@ -348,50 +354,13 @@ import static android.os.FileUtils.copy;
            }
        });
 
-        holder.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                float a=rating;
-                int b;
-                b=(int)a;
-                String ratingValue=String.valueOf(b);
-                if (CommonUtils.isOnline(context)) {
-                    //sessonManager.showProgress(context);
-                    RatingsRequest ratingsRequest=new RatingsRequest();
-                    ratingsRequest.setRatings(ratingValue);
-                    Call<RatingsModel>call=ApiExecutor.getApiService(context)
-                            .apiRatings("Bearer "+sessonManager.getToken(),chat.getId(),ratingsRequest);
-                    call.enqueue(new Callback<RatingsModel>() {
-                        @Override
-                        public void onResponse(Call<RatingsModel> call, Response<RatingsModel> response) {
-                            //sessonManager.hideProgress();
-                            //Log.d("response",response.body().getStatus());
-                            if (response.body()!=null) {
-                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    //ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(context,chatList);
-                                    //chatMessageAdapter.refreshEvents(chatList);
-                                    Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                }else {
-                                    Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<RatingsModel> call, Throwable t) {
-                            //sessonManager.hideProgress();
-                        }
-                    });
-                }else {
-                    CommonUtils.showToastInCenter((Activity) context,context.getString(R.string.please_check_network));
-                }
-            }
-        });
         holder.addressLinkText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 context.startActivity(new Intent(context, ShareLocationActivity.class)
-                .putExtra("chatId",chat.getChatId()));
+                .putExtra("chatId",chat.getChatId())
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
 
@@ -420,10 +389,12 @@ import static android.os.FileUtils.copy;
         holder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(context);
+                final Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.image_layout
+                        , null));
+                dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(true);
-                dialog.setContentView(R.layout.image_layout);
                 ImageView imageFirst= (ImageView) dialog.findViewById(R.id.imageView);
                 Picasso.get().load(chat.getFilePath()).into(imageFirst);
                 PhotoViewAttacher pAttacher;
@@ -435,10 +406,12 @@ import static android.os.FileUtils.copy;
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(context);
+                final Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.image_layout
+                        , null));
+                dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(true);
-                dialog.setContentView(R.layout.image_layout);
                 ImageView imageFirst= (ImageView) dialog.findViewById(R.id.imageView);
                 Picasso.get().load(chat.getFilePath()).into(imageFirst);
                 PhotoViewAttacher pAttacher;
@@ -447,6 +420,81 @@ import static android.os.FileUtils.copy;
                 dialog.show();
             }
         });
+
+        holder.ratingLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog=new Dialog(context,R.style.FullScreenDialog);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.layout_rating_dialog
+                        , null));
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(true);
+
+                ImageView backPress=dialog.findViewById(R.id.backPress);
+                backPress.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AppCompatRatingBar ratingBar=dialog.findViewById(R.id.ratingBar);
+                ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                    @Override
+                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                        float a=rating;
+                        int b;
+                        b=(int)a;
+                        ratingValue=String.valueOf(b);
+
+                    }
+                });
+                EditText messageEt=dialog.findViewById(R.id.messageEt);
+                Button submitRatingBtn=dialog.findViewById(R.id.submitRatingBtn);
+                submitRatingBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (CommonUtils.isOnline(context)) {
+                            //sessonManager.showProgress(context);
+                            RatingsRequest ratingsRequest=new RatingsRequest();
+                            ratingsRequest.setRatings(ratingValue);
+                            ratingsRequest.setComment(messageEt.getText().toString());
+
+                            Call<RatingsModel>call=ApiExecutor.getApiService(context)
+                                    .apiRatings("Bearer "+sessonManager.getToken(),chat.getId(),ratingsRequest);
+                            call.enqueue(new Callback<RatingsModel>() {
+                                @Override
+                                public void onResponse(Call<RatingsModel> call, Response<RatingsModel> response) {
+                                    //sessonManager.hideProgress();
+                                    //Log.d("response",response.body().getStatus());
+                                    if (response.body()!=null) {
+                                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                            //ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(context,chatList);
+                                            //chatMessageAdapter.refreshEvents(chatList);
+                                            Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                        }else {
+                                            Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<RatingsModel> call, Throwable t) {
+                                    //sessonManager.hideProgress();
+                                }
+                            });
+                        }else {
+                            CommonUtils.showToastInCenter((Activity) context,context.getString(R.string.please_check_network));
+                        }
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+
 
     }
 
@@ -540,6 +588,9 @@ import static android.os.FileUtils.copy;
             ratingsMessage=itemView.findViewById(R.id.ratingsMessage);
             dateRating=itemView.findViewById(R.id.dateRating);
             ratingBar=itemView.findViewById(R.id.ratingBar);
+            ratingBar.setFocusableInTouchMode(true);
+            ratingBar.setFocusable(true);
+            ratingBar.setIsIndicator(true);
             /*Todo:- Audio*/
             voicePlayerView=itemView.findViewById(R.id.voicePlayerView);
             /*Todo:- Address*/
@@ -550,7 +601,6 @@ import static android.os.FileUtils.copy;
             /*Todo:- Track Location*/
             trackLocationLayout=itemView.findViewById(R.id.trackLocationLayout);
             trackLocationText=itemView.findViewById(R.id.trackLocationText);
-
 
         }
 

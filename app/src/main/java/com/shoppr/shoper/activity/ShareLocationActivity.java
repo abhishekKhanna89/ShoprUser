@@ -26,7 +26,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -78,7 +80,7 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class ShareLocationActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener{
+public class ShareLocationActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -89,7 +91,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
     LatLng getlatLng;
     Marker marker;
     Location currentLocation;
-    String latitude, longitude,location_address;
+    String latitude, longitude, location_address;
     double lateee;
     double lngeee;
     Circle circle;
@@ -100,19 +102,70 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
     ArrayAdapter<String> arrayAdapter_stateLocation;
     ArrayList<String> arrListLocation = new ArrayList<>();
     ImageView imgClose;
-    String locality,subLocality;
+    String locality, subLocality;
     SessonManager sessonManager;
     int chat_id;
+    /*Todo:- Address Details*/
+    TextView boldAddressText, smallAddressText;
+    EditText house_detailsEt, landMarkEt;
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            // check Fields For Empty Values
+            checkFieldsForEmptyValues();
+        }
+    };
+
+    void checkFieldsForEmptyValues(){
+        String s1 = house_detailsEt.getText().toString();
+        String s2 = landMarkEt.getText().toString();
+
+        if(s1.equals("")|| s2.equals("")){
+            addBTN.setEnabled(false);
+        } else {
+            addBTN.setEnabled(true);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_location);
-        sessonManager=new SessonManager(this);
-        addBTN=findViewById(R.id.btn_map_address);
-        imgClose=findViewById(R.id.imgClose);
-        chat_id=getIntent().getIntExtra("chatId",0);
+        sessonManager = new SessonManager(this);
+        addBTN = findViewById(R.id.btn_map_address);
+        imgClose = findViewById(R.id.imgClose);
+        chat_id = getIntent().getIntExtra("chatId", 0);
 
         autoCompleteTextViewLoaction = findViewById(R.id.AutoComplte_tv_home);
+
+        /*Todo:- Find Address Details*/
+        boldAddressText = findViewById(R.id.boldAddressText);
+        smallAddressText = findViewById(R.id.smallAddressText);
+        house_detailsEt = findViewById(R.id.house_detailsEt);
+        landMarkEt = findViewById(R.id.landMarkEt);
+
+        house_detailsEt.addTextChangedListener(mTextWatcher);
+        landMarkEt.addTextChangedListener(mTextWatcher);
+
+        // run once to disable if empty
+        checkFieldsForEmptyValues();
+/*
+        String houseDetails=house_detailsEt.getText().toString();
+        String langMark=landMarkEt.getText().toString();
+        if(houseDetails.equals("")|| langMark.equals("")){
+            addBTN.setEnabled(false);
+        } else {
+            addBTN.setEnabled(true);
+        }*/
 
         addBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,9 +215,11 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     //sessonManager.showProgress(ChatActivity.this);
                     ShareLocationRequest shareLocationRequest=new ShareLocationRequest();
                     shareLocationRequest.setType("address");
-                    shareLocationRequest.setAddress(location_address);
+                    shareLocationRequest.setAddress(location_address+","+house_detailsEt.getText()+","+landMarkEt.getText().toString());
                     shareLocationRequest.setLat(latitude);
                     shareLocationRequest.setLang(longitude);
+
+
                     Call<SendModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
                             .apiShareLocation("Bearer "+sessonManager.getToken(),chat_id,shareLocationRequest);
                     call.enqueue(new Callback<SendModel>() {
@@ -173,8 +228,8 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                             //sessonManager.hideProgress();
                             if (response.body()!=null) {
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    onBackPressed();
                                     Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                    finish();
                                 }else {
                                     Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                 }
@@ -197,7 +252,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!autoCompleteTextViewLoaction.getText().toString().isEmpty()){
+                if (!autoCompleteTextViewLoaction.getText().toString().isEmpty()) {
                     autoCompleteTextViewLoaction.getText().clear();
                 }
 
@@ -279,7 +334,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
 
 //                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
-                    getAddress(latLng.latitude,latLng.longitude);
+                    getAddress(latLng.latitude, latLng.longitude);
                 } catch (IndexOutOfBoundsException er) {
                     Toast.makeText(this, "Location isn't available", Toast.LENGTH_SHORT).show();
                 }
@@ -301,7 +356,12 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         try {
             addressess = geocoder.getFromLocation(lat, log, 1);
             locality = addressess.get(0).getLocality();
+            location_address = addressess.get(0).getAddressLine(0);
             subLocality = addressess.get(0).getSubLocality();
+            String[] separated = location_address.split(",");
+            String second = separated[1];
+            boldAddressText.setText(second);
+            smallAddressText.setText(location_address);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -337,6 +397,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
+
     private void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -441,10 +502,17 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                                 Address address = list.get(0);
                                 String localitys = address.getLocality();
                                 location_address = address.getAddressLine(0);
-                                locality =  address.getLocality();
-                                subLocality = address.getSubLocality();
-                                autoCompleteTextViewLoaction.setText(address.getAddressLine(0));
 
+                                String[] separated = location_address.split(",");
+                                String second = separated[1];
+                                locality = address.getLocality();
+                                subLocality = address.getSubLocality();
+                                String state = address.getAdminArea();
+                                String country = address.getCountryName();
+                                String knownName = address.getFeatureName();
+                                autoCompleteTextViewLoaction.setText(address.getAddressLine(0));
+                                boldAddressText.setText(second);
+                                smallAddressText.setText(location_address);
                                 LatLng latLng = new LatLng(Double.parseDouble(latitude), (Double.parseDouble(longitude)));
                                 //Log.d("cheklatlong", String.valueOf(latLng));
                                 mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title(localitys));
@@ -452,7 +520,6 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                                 circle = DrawCircle(latLng);
 
 
-                            } else {
                             }
 
                         } else {

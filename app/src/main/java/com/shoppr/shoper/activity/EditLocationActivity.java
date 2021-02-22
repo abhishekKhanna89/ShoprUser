@@ -171,7 +171,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                 } else {
                     startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
                             .putExtra("location_address", location_address)
-                            .putExtra("value", 1)
+                            .putExtra("value", "0")
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 }
 

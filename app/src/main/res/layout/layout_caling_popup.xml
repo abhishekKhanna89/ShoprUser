@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:id="@+id/popup"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="20dp"
+    android:orientation="vertical" >
+    <ImageView
+        android:id="@+id/audioCall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:onClick="initializationVoice"
+        android:src="@drawable/btn_call_voice"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voice Call"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black"/>
+    <ImageView
+        android:id="@+id/videoCall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20sp"
+        android:onClick="initializationVideo"
+        android:src="@drawable/btn_call_video"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Video Call"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black"/>
+</LinearLayout>

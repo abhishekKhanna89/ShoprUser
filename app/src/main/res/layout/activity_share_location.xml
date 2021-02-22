@@ -7,10 +7,10 @@
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/second">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,26 +42,79 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/cancel"/>
         </LinearLayout>
-
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </fragment>
-
+            android:layout_height="match_parent"/>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_map_address"
+    <LinearLayout
+        android:id="@+id/second"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:text="add address"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
+        android:layout_margin="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/add_marker"/>
+          <TextView
+              android:id="@+id/boldAddressText"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textStyle="bold"
+              android:textSize="25dp"
+              android:text="G Block"
+              android:textColor="@color/black"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/smallAddressText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="G Block,Sector 63,Noida Uttar Pradesh,\nIndia"
+            android:layout_marginLeft="15dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/house_detailsEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:inputType="textCapSentences"
+                android:hint="HOUSE / FLAT / BLOCK NO."/>
+
+            <EditText
+                android:id="@+id/landMarkEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:inputType="textCapSentences"
+                android:layout_marginTop="10dp"
+                android:hint="LANDMARK"/>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_map_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="SAVE AND PROCEED"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+
 </RelativeLayout>

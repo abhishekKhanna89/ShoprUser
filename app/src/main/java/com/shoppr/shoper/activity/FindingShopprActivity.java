@@ -63,7 +63,7 @@ public class FindingShopprActivity extends AppCompatActivity {
 
     private void setTimer() {
         //int time = 1;
-        totalTimeCountInMilliseconds = 10  * 1000;
+        totalTimeCountInMilliseconds = 20  * 1000;
 
         timeBlinkInMilliseconds = 10 * 1000;
         startTimer();
