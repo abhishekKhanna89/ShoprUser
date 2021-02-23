@@ -113,11 +113,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".OtpActivity"
-            android:label="OTP Verify"
+            android:theme="@style/loginTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
-            android:label="Register"
+            android:theme="@style/loginTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -150,7 +150,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
-            android:label="Login"
+            android:theme="@style/loginTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SplashActivity"

@@ -23,7 +23,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -92,6 +94,9 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     SessonManager sessonManager;
     int chat_id;
     String merchant;
+    /*Todo:- Address Details*/
+    TextView boldAddressText, smallAddressText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,54 +110,16 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         merchant = getIntent().getStringExtra("merchant");
         autoCompleteTextViewLoaction = findViewById(R.id.AutoComplte_tv_home);
 
+        boldAddressText = findViewById(R.id.boldAddressText);
+        smallAddressText = findViewById(R.id.smallAddressText);
+
+
         addBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 location_address = autoCompleteTextViewLoaction.getText().toString();
-                /*location_address= autoCompleteTextViewLoaction.getText().toString();
+                Log.d("res",location_address);
 
-                Geocoder coder = new Geocoder(EditLocationActivity.this);
-                List<Address> address;
-
-                try {
-                    //Get latLng from String
-                    address = coder.getFromLocationName(location_address, 5);
-
-                    //check for null
-                    if (address != null) {
-
-                        //Lets take first possibility from the all possibilities.
-                        try {
-                            Address location = address.get(0);
-                            latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-                            latitude = String.valueOf(latLng.latitude);
-                            longitude = String.valueOf(latLng.longitude);
-
-
-                            //sharedPreferences.edit().putString("lat", ""+latitude).apply();
-                            //sharedPreferences.edit().putString("lng", ""+longitude).apply();
-
-                            //   mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                            // mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                            mMap.addMarker(new MarkerOptions().position(latLng));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
-
-
-
-
-//                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
-                            getAddress(latLng.latitude,latLng.longitude);
-                        } catch (IndexOutOfBoundsException er) {
-                            Toast.makeText(EditLocationActivity.this, "Location isn't available", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
 
                 if (merchant != null) {
                    /* startActivity(new Intent(EditLocationActivity.this, RegisterMerchantActivity.class)
@@ -313,8 +280,13 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         List<Address> addressess = null;
         try {
             addressess = geocoder.getFromLocation(lat, log, 1);
+            location_address = addressess.get(0).getAddressLine(0);
             locality = addressess.get(0).getLocality();
             subLocality = addressess.get(0).getSubLocality();
+            String[] separated = location_address.split(",");
+            String second = separated[1];
+            boldAddressText.setText(second);
+            smallAddressText.setText(location_address);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -458,7 +430,10 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                                 locality = address.getLocality();
                                 subLocality = address.getSubLocality();
                                 autoCompleteTextViewLoaction.setText(address.getAddressLine(0));
-
+                                String[] separated = location_address.split(",");
+                                String second = separated[1];
+                                boldAddressText.setText(second);
+                                smallAddressText.setText(location_address);
                                 LatLng latLng = new LatLng(Double.parseDouble(latitude), (Double.parseDouble(longitude)));
                                 //Log.d("cheklatlong", String.valueOf(latLng));
                                 mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title(localitys));

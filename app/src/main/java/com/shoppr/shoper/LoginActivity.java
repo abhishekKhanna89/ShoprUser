@@ -41,10 +41,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     Button btnsubmit;
     TextView textregister;
-    CallbackManager callbackManager;
-    SignInButton signInButton;
-    private GoogleApiClient googleApiClient;
-    private static final int RC_SIGN_IN = 1;
+
     EditText editusername;
     SessonManager sessonManager;
     @Override
@@ -53,32 +50,14 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager = new SessonManager(LoginActivity.this);
-        GoogleSignInOptions gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
+
 
         btnsubmit=findViewById(R.id.btnsubmit);
         editusername=findViewById(R.id.editusername);
 
 
         textregister=findViewById(R.id.textregister);
-        callbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email");
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-            }
-            @Override
-            public void onCancel() {
-                // App code
-            }
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
-        });
+
 
 
         textregister.setOnClickListener(new View.OnClickListener() {
@@ -107,14 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-/*
-    private void hitLoginApi() {
-        if (CommonUtils.isOnline(LoginActivity.this)) {
-            sessonManager.showProgress(LoginActivity.this);
 
-        }
-    }
-*/
 
 
 
@@ -165,26 +137,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        /*if(requestCode==RC_SIGN_IN){
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }*/
-    }
-  /*  private void handleSignInResult(GoogleSignInResult result){
-        if(result.isSuccess()){
-            gotoProfile();
-        }else{
-            Toast.makeText(getApplicationContext(),"Sign in cancel",Toast.LENGTH_LONG).show();
-        }
-    }
-    private void gotoProfile(){
-        Intent intent=new Intent(LoginActivity.this,ProfileActivity.class);
-        startActivity(intent);
-    }*/
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

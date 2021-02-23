@@ -362,6 +362,7 @@
                 android:orientation="horizontal"
                 android:layout_weight="1"
                 android:padding="8dp"
+                android:onClick="notification"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:background="@drawable/eddittext">
@@ -382,6 +383,7 @@
                 android:orientation="horizontal"
                 android:layout_weight="1"
                 android:padding="8dp"
+                android:onClick="home"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:background="@drawable/eddittext">
@@ -403,6 +405,7 @@
                 android:orientation="horizontal"
                 android:layout_weight="1"
                 android:padding="8dp"
+                android:onClick="store_list"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:background="@drawable/eddittext">

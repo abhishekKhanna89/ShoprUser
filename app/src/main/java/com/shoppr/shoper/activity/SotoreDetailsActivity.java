@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
@@ -189,6 +190,21 @@ public class SotoreDetailsActivity extends AppCompatActivity {
     public void galleryImage(View view) {
         startActivity(new Intent(this,ImageZoomActivity.class)
                 .putExtra("shopId",shopId)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
+
+    public void notification(View view) {
+        startActivity(new Intent(SotoreDetailsActivity.this,NotificationListActivity.class)
+        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
+
+    public void home(View view) {
+        startActivity(new Intent(SotoreDetailsActivity.this, MapsActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
+
+    public void store_list(View view) {
+        startActivity(new Intent(SotoreDetailsActivity.this, StorelistingActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 }
