@@ -3,7 +3,9 @@ package com.shoppr.shoper.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -73,16 +75,20 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
     String str_dest,str_org,url;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     CountDownTimer countDownTimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_loaction);
         sessonManager=new SessonManager(this);
 
-        messageId=getIntent().getIntExtra("messageId",0);
+        messageId=getIntent().getIntExtra("chatId",0);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         viewTrackLoaction();
+
+
     }
     private void viewTrackLoaction() {
         if (CommonUtils.isOnline(TrackLoactionActivity.this)) {
@@ -97,12 +103,18 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                             if (trackLoactionModel.getData().getShoppr()!=null){
                                  lat=trackLoactionModel.getData().getShoppr().getLat();
                                  lang=trackLoactionModel.getData().getShoppr().getLang();
+                                 //Log.d("LocationTracking",""+lat+"==="+lang);
                                  india=new LatLng(lat,lang);
+                                int height =120;
+                                int width = 80;
+                                BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.scooter);
+                                Bitmap b = bitmapdraw.getBitmap();
+                                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
                                  mMap.addMarker(new MarkerOptions().position(india))
-                                 .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.scooter));
+                                 .setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                                  mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(india, 15));
                                  //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(india,12f));
-                                 mMap.setPadding(2000, 4000, 2000, 4000);
+                                 //mMap.setPadding(2000, 4000, 2000, 4000);
                             }
                         }
                     }
@@ -140,10 +152,10 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
         };
         countDownTimer.start();
         // Add a marker in Sydney and move the camera
-        sydney = new LatLng(28.7041, 77.1025);
-        mMap.addMarker(new MarkerOptions().position(sydney));
+        sydney = new LatLng(28.6035573, 77.3453588);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Customer"));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
-        mMap.setPadding(2000, 4000, 2000, 4000);
+        //mMap.setPadding(2000, 4000, 2000, 4000);
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,12f));
        // mMap.setPadding(2000, 4000, 2000, 4000);
         Handler handler=new Handler();
@@ -154,6 +166,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                 if (aaa!=null){
                     getRequestUrl(sydney,aaa);
                     getDeviceLocation(sydney,aaa);
+                    viewTrackLoaction();
                 }
             }
         },2000);
@@ -273,8 +286,8 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                 }
 
                 polylineOptions.addAll(points);
-                polylineOptions.width(30);
-                polylineOptions.color(Color.BLUE);
+                polylineOptions.width(10);
+                polylineOptions.color(Color.BLACK);
                 polylineOptions.geodesic(true);
             }
 
@@ -334,5 +347,6 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
         countDownTimer.cancel();
         super.onDestroy();
     }
+
 
 }

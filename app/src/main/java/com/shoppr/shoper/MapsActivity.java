@@ -292,10 +292,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     }
 
     /*Todo:- Location Change*/
-
-
-
-
     private void showGPSDisabledAlertToUser() {
         android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
