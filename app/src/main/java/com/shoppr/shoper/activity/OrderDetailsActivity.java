@@ -87,6 +87,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (invoice_link.equalsIgnoreCase("0")){
+
                 }else {
                     DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
                     Uri uri = Uri.parse(ApiExecutor.baseUrl+"download-invoice/"+refId);
@@ -115,6 +116,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
                             if (ordersDetailsModel.getData()!=null){
                                 refId=ordersDetailsModel.getData().getOrder().getRefid();
                                 invoice_link=ordersDetailsModel.getData().getShow_invoice_link();
+                                if (invoice_link.equalsIgnoreCase("0")){
+                                    invoiceDownload.setVisibility(View.GONE);
+                                }
+                                Log.d("ressssssssss",invoice_link);
                                 orderIdText.setText(ordersDetailsModel.getData().getOrder().getRefid());
                                 totalAmountText.setText("₹ " +ordersDetailsModel.getData().getOrder().getTotal());
                                 serviceChargeText.setText("₹ " +ordersDetailsModel.getData().getOrder().getServiceCharge());
@@ -137,13 +142,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
                                 arrCartItemList = (ArrayList<Detail>) ordersDetailsModel.getData().getOrder().getDetails();
 
-                                if (arrCartItemList.isEmpty()){
+                                /*if (arrCartItemList.isEmpty()){
                                     cardOrderSummary.setVisibility(View.GONE);
                                     emptyDeatils.setVisibility(View.VISIBLE);
                                 }else {
                                     cardOrderSummary.setVisibility(View.VISIBLE);
                                     emptyDeatils.setVisibility(View.GONE);
-                                }
+                                }*/
                                 OrderDetailsAdapter orderDetailsAdapter=new OrderDetailsAdapter(OrderDetailsActivity.this,
                                         arrCartItemList);
                                 rv_order_details.setAdapter(orderDetailsAdapter);
