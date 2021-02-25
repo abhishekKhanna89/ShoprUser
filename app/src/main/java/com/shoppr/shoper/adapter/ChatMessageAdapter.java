@@ -158,7 +158,11 @@ import static android.os.FileUtils.copy;
            holder.textLayout.setVisibility(View.GONE);
        }
        if (chat.getType().equalsIgnoreCase("product")){
-           Picasso.get().load(chat.getFilePath()).into(holder.productImage);
+           if (chat.getFilePath().length()==0){
+
+           }else {
+               Picasso.get().load(chat.getFilePath()).into(holder.productImage);
+           }
            //Glide.with(context).load(chat.getFilePath()).into(holder.productImage);
            holder.productMessage.setText(chat.getMessage());
            holder.dateProduct.setText(chat.getCreatedAt());

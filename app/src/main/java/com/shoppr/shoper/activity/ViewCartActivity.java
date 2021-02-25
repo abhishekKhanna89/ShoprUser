@@ -213,7 +213,8 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                                 startPayment(total);
                             }else {
                                 startActivity(new Intent(ViewCartActivity.this,OrderConfirmActivity.class)
-                                .putExtra("refid",initiatPaymentModel.getData().getRefid()));
+                                .putExtra("refid",initiatPaymentModel.getData().getRefid())
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             }
                         }
                     }
@@ -334,7 +335,8 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             PaymentSuccessModel paymentSuccessModel=response.body();
                             startActivity(new Intent(ViewCartActivity.this,OrderConfirmActivity.class)
-                                    .putExtra("refid",paymentSuccessModel.getData().getRefid()));
+                                    .putExtra("refid",paymentSuccessModel.getData().getRefid())
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }else {
                             Toast.makeText(ViewCartActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();
                         }
@@ -377,7 +379,12 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
 
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-            Picasso.get().load(arList.get(position).getFilePath()).into(holder.productImage);
+            if (arList.get(position).getFilePath().length()==0){
+
+            }else {
+                Picasso.get().load(arList.get(position).getFilePath()).into(holder.productImage);
+            }
+
             holder.nameProductText.setText(arList.get(position).getMessage());
             holder.priceProductText.setText("\u20B9 "+arList.get(position).getPrice());
             holder.quantityProductText.setText(arList.get(position).getQuantity());

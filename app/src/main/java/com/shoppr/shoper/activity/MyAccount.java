@@ -53,7 +53,8 @@ public class MyAccount extends AppCompatActivity {
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MyAccount.this,UpdateProfileActivity.class));
+                startActivity(new Intent(MyAccount.this,UpdateProfileActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
 
@@ -133,10 +134,13 @@ public class MyAccount extends AppCompatActivity {
     }
 
     public void chatHistory(View view) {
-        startActivity(new Intent(MyAccount.this,ChatHistoryActivity.class));
+        startActivity(new Intent(MyAccount.this,ChatHistoryActivity.class)
+        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     public void MyOrder(View view) {
-        startActivity(new Intent(MyAccount.this,MyOrderActivity.class));
+        startActivity(new Intent(MyAccount.this,MyOrderActivity.class).addFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP
+        ));
     }
 }

@@ -57,7 +57,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                     remoteMessage);
 
 
-            Log.d("chatid===",chat_id);
+            //Log.d("chatid===",chat_id);
 
             Intent intent = new Intent("message_subject_intent");
            // intent.putExtra("findingchatid", chat_id);
@@ -76,7 +76,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         remoteViews.setTextViewText(R.id.title, title);
         remoteViews.setTextViewText(R.id.message, message);
         remoteViews.setImageViewResource(R.id.icon,
-                R.mipmap.ic_launcher);
+                R.drawable.splash);
         return remoteViews;
     }
 
@@ -85,13 +85,13 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         //Log.d("title",title);
         // Pass the intent to switch to the MainActivity
         JSONObject jsonObject = new JSONObject(remoteMessage.getData());
-        Log.d("ChatId+",""+jsonObject);
+        //Log.d("ChatId+",""+jsonObject);
         try {
             chat_id = jsonObject.getString("chat_id");
 
 
           // sessonManager.setChatId(chat_id);
-            Log.d("ChatId+",chat_id);
+           // Log.d("ChatId+",chat_id);
             type = jsonObject.getString("type");
            /* if (type.equalsIgnoreCase("chat-assigned")){
                 startActivity(new Intent(this, ChatDetailsActivity.class)
@@ -104,7 +104,6 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
             e.printStackTrace();
         }
         intent = new Intent(FirebaseMessageReceiver.this, ChatActivity.class);
-
         intent.putExtra("findingchatid",chat_id);
         intent.putExtra("chat_status","1");
         intent.setAction(Intent.ACTION_MAIN);
@@ -141,7 +140,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                 = new NotificationCompat
                 .Builder(getApplicationContext(),
                 channel_id)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.splash)
                 .setAutoCancel(true)
                 .setVibrate(new long[]{1000, 1000, 1000,
                         1000, 1000})
