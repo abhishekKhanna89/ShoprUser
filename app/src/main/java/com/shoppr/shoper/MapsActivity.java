@@ -73,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         GoogleApiClient.OnConnectionFailedListener, LocationListener{
     SessonManager sessonManager;
     //double lat,lon;
-    TextView shoprListText, addressText;
+    TextView shoprListText, addressText,countText;
     CircleImageView cir_man_hair_cut;
 
     /*Todo:- Location Manager*/
@@ -99,6 +99,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         shoprListText = findViewById(R.id.shoprListText);
         addressText = findViewById(R.id.addressText);
         cir_man_hair_cut = findViewById(R.id.cir_man_hair_cut);
+        countText=findViewById(R.id.countText);
 
         Log.d("Token", sessonManager.getToken());
 
@@ -180,7 +181,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     private void viewListShopr() {
         if (CommonUtils.isOnline(MapsActivity.this)) {
             sessonManager.showProgress(MapsActivity.this);
-            Call<ShoprListModel> call = ApiExecutor.getApiService(this).apiShoprList();
+            Call<ShoprListModel> call = ApiExecutor.getApiService(this).apiShoprList("Bearer " + sessonManager.getToken());
             call.enqueue(new Callback<ShoprListModel>() {
                 @SuppressLint("SetTextI18n")
                 @Override
@@ -192,6 +193,13 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                             if (shoprListModel.getData() != null) {
                                 for (int i = 0; i < shoprListModel.getData().getShopper().size(); i++) {
                                     shoprListText.setText(shoprListModel.getData().getShopper().get(i).getShopprCount() + "\t" + shoprListModel.getData().getShopper().get(i).getLocation());
+                                    if (shoprListModel.getData().getNotifications().equalsIgnoreCase("0")){
+                                        countText.setVisibility(View.GONE);
+                                    }else {
+                                        countText.setVisibility(View.VISIBLE);
+                                        countText.setText(shoprListModel.getData().getNotifications());
+                                    }
+
                                 }
                             }
                         }
@@ -276,6 +284,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     protected void onRestart() {
         super.onRestart();
         myProfile();
+        viewListShopr();
     }
 
     public void notification(View view) {

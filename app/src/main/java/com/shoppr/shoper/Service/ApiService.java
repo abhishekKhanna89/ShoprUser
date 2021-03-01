@@ -98,7 +98,7 @@ public interface ApiService {
 
     @NonNull
     @GET("shoppr-list")
-    Call<ShoprListModel> apiShoprList();
+    Call<ShoprListModel> apiShoprList(@Header("Authorization") String token);
 
     @NonNull
     @GET("customer-balance")

@@ -9,7 +9,9 @@ public class Data {
     @SerializedName("shopper")
     @Expose
     private List<Shopper> shopper = null;
-
+    @SerializedName("notifications")
+    @Expose
+    private String notifications;
 
     public List<Shopper> getShopper() {
         return shopper;
@@ -19,4 +21,11 @@ public class Data {
         this.shopper = shopper;
     }
 
+    public String getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(String notifications) {
+        this.notifications = notifications;
+    }
 }

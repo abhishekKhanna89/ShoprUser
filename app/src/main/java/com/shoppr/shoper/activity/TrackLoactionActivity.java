@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -136,14 +137,14 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
 
         mMap = googleMap;
 
+
+
         viewTrackLoaction();
 
         countDownTimer =  new CountDownTimer(20000, 1000) {
             public void onTick(long millisUntilFinished) {
                 //viewTrackLoaction();
-
             }
-
             public void onFinish() {
                 viewTrackLoaction();
                 countDownTimer.start();
