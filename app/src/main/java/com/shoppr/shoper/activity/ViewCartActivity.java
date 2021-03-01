@@ -80,7 +80,7 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         chatId=getIntent().getIntExtra("chat_id",0);
-        Log.d("resssssss",""+chatId);
+        //Log.d("resssssss",""+chatId);
 
         RvMyCart = (RecyclerView) findViewById(R.id.rv_my_cart);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ViewCartActivity.this, 1);
