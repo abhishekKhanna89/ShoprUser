@@ -499,6 +499,8 @@ import static android.os.FileUtils.copy;
             }
         });
 
+        holder.setIsRecyclable(false);
+
 
     }
 

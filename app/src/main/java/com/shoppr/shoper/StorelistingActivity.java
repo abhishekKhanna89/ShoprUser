@@ -182,7 +182,6 @@ public class StorelistingActivity extends AppCompatActivity {
             }
         });
 
-        /*Todo:- Radio Button event*/
         bottomSheetDialog.show();
     }
 

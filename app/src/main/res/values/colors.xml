@@ -64,4 +64,6 @@
     <color name="holo_darker_gray">#ffaaaaaa</color>
 
     <color name="colo_home_bg">#1d6867</color>
+
+    <color name="call_type">#178277</color>
 </resources>

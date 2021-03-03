@@ -54,9 +54,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
@@ -141,8 +144,9 @@ public class ChatActivity extends AppCompatActivity {
     CircleImageView userDp;
     TextView userName;
 
-     String TAG="lakshmi";
-    PopupWindow popUp;
+     //String TAG="lakshmi";
+
+    BottomSheetDialog bottomSheetDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,7 +155,16 @@ public class ChatActivity extends AppCompatActivity {
         sessonManager = new SessonManager(this);
 
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
-        popUp = new PopupWindow(this);
+
+
+        chatRecyclerView = findViewById(R.id.chatRecyclerView);
+        chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+        chatRecyclerView.setHasFixedSize(true);
+        chatRecyclerView.setItemViewCacheSize(20);
+        chatRecyclerView.setDrawingCacheEnabled(true);
+        chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        chatRecyclerView.setNestedScrollingEnabled(false);
+
 
         Bundle extras = getIntent().getExtras();
         if (extras!=null)
@@ -176,41 +189,20 @@ public class ChatActivity extends AppCompatActivity {
                chat_id = getIntent().getIntExtra("findingchatid", 0);
                chatMessageList(chat_id);
            }
-           /*else if(chat_status!=null&&chat_status.equalsIgnoreCase("3")) {
-               Log.d("hello","hellobcdefgh");
-
-               int  shopId = getIntent().getIntExtra("shopId",0);
-               Log.d("hello", String.valueOf(shopId));
-               viewStartChat(shopId);
-
-               // Log.d("Chsgss", String.valueOf(chat_id));
-              // chat_id = getIntent().getIntExtra("findingchatid", 0);
-           }*/
            else{
 
                String  value = String.valueOf(getIntent().getExtras().get("chat_id"));
                chat_id= Integer.parseInt(value);
                chatMessageList(chat_id);
-               Log.d(TAG, "Key: " + "abcd" + " Value: " + value);
+               //Log.d(TAG, "Key: " + "abcd" + " Value: " + value);
            }
-
-
-
-
-           /* for (String key : getIntent().getExtras().keySet()) {
-                Object value = getIntent().getExtras().get(key);
-                Log.d(TAG, "Key: " + key + " Value: " + value);
-
-
-            }*/
-
 
 
         }
 
 
 
-        Log.d("ChatIdForTesting","" +chat_id);
+        //Log.d("ChatIdForTesting","" +chat_id);
         /*Todo:- UserDP*/
         userDp=findViewById(R.id.userDp);
         userName=findViewById(R.id.userName);
@@ -239,40 +231,8 @@ public class ChatActivity extends AppCompatActivity {
 
                // chat_id=intent.getIntExtra("findingchatid",0);
 
-                Log.d("chatidreciver==",""+chat_id);
+                //Log.d("chatidreciver==",""+chat_id);
                 chatMessageList(Integer.parseInt(String.valueOf(chat_id)));
-
-              /*  if (intent.getStringExtra("chat_id")!=null){
-                    chat_id=intent.getIntExtra("chat_id",0);
-                    chatMessageList(Integer.parseInt(String.valueOf(chat_id)));
-
-
-                  *//*  if (sessonManager.getChatId()!=null){
-                        String chatid=String.valueOf(sessonManager.getChatId());
-                        //Log.d("RecieveChatId",chatid);
-                        chatMessageList(Integer.parseInt(chatid));
-                    }
-*//*
-                }*/
-
-
-//                if (intent.getStringExtra("title")!=null||intent.getStringExtra("body")!=null){
-//                    String title=intent.getStringExtra("title");
-//                    body=intent.getStringExtra("body");
-//                    chatMessageList(chat_id);
-//                    chatMessageList1(chatid);
-//                    // msgDtoList = new ArrayList<ChatModel>();
-//                    ChatModel msgDto = new ChatModel(ChatModel.MSG_TYPE_RECEIVED, body);
-//                    msgDtoList.add(msgDto);
-//
-//
-//                    // Create the data adapter with above data list.
-//                    chatAppMsgAdapter = new ChatAppMsgAdapter(msgDtoList);
-//
-//                    // Set data adapter to RecyclerView.
-//                    chatRecyclerView.setAdapter(chatAppMsgAdapter);
-//                    //Toast.makeText(ChatActivity.this, "Title:- "+title+" Body:- "+body, Toast.LENGTH_SHORT).show();*/
-//                }
             }
         };
         IntentFilter i = new IntentFilter();
@@ -338,16 +298,6 @@ public class ChatActivity extends AppCompatActivity {
                     //sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped, null));
                     // is only executed if the EditText was directly changed by the user
                 } else {
-                   /* if (sessonManager.getChatId().isEmpty()){
-                        sessonManager.setChatId("");
-                        chat_id=Chat_id;
-                    }else {
-                        String cId=sessonManager.getChatId();
-                        int a= Integer.parseInt(cId);
-                        chat_id=a;
-                        sessonManager.setChatId("");
-                    }*/
-
                     sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.send));
                     sendMsgBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -406,13 +356,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        chatRecyclerView = findViewById(R.id.chatRecyclerView);
-        chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-        chatRecyclerView.setHasFixedSize(true);
-        chatRecyclerView.setItemViewCacheSize(20);
-        chatRecyclerView.setDrawingCacheEnabled(true);
-        chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        chatRecyclerView.setNestedScrollingEnabled(false);
+
 
 
 
@@ -988,28 +932,12 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void calling(View view) {
-// inflate the layout of the popup window
-        LayoutInflater inflater = (LayoutInflater)
-                getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.layout_caling_popup, null);
+        bottomSheetDialog=new BottomSheetDialog(this,R.style.CustomBottomSheetDialog);
+        bottomSheetDialog.setContentView(getLayoutInflater().inflate(R.layout.calling_bottom_dialog,null));
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
 
-        // create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true; // lets taps outside the popup also dismiss it
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-        // show the popup window
-        // which view you pass in doesn't matter, it is only used for the window tolken
-        popupWindow.showAtLocation(view, Gravity.TOP|Gravity.END, 0, 0);
-
-        // dismiss the popup window when touched
-        popupView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
-                return true;
-            }
-        });
+        bottomSheetDialog.show();
 
     }
 
@@ -1035,6 +963,7 @@ public class ChatActivity extends AppCompatActivity {
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
                                 String savedCalleeId = PrefUtils.getCalleeId(ChatActivity.this);
                                 CallService.dial(ChatActivity.this, savedCalleeId, true);
+                                bottomSheetDialog.dismiss();
                             }
                         }
                     }
@@ -1065,6 +994,7 @@ public class ChatActivity extends AppCompatActivity {
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
                                 String savedCalleeId = PrefUtils.getCalleeId(ChatActivity.this);
                                 CallService.dial(ChatActivity.this, savedCalleeId, false);
+                                bottomSheetDialog.dismiss();
                             }
                         }
                     }

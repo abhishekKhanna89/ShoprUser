@@ -68,13 +68,13 @@
 
             <ImageView
                 android:id="@+id/audioCall"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:onClick="calling"
                 android:layout_marginRight="10dp"
                 android:layout_centerInParent="true"
                 android:layout_toLeftOf="@+id/cartView"
-                android:src="@drawable/btn_call_voice"/>
+                android:src="@drawable/ic_phone"/>
 
 
 
