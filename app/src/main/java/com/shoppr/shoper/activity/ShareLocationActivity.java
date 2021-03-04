@@ -172,45 +172,6 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
             public void onClick(View view) {
                 location_address= autoCompleteTextViewLoaction.getText().toString();
 
-                Geocoder coder = new Geocoder(ShareLocationActivity.this);
-                List<Address> address;
-
-                try {
-                    //Get latLng from String
-                    address = coder.getFromLocationName(location_address, 5);
-
-                    //check for null
-                    if (address != null) {
-
-                        //Lets take first possibility from the all possibilities.
-                        try {
-                            Address location = address.get(0);
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-                            latitude = String.valueOf(latLng.latitude);
-                            longitude = String.valueOf(latLng.longitude);
-
-                            //sharedPreferences.edit().putString("lat", ""+latitude).apply();
-                            //sharedPreferences.edit().putString("lng", ""+longitude).apply();
-
-                            //   mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                            // mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                            mMap.addMarker(new MarkerOptions().position(latLng));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
-
-//                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
-                            getAddress(latLng.latitude,latLng.longitude);
-                        } catch (IndexOutOfBoundsException er) {
-                            Toast.makeText(ShareLocationActivity.this, "Location isn't available", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
                 if (CommonUtils.isOnline(ShareLocationActivity.this)) {
                     //sessonManager.showProgress(ChatActivity.this);
                     ShareLocationRequest shareLocationRequest=new ShareLocationRequest();

@@ -138,7 +138,12 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
                 Picasso.get().load(R.drawable.pin_logo).into(holder.itemImage);
             }else {
                 for (int i=0;i<datumList.get(position).getDetails().size();i++){
-                    Picasso.get().load(datumList.get(position).getDetails().get(i).getFilePath()).into(holder.itemImage);
+                    if (datumList.get(position).getDetails().get(i).getFilePath().length()==0){
+
+                    }else {
+                        Picasso.get().load(datumList.get(position).getDetails().get(i).getFilePath()).into(holder.itemImage);
+                    }
+
                 }
 
             }

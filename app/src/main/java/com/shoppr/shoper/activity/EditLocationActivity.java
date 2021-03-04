@@ -118,33 +118,18 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
             @Override
             public void onClick(View view) {
                 location_address = autoCompleteTextViewLoaction.getText().toString();
-                Log.d("res",location_address);
-
-
+                //Log.d("res",location_address);
                 if (merchant != null) {
-                   /* startActivity(new Intent(EditLocationActivity.this, RegisterMerchantActivity.class)
-                            .putExtra("location_address", location_address)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
-
-                    /*Intent intent = new Intent();
-                    intent.putExtra("location_address", location_address);
-                    setResult(1, intent);*/
                     Intent intent = new Intent();
                     intent.putExtra("location_address", location_address);
                     setResult(RESULT_OK, intent);
                     finish();
-
-
                 } else {
                     startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
                             .putExtra("location_address", location_address)
                             .putExtra("value", "0")
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 }
-
-
-                //onBackPressed();
-
 
             }
         });

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.developer.kalert.KAlertDialog;
+import com.google.gson.Gson;
 import com.shoppr.shoper.Model.OrderDetails.OrderHistory.Detail;
 import com.shoppr.shoper.Model.OrderDetails.OrderHistory.OrderHistoryModel;
 import com.shoppr.shoper.R;
@@ -119,7 +120,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                 if (invoice_link.equalsIgnoreCase("0")){
                                     invoiceDownload.setVisibility(View.GONE);
                                 }
-                                Log.d("ressssssssss",invoice_link);
                                 orderIdText.setText(ordersDetailsModel.getData().getOrder().getRefid());
                                 totalAmountText.setText("₹ " +ordersDetailsModel.getData().getOrder().getTotal());
                                 serviceChargeText.setText("₹ " +ordersDetailsModel.getData().getOrder().getServiceCharge());
