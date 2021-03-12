@@ -26,7 +26,7 @@ public class OrderConfirmActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, MyAccount.class)
+        startActivity(new Intent(this, ChatActivity.class)
         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 }

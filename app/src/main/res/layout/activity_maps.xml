@@ -139,6 +139,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingStart="10dp"
+                        android:gravity="center"
                         android:paddingLeft="10dp"/>
                 </LinearLayout>
             </LinearLayout>
@@ -281,7 +282,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/one"
-                    android:text="Store List"
+                    android:text="Local Shops"
                     android:textSize="16sp"
                     android:textColor="@color/white" />
             </LinearLayout>

@@ -192,7 +192,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                             ShoprListModel shoprListModel = response.body();
                             if (shoprListModel.getData() != null) {
                                 for (int i = 0; i < shoprListModel.getData().getShopper().size(); i++) {
-                                    shoprListText.setText(shoprListModel.getData().getShopper().get(i).getShopprCount() + "\t" + shoprListModel.getData().getShopper().get(i).getLocation());
+                                    shoprListText.setText("Active Shoppers : "+shoprListModel.getData().getShopper().get(i).getShopprCount());
                                     if (shoprListModel.getData().getNotifications().equalsIgnoreCase("0")){
                                         countText.setVisibility(View.GONE);
                                     }else {

@@ -94,6 +94,7 @@
             android:layout_width="match_parent"
             android:id="@+id/chatRecyclerView"
             android:divider="#fff"
+
             android:layout_height="match_parent" />
 
     </RelativeLayout>

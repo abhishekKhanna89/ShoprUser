@@ -72,7 +72,7 @@ public class FindingShopprActivity extends AppCompatActivity {
     }
 
     private void startTimer() {
-        new CountDownTimer(6000,2000) {
+        new CountDownTimer(15000,2000) {
             @Override
             public void onTick(long millisUntilFinished) {
                // counttime.setText(String.valueOf(counter));

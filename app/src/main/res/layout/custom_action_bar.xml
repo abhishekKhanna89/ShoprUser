@@ -22,7 +22,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/back"
             android:fontFamily="sans-serif"
-            android:text="Store Listing"
+            android:text="Local Shops"
             android:layout_centerInParent="true"
             android:padding="10dp"
             android:textColor="@color/white"

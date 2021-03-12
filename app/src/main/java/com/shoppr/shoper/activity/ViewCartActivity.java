@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
@@ -34,12 +34,10 @@ import com.shoppr.shoper.Model.CartView.Item;
 import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
 import com.shoppr.shoper.Model.PaymentSuccess.PaymentSuccessModel;
-import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.InitiatePaymentRequest;
 import com.shoppr.shoper.requestdata.PaymentSuccessRequest;
-import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.Progressbar;
 import com.shoppr.shoper.util.SessonManager;
@@ -69,6 +67,8 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
     CheckBox checkbox;
     int value,total;
     String razorpay_order_id;
+    String valueId;
+    String chat_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,9 +79,17 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_arrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        chatId=getIntent().getIntExtra("chat_id",0);
-        //Log.d("resssssss",""+chatId);
-
+        valueId=getIntent().getStringExtra("valueId");
+        if (valueId!=null&&valueId.equalsIgnoreCase("1")){
+            chatId=getIntent().getIntExtra("chat_id",0);
+            Log.d("resChatId",""+chatId);
+            hitCartDetailsApi(chatId);
+        }else if (valueId!=null&&valueId.equalsIgnoreCase("2")){
+            chat_id=getIntent().getStringExtra("chat_id");
+            chatId= Integer.parseInt(chat_id);
+            Log.d("resChatId",""+chatId);
+            hitCartDetailsApi(chatId);
+        }
         RvMyCart = (RecyclerView) findViewById(R.id.rv_my_cart);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ViewCartActivity.this, 1);
         RvMyCart.setLayoutManager(layoutManager);
@@ -189,7 +197,8 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
             }
         });
 
-        hitCartDetailsApi(chatId);
+
+
 
     }
 
@@ -236,6 +245,7 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
             progressbar.showProgress(ViewCartActivity.this);
             Call<CartViewModel>call= ApiExecutor.getApiService(this).apiCartView("Bearer "+sessonManager.getToken(),chatId);
             call.enqueue(new Callback<CartViewModel>() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onResponse(Call<CartViewModel> call, Response<CartViewModel> response) {
                     progressbar.hideProgress();
@@ -252,9 +262,7 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                                 }else {
                                     walletCardView.setVisibility(View.GONE);
                                 }
-
                                 arrCartItemList = (ArrayList<Item>) cartViewModel.getData().getItems();
-
                                 if (arrCartItemList.isEmpty()){
                                     btn_continue.setVisibility(View.VISIBLE);
                                     imgCart.setVisibility(View.VISIBLE);
@@ -386,11 +394,10 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
             }
 
             holder.nameProductText.setText(arList.get(position).getMessage());
-            holder.priceProductText.setText("\u20B9 "+arList.get(position).getPrice());
-            holder.quantityProductText.setText(arList.get(position).getQuantity());
-
-
-
+            //holder.priceProductText.setText("Item total :- "+"\u20B9 "+arList.get(position).getPrice());
+            //holder.quantityProductText.setText("Quantity :- "+arList.get(position).getQuantity());
+            holder.priceProductText.setText(Html.fromHtml("<b>" + "Item total :- " + "</b>"+"<medium>"+"\u20B9 "+arList.get(position).getPrice() + "</medium>"));
+            holder.quantityProductText.setText(Html.fromHtml("<b>" + "Quantity :- " + "</b>"+ "<medium>" +arList.get(position).getQuantity()+ "</medium>"));
         }
         @Override
         public int getItemCount() {

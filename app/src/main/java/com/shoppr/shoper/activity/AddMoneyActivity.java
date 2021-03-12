@@ -47,6 +47,7 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
     Button btnsubmit;
     SessonManager sessonManager;
     String order_id,email,mobile,amount;
+    String chat_id,value;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +55,8 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
         getSupportActionBar().setTitle("Add Money");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager=new SessonManager(this);
+        chat_id=getIntent().getStringExtra("chat_id");
+        value=getIntent().getStringExtra("value");
         /*Todo:- TextView find Id*/
         customerBalance=findViewById(R.id.customerBalance);
         selectedBalance=findViewById(R.id.selectedBalance);
@@ -138,6 +141,7 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
             sessonManager.showProgress(AddMoneyActivity.this);
             RechargeRequest rechargeRequest=new RechargeRequest();
             rechargeRequest.setAmount(aa);
+            rechargeRequest.setChat_id(chat_id);
             Call<RechargeModel>call=ApiExecutor.getApiService(this)
                     .apiRecharge("Bearer "+sessonManager.getToken(),rechargeRequest);
             call.enqueue(new Callback<RechargeModel>() {
@@ -278,9 +282,15 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            Intent intent=new Intent(AddMoneyActivity.this,MyAccount.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+                            if (value!=null&&value.equalsIgnoreCase("1")){
+                                Intent intent=new Intent(AddMoneyActivity.this,ChatActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }else if (value!=null&&value.equalsIgnoreCase("2")){
+                                Intent intent=new Intent(AddMoneyActivity.this,MyAccount.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
                             Toast.makeText(AddMoneyActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();
                         }else {
                             Toast.makeText(AddMoneyActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();

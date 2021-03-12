@@ -73,22 +73,65 @@
                 android:onClick="calling"
                 android:layout_marginRight="10dp"
                 android:layout_centerInParent="true"
-                android:layout_toLeftOf="@+id/cartView"
+                android:layout_toLeftOf="@+id/cardViewLayout"
                 android:src="@drawable/ic_phone"/>
+        <RelativeLayout
+            android:id="@+id/cardViewLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:onClick="MyCart"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/round">
+            <FrameLayout
+                style="?attr/actionButtonStyle"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:focusable="true">
 
-
-
-            <ImageView
-                android:id="@+id/cartView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                <ImageView
+                    android:id="@+id/cartView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_shoppingcart"/>
+                <TextView
+                    android:id="@+id/cart_badge"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right|end|top"
+                    android:layout_marginEnd="-5dp"
+                    android:layout_marginRight="-5dp"
+                    android:layout_marginTop="3dp"
+                    android:visibility="gone"
+                    android:background="@drawable/text_circle"
+                    android:gravity="center"
+                    android:padding="3dp"
+                    android:textColor="@android:color/white"
+                    android:text="0"
+                    android:textSize="10sp"/>
+            </FrameLayout>
+        </RelativeLayout>
+            <!--<RelativeLayout
+                android:id="@+id/cardViewLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_centerInParent="true"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/round"
-                android:padding="10dp"
-                android:onClick="MyCart"
-                android:src="@drawable/ic_shoppingcart"/>
+                android:background="@drawable/round">
+                <ImageView
+                    android:id="@+id/cartView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:onClick="MyCart"
+                    android:src="@drawable/ic_shoppingcart"/>
+            </RelativeLayout>-->
+
            <!-- <ImageView
                 android:id="@+id/audioCall"
                 android:layout_width="40dp"
@@ -118,6 +161,9 @@
         android:layout_width="match_parent"
         android:id="@+id/chatRecyclerView"
         android:divider="#fff"
+        android:splitMotionEvents="false"
+        android:overScrollMode="always"
+        android:animateLayoutChanges="false"
         android:layout_height="match_parent" />
     </RelativeLayout>
     <Chronometer
@@ -159,7 +205,7 @@
             android:background="@drawable/rounded_edit"
             android:hint="Write a message"
             android:textColorHint="@color/black"
-            android:inputType="textCapSentences"
+            android:inputType="textCapSentences|textMultiLine"
             android:textColor="@color/black"
             android:paddingHorizontal="10dp" />
         <ImageButton

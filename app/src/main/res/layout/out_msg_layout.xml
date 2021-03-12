@@ -188,7 +188,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:lines="1"
+                            android:lines="2"
                             android:text="5/₹ 500"
                             android:layout_marginRight="5dp"
                             android:textColor="@android:color/black" />
@@ -201,6 +201,7 @@
                             android:gravity="center_horizontal"
                             android:lines="1"
                             android:text="Accept"
+                            android:background="@drawable/rounded_edit"
                             android:textColor="@color/green"
                             android:textStyle="bold" />
 
@@ -210,6 +211,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="right"
                             android:lines="1"
+                            android:background="@drawable/rounded_edit"
                             android:text="Reject"
                             android:layout_weight="1" android:textColor="@android:color/holo_red_dark"
                             android:textStyle="bold" />
@@ -220,6 +222,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="end"
                             android:lines="1"
+                            android:background="@drawable/rounded_edit"
                             android:text="Cancel"
                             android:textColor="#C9A1A1A1"
                             android:textStyle="bold"
@@ -359,7 +362,7 @@
             app:showTiming="true"
 
             app:timingBackgroundColor="#6AFF7700"
-            app:viewBackground="#C6C4CF"
+            app:viewBackground="#fff"
             app:viewCornerRadius="100"
             app:visualizationNotPlayedColor="#727171"
             app:visualizationPlayedColor="#ff7700" />
@@ -474,7 +477,7 @@
             </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>
         <!--Todo:- Track Location Type-->
-        <me.himanshusoni.chatmessageview.ChatMessageView
+       <!-- <me.himanshusoni.chatmessageview.ChatMessageView
             android:id="@+id/trackLocationLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -501,6 +504,107 @@
                     android:text="Please share your delivery address\nAnd share the location on the map."
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="16sp" />
+            </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>-->
+        <!--Todo:- Add Wallet-->
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/addWalletLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            app:cmv_arrowPosition="right"
+            app:cmv_backgroundColor="#fff"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/addWalletMsgText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:elevation="2dp"
+                    android:padding="10dp"
+                    android:textColor="#000"
+                    android:textSize="18dp" />
+                <Button
+                    android:id="@+id/addWalletBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add Money"
+                    android:backgroundTint="@color/green"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="5dp"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/addwalletDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="11:00 AM"
+                        android:textColor="#000000"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
+
+        <!--Todo:- Payment-->
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/paymentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            app:cmv_arrowPosition="right"
+            app:cmv_backgroundColor="#fff"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:elevation="2dp"
+                    android:padding="10dp"
+                    android:text="Please make a payment"
+                    android:textColor="#000"
+                    android:textSize="18dp" />
+                <Button
+                    android:id="@+id/paymentBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pay"
+                    android:backgroundTint="@color/green"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="5dp"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/paymentDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="11:00 AM"
+                        android:textColor="#000000"
+                        android:textSize="10sp" />
+                </LinearLayout>
             </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>
     </LinearLayout>

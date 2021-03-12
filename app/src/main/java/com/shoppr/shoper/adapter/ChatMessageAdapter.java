@@ -54,9 +54,12 @@ import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.StorelistingActivity;
+import com.shoppr.shoper.activity.AddMoneyActivity;
 import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.activity.ShareLocationActivity;
 import com.shoppr.shoper.activity.TrackLoactionActivity;
+import com.shoppr.shoper.activity.ViewCartActivity;
+import com.shoppr.shoper.activity.WalletActivity;
 import com.shoppr.shoper.requestdata.RatingsRequest;
 import com.shoppr.shoper.requestdata.ShareLocationRequest;
 import com.shoppr.shoper.requestdata.TextTypeRequest;
@@ -207,11 +210,54 @@ import static android.os.FileUtils.copy;
        }
 
        if (chat.getType().equalsIgnoreCase("track")){
+           holder.trackLocationLayout.setVisibility(View.VISIBLE);
            holder.trackLocationText.setText(chat.getMessage());
-       }else {
-           holder.trackLocationLayout.setVisibility(View.GONE);
+           holder.trackLocationText.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   String chat_id= String.valueOf(chat.getChatId());
+                   context.startActivity(new Intent(context, TrackLoactionActivity.class)
+                           .putExtra("chatId",chat_id));
+               }
+           });
        }
 
+       if (chat.getType().equalsIgnoreCase("add-money")){
+           holder.addWalletLayout.setVisibility(View.VISIBLE);
+           holder.addWalletMsgText.setText(chat.getMessage());
+           holder.addwalletDate.setText(chat.getCreatedAt());
+           /*Todo:-Add Wallet Listener*/
+           holder.addWalletBtn.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   String chat_id= String.valueOf(chat.getChatId());
+                   //Log.d("chatIDDD",""+chat_id);
+                   context.startActivity(new Intent(context, AddMoneyActivity.class)
+                   .putExtra("chat_id",chat_id)
+                   .putExtra("value","1"));
+               }
+           });
+       }
+       if (chat.getType().equalsIgnoreCase("recharge")){
+           holder.rechargeLayout.setVisibility(View.VISIBLE);
+           holder.rechargeMsgText.setText(chat.getMessage());
+           holder.rechargeDateText.setText(chat.getCreatedAt());
+       }
+
+       if (chat.getType().equalsIgnoreCase("payment")){
+           holder.paymentLayout.setVisibility(View.VISIBLE);
+           holder.paymentDate.setText(chat.getCreatedAt());
+           holder.paymentBtn.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   String chat_id= String.valueOf(chat.getChatId());
+                   Log.d("ChatIDDD",chat_id);
+                   context.startActivity(new Intent(context, ViewCartActivity.class)
+                   .putExtra("valueId","2")
+                   .putExtra("chat_id",chat_id));
+               }
+           });
+       }
 
        /*Todo:- Visibility Concept*/
        if (chat.getStatus().equalsIgnoreCase("accepted")){
@@ -368,13 +414,7 @@ import static android.os.FileUtils.copy;
             }
         });
 
-        holder.trackLocationText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startActivity(new Intent(context, TrackLoactionActivity.class)
-                        .putExtra("chatId",chat.getChatId()));
-            }
-        });
+
 
         /*Todo:-   Zoom Image*/
         holder.locationImage.setOnClickListener(new View.OnClickListener() {
@@ -474,10 +514,10 @@ import static android.os.FileUtils.copy;
                                     //Log.d("response",response.body().getStatus());
                                     if (response.body()!=null) {
                                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                            //ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(context,chatList);
-                                            //chatMessageAdapter.refreshEvents(chatList);
                                             Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
+                                            context.startActivity(new Intent(context,ChatActivity.class)
+                                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                         }else {
                                             Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
@@ -560,7 +600,21 @@ import static android.os.FileUtils.copy;
 
          /*Todo:- Track Location*/
          ChatMessageView trackLocationLayout;
-         TextView trackLocationText;
+         Button trackLocationText;
+
+         /*Todo:- Add Wallet*/
+         ChatMessageView addWalletLayout;
+         TextView addWalletMsgText,addwalletDate;
+         Button addWalletBtn;
+
+         /*Todo:- Recharge*/
+         ChatMessageView rechargeLayout;
+         TextView rechargeMsgText,rechargeDateText;
+
+         /*Todo:- Payment*/
+         ChatMessageView paymentLayout;
+         Button paymentBtn;
+         TextView paymentDate;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -607,10 +661,21 @@ import static android.os.FileUtils.copy;
             /*Todo:- Track Location*/
             trackLocationLayout=itemView.findViewById(R.id.trackLocationLayout);
             trackLocationText=itemView.findViewById(R.id.trackLocationText);
+            /*Todo:- Add Wallet*/
+            addWalletLayout=itemView.findViewById(R.id.addWalletLayout);
+            addWalletMsgText=itemView.findViewById(R.id.addWalletMsgText);
+            addwalletDate=itemView.findViewById(R.id.addwalletDate);
+            addWalletBtn=itemView.findViewById(R.id.addWalletBtn);
+            /*Todo:- Recharge*/
+            rechargeLayout=itemView.findViewById(R.id.rechargeLayout);
+            rechargeMsgText=itemView.findViewById(R.id.rechargeMsgText);
+            rechargeDateText=itemView.findViewById(R.id.rechargeDateText);
+            /*Todo:- Payment*/
+            paymentLayout=itemView.findViewById(R.id.paymentLayout);
+            paymentBtn=itemView.findViewById(R.id.paymentBtn);
+            paymentDate=itemView.findViewById(R.id.paymentDate);
 
         }
-
-
      }
      public void recycle() {
          unregisterNotifications();

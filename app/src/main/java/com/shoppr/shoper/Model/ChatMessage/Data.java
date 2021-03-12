@@ -12,6 +12,9 @@ public class Data {
     @SerializedName("chat_id")
     @Expose
     private String chatId;
+    @SerializedName("items_count")
+    @Expose
+    private String items_count;
     @SerializedName("shoppr")
     @Expose
     private Shoppr shoppr;
@@ -37,5 +40,13 @@ public class Data {
 
     public void setShoppr(Shoppr shoppr) {
         this.shoppr = shoppr;
+    }
+
+    public String getItems_count() {
+        return items_count;
+    }
+
+    public void setItems_count(String items_count) {
+        this.items_count = items_count;
     }
 }

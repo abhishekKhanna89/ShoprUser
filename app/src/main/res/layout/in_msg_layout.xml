@@ -15,7 +15,7 @@
             android:id="@+id/imageLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="5dp"
             app:cmv_arrowPosition="left"
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text="Location"
-                    android:textColor="#000000" />
+                    android:textColor="#fff" />
 
                 <TextView
                     android:id="@+id/dateImage"
@@ -46,7 +46,7 @@
                     android:layout_gravity="end"
                     android:padding="5dp"
                     android:text="11:00 AM"
-                    android:textColor="#000000"
+                    android:textColor="#fff"
                     android:textSize="10sp" />
             </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>
@@ -55,7 +55,7 @@
             android:id="@+id/textLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:layout_margin="5dp"
@@ -74,7 +74,7 @@
                 android:layout_gravity="end"
                 android:elevation="2dp"
                 android:padding="10dp"
-                android:textColor="#000"
+                android:textColor="#fff"
                 android:textSize="18dp" />
 
             <TextView
@@ -84,7 +84,7 @@
                 android:layout_gravity="end"
                 android:padding="5dp"
                 android:text="11:00 AM"
-                android:textColor="#000000"
+                android:textColor="#fff"
                 android:textSize="10sp" />
         </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>
@@ -93,7 +93,7 @@
             android:id="@+id/productLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:layout_margin="5dp"
@@ -137,7 +137,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Added to\nshoping bag"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -169,11 +169,10 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text="Location"
-                    android:textColor="#000000" />
+                    android:textColor="#fff" />
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="#fff"
                     android:orientation="horizontal"
                     android:padding="5dip">
 
@@ -182,10 +181,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:lines="1"
+                        android:lines="2"
+                        android:gravity="center"
+                        android:background="@drawable/eddittext"
                         android:text="5/₹ 500"
                         android:layout_marginRight="5dp"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/white" />
 
                     <TextView
                         android:id="@+id/acceptText"
@@ -194,6 +195,7 @@
                         android:layout_weight="1"
                         android:gravity="center_horizontal"
                         android:lines="1"
+                        android:background="@drawable/rounded_edit"
                         android:text="Accept"
                         android:textColor="@color/green"
                         android:textStyle="bold" />
@@ -204,6 +206,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:lines="1"
+                        android:background="@drawable/rounded_edit"
                         android:text="Reject"
                         android:layout_weight="1" android:textColor="@android:color/holo_red_dark"
                         android:textStyle="bold" />
@@ -214,6 +217,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:lines="1"
+                        android:background="@drawable/rounded_edit"
                         android:text="Cancel"
                         android:textColor="#C9A1A1A1"
                         android:textStyle="bold"
@@ -280,7 +284,7 @@
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="11:00 AM"
-                        android:textColor="#000000"
+                        android:textColor="#fff"
                         android:textSize="10sp" />
                 </LinearLayout>
 
@@ -292,7 +296,7 @@
             android:id="@+id/ratingLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:layout_margin="5dp"
@@ -310,14 +314,14 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="Location"
-                android:textColor="#000000" />
+                android:textColor="#fff" />
 
             <androidx.appcompat.widget.AppCompatRatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:numStars="5"
-                android:progressTint="@color/black"
+                android:progressTint="@color/white"
                 android:secondaryProgressTint="@android:color/transparent"
                 android:stepSize="1" />
 
@@ -328,7 +332,7 @@
                 android:layout_gravity="start"
                 android:padding="5dp"
                 android:text="11:00 AM"
-                android:textColor="#000000"
+                android:textColor="#fff"
                 android:textSize="10sp" />
         </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>
@@ -345,15 +349,14 @@
             app:playPauseBackgroundColor="#ff7700"
             app:playPauseCornerRadius="100"
             app:playProgressbarColor="#ff7700"
-            app:progressTimeColor="#000"
-            app:seekBarProgressColor="#000"
+            app:progressTimeColor="#fff"
+            app:seekBarProgressColor="#fff"
             app:seekBarThumbColor="#FFC107"
             app:shareCornerRadius="100"
             app:showShareButton="false"
             app:showTiming="true"
-
-            app:timingBackgroundColor="#6AFF7700"
-            app:viewBackground="#C6C4CF"
+            app:timingBackgroundColor="#003535"
+            app:viewBackground="@color/call_type"
             app:viewCornerRadius="100"
             app:visualizationNotPlayedColor="#727171"
             app:visualizationPlayedColor="#ff7700" />
@@ -364,7 +367,7 @@
             android:id="@+id/mapLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:layout_margin="5dp"
@@ -389,7 +392,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="Location"
-                android:textColor="#000000" />
+                android:textColor="#fff" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -405,7 +408,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="11:00 AM"
-                    android:textColor="#000000"
+                    android:textColor="#fff"
                     android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
@@ -415,7 +418,7 @@
             android:id="@+id/addressLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:layout_margin="5dp"
@@ -434,7 +437,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="Please share your delivery address\nAnd share the location on the map."
-                android:textColor="#000000"
+                android:textColor="#fff"
                 android:textSize="16sp" />
 
             <TextView
@@ -443,7 +446,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="@string/your_string_here"
-                android:textColor="@android:color/holo_blue_dark"
+                android:textColor="@color/blue"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -460,7 +463,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="11:00 AM"
-                    android:textColor="#000000"
+                    android:textColor="#fff"
                     android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
@@ -470,9 +473,10 @@
             android:id="@+id/trackLocationLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cmv_backgroundColor="#e0ffc6"
+            app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
+            android:visibility="gone"
             android:layout_margin="5dp"
             app:cmv_arrowPosition="left"
             android:layout_gravity="end">
@@ -482,17 +486,56 @@
             android:layout_gravity="end"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/trackLocationText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="top|left"
+            <!--android:gravity="top|left"
                 android:lines="3"
-                android:padding="10dp"
-                android:text="Please share your delivery address\nAnd share the location on the map."
-                android:textColor="@android:color/holo_blue_dark"
+                android:padding="10dp"-->
+            <Button
+                android:id="@+id/trackLocationText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/teal_200"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
+        <!--Todo:- Recharge-->
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/rechargeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cmv_backgroundColor="@color/call_type"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:visibility="gone"
+            android:layout_margin="5dp"
+            app:cmv_arrowPosition="left"
+            android:layout_gravity="end">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/rechargeMsgText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:elevation="2dp"
+                    android:padding="10dp"
+                    android:textColor="#fff"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/rechargeDateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:padding="5dp"
+                    android:text="11:00 AM"
+                    android:textColor="#fff"
+                    android:textSize="10sp" />
+            </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>
     </LinearLayout>
 </ScrollView>

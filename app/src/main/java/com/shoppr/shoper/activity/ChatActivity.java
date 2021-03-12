@@ -1,5 +1,6 @@
 package com.shoppr.shoper.activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -28,6 +29,7 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -70,6 +72,7 @@ import com.shoppr.shoper.Model.StartChat.StartChatModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.call.CallService;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
+import com.shoppr.shoper.SendBird.utils.ToastUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.Service.ApiService;
 import com.shoppr.shoper.adapter.ChatAppMsgAdapter;
@@ -107,6 +110,13 @@ import static android.media.MediaRecorder.VideoSource.CAMERA;
 import static java.lang.Integer.parseInt;
 
 public class ChatActivity extends AppCompatActivity {
+
+    private static final String[] MANDATORY_PERMISSIONS = {
+            Manifest.permission.RECORD_AUDIO,   // for VoiceCall and VideoCall
+            Manifest.permission.CAMERA          // for VideoCall
+    };
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+
     boolean flag=false;
     public static int chat_id, chatid;
     RecyclerView chatRecyclerView;
@@ -147,6 +157,7 @@ public class ChatActivity extends AppCompatActivity {
      //String TAG="lakshmi";
 
     BottomSheetDialog bottomSheetDialog;
+    TextView cart_badge;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,7 +166,7 @@ public class ChatActivity extends AppCompatActivity {
         sessonManager = new SessonManager(this);
 
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
-
+        checkPermissions1();
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView);
         chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
@@ -201,8 +212,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
 
-
-        //Log.d("ChatIdForTesting","" +chat_id);
+        Log.d("ChatIdForTesting","" +chat_id);
         /*Todo:- UserDP*/
         userDp=findViewById(R.id.userDp);
         userName=findViewById(R.id.userName);
@@ -213,6 +223,10 @@ public class ChatActivity extends AppCompatActivity {
 
         /*Todo:- Voice Recorder*/
         timer = findViewById(R.id.record_timer);
+
+        /*Todo:- Cart Count View*/
+        cart_badge=findViewById(R.id.cart_badge);
+
 
 
         chooseImage.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +241,6 @@ public class ChatActivity extends AppCompatActivity {
         mMessageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
 
                // chat_id=intent.getIntExtra("findingchatid",0);
 
@@ -362,6 +375,23 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    private void checkPermissions1() {
+        ArrayList<String> deniedPermissions = new ArrayList<>();
+        for (String permission : MANDATORY_PERMISSIONS) {
+            if (checkCallingOrSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                deniedPermissions.add(permission);
+            }
+        }
+
+        if (deniedPermissions.size() > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(deniedPermissions.toArray(new String[0]), REQUEST_PERMISSIONS_REQUEST_CODE);
+            } else {
+                ToastUtils.showToast(this, "Permission denied.");
+            }
+        }
+    }
+
 
     private void startDialog() {
         AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
@@ -419,6 +449,13 @@ public class ChatActivity extends AppCompatActivity {
                             ChatMessageModel chatMessageModel=response.body();
                             if (chatMessageModel.getData()!=null){
                                 chatList=chatMessageModel.getData().getChats();
+                                String cartCount=chatMessageModel.getData().getItems_count();
+                                if (cartCount.equalsIgnoreCase("0")){
+                                    cart_badge.setVisibility(View.GONE);
+                                }else {
+                                    cart_badge.setVisibility(View.VISIBLE);
+                                    cart_badge.setText(cartCount);
+                                }
                                 Picasso.get().load(chatMessageModel.getData().getShoppr().getImage()).into(userDp);
                                 userName.setText(chatMessageModel.getData().getShoppr().getName());
                                 ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
@@ -448,11 +485,12 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
-    public boolean onCreateOptionsMenu(Menu menu) {
+   /* public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_cart, menu);
         return true;
-    }
+    }*/
+
 
 
 
@@ -913,6 +951,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         chatMessageList(chat_id);
+        //Toast.makeText(this, "Restart", Toast.LENGTH_SHORT).show();
         //ChatActivity.this.finish();
     }
 
@@ -927,6 +966,7 @@ public class ChatActivity extends AppCompatActivity {
 
     public void MyCart(View view) {
         startActivity(new Intent(ChatActivity.this,ViewCartActivity.class)
+                .putExtra("valueId","1")
                 .putExtra("chat_id",chat_id)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
@@ -1008,5 +1048,32 @@ public class ChatActivity extends AppCompatActivity {
         }else {
             CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
         }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            boolean allowed = true;
+
+            for (int result : grantResults) {
+                allowed = allowed && (result == PackageManager.PERMISSION_GRANTED);
+            }
+
+            if (!allowed) {
+                ToastUtils.showToast(this, "Permission denied.");
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        chatMessageList(chat_id);
+        //Toast.makeText(this, "Resume", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //Toast.makeText(this, "Start", Toast.LENGTH_SHORT).show();
     }
 }

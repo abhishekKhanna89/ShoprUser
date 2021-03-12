@@ -70,7 +70,9 @@ public class MyAccount extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(MyAccount.this,AddMoneyActivity.class);
+                intent.putExtra("value","2");
                 startActivity(intent);
+
             }
         });
         logoutLayout.setOnClickListener(new View.OnClickListener() {
