@@ -52,6 +52,7 @@ import com.shoppr.shoper.Model.RejectedModel;
 import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.StorelistingActivity;
 import com.shoppr.shoper.activity.AddMoneyActivity;
@@ -308,8 +309,6 @@ import static android.os.FileUtils.copy;
                                        holder.acceptText.setVisibility(View.GONE);
                                    }
                                    Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                               }else {
-                                   Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                }
                            }
                        }
@@ -420,13 +419,10 @@ import static android.os.FileUtils.copy;
         holder.locationImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Uri gmmIntentUri = Uri.parse("geo:0,0?q="+chat.getLat()+","+chat.getLang());
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 context.startActivity(mapIntent);
-
-
             }
         });
 

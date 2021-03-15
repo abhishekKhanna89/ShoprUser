@@ -6,6 +6,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     tools:context=".MapsActivity">
+    <LinearLayout
+        android:id="@+id/mainPage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical">
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -313,213 +319,10 @@
                     android:textColor="@color/white" />
             </LinearLayout>
         </RelativeLayout>
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:background="@drawable/round"/>
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:background="@drawable/round"/>
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:background="@drawable/round"/>
-        </LinearLayout>-->
-
-        <!--<androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="match_parent">
-
-
-
-
-            &lt;!&ndash;<LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="chats"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="20sp"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.254">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>&ndash;&gt;
-
-           &lt;!&ndash; <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingLeft="0dp"
-                android:layout_marginBottom="30dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="180dp"
-                    android:onClick="chats"
-                    android:backgroundTint="@color/colorDarkBlue"
-                    app:cardCornerRadius="15sp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/monster"
-                            android:gravity="center_horizontal"
-                            android:lineSpacingExtra="7sp"
-                            android:text="Upload Shopping List"
-                            android:textColor="#fff"
-                            android:textSize="26sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_below="@+id/textshpng"
-                            android:background="@drawable/ic_shoppingcart" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>&ndash;&gt;
-
-
-         &lt;!&ndash;   <LinearLayout
-                android:id="@+id/LL"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_weight="1"
-                android:layout_marginLeft="30sp"
-                android:layout_marginBottom="30dp"
-                android:background="@color/colorDarkBlue"
-                android:orientation="horizontal"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-
-                    android:background="@drawable/eddittext"
-                    android:gravity="center"
-                    android:onClick="NotificationList"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_notifications" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="Notification"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearstorelist"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@drawable/eddittext"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_list" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="Store List"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-            </LinearLayout>&ndash;&gt;
-
-        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-        <!-- <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="10dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="5dp"
-            app:cardMaxElevation="5dp">
-
-
-        </androidx.cardview.widget.CardView>-->
-
-
-       <!-- <LinearLayout
-            android:id="@+id/lqq"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_weight="50"
-            android:layout_marginTop="100dp"
-            android:orientation="vertical"
-            android:layout_above="@+id/LL"
-            android:background="@color/textColor">
-
-        </LinearLayout>-->
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-   <!-- <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </fragment>-->
+    </LinearLayout>
+    <include
+        layout="@layout/layout_service_not_avialable"/>
 </LinearLayout>
 

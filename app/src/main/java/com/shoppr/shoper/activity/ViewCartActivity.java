@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
+import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.CartCancel.CartCancelModel;
 import com.shoppr.shoper.Model.CartView.CartViewModel;
@@ -35,6 +36,7 @@ import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
 import com.shoppr.shoper.Model.PaymentSuccess.PaymentSuccessModel;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.InitiatePaymentRequest;
 import com.shoppr.shoper.requestdata.PaymentSuccessRequest;
@@ -278,6 +280,12 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                                 myCartAdapter.notifyDataSetChanged();
 
                             }
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(ViewCartActivity.this, "");
+                            Toast.makeText(ViewCartActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(ViewCartActivity.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
                 }

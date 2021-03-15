@@ -11,12 +11,14 @@ import com.shoppr.shoper.Model.CartCancel.CartCancelModel;
 import com.shoppr.shoper.Model.CartView.CartViewModel;
 import com.shoppr.shoper.Model.ChatList.ChatListModel;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
+import com.shoppr.shoper.Model.CheckLocation.CheckLocationModel;
 import com.shoppr.shoper.Model.CustomerBalancceModel;
 import com.shoppr.shoper.Model.GetRegisterMerchant.GetRegisterMerchantModel;
 import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
 import com.shoppr.shoper.Model.InitiateVideoCall.InitiateVideoCallModel;
 import com.shoppr.shoper.Model.LoginModel;
+import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.NotificationList.NotificationListModel;
 import com.shoppr.shoper.Model.OrderDetails.OrderDetailsModel;
@@ -45,6 +47,7 @@ import com.shoppr.shoper.requestdata.ShareLocationRequest;
 import com.shoppr.shoper.requestdata.TextTypeRequest;
 import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -225,5 +228,12 @@ public interface ApiService {
     Call<AutoAssignModel>apiAutoAssign(@Header("Authorization") String token,
                                        @Path("chat_id")int chat_id);
 
+
+    @POST("check-availability")
+    Call<CheckLocationModel>apiCheckLocation(@Header("Authorization") String token, @Query("location")ArrayList<String>location);
+
+    @NonNull
+    @GET("logout")
+    Call<LogoutModel>apiLogoutStatus(@Header("Authorization") String token);
 
 }

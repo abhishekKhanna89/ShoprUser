@@ -1,7 +1,9 @@
 package com.shoppr.shoper.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,8 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shoppr.shoper.LoginActivity;
+import com.shoppr.shoper.MapsActivity;
+import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
@@ -78,11 +83,41 @@ public class MyAccount extends AppCompatActivity {
         logoutLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sessonManager.setToken("");
-                Toast.makeText(MyAccount.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(MyAccount.this,LoginActivity.class));
-                finishAffinity();
+                new AlertDialog.Builder(MyAccount.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Call<LogoutModel>call=ApiExecutor.getApiService(MyAccount.this)
+                                        .apiLogoutStatus("Bearer "+sessonManager.getToken());
+                                call.enqueue(new Callback<LogoutModel>() {
+                                    @Override
+                                    public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                                        if (response.body()!=null) {
+                                            if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                                sessonManager.setToken("");
+                                                PrefUtils.setAppId(MyAccount.this, "");
+                                                Toast.makeText(MyAccount.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                                startActivity(new Intent(MyAccount.this, LoginActivity.class));
+                                                finishAffinity();
 
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<LogoutModel> call, Throwable t) {
+
+                                    }
+                                });
+                            }
+
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
             }
         });
         myProfile();
@@ -109,6 +144,12 @@ public class MyAccount extends AppCompatActivity {
                                 walletAmountText.setText("₹ "+String.valueOf(myProfileModel.getData().getBalance()));
                                 sessonManager.setMobileNo(myProfileModel.getData().getMobile());
                             }
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(MyAccount.this, "");
+                            Toast.makeText(MyAccount.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(MyAccount.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
                 }

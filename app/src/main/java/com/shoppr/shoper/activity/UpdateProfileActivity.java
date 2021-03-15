@@ -34,10 +34,12 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.Model.UpdateProfileModel;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.Service.ApiService;
 import com.shoppr.shoper.requestdata.UpdateProfileRequest;
@@ -152,6 +154,12 @@ public class UpdateProfileActivity extends AppCompatActivity {
                                 editEmail.setText(myProfileModel.getData().getEmail());
                                 //sessonManager.setMobileNo(myProfileModel.getData().getMobile());
                             }
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(UpdateProfileActivity.this, "");
+                            Toast.makeText(UpdateProfileActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(UpdateProfileActivity.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
                 }

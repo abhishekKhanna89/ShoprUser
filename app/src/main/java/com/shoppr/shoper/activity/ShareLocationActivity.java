@@ -2,6 +2,7 @@ package com.shoppr.shoper.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -20,6 +21,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -28,6 +30,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +63,8 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.gson.Gson;
+import com.shoppr.shoper.MapsActivity;
+import com.shoppr.shoper.Model.CheckLocation.CheckLocationModel;
 import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
@@ -65,6 +72,7 @@ import com.shoppr.shoper.requestdata.ShareLocationRequest;
 import com.shoppr.shoper.requestdata.TextTypeRequest;
 import com.shoppr.shoper.util.CheckNetwork;
 import com.shoppr.shoper.util.CommonUtils;
+import com.shoppr.shoper.util.Progressbar;
 import com.shoppr.shoper.util.SessonManager;
 
 import org.json.JSONArray;
@@ -89,6 +97,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
     AutoCompleteTextView autoCompleteTextViewLoaction;
     Button addBTN;
     LatLng getlatLng;
+    Progressbar progressbar;
     Marker marker;
     Location currentLocation;
     String latitude, longitude, location_address;
@@ -101,6 +110,8 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
     private FusedLocationProviderClient mFusedLocationProviderClient;
     ArrayAdapter<String> arrayAdapter_stateLocation;
     ArrayList<String> arrListLocation = new ArrayList<>();
+    ArrayList<String> listTermsLocation = new ArrayList<>();
+
     ImageView imgClose;
     String locality, subLocality;
     SessonManager sessonManager;
@@ -108,6 +119,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
     /*Todo:- Address Details*/
     TextView boldAddressText, smallAddressText;
     EditText house_detailsEt, landMarkEt;
+    LinearLayout second;
 
     private TextWatcher mTextWatcher = new TextWatcher() {
         @Override
@@ -136,16 +148,23 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    LinearLayout main;
+    TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_location);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager = new SessonManager(this);
+        progressbar = new Progressbar();
         addBTN = findViewById(R.id.btn_map_address);
         imgClose = findViewById(R.id.imgClose);
         chat_id = getIntent().getIntExtra("chatId", 0);
 
         autoCompleteTextViewLoaction = findViewById(R.id.AutoComplte_tv_home);
+
+
 
         /*Todo:- Find Address Details*/
         boldAddressText = findViewById(R.id.boldAddressText);
@@ -156,20 +175,20 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         house_detailsEt.addTextChangedListener(mTextWatcher);
         landMarkEt.addTextChangedListener(mTextWatcher);
 
+        main=findViewById(R.id.main);
+        second=findViewById(R.id.second);
+        textView=findViewById(R.id.textView);
         // run once to disable if empty
         checkFieldsForEmptyValues();
-/*
-        String houseDetails=house_detailsEt.getText().toString();
-        String langMark=landMarkEt.getText().toString();
-        if(houseDetails.equals("")|| langMark.equals("")){
-            addBTN.setEnabled(false);
-        } else {
-            addBTN.setEnabled(true);
-        }*/
+
+
+
+
 
         addBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 location_address= autoCompleteTextViewLoaction.getText().toString();
 
                 if (CommonUtils.isOnline(ShareLocationActivity.this)) {
@@ -323,6 +342,57 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
             String second = separated[1];
             boldAddressText.setText(second);
             smallAddressText.setText(location_address);
+            String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + location_address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+            StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    progressbar.hideProgress();
+                    Log.d("EditLocationResponse",response);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject searchObj = jsonArray.getJSONObject(i);
+                            listTermsLocation.add(searchObj.getString("terms"));
+                            Call<CheckLocationModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(),listTermsLocation);
+                            call.enqueue(new Callback<CheckLocationModel>() {
+                                @Override
+                                public void onResponse(Call<CheckLocationModel> call, retrofit2.Response<CheckLocationModel> response) {
+                                    CheckLocationModel checkLocationModel=response.body();
+                                    if (checkLocationModel.getStatus()!=null&&checkLocationModel.getStatus().equalsIgnoreCase("success")){
+                                        textView.setVisibility(View.GONE);
+                                        main.setVisibility(View.VISIBLE);
+
+                                    }else {
+                                        progressbar.hideProgress();
+                                        textView.setVisibility(View.VISIBLE);
+                                        main.setVisibility(View.GONE);
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<CheckLocationModel> call, Throwable t) {
+
+                                }
+                            });
+                            break;
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    progressbar.hideProgress();
+                }
+            });
+            RequestQueue requestQueue= Volley.newRequestQueue(ShareLocationActivity.this);
+            requestQueue.add(stringRequest);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -372,7 +442,6 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onResponse(String response) {
                 //Log.d("ResponseSearch", response);
-
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("predictions");
@@ -393,13 +462,16 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     arrayAdapter_stateLocation = new ArrayAdapter<String>(getApplicationContext(), R.layout.search_item, R.id.txt_search_place, arrListLocation);
                     autoCompleteTextViewLoaction.setAdapter(arrayAdapter_stateLocation);//setting the adapter data into the AutoCompleteTextView
                     arrayAdapter_stateLocation.notifyDataSetChanged();
+
                 } catch (Exception e) {
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 arrListLocation.clear();
+                listTermsLocation.clear();
             }
         }) {
         };
@@ -463,6 +535,60 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                                 Address address = list.get(0);
                                 String localitys = address.getLocality();
                                 location_address = address.getAddressLine(0);
+                                String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + location_address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+                                StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        progressbar.hideProgress();
+                                        Log.d("EditLocationResponse",response);
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(response);
+                                            JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                                            for (int i = 0; i < jsonArray.length(); i++) {
+                                                JSONObject searchObj = jsonArray.getJSONObject(i);
+                                                listTermsLocation.add(searchObj.getString("terms"));
+                                                Call<CheckLocationModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
+                                                        .apiCheckLocation("Bearer " + sessonManager.getToken(),listTermsLocation);
+                                                call.enqueue(new Callback<CheckLocationModel>() {
+                                                    @Override
+                                                    public void onResponse(Call<CheckLocationModel> call, retrofit2.Response<CheckLocationModel> response) {
+                                                        CheckLocationModel checkLocationModel=response.body();
+                                                        if (checkLocationModel.getStatus()!=null&&checkLocationModel.getStatus().equalsIgnoreCase("success")){
+                                                            //Toast.makeText(ShareLocationActivity.this, checkLocationModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            textView.setVisibility(View.GONE);
+                                                            main.setVisibility(View.VISIBLE);
+                                                        }else {
+                                                            progressbar.hideProgress();
+                                                            textView.setVisibility(View.VISIBLE);
+                                                            main.setVisibility(View.GONE);
+                                                        }
+
+
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<CheckLocationModel> call, Throwable t) {
+
+                                                    }
+                                                });
+                                                break;
+                                            }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }, new com.android.volley.Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        progressbar.hideProgress();
+                                    }
+                                });
+                                RequestQueue requestQueue= Volley.newRequestQueue(ShareLocationActivity.this);
+                                requestQueue.add(stringRequest);
+
+
+
 
                                 String[] separated = location_address.split(",");
                                 String second = separated[1];
@@ -474,6 +600,8 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                                 autoCompleteTextViewLoaction.setText(address.getAddressLine(0));
                                 boldAddressText.setText(second);
                                 smallAddressText.setText(location_address);
+
+
                                 LatLng latLng = new LatLng(Double.parseDouble(latitude), (Double.parseDouble(longitude)));
                                 //Log.d("cheklatlong", String.valueOf(latLng));
                                 mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title(localitys));
@@ -505,5 +633,13 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         // .strokeWidth()
         return mMap.addCircle(circleOptions);
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id==android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -28,6 +28,7 @@ import com.shoppr.shoper.Model.Recharge.RechargeModel;
 import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.OtpActivity;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.RechargeRequest;
 import com.shoppr.shoper.requestdata.VerifyRechargeRequest;
@@ -216,6 +217,12 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
                             CustomerBalancceModel customerBalancceModel=response.body();
                             if (customerBalancceModel.getData()!=null){
                                 customerBalance.setText(String.valueOf("₹ "+customerBalancceModel.getData()));
+                            }else {
+                                sessonManager.setToken("");
+                                PrefUtils.setAppId(AddMoneyActivity.this, "");
+                                Toast.makeText(AddMoneyActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(AddMoneyActivity.this, LoginActivity.class));
+                                finishAffinity();
                             }
                         }
                     }

@@ -11,8 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.StorelistingActivity;
 import com.shoppr.shoper.adapter.SliderAdapter;
@@ -162,6 +165,12 @@ public class SotoreDetailsActivity extends AppCompatActivity {
                                 }
 
                             }
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(SotoreDetailsActivity.this, "");
+                            Toast.makeText(SotoreDetailsActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(SotoreDetailsActivity.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
 

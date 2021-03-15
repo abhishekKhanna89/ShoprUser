@@ -44,6 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.ChatModel;

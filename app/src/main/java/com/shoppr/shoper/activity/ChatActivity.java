@@ -63,6 +63,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.ChatModel;
@@ -465,6 +466,12 @@ public class ChatActivity extends AppCompatActivity {
                                 //chatRecyclerView.getLayoutManager().scrollToPosition(chatList.size()-1);
                                 chatMessageAdapter.notifyDataSetChanged();
                             }
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(ChatActivity.this, "");
+                            Toast.makeText(ChatActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(ChatActivity.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
                 }

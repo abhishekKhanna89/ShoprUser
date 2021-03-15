@@ -15,9 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.AutoAssign.AutoAssignModel;
 import com.shoppr.shoper.Model.StartChat.StartChatModel;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
@@ -111,6 +113,12 @@ public class FindingShopprActivity extends AppCompatActivity {
 
 
                             }
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(FindingShopprActivity.this, "");
+                            Toast.makeText(FindingShopprActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(FindingShopprActivity.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
                 }

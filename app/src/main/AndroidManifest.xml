@@ -80,7 +80,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ShareLocationActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label="Share Location"/>
         <activity
             android:name=".activity.ViewCartActivity"
             android:screenOrientation="portrait" />

@@ -34,13 +34,16 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.shoppr.shoper.Model.StoreList.Category;
 import com.shoppr.shoper.Model.StoreList.Store;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.activity.MyAccount;
 import com.shoppr.shoper.activity.SotoreDetailsActivity;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
@@ -132,6 +135,12 @@ public class StorelistingActivity extends AppCompatActivity {
 
                                 storeadapter.notifyDataSetChanged();
                             }
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(StorelistingActivity.this, "");
+                            Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
                 }
@@ -240,6 +249,12 @@ public class StorelistingActivity extends AppCompatActivity {
                                 filterRecycler.setAdapter(fullScreenAdapter);
                                 fullScreenAdapter.notifyDataSetChanged();
                             }
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(StorelistingActivity.this, "");
+                            Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
                 }

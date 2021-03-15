@@ -76,7 +76,7 @@ dependencies {
     implementation 'com.github.TecOrb-Developers:HRMarkerAnimation:fe6f64e75b'
     implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
     implementation 'com.github.stfalcon:chatkit:0.3.3'
-    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.android.volley:volley:1.2.0'
 
     implementation 'com.sendbird.sdk:sendbird-calls:1.4.0' // [Calls]
     implementation 'com.github.bumptech.glide:glide:4.11.0'

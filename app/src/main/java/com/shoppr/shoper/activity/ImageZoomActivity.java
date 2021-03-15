@@ -3,6 +3,7 @@ package com.shoppr.shoper.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -13,10 +14,13 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.adapter.SliderAdapter;
 import com.shoppr.shoper.util.CommonUtils;
@@ -84,6 +88,12 @@ public class ImageZoomActivity extends AppCompatActivity {
                             });
 
 
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(ImageZoomActivity.this, "");
+                            Toast.makeText(ImageZoomActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(ImageZoomActivity.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
 

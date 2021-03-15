@@ -49,6 +49,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.R;
@@ -320,7 +321,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //Log.d("ResponseSearch", response);
+                Log.d("ResponseSearch", response);
 
                 try {
                     JSONObject jsonObject = new JSONObject(response);
@@ -328,7 +329,9 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject searchObj = jsonArray.getJSONObject(i);
                         arrListLocation.add(searchObj.getString("description"));
-
+                       /* Gson gson=new Gson();
+                        String json=gson.toJson(arrListLocation);
+                        Log.d("resAddress2",json);*/
                     }
 
                     //location_address = arrListLocation.get(0);
@@ -410,11 +413,14 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                                 }
 
                                 Address address = list.get(0);
+
                                 String localitys = address.getLocality();
+                                //Log.d("locality",localitys);
                                 location_address = address.getAddressLine(0);
                                 locality = address.getLocality();
                                 subLocality = address.getSubLocality();
                                 autoCompleteTextViewLoaction.setText(address.getAddressLine(0));
+
                                 String[] separated = location_address.split(",");
                                 String second = separated[1];
                                 boldAddressText.setText(second);

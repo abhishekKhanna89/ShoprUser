@@ -15,10 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.ChatList.ChatListModel;
 import com.shoppr.shoper.Model.ChatList.Userchat;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
@@ -92,6 +95,12 @@ public class ChatHistoryActivity extends AppCompatActivity {
                                 ChatHistoryAdapter chatHistoryAdapter=new ChatHistoryAdapter(ChatHistoryActivity.this,chatsListModelList);
                                 recyclerChatHistory.setAdapter(chatHistoryAdapter);
                             }
+                        }else {
+                            sessonManager.setToken("");
+                            PrefUtils.setAppId(ChatHistoryActivity.this, "");
+                            Toast.makeText(ChatHistoryActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(ChatHistoryActivity.this, LoginActivity.class));
+                            finishAffinity();
                         }
                     }
                 }
