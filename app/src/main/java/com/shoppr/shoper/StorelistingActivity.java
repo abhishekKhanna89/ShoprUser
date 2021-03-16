@@ -136,12 +136,12 @@ public class StorelistingActivity extends AppCompatActivity {
                                 storeadapter.notifyDataSetChanged();
                             }
                         }else {
-                            Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                           /* sessonManager.setToken("");
+                            //Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            sessonManager.setToken("");
                             PrefUtils.setAppId(StorelistingActivity.this, "");
 
                             startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
-                            finishAffinity();*/
+                            finishAffinity();
                         }
                     }
                 }
