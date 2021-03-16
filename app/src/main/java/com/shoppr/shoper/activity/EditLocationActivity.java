@@ -97,8 +97,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     String merchant;
     /*Todo:- Address Details*/
     TextView boldAddressText, smallAddressText;
-
-
+    String locationAddress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,16 +117,18 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         addBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                location_address = autoCompleteTextViewLoaction.getText().toString();
+
+                //location_address = autoCompleteTextViewLoaction.getText().toString();
+                //Log.d("locality",location_address);
                 //Log.d("res",location_address);
                 if (merchant != null) {
                     Intent intent = new Intent();
-                    intent.putExtra("location_address", location_address);
+                    intent.putExtra("location_address", locationAddress);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
                     startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
-                            .putExtra("location_address", location_address)
+                            .putExtra("location_address", locationAddress)
                             .putExtra("value", "0")
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 }
@@ -202,13 +203,6 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                 }
             }
         }
-
-       /* if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            mLocationPermissionsGranted = true;
-            initMap();
-        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            getLocationPermission();
-        }*/
     }
 
 
@@ -222,12 +216,10 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
         try {
             //Get latLng from String
-            address = coder.getFromLocationName(strAddress, 5);
+            address = coder.getFromLocationName(strAddress, 1);
 
             //check for null
             if (address != null) {
-
-                //Lets take first possibility from the all possibilities.
                 try {
                     Address location = address.get(0);
                     latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -235,16 +227,9 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                     latitude = String.valueOf(latLng.latitude);
                     longitude = String.valueOf(latLng.longitude);
 
-                    //Log.d("asdaskjasd",latitude+"   "+longitude);
-                    //sharedPreferences.edit().putString("lat", ""+latitude).apply();
-                    //sharedPreferences.edit().putString("lng", ""+longitude).apply();
-
-                    //   mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    // mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                     mMap.addMarker(new MarkerOptions().position(latLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
 
-//                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
                     getAddress(latLng.latitude, latLng.longitude);
                 } catch (IndexOutOfBoundsException er) {
                     Toast.makeText(this, "Location isn't available", Toast.LENGTH_SHORT).show();
@@ -260,30 +245,24 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
     private void getAddress(double lat, double log) {
         Geocoder geocoder = new Geocoder(EditLocationActivity.this);
-
-        //  String addresses = String.valueOf(geocoder.getFromLocation(lat, log, 1));
-
-        List<Address> addressess = null;
+        List<Address> list = null;
         try {
-            addressess = geocoder.getFromLocation(lat, log, 1);
-            location_address = addressess.get(0).getAddressLine(0);
-            locality = addressess.get(0).getLocality();
-            subLocality = addressess.get(0).getSubLocality();
-            String[] separated = location_address.split(",");
-            String second = separated[1];
-            boldAddressText.setText(second);
-            smallAddressText.setText(location_address);
+            list = geocoder.getFromLocation(lat, log, 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // tv_location.setText(addresses.get(0).getAddressLine(0));
-        //Log.d("sasajksadsad",locality+"\n"+subLocality);
+        Address address = list.get(0);
 
+        String localitys = address.getLocality();
 
-        //  Log.d("sasajkdsxad",city);
-        //   Toast.makeText(getApplicationContext(), ""+addressess.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
+        location_address = address.getAddressLine(0);
+        String[] separated = location_address.split(",");
+        String second = separated[1];
+        boldAddressText.setText(second);
+        smallAddressText.setText(location_address);
 
+        locationAddress=smallAddressText.getText().toString();
     }
 
     private void getLocationPermission() {
@@ -417,6 +396,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                                 String localitys = address.getLocality();
                                 //Log.d("locality",localitys);
                                 location_address = address.getAddressLine(0);
+                                Log.d("locality",location_address);
                                 locality = address.getLocality();
                                 subLocality = address.getSubLocality();
                                 autoCompleteTextViewLoaction.setText(address.getAddressLine(0));

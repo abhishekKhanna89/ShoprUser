@@ -190,7 +190,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
             public void onClick(View view) {
 
                 location_address= autoCompleteTextViewLoaction.getText().toString();
-
+                //Log.d("locality",location_address);
                 if (CommonUtils.isOnline(ShareLocationActivity.this)) {
                     //sessonManager.showProgress(ChatActivity.this);
                     ShareLocationRequest shareLocationRequest=new ShareLocationRequest();
@@ -304,16 +304,9 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     latitude = String.valueOf(latLng.latitude);
                     longitude = String.valueOf(latLng.longitude);
 
-                    //Log.d("asdaskjasd",latitude+"   "+longitude);
-                    //sharedPreferences.edit().putString("lat", ""+latitude).apply();
-                    //sharedPreferences.edit().putString("lng", ""+longitude).apply();
-
-                    //   mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    // mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                     mMap.addMarker(new MarkerOptions().position(latLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
 
-//                    Log.d("asdaskjasd",latLng.latitude+"   "+latLng.longitude);
                     getAddress(latLng.latitude, latLng.longitude);
                 } catch (IndexOutOfBoundsException er) {
                     Toast.makeText(this, "Location isn't available", Toast.LENGTH_SHORT).show();
@@ -337,6 +330,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
             addressess = geocoder.getFromLocation(lat, log, 1);
             locality = addressess.get(0).getLocality();
             location_address = addressess.get(0).getAddressLine(0);
+            //Log.d("locality",location_address);
             subLocality = addressess.get(0).getSubLocality();
             String[] separated = location_address.split(",");
             String second = separated[1];
