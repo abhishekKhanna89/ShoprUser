@@ -210,7 +210,7 @@
             android:paddingHorizontal="10dp" />
         <ImageButton
             android:id="@+id/sendMsgBtn"
-            android:background="@drawable/record_btn_stopped"
+            android:background="@drawable/mic_mute"
             android:layout_width="50dp"
             android:layout_height="50dp"
            />

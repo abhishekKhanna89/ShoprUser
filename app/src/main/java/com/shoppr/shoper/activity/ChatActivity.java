@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,12 +22,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -42,22 +35,10 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,7 +50,6 @@ import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.ChatModel;
 import com.shoppr.shoper.Model.InitiateVideoCall.InitiateVideoCallModel;
 import com.shoppr.shoper.Model.Send.SendModel;
-import com.shoppr.shoper.Model.StartChat.StartChatModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.call.CallService;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
@@ -268,7 +248,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    sendMsgBtn.setBackgroundResource(R.drawable.record_btn_stopped);
+                    sendMsgBtn.setBackgroundResource(R.drawable.mic_mute);
                     stopRecording();
                     flag=false;
                 }
@@ -285,7 +265,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 0) {
-                    sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.record_btn_stopped));
+                    sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.mic_mute));
                     sendMsgBtn.setOnClickListener(new View.OnClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.Q)
                         @SuppressLint("UseCompatLoadingForDrawables")
@@ -301,7 +281,7 @@ public class ChatActivity extends AppCompatActivity {
                                 }
                             }
                             else {
-                                sendMsgBtn.setBackgroundResource(R.drawable.record_btn_stopped);
+                                sendMsgBtn.setBackgroundResource(R.drawable.mic_mute);
                                 stopRecording();
                                 flag=false;
                             }
