@@ -26,7 +26,7 @@ public class BaseApplication extends MultiDexApplication { // multidex
     public static final String TAG = "SendBirdCalls";
 
     // Refer to "https://github.com/sendbird/quickstart-calls-android".
-    public static final String APP_ID = "A6B4FD8D-4CC4-467B-AB87-8D4C113D41D0";
+    public static final String APP_ID = "CE02AC82-1E42-44C9-A255-26BA2220CA74";
 
     @Override
     public void onCreate() {

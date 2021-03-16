@@ -24,6 +24,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.shoppr.shoper.Model.LoginModel;
+import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.LoginRequest;
 import com.shoppr.shoper.util.ApiFactory;
@@ -115,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                                 finish();
                             }else {
                                 sessonManager.getToken();
+                                PrefUtils.getAppId(LoginActivity.this);
                                 //sessonManager.setToken(response.body().getToken());
                                 startActivity(new Intent(LoginActivity.this,MapsActivity.class)
                                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));

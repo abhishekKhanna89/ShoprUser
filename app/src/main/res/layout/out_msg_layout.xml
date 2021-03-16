@@ -95,7 +95,7 @@
         <!--Todo:- Product Type-->
         <me.himanshusoni.chatmessageview.ChatMessageView
             android:id="@+id/productLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="5dp"
@@ -105,13 +105,13 @@
             app:cmv_cornerRadius="3dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -175,105 +175,50 @@
                         android:padding="10dp"
                         android:text="Location"
                         android:textColor="#000000" />
-
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:background="#fff"
                         android:orientation="horizontal"
-                        android:padding="5dip">
-
-                        <TextView
-                            android:id="@+id/pqText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:lines="2"
-                            android:text="5/₹ 500"
-                            android:layout_marginRight="5dp"
-                            android:textColor="@android:color/black" />
-
-                        <TextView
-                            android:id="@+id/acceptText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:lines="1"
-                            android:text="Accept"
-                            android:background="@drawable/rounded_edit"
-                            android:textColor="@color/green"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/rejectText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="right"
-                            android:lines="1"
-                            android:background="@drawable/rounded_edit"
-                            android:text="Reject"
-                            android:layout_weight="1" android:textColor="@android:color/holo_red_dark"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/cancelText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:lines="1"
-                            android:background="@drawable/rounded_edit"
-                            android:text="Cancel"
-                            android:textColor="#C9A1A1A1"
-                            android:textStyle="bold"
-                            android:visibility="gone" />
-                    </LinearLayout>
-                    <!--<LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
                         android:gravity="center"
-                        android:layout_weight="3"
-                        android:background="@drawable/layout_bg">
+                        android:layout_marginTop="1dp"
+                        style="android:style/ButtonBar">
                         <TextView
                             android:id="@+id/pqText"
-                            android:layout_width="wrap_content"
+                            android:text="5/₹ 500"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
                             android:layout_weight="1"
-                            android:text="₹ 500 -5 kg"/>
-                        <TextView
+                            android:textColor="@android:color/black"
+                            android:layout_marginRight="5dp" />
+                        <Button
                             android:id="@+id/acceptText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="@color/green"
-                            android:textStyle="bold"
                             android:text="Accept"
-                            />
-                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="10sp"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:layout_marginRight="5dp"  />
+                        <Button
                             android:id="@+id/rejectText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="@android:color/holo_red_dark"
-                            android:textStyle="bold"
                             android:text="Reject"
-                            />
-                        <TextView
-                            android:id="@+id/cancelText"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:visibility="gone"
-                            android:gravity="center"
+                            android:textSize="10sp"
                             android:layout_marginRight="5dp"
-                            android:textColor="#C9A1A1A1"
-                            android:textStyle="bold"
+                            android:backgroundTint="@android:color/holo_red_dark"/>
+                        <Button
+                            android:id="@+id/cancelText"
                             android:text="Cancel"
-                            />
-                    </LinearLayout>-->
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="10sp"
+                            android:visibility="gone"
+                            android:layout_marginRight="5dp"
+                            android:backgroundTint="#C9A1A1A1"/>
+                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

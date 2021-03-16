@@ -575,7 +575,8 @@ import static android.os.FileUtils.copy;
          ChatMessageView textLayout;
         /*Todo:- Product*/
         ImageView productImage;
-        TextView pqText,dateProduct,productMessage,acceptText,rejectText,cancelText;
+        TextView pqText,dateProduct,productMessage;
+        Button acceptText,rejectText,cancelText;
          LinearLayout greenLayout,closeRedLayout;
          ChatMessageView productLayout;
         /*Todo:- Image*/
