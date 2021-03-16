@@ -36,6 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:text="Location"
                     android:textColor="#fff" />
 
@@ -45,6 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:padding="5dp"
+                    android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#fff"
                     android:textSize="10sp" />
@@ -73,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:elevation="2dp"
+                android:fontFamily="sans-serif"
                 android:padding="10dp"
                 android:textColor="#fff"
                 android:textSize="18dp" />
@@ -83,6 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:padding="5dp"
+                android:fontFamily="sans-serif"
                 android:text="11:00 AM"
                 android:textColor="#fff"
                 android:textSize="10sp" />
@@ -136,6 +140,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:fontFamily="sans-serif"
                             android:text="Added to\nshoping bag"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
@@ -168,6 +173,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:text="Location"
                     android:textColor="#fff" />
                 <LinearLayout
@@ -180,6 +186,7 @@
                     <TextView
                         android:id="@+id/pqText"
                         android:text="5/₹ 500"
+                        android:fontFamily="sans-serif"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -188,6 +195,7 @@
                     <Button
                         android:id="@+id/acceptText"
                         android:text="Accept"
+                        android:fontFamily="sans-serif"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
@@ -196,6 +204,7 @@
                     <Button
                         android:id="@+id/rejectText"
                         android:text="Reject"
+                        android:fontFamily="sans-serif"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
@@ -205,6 +214,7 @@
                     <Button
                         android:id="@+id/cancelText"
                         android:text="Cancel"
+                        android:fontFamily="sans-serif"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
@@ -227,6 +237,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
+                        android:fontFamily="sans-serif"
                         android:text="11:00 AM"
                         android:textColor="#fff"
                         android:textSize="10sp" />
@@ -257,6 +268,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:fontFamily="sans-serif"
                 android:text="Location"
                 android:textColor="#fff" />
 
@@ -275,6 +287,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:padding="5dp"
+                android:fontFamily="sans-serif"
                 android:text="11:00 AM"
                 android:textColor="#fff"
                 android:textSize="10sp" />
@@ -336,6 +349,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="Location"
+                android:fontFamily="sans-serif"
                 android:textColor="#fff" />
 
             <LinearLayout
@@ -351,6 +365,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#fff"
                     android:textSize="10sp" />
@@ -380,6 +395,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:fontFamily="sans-serif"
                 android:text="Please share your delivery address\nAnd share the location on the map."
                 android:textColor="#fff"
                 android:textSize="16sp" />
@@ -389,6 +405,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:fontFamily="sans-serif"
                 android:text="@string/your_string_here"
                 android:textColor="@color/blue"
                 android:textSize="16sp" />
@@ -406,6 +423,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#fff"
                     android:textSize="10sp" />
@@ -436,6 +454,7 @@
             <Button
                 android:id="@+id/trackLocationText"
                 android:layout_width="match_parent"
+                android:fontFamily="sans-serif"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/teal_200"
                 android:textColor="@color/white"
@@ -466,6 +485,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:elevation="2dp"
+                    android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:textColor="#fff"
                     android:textSize="18dp" />
@@ -476,6 +496,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:padding="5dp"
+                    android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#fff"
                     android:textSize="10sp" />

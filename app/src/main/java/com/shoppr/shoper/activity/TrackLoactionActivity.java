@@ -67,7 +67,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
     private GoogleMap mMap;
     private Marker marker;
     SessonManager sessonManager;
-    int messageId;
+    String messageId;
     public static  double lat,lang;
     LatLng sydney,india,aaa;
     private String serverKey = "AIzaSyCHl8Ff_ghqPjWqlT2BXJH5BOYH1q-sw0E";
@@ -83,7 +83,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
         setContentView(R.layout.activity_track_loaction);
         sessonManager=new SessonManager(this);
 
-        messageId=getIntent().getIntExtra("chatId",0);
+        messageId=getIntent().getStringExtra("chatId");
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -94,17 +94,18 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
     private void viewTrackLoaction() {
         if (CommonUtils.isOnline(TrackLoactionActivity.this)) {
             Call<TrackLoactionModel>call= ApiExecutor.getApiService(this)
-                    .apiTrackLocation("Bearer "+sessonManager.getToken(),messageId);
+                    .apiTrackLocation("Bearer "+sessonManager.getToken(), Integer.parseInt(messageId));
             call.enqueue(new Callback<TrackLoactionModel>() {
                 @Override
                 public void onResponse(Call<TrackLoactionModel> call, Response<TrackLoactionModel> response) {
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                            Toast.makeText(TrackLoactionActivity.this, response.body().getStatus(), Toast.LENGTH_SHORT).show();
                             TrackLoactionModel trackLoactionModel=response.body();
                             if (trackLoactionModel.getData().getShoppr()!=null){
                                  lat=trackLoactionModel.getData().getShoppr().getLat();
                                  lang=trackLoactionModel.getData().getShoppr().getLang();
-                                 //Log.d("LocationTracking",""+lat+"==="+lang);
+                                 Log.d("LocationTracking",""+lat+"==="+lang);
                                  india=new LatLng(lat,lang);
                                 int height =120;
                                 int width = 80;
@@ -117,6 +118,9 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                                  //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(india,12f));
                                  //mMap.setPadding(2000, 4000, 2000, 4000);
                             }
+                        }else
+                        {
+                            Toast.makeText(TrackLoactionActivity.this, response.body().getStatus(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

@@ -217,6 +217,7 @@ import static android.os.FileUtils.copy;
                @Override
                public void onClick(View v) {
                    String chat_id= String.valueOf(chat.getChatId());
+                   Log.d("resChatId",chat_id);
                    context.startActivity(new Intent(context, TrackLoactionActivity.class)
                            .putExtra("chatId",chat_id));
                }

@@ -149,13 +149,7 @@ public class ChatActivity extends AppCompatActivity {
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
         checkPermissions1();
 
-        chatRecyclerView = findViewById(R.id.chatRecyclerView);
-        chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-        chatRecyclerView.setHasFixedSize(true);
-        chatRecyclerView.setItemViewCacheSize(20);
-        chatRecyclerView.setDrawingCacheEnabled(true);
-        chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        chatRecyclerView.setNestedScrollingEnabled(false);
+
 
 
         Bundle extras = getIntent().getExtras();
@@ -165,32 +159,54 @@ public class ChatActivity extends AppCompatActivity {
            if (chat_status!=null&&chat_status.equalsIgnoreCase("1")){
                Log.d("hello",chat_status);
                chat_id = Integer.parseInt(extras.getString("findingchatid"));
-               chatMessageList(chat_id);
+               //chatMessageList(chat_id);
            }
 
            else if(chat_status!=null&&chat_status.equalsIgnoreCase("0")) {
 
                // Log.d("Chsgss", String.valueOf(chat_id));
                chat_id = getIntent().getIntExtra("findingchatid", 0);
-               chatMessageList(chat_id);
+               //chatMessageList(chat_id);
            }
 
            else if(chat_status!=null&&chat_status.equalsIgnoreCase("2")) {
 
                // Log.d("Chsgss", String.valueOf(chat_id));
                chat_id = getIntent().getIntExtra("findingchatid", 0);
-               chatMessageList(chat_id);
+               //chatMessageList(chat_id);
            }
            else{
 
                String  value = String.valueOf(getIntent().getExtras().get("chat_id"));
                chat_id= Integer.parseInt(value);
-               chatMessageList(chat_id);
+               //chatMessageList(chat_id);
                //Log.d(TAG, "Key: " + "abcd" + " Value: " + value);
            }
 
 
         }
+
+        chatRecyclerView = findViewById(R.id.chatRecyclerView);
+        chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+        chatRecyclerView.setHasFixedSize(true);
+        chatRecyclerView.setItemViewCacheSize(20);
+        chatRecyclerView.setDrawingCacheEnabled(true);
+        chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        chatRecyclerView.setNestedScrollingEnabled(false);
+
+        if (chatList!=null){
+            if (chatList.size()==0){
+                chatMessageList(chat_id);
+            }else if (chatList.size()>0){
+                ChatMessageAdapter chatMessageAdapter=new ChatMessageAdapter(ChatActivity.this,chatList);
+                chatRecyclerView.setAdapter(chatMessageAdapter);
+                chatRecyclerView.scrollToPosition(chatList.size()-1);
+                chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount());
+                //chatRecyclerView.getLayoutManager().scrollToPosition(chatList.size()-1);
+                chatMessageAdapter.notifyDataSetChanged();
+            }
+        }
+
 
 
         Log.d("ChatIdForTesting","" +chat_id);

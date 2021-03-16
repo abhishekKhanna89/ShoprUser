@@ -1,7 +1,9 @@
 package com.shoppr.shoper.SendBird;
 
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -50,7 +52,11 @@ public class BaseApplication extends MultiDexApplication { // multidex
                 @Override
                 public void onRinging(DirectCall call) {
                     int ongoingCallCount = SendBirdCall.getOngoingCallCount();
-                    Log.i(BaseApplication.TAG, "[BaseApplication] onRinging() => callId: " + call.getCallId() + ", getOngoingCallCount(): " + ongoingCallCount);
+                    Dialog dialog=new Dialog(BaseApplication.this,R.style.FullScreenDialog);
+                    dialog.setContentView(R.layout.activity_video_chat_view);
+                    dialog.show();
+                    //startActivity(new Intent(this,Ca));
+                    //Log.i(BaseApplication.TAG, "[BaseApplication] onRinging() => callId: " + call.getCallId() + ", getOngoingCallCount(): " + ongoingCallCount);
 
                     if (ongoingCallCount >= 2) {
                         call.end();

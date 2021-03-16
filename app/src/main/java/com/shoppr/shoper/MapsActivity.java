@@ -494,7 +494,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             if (jj != null && jj.equalsIgnoreCase("0")) {
                 String editLocation = getIntent().getStringExtra("location_address");
                 key = editLocation;
-                Log.d("locationPick",key);
+               // Log.d("locationPick",key);
                 String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                     @Override

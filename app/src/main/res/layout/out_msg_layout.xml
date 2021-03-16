@@ -39,6 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:text="Location"
                     android:textColor="#000000" />
 
@@ -48,6 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:padding="5dp"
+                    android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#000000"
                     android:textSize="10sp" />
@@ -78,6 +80,7 @@
                     android:layout_gravity="start"
                     android:elevation="2dp"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:textColor="#000"
                     android:textSize="18dp" />
 
@@ -87,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:padding="5dp"
+                    android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#000000"
                     android:textSize="10sp" />
@@ -141,6 +145,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
+                                android:fontFamily="sans-serif"
                                 android:text="Added to\nshoping bag"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
@@ -173,6 +178,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
+                        android:fontFamily="sans-serif"
                         android:text="Location"
                         android:textColor="#000000" />
                     <LinearLayout
@@ -184,6 +190,7 @@
                         style="android:style/ButtonBar">
                         <TextView
                             android:id="@+id/pqText"
+                            android:fontFamily="sans-serif"
                             android:text="5/₹ 500"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -197,11 +204,13 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="10sp"
+                            android:fontFamily="sans-serif"
                             android:backgroundTint="@color/colorPrimary"
                             android:layout_marginRight="5dp"  />
                         <Button
                             android:id="@+id/rejectText"
                             android:text="Reject"
+                            android:fontFamily="sans-serif"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -211,6 +220,7 @@
                         <Button
                             android:id="@+id/cancelText"
                             android:text="Cancel"
+                            android:fontFamily="sans-serif"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -232,6 +242,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
+                            android:fontFamily="sans-serif"
                             android:text="11:00 AM"
                             android:textColor="#000000"
                             android:textSize="10sp" />
@@ -263,6 +274,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:text="Location"
                     android:textColor="#000000" />
 
@@ -282,6 +294,7 @@
                     android:layout_gravity="start"
                     android:padding="5dp"
                     android:text="11:00 AM"
+                    android:fontFamily="sans-serif"
                     android:textColor="#000000"
                     android:textSize="10sp" />
             </LinearLayout>
@@ -321,6 +334,7 @@
             android:layout_gravity="start"
             android:layout_margin="5dp"
             app:cmv_arrowPosition="right"
+            android:fontFamily="sans-serif"
             app:cmv_backgroundColor="#fff"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp">
@@ -343,6 +357,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:text="Location"
                     android:textColor="#000000" />
 
@@ -359,6 +374,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
+                        android:fontFamily="sans-serif"
                         android:text="11:00 AM"
                         android:textColor="#000000"
                         android:textSize="10sp" />
@@ -389,6 +405,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:text="Please share your delivery address\nAnd share the location on the map."
                     android:textColor="#000000"
                     android:textSize="16sp" />
@@ -398,6 +415,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:text="@string/your_string_here"
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="16sp" />
@@ -415,6 +433,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
+                        android:fontFamily="sans-serif"
                         android:text="11:00 AM"
                         android:textColor="#000000"
                         android:textSize="10sp" />
@@ -474,6 +493,7 @@
                     android:layout_gravity="start"
                     android:elevation="2dp"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:textColor="#000"
                     android:textSize="18dp" />
                 <Button
@@ -481,6 +501,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Add Money"
+                    android:fontFamily="sans-serif"
                     android:backgroundTint="@color/green"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -495,6 +516,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
+                        android:fontFamily="sans-serif"
                         android:text="11:00 AM"
                         android:textColor="#000000"
                         android:textSize="10sp" />
@@ -524,6 +546,7 @@
                     android:layout_gravity="start"
                     android:elevation="2dp"
                     android:padding="10dp"
+                    android:fontFamily="sans-serif"
                     android:text="Please make a payment"
                     android:textColor="#000"
                     android:textSize="18dp" />
@@ -532,6 +555,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Pay"
+                    android:fontFamily="sans-serif"
                     android:backgroundTint="@color/green"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -546,6 +570,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
+                        android:fontFamily="sans-serif"
                         android:text="11:00 AM"
                         android:textColor="#000000"
                         android:textSize="10sp" />
