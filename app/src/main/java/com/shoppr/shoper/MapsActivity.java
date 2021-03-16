@@ -519,10 +519,10 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                             addressText.setText(key);
                                             mainPage.setVisibility(View.VISIBLE);
                                             secondPage.setVisibility(View.GONE);
-                                            Toast.makeText(MapsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(MapsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                         } else {
                                             progressbar.hideProgress();
-                                            Toast.makeText(MapsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(MapsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                             progressbar.hideProgress();
                                             secondPage.setVisibility(View.VISIBLE);
                                         }
@@ -576,10 +576,10 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                             addressText.setText(key);
                                             mainPage.setVisibility(View.VISIBLE);
                                             secondPage.setVisibility(View.GONE);
-                                            Toast.makeText(MapsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(MapsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                         } else {
                                             progressbar.hideProgress();
-                                            Toast.makeText(MapsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(MapsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                             secondPage.setVisibility(View.VISIBLE);
                                             progressbar.hideProgress();
                                         }

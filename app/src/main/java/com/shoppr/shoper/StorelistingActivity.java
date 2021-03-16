@@ -119,7 +119,7 @@ public class StorelistingActivity extends AppCompatActivity {
         if (CommonUtils.isOnline(StorelistingActivity.this)) {
             //sessonManager.showProgress(StorelistingActivity.this);
             Call<StoreListModel> call = ApiExecutor.getApiService(this)
-                    .apiStoreList(sessonManager.getLat(), sessonManager.getLon(),checkedFriends,search,radioName);
+                    .apiStoreList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon(),checkedFriends,search,radioName);
             //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
             call.enqueue(new Callback<StoreListModel>() {
                 @Override
@@ -136,11 +136,12 @@ public class StorelistingActivity extends AppCompatActivity {
                                 storeadapter.notifyDataSetChanged();
                             }
                         }else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(StorelistingActivity.this, "");
                             Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                           /* sessonManager.setToken("");
+                            PrefUtils.setAppId(StorelistingActivity.this, "");
+
                             startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            finishAffinity();*/
                         }
                     }
                 }
@@ -231,7 +232,7 @@ public class StorelistingActivity extends AppCompatActivity {
         if (CommonUtils.isOnline(StorelistingActivity.this)) {
             sessonManager.showProgress(StorelistingActivity.this);
             Call<StoreListModel> call = ApiExecutor.getApiService(this)
-                    .apiStoreCategoryList(sessonManager.getLat(), sessonManager.getLon());
+                    .apiStoreCategoryList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon());
             //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
             call.enqueue(new Callback<StoreListModel>() {
                 @Override

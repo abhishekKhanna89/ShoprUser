@@ -79,7 +79,7 @@ public interface ApiService {
     Call<MyProfileModel> apiMyProfile(@Header("Authorization") String token);
     @NonNull
     @GET("stores-list")
-    Call<StoreListModel>apiStoreList(@Query("lat")String lat,
+    Call<StoreListModel>apiStoreList(@Header("Authorization") String token,@Query("lat")String lat,
                                      @Query("lang")String lang,
                                      @Query("category_id[]") List<String> category_id,
                                      @Query("search")String search,
@@ -87,7 +87,7 @@ public interface ApiService {
 
     @NonNull
     @GET("stores-list")
-    Call<StoreListModel>apiStoreCategoryList(@Query("lat")String lat,
+    Call<StoreListModel>apiStoreCategoryList(@Header("Authorization") String token,@Query("lat")String lat,
                                      @Query("lang")String lang);
 
     @NonNull
