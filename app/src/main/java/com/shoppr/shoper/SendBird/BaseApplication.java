@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Window;
+import android.widget.ImageView;
 
 import androidx.multidex.MultiDexApplication;
 
@@ -17,9 +20,13 @@ import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.call.CallService;
 import com.shoppr.shoper.SendBird.utils.BroadcastUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
+import com.shoppr.shoper.activity.CallingServiceActivity;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.UUID;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class BaseApplication extends MultiDexApplication { // multidex
 
@@ -52,11 +59,8 @@ public class BaseApplication extends MultiDexApplication { // multidex
                 @Override
                 public void onRinging(DirectCall call) {
                     int ongoingCallCount = SendBirdCall.getOngoingCallCount();
-                    Dialog dialog=new Dialog(BaseApplication.this,R.style.FullScreenDialog);
-                    dialog.setContentView(R.layout.activity_video_chat_view);
-                    dialog.show();
-                    //startActivity(new Intent(this,Ca));
-                    //Log.i(BaseApplication.TAG, "[BaseApplication] onRinging() => callId: " + call.getCallId() + ", getOngoingCallCount(): " + ongoingCallCount);
+
+                    Log.i(BaseApplication.TAG, "[BaseApplication] onRinging() => callId: " + call.getCallId() + ", getOngoingCallCount(): " + ongoingCallCount);
 
                     if (ongoingCallCount >= 2) {
                         call.end();
@@ -89,6 +93,7 @@ public class BaseApplication extends MultiDexApplication { // multidex
             SendBirdCall.Options.addDirectCallSound(SendBirdCall.SoundType.RINGING, R.raw.ringing);
             SendBirdCall.Options.addDirectCallSound(SendBirdCall.SoundType.RECONNECTING, R.raw.reconnecting);
             SendBirdCall.Options.addDirectCallSound(SendBirdCall.SoundType.RECONNECTED, R.raw.reconnected);
+
             return true;
         }
         return false;
