@@ -136,12 +136,15 @@ public class StorelistingActivity extends AppCompatActivity {
                                 storeadapter.notifyDataSetChanged();
                             }
                         }else {
-                            //Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(StorelistingActivity.this, "");
-
-                            startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(StorelistingActivity.this, "");
+                                    Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
                 }
@@ -251,11 +254,15 @@ public class StorelistingActivity extends AppCompatActivity {
                                 fullScreenAdapter.notifyDataSetChanged();
                             }
                         }else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(StorelistingActivity.this, "");
-                            Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(StorelistingActivity.this, "");
+                                    Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
                 }

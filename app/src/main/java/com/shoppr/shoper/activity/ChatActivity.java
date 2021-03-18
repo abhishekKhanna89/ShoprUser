@@ -463,11 +463,15 @@ public class ChatActivity extends AppCompatActivity {
                                 chatMessageAdapter.notifyDataSetChanged();
                             }
                         }else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(ChatActivity.this, "");
-                            Toast.makeText(ChatActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(ChatActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equals("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(ChatActivity.this, "");
+                                    Toast.makeText(ChatActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(ChatActivity.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
                 }

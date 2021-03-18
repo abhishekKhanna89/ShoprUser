@@ -23,6 +23,7 @@ import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
 import com.shoppr.shoper.LoginActivity;
+import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.CustomerBalancceModel;
 import com.shoppr.shoper.Model.Recharge.RechargeModel;
 import com.shoppr.shoper.Model.VerifyRechargeModel;
@@ -218,11 +219,15 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
                             if (customerBalancceModel.getData()!=null){
                                 customerBalance.setText(String.valueOf("₹ "+customerBalancceModel.getData()));
                             }else {
-                                sessonManager.setToken("");
-                                PrefUtils.setAppId(AddMoneyActivity.this, "");
-                                Toast.makeText(AddMoneyActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(AddMoneyActivity.this, LoginActivity.class));
-                                finishAffinity();
+                                if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                    if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                        sessonManager.setToken("");
+                                        PrefUtils.setAppId(AddMoneyActivity.this, "");
+                                        Toast.makeText(AddMoneyActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(AddMoneyActivity.this, LoginActivity.class));
+                                        finishAffinity();
+                                    }
+                                }
                             }
                         }
                     }

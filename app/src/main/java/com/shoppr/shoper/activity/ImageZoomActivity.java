@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.shoppr.shoper.LoginActivity;
+import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
 import com.shoppr.shoper.R;
@@ -89,11 +90,15 @@ public class ImageZoomActivity extends AppCompatActivity {
 
 
                         }else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(ImageZoomActivity.this, "");
-                            Toast.makeText(ImageZoomActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(ImageZoomActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(ImageZoomActivity.this, "");
+                                    Toast.makeText(ImageZoomActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(ImageZoomActivity.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
 

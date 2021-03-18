@@ -145,11 +145,15 @@ public class MyAccount extends AppCompatActivity {
                                 sessonManager.setMobileNo(myProfileModel.getData().getMobile());
                             }
                         }else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(MyAccount.this, "");
-                            Toast.makeText(MyAccount.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(MyAccount.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(MyAccount.this, "");
+                                    Toast.makeText(MyAccount.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(MyAccount.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
                 }

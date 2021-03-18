@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.shoppr.shoper.LoginActivity;
+import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.Model.UpdateProfileModel;
@@ -155,11 +156,15 @@ public class UpdateProfileActivity extends AppCompatActivity {
                                 //sessonManager.setMobileNo(myProfileModel.getData().getMobile());
                             }
                         }else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(UpdateProfileActivity.this, "");
-                            Toast.makeText(UpdateProfileActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(UpdateProfileActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(UpdateProfileActivity.this, "");
+                                    Toast.makeText(UpdateProfileActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(UpdateProfileActivity.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
                 }

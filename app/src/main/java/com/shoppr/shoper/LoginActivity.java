@@ -42,9 +42,10 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     Button btnsubmit;
     TextView textregister;
-
     EditText editusername;
     SessonManager sessonManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

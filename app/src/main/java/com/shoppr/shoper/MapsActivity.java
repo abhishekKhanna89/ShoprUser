@@ -200,11 +200,15 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(cir_man_hair_cut);
                             }
                         } else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(MapsActivity.this, "");
-                            Toast.makeText(MapsActivity.this, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(MapsActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(MapsActivity.this, "");
+                                    Toast.makeText(MapsActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
                 }
@@ -246,11 +250,15 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                 }
                             }
                         } else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(MapsActivity.this, "");
-                            Toast.makeText(MapsActivity.this, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(MapsActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(MapsActivity.this, "");
+                                    Toast.makeText(MapsActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
                 }
@@ -268,7 +276,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     public void chats(View view) {
         startActivity(new Intent(MapsActivity.this, FindingShopprActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("address", addressText.getText().toString()));
     }
 
     public void menu(View view) {

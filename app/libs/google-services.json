@@ -41,6 +41,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279884695916:android:4f5be95d54679ef7a64b49",
+        "android_client_info": {
+          "package_name": "com.shopprdriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279884695916-sgr9riqcavsjemv38ej3d6cpvqhr1phg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shopprdriver",
+            "certificate_hash": "6fabb7e9556e388197c505ed763ededfa06193d6"
+          }
+        },
+        {
+          "client_id": "279884695916-q2h3v3oadet530k27lklr8sqvt0l5j67.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyRTUDCsEUPAYV23hUvOV0CZrVOPRok2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279884695916-q2h3v3oadet530k27lklr8sqvt0l5j67.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

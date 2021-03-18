@@ -281,11 +281,15 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
 
                             }
                         }else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(ViewCartActivity.this, "");
-                            Toast.makeText(ViewCartActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(ViewCartActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(ViewCartActivity.this, "");
+                                    Toast.makeText(ViewCartActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(ViewCartActivity.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
                 }

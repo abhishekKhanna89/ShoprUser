@@ -125,12 +125,13 @@ public interface ApiService {
 
 
     @NonNull
-    @GET("start-chat/{store_id}")
+    @POST("start-chat/{store_id}")
     Call<StartChatModel>apiChatStart(@Header("Authorization") String token,
-                                     @Path("store_id")int store_id);
-    @NonNull
+                                     @Path("store_id")int store_id,
+                                     @Query("location")ArrayList<String>location);
+   /* @NonNull
     @GET("start-chat/{store_id}")
-    Call<StartChatModel>apiChatStart(@Header("Authorization") String token);
+    Call<StartChatModel>apiChatStart(@Header("Authorization") String token);*/
     @NonNull
     @GET("chat-messages/{chat_id}")
     Call<ChatMessageModel>apiChatMessage(@Header("Authorization") String token,
@@ -224,9 +225,10 @@ public interface ApiService {
     Call<GetRegisterMerchantModel>apiGetMerchantRegister(@Header("Authorization") String token);
 
     @NonNull
-    @GET("auto-assign/{chat_id}")
+    @POST("auto-assign/{chat_id}")
     Call<AutoAssignModel>apiAutoAssign(@Header("Authorization") String token,
-                                       @Path("chat_id")int chat_id);
+                                       @Path("chat_id")int chat_id,
+                                       @Query("location")ArrayList<String>location);
 
 
     @POST("check-availability")

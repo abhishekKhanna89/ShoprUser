@@ -96,11 +96,15 @@ public class ChatHistoryActivity extends AppCompatActivity {
                                 recyclerChatHistory.setAdapter(chatHistoryAdapter);
                             }
                         }else {
-                            sessonManager.setToken("");
-                            PrefUtils.setAppId(ChatHistoryActivity.this, "");
-                            Toast.makeText(ChatHistoryActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(ChatHistoryActivity.this, LoginActivity.class));
-                            finishAffinity();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    sessonManager.setToken("");
+                                    PrefUtils.setAppId(ChatHistoryActivity.this, "");
+                                    Toast.makeText(ChatHistoryActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(ChatHistoryActivity.this, LoginActivity.class));
+                                    finishAffinity();
+                                }
+                            }
                         }
                     }
                 }
