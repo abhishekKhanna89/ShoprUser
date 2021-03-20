@@ -57,7 +57,7 @@ public class OtpActivity extends AppCompatActivity {
         editusername=findViewById(R.id.editusername);
         type=getIntent().getStringExtra("type");
         mobile=getIntent().getStringExtra("mobile");
-        sendVerificationCode(mobile);
+        //sendVerificationCode(mobile);
 
         btnsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,14 +71,64 @@ public class OtpActivity extends AppCompatActivity {
                     editusername.requestFocus();
                 }
                 else {
-                    verifyOtpCode(editusername.getText().toString());
-                    //OtpVerifyAPI();
+                    //verifyOtpCode(editusername.getText().toString());
+                    OtpVerifyAPI();
                 }
-               /* Intent i = new Intent(getBaseContext(), MapsActivity.class);
-                startActivity(i);*/
+
             }
         });
         
+    }
+
+    private void OtpVerifyAPI() {
+        if (CommonUtils.isOnline(OtpActivity.this)) {
+            sessonManager.showProgress(OtpActivity.this);
+            OtpVerifyRequest otpVerifyRequest=new OtpVerifyRequest();
+            otpVerifyRequest.setOtp(editusername.getText().toString());
+            otpVerifyRequest.setMobile(mobile);
+            otpVerifyRequest.setType(type);
+            otpVerifyRequest.setNotification_token(sessonManager.getNotificationToken());
+            Call<OtpVerifyModel> call= ApiExecutor.getApiService(OtpActivity.this)
+                    .otpService(otpVerifyRequest);
+            call.enqueue(new Callback<OtpVerifyModel>() {
+                @Override
+                public void onResponse(Call<OtpVerifyModel> call, Response<OtpVerifyModel> response) {
+                    sessonManager.hideProgress();
+                    if (response.body()!=null){
+                        if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
+                            OtpVerifyModel otpVerifyModel=response.body();
+                            String userId=otpVerifyModel.getUser_id();
+                            String sendbird_token=otpVerifyModel.getSendbird_token();
+                            String savedAppId = PrefUtils.getAppId(OtpActivity.this);
+                            if((!editusername.getText().toString().isEmpty())){
+                                sessonManager.setToken(response.body().getToken());
+                                if (((BaseApplication)getApplication()).initSendBirdCall(savedAppId)) {
+                                    AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
+                                        if (isSuccess) {
+                                            setResult(RESULT_OK, null);
+                                            Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(OtpActivity.this, MapsActivity.class)
+                                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                            finish();
+                                        }
+                                    });
+                                }
+                            }
+                        }else {
+                            Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<OtpVerifyModel> call, Throwable t) {
+                    sessonManager.hideProgress();
+                }
+            });
+
+        }else {
+            CommonUtils.showToastInCenter(OtpActivity.this, getString(R.string.please_check_network));
+        }
     }
 
     private void sendVerificationCode(String mobile) {
@@ -127,54 +177,7 @@ public class OtpActivity extends AppCompatActivity {
             public void onSuccess(AuthResult authResult) {
                 FirebaseUser user=mAuth.getCurrentUser();
                 Toast.makeText(OtpActivity.this, "Successfull!!!"+"\n"+"user Id: "+user.getUid(), Toast.LENGTH_SHORT).show();
-                if (CommonUtils.isOnline(OtpActivity.this)) {
-                    sessonManager.showProgress(OtpActivity.this);
-                    OtpVerifyRequest otpVerifyRequest=new OtpVerifyRequest();
-                    otpVerifyRequest.setOtp(editusername.getText().toString());
-                    otpVerifyRequest.setMobile(mobile);
-                    otpVerifyRequest.setType(type);
-                    otpVerifyRequest.setNotification_token(sessonManager.getNotificationToken());
-                    Call<OtpVerifyModel> call= ApiExecutor.getApiService(OtpActivity.this)
-                            .otpService(otpVerifyRequest);
-                    call.enqueue(new Callback<OtpVerifyModel>() {
-                        @Override
-                        public void onResponse(Call<OtpVerifyModel> call, Response<OtpVerifyModel> response) {
-                            sessonManager.hideProgress();
-                            if (response.body()!=null){
-                                if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
-                                    OtpVerifyModel otpVerifyModel=response.body();
-                                    String userId=otpVerifyModel.getUser_id();
-                                    String sendbird_token=otpVerifyModel.getSendbird_token();
-                                    String savedAppId = PrefUtils.getAppId(OtpActivity.this);
-                                    if((!editusername.getText().toString().isEmpty())){
-                                        sessonManager.setToken(response.body().getToken());
-                                        if (((BaseApplication)getApplication()).initSendBirdCall(savedAppId)) {
-                                            AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
-                                                if (isSuccess) {
-                                                    setResult(RESULT_OK, null);
-                                                    Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                                    startActivity(new Intent(OtpActivity.this, MapsActivity.class)
-                                                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                                    finish();
-                                                }
-                                            });
-                                        }
-                                    }
-                                }else {
-                                    Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<OtpVerifyModel> call, Throwable t) {
-                            sessonManager.hideProgress();
-                        }
-                    });
-
-                }else {
-                    CommonUtils.showToastInCenter(OtpActivity.this, getString(R.string.please_check_network));
-                }
 
             }
         });
