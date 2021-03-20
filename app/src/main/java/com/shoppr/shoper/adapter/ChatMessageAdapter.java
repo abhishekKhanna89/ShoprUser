@@ -308,6 +308,8 @@ import static android.os.FileUtils.copy;
                                        holder.rejectText.setVisibility(View.GONE);
                                        holder.cancelText.setVisibility(View.VISIBLE);
                                        holder.acceptText.setVisibility(View.GONE);
+                                       context.startActivity(new Intent(context,ChatActivity.class)
+                                               .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                    }
                                    Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                }
@@ -346,6 +348,8 @@ import static android.os.FileUtils.copy;
                                        holder.acceptText.setVisibility(View.GONE);
                                        holder.rejectText.setVisibility(View.GONE);
                                        holder.cancelText.setVisibility(View.GONE);
+                                       context.startActivity(new Intent(context,ChatActivity.class)
+                                               .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                    }
                                    Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                }else {
@@ -385,6 +389,8 @@ import static android.os.FileUtils.copy;
                                        holder.acceptText.setVisibility(View.GONE);
                                        holder.rejectText.setVisibility(View.GONE);
                                        holder.cancelText.setVisibility(View.GONE);
+                                       context.startActivity(new Intent(context,ChatActivity.class)
+                                               .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                    }
                                    Toast.makeText(context, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                }else {

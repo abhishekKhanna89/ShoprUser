@@ -54,6 +54,7 @@ import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.activity.EditLocationActivity;
 import com.shoppr.shoper.activity.FindingShopprActivity;
+import com.shoppr.shoper.activity.HelpActivity;
 import com.shoppr.shoper.activity.MyAccount;
 import com.shoppr.shoper.activity.NotificationListActivity;
 import com.shoppr.shoper.activity.RegisterMerchantActivity;
@@ -310,11 +311,12 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                         startActivity(new Intent(MapsActivity.this, RegisterMerchantActivity.class));
                         break;
                     case R.id.action_help:
-
+                        startActivity(new Intent(MapsActivity.this, HelpActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         break;
-                    case R.id.action_feedback:
+                    /*case R.id.action_feedback:
 
-                        break;
+                        break;*/
                     case R.id.action_shareApp:
                         try {
                             Intent shareIntent = new Intent(Intent.ACTION_SEND);

@@ -47,7 +47,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Order Summary"
+                        android:text="Order Summery"
                         android:textColor="@color/black"
                         android:textSize="18dp"
                         android:textStyle="bold" />
@@ -77,7 +77,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -113,6 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1.9"
                             android:text="Grand Total"
+                            android:textColor="@color/textColor"
                             android:textSize="16dp" />
 
                         <TextView
@@ -121,6 +121,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
                             android:text="Total"
+                            android:textColor="@color/textColor"
                             android:textSize="16dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -140,13 +141,28 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_margin="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Use Wallet"
-                    android:textColor="@color/black"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/useWT"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Use Wallet "
+                            android:layout_alignParentStart="true"
+                            android:layout_centerInParent="true"
+                            android:textColor="@color/black"
+                            android:textSize="18dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/useWT"
+                            android:text="(For Quick payment)"
+                            android:layout_centerInParent="true"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+                    </RelativeLayout>
 
                 <CheckBox
                     android:id="@+id/checkbox"

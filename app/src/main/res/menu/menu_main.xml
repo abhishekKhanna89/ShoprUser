@@ -9,12 +9,12 @@
         android:id="@+id/action_help"
         android:title="Help"
         android:icon="@drawable/ic_baseline_help" />
-    <item
+    <!--<item
         android:id="@+id/action_feedback"
         android:title="Feedback"
-        android:icon="@drawable/ic_baseline_feedback"/>
+        android:icon="@drawable/ic_baseline_feedback"/>-->
     <item
         android:id="@+id/action_shareApp"
-        android:title="Share this app for a FREE Delivery !"
+        android:title="Share this app"
         android:icon="@drawable/ic_baseline_share"/>
 </menu>

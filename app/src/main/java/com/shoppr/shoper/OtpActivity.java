@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,6 +28,7 @@ import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
 import com.shoppr.shoper.util.CommonUtils;
+import com.shoppr.shoper.util.Progressbar;
 import com.shoppr.shoper.util.SessonManager;
 
 import java.util.concurrent.TimeUnit;
@@ -45,11 +48,13 @@ public class OtpActivity extends AppCompatActivity {
     String mVerificationId;
     //firebase auth object
     FirebaseAuth mAuth;
+    Progressbar progressbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
         sessonManager = new SessonManager(OtpActivity.this);
+        progressbar=new Progressbar();
         //initializing objects
         mAuth = FirebaseAuth.getInstance();
         //FirebaseAuth.getInstance().getFirebaseAuthSettings().forceRecaptchaFlowForTesting(false);
@@ -81,8 +86,8 @@ public class OtpActivity extends AppCompatActivity {
     }
 
     private void OtpVerifyAPI() {
+        progressbar.showProgress(OtpActivity.this);
         if (CommonUtils.isOnline(OtpActivity.this)) {
-            sessonManager.showProgress(OtpActivity.this);
             OtpVerifyRequest otpVerifyRequest=new OtpVerifyRequest();
             otpVerifyRequest.setOtp(editusername.getText().toString());
             otpVerifyRequest.setMobile(mobile);
@@ -93,9 +98,10 @@ public class OtpActivity extends AppCompatActivity {
             call.enqueue(new Callback<OtpVerifyModel>() {
                 @Override
                 public void onResponse(Call<OtpVerifyModel> call, Response<OtpVerifyModel> response) {
-                    sessonManager.hideProgress();
+                    progressbar.hideProgress();
                     if (response.body()!=null){
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
+                            Log.d("ressOtp",response.body().getStatus());
                             OtpVerifyModel otpVerifyModel=response.body();
                             String userId=otpVerifyModel.getUser_id();
                             String sendbird_token=otpVerifyModel.getSendbird_token();
@@ -106,6 +112,7 @@ public class OtpActivity extends AppCompatActivity {
                                     AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
                                         if (isSuccess) {
                                             setResult(RESULT_OK, null);
+                                            //Toast.makeText(OtpActivity.this, ""+isSuccess, Toast.LENGTH_SHORT).show();
                                             Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(OtpActivity.this, MapsActivity.class)
                                                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -122,7 +129,7 @@ public class OtpActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<OtpVerifyModel> call, Throwable t) {
-                    sessonManager.hideProgress();
+                    progressbar.hideProgress();
                 }
             });
 

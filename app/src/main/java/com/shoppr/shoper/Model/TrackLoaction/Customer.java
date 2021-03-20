@@ -13,10 +13,10 @@ public class Customer {
     private String name;
     @SerializedName("lat")
     @Expose
-    private Object lat;
+    private double lat;
     @SerializedName("lang")
     @Expose
-    private Object lang;
+    private double lang;
     @SerializedName("age")
     @Expose
     private String age;
@@ -37,19 +37,19 @@ public class Customer {
         this.name = name;
     }
 
-    public Object getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(Object lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public Object getLang() {
+    public double getLang() {
         return lang;
     }
 
-    public void setLang(Object lang) {
+    public void setLang(double lang) {
         this.lang = lang;
     }
 

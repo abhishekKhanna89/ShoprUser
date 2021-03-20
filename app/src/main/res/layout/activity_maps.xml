@@ -213,7 +213,7 @@
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_below="@+id/textshpng"
-                            android:background="@drawable/ic_shoppingcart" />
+                            android:background="@drawable/ic_shopping_orange" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>

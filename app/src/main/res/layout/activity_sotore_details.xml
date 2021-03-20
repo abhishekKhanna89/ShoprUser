@@ -63,7 +63,7 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/gallery"
+                                    android:src="@drawable/ic_baseline_dashboard"
                                     android:layout_margin="10dp"
                                     android:onClick="galleryImage"
                                     android:scaleType="fitXY"
@@ -91,6 +91,7 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
+                                    android:visibility="gone"
                                     android:background="@drawable/ic_about_ico"
                                     android:backgroundTint="@color/darkbrown"/>
 
@@ -99,6 +100,7 @@
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/monster"
                                     android:textStyle="bold"
+                                    android:layout_marginLeft="5dp"
                                     android:textSize="16sp"
                                     android:textColor="#333333"
                                     android:lineSpacingExtra="5sp"
@@ -135,6 +137,7 @@
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/monster"
                                     android:textStyle="bold"
+                                        android:layout_marginLeft="5dp"
                                     android:textSize="16sp"
                                     android:textColor="#333333"
                                     android:lineSpacingExtra="5sp"
@@ -172,9 +175,10 @@
                                     android:fontFamily="@font/monster"
                                     android:textStyle="bold"
                                     android:textSize="16sp"
+                                    android:layout_marginLeft="5dp"
                                     android:textColor="#333333"
                                     android:lineSpacingExtra="5sp"
-                                    android:text="Category Name" />
+                                    android:text="Category" />
 
                             </LinearLayout>
                             <TextView
@@ -209,9 +213,10 @@
                                     android:fontFamily="@font/monster"
                                     android:textStyle="bold"
                                     android:textSize="16sp"
+                                       android:layout_marginLeft="5dp"
                                     android:textColor="#333333"
                                     android:lineSpacingExtra="5sp"
-                                       android:text="Opening Timing" />
+                                       android:text="Timings" />
                             </LinearLayout>
                             <TextView
                                 android:id="@+id/openingTimeText"
@@ -244,6 +249,7 @@
                                     android:fontFamily="@font/monster"
                                     android:textStyle="bold"
                                     android:textSize="16sp"
+                                      android:layout_marginLeft="5dp"
                                     android:textColor="#333333"
                                     android:lineSpacingExtra="5sp"
                                     android:text="Email" />
@@ -271,16 +277,17 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:backgroundTint="@color/darkbrown"
-                                    android:background="@drawable/ic_call"/>
+                                    android:background="@drawable/ic_phone"/>
                                   <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/monster"
                                     android:textStyle="bold"
                                     android:textSize="16sp"
+                                      android:layout_marginLeft="5dp"
                                     android:textColor="#333333"
                                     android:lineSpacingExtra="5sp"
-                                      android:text="Mobile" />
+                                      android:text="Contact Number" />
                             </LinearLayout>
 
                             <TextView
@@ -313,6 +320,7 @@
                                     android:fontFamily="@font/monster"
                                     android:textStyle="bold"
                                     android:textSize="16sp"
+                                       android:layout_marginLeft="5dp"
                                     android:textColor="#333333"
                                     android:lineSpacingExtra="5sp"
                                        android:text="Address" />

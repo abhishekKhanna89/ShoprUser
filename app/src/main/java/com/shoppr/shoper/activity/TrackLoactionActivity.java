@@ -68,7 +68,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
     private Marker marker;
     SessonManager sessonManager;
     String messageId;
-    public static  double lat,lang;
+    public static  double lat,lang,lat_driver,lang_driver;
     LatLng sydney,india,aaa;
     private String serverKey = "AIzaSyCHl8Ff_ghqPjWqlT2BXJH5BOYH1q-sw0E";
     private String[] colors = {"#7fff7272", "#7f31c7c5", "#7fff8a00"};
@@ -100,13 +100,16 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                 public void onResponse(Call<TrackLoactionModel> call, Response<TrackLoactionModel> response) {
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            Toast.makeText(TrackLoactionActivity.this, response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(TrackLoactionActivity.this, response.body().getStatus(), Toast.LENGTH_SHORT).show();
                             TrackLoactionModel trackLoactionModel=response.body();
                             if (trackLoactionModel.getData().getShoppr()!=null){
                                  lat=trackLoactionModel.getData().getShoppr().getLat();
                                  lang=trackLoactionModel.getData().getShoppr().getLang();
+                                lat_driver=trackLoactionModel.getData().getCustomer().getLat();
+                                lang_driver=trackLoactionModel.getData().getCustomer().getLang();
                                  Log.d("LocationTracking",""+lat+"==="+lang);
                                  india=new LatLng(lat,lang);
+                                sydney = new LatLng(lat_driver, lang_driver);
                                 int height =120;
                                 int width = 80;
                                 BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.scooter);
@@ -115,6 +118,24 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                                  mMap.addMarker(new MarkerOptions().position(india))
                                  .setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                                  mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(india, 15));
+
+                                mMap.addMarker(new MarkerOptions().position(sydney).title("Customer"));
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+                                //mMap.setPadding(2000, 4000, 2000, 4000);
+                                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,12f));
+                                // mMap.setPadding(2000, 4000, 2000, 4000);
+                                Handler handler=new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        aaa=new LatLng(lat,lang);
+                                        if (aaa!=null){
+                                            getRequestUrl(sydney,aaa);
+                                            getDeviceLocation(sydney,aaa);
+                                            viewTrackLoaction();
+                                        }
+                                    }
+                                },2000);
                                  //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(india,12f));
                                  //mMap.setPadding(2000, 4000, 2000, 4000);
                             }
@@ -157,24 +178,8 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
         };
         countDownTimer.start();
         // Add a marker in Sydney and move the camera
-        sydney = new LatLng(28.6035573, 77.3453588);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Customer"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
-        //mMap.setPadding(2000, 4000, 2000, 4000);
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,12f));
-       // mMap.setPadding(2000, 4000, 2000, 4000);
-        Handler handler=new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                aaa=new LatLng(lat,lang);
-                if (aaa!=null){
-                    getRequestUrl(sydney,aaa);
-                    getDeviceLocation(sydney,aaa);
-                    viewTrackLoaction();
-                }
-            }
-        },2000);
+
+
 
     }
     /*AIzaSyBq0kgTo_fwzmQpo-z901CFaXfKVqZXma8*/

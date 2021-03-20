@@ -408,8 +408,8 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
             holder.nameProductText.setText(arList.get(position).getMessage());
             //holder.priceProductText.setText("Item total :- "+"\u20B9 "+arList.get(position).getPrice());
             //holder.quantityProductText.setText("Quantity :- "+arList.get(position).getQuantity());
-            holder.priceProductText.setText(Html.fromHtml("<b>" + "Item total :- " + "</b>"+"<medium>"+"\u20B9 "+arList.get(position).getPrice() + "</medium>"));
-            holder.quantityProductText.setText(Html.fromHtml("<b>" + "Quantity :- " + "</b>"+ "<medium>" +arList.get(position).getQuantity()+ "</medium>"));
+            holder.priceProductText.setText(Html.fromHtml("<b>" + "Item total - " + "</b>"+"<medium>"+"\u20B9 "+arList.get(position).getPrice() + "</medium>"));
+            holder.quantityProductText.setText(Html.fromHtml("<b>" + "Quantity - " + "</b>"+ "<medium>" +arList.get(position).getQuantity()+ "</medium>"));
         }
         @Override
         public int getItemCount() {

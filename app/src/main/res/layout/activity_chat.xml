@@ -47,8 +47,8 @@
 
             <RelativeLayout
                 android:id="@+id/helpRelative"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:onClick="help"
                 android:layout_centerInParent="true"
                 android:layout_toLeftOf="@+id/audioCall"
@@ -62,19 +62,20 @@
                     android:fontFamily="@font/monster"
                     android:gravity="center"
                     android:textStyle="bold"
+                    android:textSize="10sp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"/>
             </RelativeLayout>
 
             <ImageView
                 android:id="@+id/audioCall"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:onClick="calling"
                 android:layout_marginRight="10dp"
                 android:layout_centerInParent="true"
                 android:layout_toLeftOf="@+id/cardViewLayout"
-                android:src="@drawable/ic_phone"/>
+                android:src="@drawable/ic_add_call"/>
         <RelativeLayout
             android:id="@+id/cardViewLayout"
             android:layout_width="wrap_content"
@@ -82,11 +83,9 @@
             android:layout_marginRight="10dp"
             android:onClick="MyCart"
             android:layout_centerInParent="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/round">
+            android:layout_alignParentRight="true">
             <FrameLayout
                 style="?attr/actionButtonStyle"
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
@@ -94,10 +93,10 @@
 
                 <ImageView
                     android:id="@+id/cartView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_shoppingcart"/>
+                    android:src="@drawable/ic_shopping_white"/>
                 <TextView
                     android:id="@+id/cart_badge"
                     android:layout_width="20dp"
@@ -161,6 +160,7 @@
         android:layout_width="match_parent"
         android:id="@+id/chatRecyclerView"
         android:divider="#fff"
+
         android:splitMotionEvents="false"
         android:overScrollMode="always"
         android:animateLayoutChanges="false"
@@ -176,7 +176,79 @@
         android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="5dp">
+        <com.devlomi.record_view.RecordView
+            android:id="@+id/record_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/record_button"
+            app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
+            app:slide_to_cancel_arrow_color="#000000"
+            app:slide_to_cancel_bounds="10dp"
+            android:visibility="gone"
+            app:slide_to_cancel_margin_right="10dp"
+            app:slide_to_cancel_text="Slide To Cancel"
+            app:counter_time_color="#ff0000"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/chooseImage"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:backgroundTint="@color/dark_grey"
+                android:background="@drawable/ic_camera"/>
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:ems="10"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:padding="10dp"
+                android:imeOptions="actionDone"
+                android:background="@drawable/rounded_edit"
+                android:hint="Write a message"
+                android:textColorHint="@color/black"
+                android:inputType="textCapSentences|textMultiLine"
+                android:textColor="@color/black"
+                android:paddingHorizontal="10dp" />
+
+        <com.devlomi.record_view.RecordButton
+            android:id="@+id/record_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/recv_bg_mic"
+            android:scaleType="centerInside"
+            app:mic_icon="@drawable/recv_ic_mic_white" />
+            <ImageButton
+                android:id="@+id/sendMsgBtn"
+                android:layout_width="50dp"
+                android:visibility="gone"
+                android:layout_height="50dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -214,5 +286,5 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
            />
-    </LinearLayout>
+    </LinearLayout>-->
 </LinearLayout>
