@@ -78,17 +78,19 @@ public interface ApiService {
     @GET("get-profile")
     Call<MyProfileModel> apiMyProfile(@Header("Authorization") String token);
     @NonNull
-    @GET("stores-list")
+    @POST("stores-list")
     Call<StoreListModel>apiStoreList(@Header("Authorization") String token,@Query("lat")String lat,
                                      @Query("lang")String lang,
                                      @Query("category_id[]") List<String> category_id,
                                      @Query("search")String search,
-                                     @Query("sortby")String sortby);
+                                     @Query("sortby")String sortby,
+                                     @Query("location")ArrayList<String>location);
 
     @NonNull
-    @GET("stores-list")
+    @POST("stores-list")
     Call<StoreListModel>apiStoreCategoryList(@Header("Authorization") String token,@Query("lat")String lat,
-                                     @Query("lang")String lang);
+                                             @Query("lang")String lang,
+                                             @Query("location")ArrayList<String>location);
 
     @NonNull
     @GET("store-details/{id}")
@@ -100,8 +102,9 @@ public interface ApiService {
     Call<WalletHistoryModel>apiWalletHistory(@Header("Authorization") String token);
 
     @NonNull
-    @GET("shoppr-list")
-    Call<ShoprListModel> apiShoprList(@Header("Authorization") String token);
+    @POST("shoppr-list")
+    Call<ShoprListModel> apiShoprList(@Header("Authorization") String token,
+                                      @Query("location")ArrayList<String>location);
 
     @NonNull
     @GET("customer-balance")
@@ -128,6 +131,8 @@ public interface ApiService {
     @POST("start-chat/{store_id}")
     Call<StartChatModel>apiChatStart(@Header("Authorization") String token,
                                      @Path("store_id")int store_id,
+                                     @Query("lat")String lat,
+                                     @Query("lang")String lang,
                                      @Query("location")ArrayList<String>location);
    /* @NonNull
     @GET("start-chat/{store_id}")

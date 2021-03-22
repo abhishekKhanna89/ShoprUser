@@ -121,6 +121,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     LinearLayout mainPage;
     Button updateLocation;
     Progressbar progressbar;
+    private boolean firstLocation=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +181,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         myProfile();
         viewListShopr();
 
-
         //Log.d("newToken", getActivity().getPreferences(Context.MODE_PRIVATE).getString("fb", "empty :("));
     }
 
@@ -228,47 +228,156 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     private void viewListShopr() {
         if (CommonUtils.isOnline(MapsActivity.this)) {
-            sessonManager.showProgress(MapsActivity.this);
-            Call<ShoprListModel> call = ApiExecutor.getApiService(this).apiShoprList("Bearer " + sessonManager.getToken());
-            call.enqueue(new Callback<ShoprListModel>() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onResponse(Call<ShoprListModel> call, Response<ShoprListModel> response) {
-                    sessonManager.hideProgress();
-                    if (response.body() != null) {
-                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            ShoprListModel shoprListModel = response.body();
-                            if (shoprListModel.getData() != null) {
-                                for (int i = 0; i < shoprListModel.getData().getShopper().size(); i++) {
-                                    shoprListText.setText("Active Shoppers : " + shoprListModel.getData().getShopper().get(i).getShopprCount());
-                                    if (shoprListModel.getData().getNotifications().equalsIgnoreCase("0")) {
-                                        countText.setVisibility(View.GONE);
-                                    } else {
-                                        countText.setVisibility(View.VISIBLE);
-                                        countText.setText(shoprListModel.getData().getNotifications());
+            String jj = getIntent().getStringExtra("value");
+            if (jj != null && jj.equalsIgnoreCase("0")) {
+                String editLocation = getIntent().getStringExtra("location_address");
+                key = editLocation;
+                // Log.d("locationPick",key);
+                String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("EditLocationResponse", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject searchObj = jsonArray.getJSONObject(i);
+                                arrListLocation.add(searchObj.getString("terms"));
+                                Log.d("resTerms",""+arrListLocation);
+                                Call<ShoprListModel> call = ApiExecutor.getApiService(MapsActivity.this).apiShoprList("Bearer " + sessonManager.getToken(),arrListLocation);
+                                call.enqueue(new Callback<ShoprListModel>() {
+                                    @SuppressLint("SetTextI18n")
+                                    @Override
+                                    public void onResponse(Call<ShoprListModel> call, Response<ShoprListModel> response) {
+                                        //sessonManager.hideProgress();
+                                        if (response.body() != null) {
+                                            if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                                ShoprListModel shoprListModel = response.body();
+
+                                                if (shoprListModel.getData() != null) {
+                                                    for (int i = 0; i < shoprListModel.getData().getShopper().size(); i++) {
+                                                        String res=new Gson().toJson(shoprListModel.getData().getShopper().get(i).getShopprCount());
+                                                        Log.d("resShopo",res);
+                                                        shoprListText.setText("Active Shoppers : " + shoprListModel.getData().getShopper().get(i).getShopprCount());
+                                                        if (shoprListModel.getData().getNotifications().equalsIgnoreCase("0")) {
+                                                            countText.setVisibility(View.GONE);
+                                                        } else {
+                                                            countText.setVisibility(View.VISIBLE);
+                                                            countText.setText(shoprListModel.getData().getNotifications());
+                                                        }
+
+                                                    }
+                                                }
+                                            } else {
+                                                if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                                    if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                                        sessonManager.setToken("");
+                                                        PrefUtils.setAppId(MapsActivity.this, "");
+                                                        Toast.makeText(MapsActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                        startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                                                        finishAffinity();
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
 
-                                }
+                                    @Override
+                                    public void onFailure(Call<ShoprListModel> call, Throwable t) {
+                                        // sessonManager.hideProgress();
+                                    }
+                                });
+                                break;
                             }
-                        } else {
-                            if (response.body().getStatus().equalsIgnoreCase("failed")){
-                                if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                    sessonManager.setToken("");
-                                    PrefUtils.setAppId(MapsActivity.this, "");
-                                    Toast.makeText(MapsActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(MapsActivity.this, LoginActivity.class));
-                                    finishAffinity();
-                                }
-                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
-                }
+                }, new com.android.volley.Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
-                @Override
-                public void onFailure(Call<ShoprListModel> call, Throwable t) {
-                    sessonManager.hideProgress();
-                }
-            });
+                    }
+                });
+                RequestQueue requestQueue = Volley.newRequestQueue(this);
+                requestQueue.add(stringRequest);
+            } else {
+                key = addressText.getText().toString();
+                String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.d("CurrentLocationResponse", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject searchObj = jsonArray.getJSONObject(i);
+                                arrListLocation.add(searchObj.getString("terms"));
+                                //progressbar.showProgress(MapsActivity.this);
+                                Call<ShoprListModel> call = ApiExecutor.getApiService(MapsActivity.this).apiShoprList("Bearer " + sessonManager.getToken(),arrListLocation);
+                                call.enqueue(new Callback<ShoprListModel>() {
+                                    @SuppressLint("SetTextI18n")
+                                    @Override
+                                    public void onResponse(Call<ShoprListModel> call, Response<ShoprListModel> response) {
+                                        Log.d("shoperList",response.body().getStatus());
+                                        //sessonManager.hideProgress();
+                                        if (response.body() != null) {
+                                            if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                                ShoprListModel shoprListModel = response.body();
+                                                if (shoprListModel.getData() != null) {
+                                                    for (int i = 0; i < shoprListModel.getData().getShopper().size(); i++) {
+                                                        shoprListText.setText("Active Shoppers : " + shoprListModel.getData().getShopper().get(i).getShopprCount());
+                                                        if (shoprListModel.getData().getNotifications().equalsIgnoreCase("0")) {
+                                                            countText.setVisibility(View.GONE);
+                                                        } else {
+                                                            countText.setVisibility(View.VISIBLE);
+                                                            countText.setText(shoprListModel.getData().getNotifications());
+                                                        }
+
+                                                    }
+                                                }
+                                            } else {
+                                                if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                                    if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                                        sessonManager.setToken("");
+                                                        PrefUtils.setAppId(MapsActivity.this, "");
+                                                        Toast.makeText(MapsActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                        startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                                                        finishAffinity();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ShoprListModel> call, Throwable t) {
+                                        // sessonManager.hideProgress();
+                                    }
+                                });
+                                break;
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+                RequestQueue requestQueue = Volley.newRequestQueue(this);
+                requestQueue.add(stringRequest);
+            }
+
         } else {
             CommonUtils.showToastInCenter(MapsActivity.this, getString(R.string.please_check_network));
         }
@@ -450,6 +559,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this,
@@ -462,7 +572,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         if (location != null) {
             serviceMap(location);
-            //addressText.setText("Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude());
         } else {
             showGPSDisabledAlertToUser();
         }
@@ -504,7 +613,18 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             if (jj != null && jj.equalsIgnoreCase("0")) {
                 String editLocation = getIntent().getStringExtra("location_address");
                 key = editLocation;
-               // Log.d("locationPick",key);
+                Geocoder geocoder1 = new Geocoder(MapsActivity.this);
+                List<Address> list1 = null;
+                try {
+                    if(key!=null){
+                        list1 = geocoder1.getFromLocationName(key, 1);
+                        Address addressData = list1.get(0);
+                        sessonManager.setLat(String.valueOf(addressData.getLatitude()));
+                        sessonManager.setLon(String.valueOf(addressData.getLongitude()));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                     @Override
@@ -561,8 +681,23 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 RequestQueue requestQueue = Volley.newRequestQueue(this);
                 requestQueue.add(stringRequest);
             } else {
-
                 key = location_address;
+                Geocoder coder = new Geocoder(this);
+                List<Address> addressiii;
+                //GeoPoint p1 = null;
+
+                try {
+                    addressiii = coder.getFromLocationName(key,5);
+                    Address locationAA=addressiii.get(0);
+                    locationAA.getLatitude();
+                    locationAA.getLongitude();
+                    Log.d("latlomng",""+address.getLatitude()+"::"+address.getLongitude());
+                    sessonManager.setLat(String.valueOf(locationAA.getLatitude()));
+                    sessonManager.setLon(String.valueOf(locationAA.getLongitude()));
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                     @Override
@@ -632,6 +767,13 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     @Override
     public void onLocationChanged(Location location) {
+        if (firstLocation == true) {
+            Bundle bundle=new Bundle();
+            onConnected(bundle);
+            firstLocation = false;
+        }
+
+        Log.d("ressssssssLoa",""+location);
         if (location != null) {
             Geocoder geocoder = new Geocoder(MapsActivity.this);
             List<Address> list = null;
@@ -641,7 +783,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             Address address = list.get(0);
             String localitys = address.getLocality();
             String location_address = address.getAddressLine(0);

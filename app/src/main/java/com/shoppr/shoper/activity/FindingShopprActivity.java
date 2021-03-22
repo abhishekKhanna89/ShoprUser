@@ -117,8 +117,11 @@ public class FindingShopprActivity extends AppCompatActivity {
                         arrListLocation.add(searchObj.getString("terms"));
                         if (CommonUtils.isOnline(FindingShopprActivity.this)) {
                             //sessonManager.showProgress(FindingShopprActivity.this);
+                            String a=sessonManager.getLat();
+                            String b=sessonManager.getLon();
+                            //Log.d("ssss",a+b);
                             Call<StartChatModel> call = ApiExecutor.getApiService(FindingShopprActivity.this)
-                                    .apiChatStart("Bearer " + sessonManager.getToken(),shop_id,arrListLocation);
+                                    .apiChatStart("Bearer " + sessonManager.getToken(),shop_id,sessonManager.getLat(),sessonManager.getLon(),arrListLocation);
                             call.enqueue(new Callback<StartChatModel>() {
                                 @Override
                                 public void onResponse(Call<StartChatModel> call, Response<StartChatModel> response) {

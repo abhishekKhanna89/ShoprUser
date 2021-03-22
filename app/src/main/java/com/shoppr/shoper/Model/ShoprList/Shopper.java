@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Shopper {
-
+/*shopper_count*/
     @SerializedName("shoppr_count")
     @Expose
     private Integer shopprCount;

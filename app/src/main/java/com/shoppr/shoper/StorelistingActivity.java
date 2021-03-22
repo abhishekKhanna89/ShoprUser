@@ -36,8 +36,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Model.StoreList.Category;
 import com.shoppr.shoper.Model.StoreList.Store;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
@@ -48,6 +54,10 @@ import com.shoppr.shoper.activity.SotoreDetailsActivity;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,6 +74,8 @@ public class StorelistingActivity extends AppCompatActivity {
 
     private SearchView searchView;
     String search;
+    String address;
+    ArrayList<String> arrListLocation = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +93,7 @@ public class StorelistingActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        String address = getIntent().getStringExtra("address");
+        address = getIntent().getStringExtra("address");
         //Log.d("ress",address);
         textAddress.setText(address);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -117,43 +129,72 @@ public class StorelistingActivity extends AppCompatActivity {
     }
     public void setmethod() {
         if (CommonUtils.isOnline(StorelistingActivity.this)) {
-            //sessonManager.showProgress(StorelistingActivity.this);
-            Call<StoreListModel> call = ApiExecutor.getApiService(this)
-                    .apiStoreList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon(),checkedFriends,search,radioName);
-            //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
-            call.enqueue(new Callback<StoreListModel>() {
+            String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                 @Override
-                public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {
-                    //sessonManager.hideProgress();
-                    if (response.body() != null) {
-                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            StoreListModel storeListModel = response.body();
-                            if (storeListModel.getData().getStores() != null) {
-                                storeList = storeListModel.getData().getStores();
-                                storeadapter = new Storeadapter(storeList, StorelistingActivity.this);
-                                storerecyclerview.setAdapter(storeadapter);
+                public void onResponse(String response) {
+                    Log.d("EditLocationResponse", response);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject searchObj = jsonArray.getJSONObject(i);
+                            arrListLocation.add(searchObj.getString("terms"));
+//sessonManager.showProgress(StorelistingActivity.this);
+                            Call<StoreListModel> call = ApiExecutor.getApiService(StorelistingActivity.this)
+                                    .apiStoreList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon(),checkedFriends,search,radioName,
+                                            arrListLocation);
+                            //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
+                            call.enqueue(new Callback<StoreListModel>() {
+                                @Override
+                                public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {
+                                    //sessonManager.hideProgress();
+                                    if (response.body() != null) {
+                                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                            StoreListModel storeListModel = response.body();
+                                            if (storeListModel.getData().getStores() != null) {
+                                                storeList = storeListModel.getData().getStores();
+                                                storeadapter = new Storeadapter(storeList, StorelistingActivity.this);
+                                                storerecyclerview.setAdapter(storeadapter);
 
-                                storeadapter.notifyDataSetChanged();
-                            }
-                        }else {
-                            if (response.body().getStatus().equalsIgnoreCase("failed")){
-                                if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                    sessonManager.setToken("");
-                                    PrefUtils.setAppId(StorelistingActivity.this, "");
-                                    Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
-                                    finishAffinity();
+                                                storeadapter.notifyDataSetChanged();
+                                            }
+                                        }else {
+                                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                                    sessonManager.setToken("");
+                                                    PrefUtils.setAppId(StorelistingActivity.this, "");
+                                                    Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
+                                                    finishAffinity();
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
-                            }
+
+                                @Override
+                                public void onFailure(Call<StoreListModel> call, Throwable t) {
+                                    //sessonManager.hideProgress();
+                                }
+                            });
                         }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
-
+            }, new com.android.volley.Response.ErrorListener() {
                 @Override
-                public void onFailure(Call<StoreListModel> call, Throwable t) {
-                    //sessonManager.hideProgress();
+                public void onErrorResponse(VolleyError error) {
+
                 }
             });
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(stringRequest);
+
+
+
         } else {
             CommonUtils.showToastInCenter(StorelistingActivity.this, getString(R.string.please_check_network));
         }
@@ -234,44 +275,72 @@ public class StorelistingActivity extends AppCompatActivity {
         filterRecycler.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
         if (CommonUtils.isOnline(StorelistingActivity.this)) {
             sessonManager.showProgress(StorelistingActivity.this);
-            Call<StoreListModel> call = ApiExecutor.getApiService(this)
-                    .apiStoreCategoryList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon());
-            //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
-            call.enqueue(new Callback<StoreListModel>() {
+            String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                 @Override
-                public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {
-                    sessonManager.hideProgress();
-                    if (response.body() != null) {
-                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            StoreListModel storeListModel = response.body();
-                            Gson gson=new Gson();
-                            String jshsh=gson.toJson(storeListModel);
-                            Log.d("ress",jshsh);
-                            if (storeListModel.getData().getCategories() != null) {
-                                categoryList=storeListModel.getData().getCategories();
-                                FullScreenAdapter fullScreenAdapter=new FullScreenAdapter(StorelistingActivity.this,categoryList);
-                                filterRecycler.setAdapter(fullScreenAdapter);
-                                fullScreenAdapter.notifyDataSetChanged();
-                            }
-                        }else {
-                            if (response.body().getStatus().equalsIgnoreCase("failed")){
-                                if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                    sessonManager.setToken("");
-                                    PrefUtils.setAppId(StorelistingActivity.this, "");
-                                    Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
-                                    finishAffinity();
+                public void onResponse(String response) {
+                    Log.d("EditLocationResponse", response);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject searchObj = jsonArray.getJSONObject(i);
+                            arrListLocation.add(searchObj.getString("terms"));
+
+                            Call<StoreListModel> call = ApiExecutor.getApiService(StorelistingActivity.this)
+                                    .apiStoreCategoryList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon(),
+                                            arrListLocation);
+                            //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
+                            call.enqueue(new Callback<StoreListModel>() {
+                                @Override
+                                public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {
+                                    sessonManager.hideProgress();
+                                    if (response.body() != null) {
+                                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                            StoreListModel storeListModel = response.body();
+                                            Gson gson=new Gson();
+                                            String jshsh=gson.toJson(storeListModel);
+                                            Log.d("ress",jshsh);
+                                            if (storeListModel.getData().getCategories() != null) {
+                                                categoryList=storeListModel.getData().getCategories();
+                                                FullScreenAdapter fullScreenAdapter=new FullScreenAdapter(StorelistingActivity.this,categoryList);
+                                                filterRecycler.setAdapter(fullScreenAdapter);
+                                                fullScreenAdapter.notifyDataSetChanged();
+                                            }
+                                        }else {
+                                            if (response.body().getStatus().equalsIgnoreCase("failed")){
+                                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                                    sessonManager.setToken("");
+                                                    PrefUtils.setAppId(StorelistingActivity.this, "");
+                                                    Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
+                                                    finishAffinity();
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
-                            }
+
+                                @Override
+                                public void onFailure(Call<StoreListModel> call, Throwable t) {
+                                    sessonManager.hideProgress();
+                                }
+                            });
                         }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
-
+            }, new com.android.volley.Response.ErrorListener() {
                 @Override
-                public void onFailure(Call<StoreListModel> call, Throwable t) {
-                    sessonManager.hideProgress();
+                public void onErrorResponse(VolleyError error) {
+
                 }
             });
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(stringRequest);
+
         } else {
             CommonUtils.showToastInCenter(StorelistingActivity.this, getString(R.string.please_check_network));
         }

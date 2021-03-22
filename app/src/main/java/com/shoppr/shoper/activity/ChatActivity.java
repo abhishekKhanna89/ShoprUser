@@ -36,6 +36,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.EditText;
@@ -163,15 +164,6 @@ public class ChatActivity extends AppCompatActivity {
         recordButton = (RecordButton) findViewById(R.id.record_button);
         recordButton.setRecordView(recordView);
         recordButton.setListenForRecord(true);
-        recordButton.setOnRecordClickListener(new OnRecordClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(ChatActivity.this, "RECORD BUTTON CLICKED", Toast.LENGTH_SHORT).show();
-                Log.d("RecordButton", "RECORD BUTTON CLICKED");
-            }
-        });
-
 
         //Cancel Bounds is when the Slide To Cancel text gets before the timer . default is 8
         recordView.setCancelBounds(8);
@@ -195,7 +187,6 @@ public class ChatActivity extends AppCompatActivity {
                 recordView.setVisibility(View.VISIBLE);
                 Log.d("RecordView", "onStart");
                 startRecording();
-                //Toast.makeText(ChatActivity.this, "OnStartRecord", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -205,6 +196,8 @@ public class ChatActivity extends AppCompatActivity {
                 Log.d("RecordView", "onCancel");
 
             }
+
+
 
             @Override
             public void onFinish(long recordTime) {
@@ -216,7 +209,6 @@ public class ChatActivity extends AppCompatActivity {
 
                 Log.d("RecordTime", time);
             }
-
             @Override
             public void onLessThanSecond() {
                // Toast.makeText(ChatActivity.this, "OnLessThanSecond", Toast.LENGTH_SHORT).show();
@@ -228,6 +220,7 @@ public class ChatActivity extends AppCompatActivity {
         recordView.setOnBasketAnimationEndListener(new OnBasketAnimationEnd() {
             @Override
             public void onAnimationEnd() {
+                recordView.setVisibility(View.GONE);
                 Log.d("RecordView", "Basket Animation Finished");
             }
         });
