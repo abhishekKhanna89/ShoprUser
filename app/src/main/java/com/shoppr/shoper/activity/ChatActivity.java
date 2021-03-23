@@ -312,10 +312,6 @@ public class ChatActivity extends AppCompatActivity {
         mMessageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
-               // chat_id=intent.getIntExtra("findingchatid",0);
-
-                //Log.d("chatidreciver==",""+chat_id);
                 chatMessageList(Integer.parseInt(String.valueOf(chat_id)));
             }
         };
@@ -525,20 +521,6 @@ public class ChatActivity extends AppCompatActivity {
             CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
         }
     }
-
-
-
-
-
-
-   /* public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_cart, menu);
-        return true;
-    }*/
-
-
-
 
     @Override
     protected void onDestroy() {
