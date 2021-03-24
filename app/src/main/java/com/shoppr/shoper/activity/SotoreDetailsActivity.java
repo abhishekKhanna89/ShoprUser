@@ -218,6 +218,6 @@ public class SotoreDetailsActivity extends AppCompatActivity {
 
     public void store_list(View view) {
         startActivity(new Intent(SotoreDetailsActivity.this, StorelistingActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 }

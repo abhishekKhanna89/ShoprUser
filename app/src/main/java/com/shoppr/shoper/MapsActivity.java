@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -40,6 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -72,9 +74,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -123,6 +132,12 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     Progressbar progressbar;
     private boolean firstLocation=true;
 
+    /*Todo:- Version Check*/
+    String VERSION_URL = "http://shoppr.avaskmcompany.xyz/api/app-version";
+    String sCurrentVersion;
+    int hoursmilllisecond = 86400000;
+    int value = 0, savedMillistime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +171,38 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                         new String[0]), ALL_PERMISSIONS_RESULT);
             }
         }
+        /*Todo:- Version Check*/
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            //String version = pInfo.versionName;
+            sCurrentVersion = pInfo.versionName;
+            Log.d("versionName", sCurrentVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (Integer.parseInt(sessonManager.getCurrenttime()) > 0) {
+            value = Integer.parseInt(sessonManager.getCurrenttime());
+        } else {
+            value = 0;
+        }
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
+        if (sessonManager.getCurrenttime().length() > 0) {
+            // Toast.makeText(getActivity(), "Hello", Toast.LENGTH_SHORT).show();
+            value = Integer.parseInt(sessonManager.getCurrenttime());
+            Log.d("hellovalueshared===", String.valueOf(value));
+            String currentDateandTime = sdf.format(new Date());
+            int savedMillis = (int) System.currentTimeMillis();
+            int valuemus = (savedMillis - value);
+            Log.d("valueminus", String.valueOf(valuemus));
+            //Log.d("savemilsaecttime===", String.valueOf(savedMillis) + "," + value + "," + hoursmilllisecond + "," + valuemus);
+            if (valuemus >= hoursmilllisecond) {
+
+                appCheckVersionApi();
+            }
+        }
+
 
         // we build google api client
         googleApiClient = new GoogleApiClient.Builder(this).
@@ -767,7 +814,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     @Override
     public void onLocationChanged(Location location) {
-        if (firstLocation == true) {
+        if (firstLocation) {
             Bundle bundle=new Bundle();
             onConnected(bundle);
             firstLocation = false;
@@ -795,6 +842,93 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 key = location_address;
                 addressText.setText(key);
             }
+        }
+    }
+    private void appCheckVersionApi() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, VERSION_URL, new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("response====", response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Log.d("responce===", jsonObject + "");
+                    String status = jsonObject.getString("status");
+                    if (status.equals("success")) {
+                        JSONObject jsonObject1 = jsonObject.getJSONObject("data");
+                        String androidversion = jsonObject1.getString("customer_version");
+                        //Log.d("androidversion", androidversion);
+                        // sCurrentVersion = defaultConfig.VERSION_NAME;
+                        //  Toast.makeText(getActivity(), "" + sCurrentVersion, Toast.LENGTH_SHORT).show();
+                        //Log.d("scureentVersion==", sCurrentVersion);
+                        //Log.d("scureentserverVersion==", androidversion);
+                        if (androidversion.equalsIgnoreCase(sCurrentVersion)) {
+
+                        } else {
+                            showDialouge();
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headerMap = new HashMap<String, String>();
+                headerMap.put("Authorization", "Bearer " + sessonManager.getToken());
+                return headerMap;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    private void showDialouge() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Upgrade App")
+                .setMessage(getResources().getString(R.string.force_update_app_message))
+                .setPositiveButton("Update App", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openPlayStore();
+                        dialog.dismiss();
+                        savedMillistime = (int) System.currentTimeMillis();
+                        sessonManager.setCurrenttime(String.valueOf(savedMillistime));
+                        Log.d("helloTimemills", String.valueOf(savedMillistime));
+                    }
+
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        savedMillistime = (int) System.currentTimeMillis();
+                        sessonManager.setCurrenttime(String.valueOf(savedMillistime));
+                        Log.d("helloTimemills", String.valueOf(savedMillistime));
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+    private void openPlayStore() {
+        if (this == null) {
+            return;
+        }
+        final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
 }

@@ -71,4 +71,8 @@
     <string name="calls_invalid_deep_link">Invalid deep link</string>
     <string name="calls_deep_linking_to_authenticate_failed">Could not authenticate deep link.</string>
     <string name="search_hint">Search Here</string>
+
+    <!--Todo:- Version Check -->
+    <string name="force_update_app_message">"Please update your Shopper Customer app to continue"</string>
+    <string name="recommend_update_app_message">"A new version app is available in play store please update your app"</string>
 </resources>

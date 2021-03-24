@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
@@ -35,6 +36,7 @@ public class SessonManager {
 
     public static final String strList="sList";
 
+    public static final String CURRENTTIME="current_time";
 
 
     public Dialog mDialog;
@@ -164,6 +166,15 @@ public class SessonManager {
         return sharedPreference.getString(strList,"");
     }
 
+    public void setCurrenttime(String currenttime) {
+        editor.putString(CURRENTTIME, currenttime);
+        Log.d("dhjdh", currenttime);
+        editor.commit();
+    }
+
+    public String getCurrenttime() {
+        return sharedPreference.getString(CURRENTTIME, "0");
+    }
 
     public void hideProgress() {
         while (mDialog != null && mDialog.isShowing()){

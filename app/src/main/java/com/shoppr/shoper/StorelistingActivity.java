@@ -153,10 +153,11 @@ public class StorelistingActivity extends AppCompatActivity {
                                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                             StoreListModel storeListModel = response.body();
                                             if (storeListModel.getData().getStores() != null) {
+                                                String hlw=new Gson().toJson(storeListModel);
+                                                Log.d("Hlw",hlw);
                                                 storeList = storeListModel.getData().getStores();
                                                 storeadapter = new Storeadapter(storeList, StorelistingActivity.this);
                                                 storerecyclerview.setAdapter(storeadapter);
-
                                                 storeadapter.notifyDataSetChanged();
                                             }
                                         }else {
@@ -430,8 +431,6 @@ public class StorelistingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     startActivity(new Intent(StorelistingActivity.this, SotoreDetailsActivity.class)
                             .putExtra("storeId", storeList.get(position).getId()));
-                   /* Intent intentone = new Intent(StorelistingActivity.this, SotoreDetailsActivity.class);
-                    startActivity(intentone);*/
                 }
             });
             String isSale = String.valueOf(storeList.get(position).getIsSale());
