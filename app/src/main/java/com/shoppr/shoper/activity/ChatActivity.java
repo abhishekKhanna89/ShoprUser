@@ -1000,7 +1000,6 @@ public class ChatActivity extends AppCompatActivity {
         bottomSheetDialog.setContentView(getLayoutInflater().inflate(R.layout.calling_bottom_dialog,null));
         bottomSheetDialog.setCancelable(false);
         bottomSheetDialog.setCanceledOnTouchOutside(true);
-
         bottomSheetDialog.show();
 
     }

@@ -37,7 +37,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     public static String chat_id;
     Intent intent;
     String type;
-    String a;
+    //String a;
 
     @Override
     public void

@@ -83,6 +83,8 @@ public class StorelistingActivity extends AppCompatActivity {
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        sessonManager = new SessonManager(this);
         searchView=findViewById(R.id.searchView);
 
         TextView textAddress = findViewById(R.id.textAddress);
@@ -94,10 +96,13 @@ public class StorelistingActivity extends AppCompatActivity {
             }
         });
         address = getIntent().getStringExtra("address");
+
         //Log.d("ress",address);
         textAddress.setText(address);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        sessonManager = new SessonManager(this);
+        sessonManager.setEditaddress(address);
+
+
+
         storerecyclerview = findViewById(R.id.storerecyclerview);
         storerecyclerview.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(StorelistingActivity.this, 1);
@@ -143,7 +148,7 @@ public class StorelistingActivity extends AppCompatActivity {
 //sessonManager.showProgress(StorelistingActivity.this);
                             Call<StoreListModel> call = ApiExecutor.getApiService(StorelistingActivity.this)
                                     .apiStoreList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon(),checkedFriends,search,radioName,
-                                            arrListLocation);
+                                            arrListLocation,address);
                             //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
                             call.enqueue(new Callback<StoreListModel>() {
                                 @Override
@@ -156,6 +161,8 @@ public class StorelistingActivity extends AppCompatActivity {
                                                 String hlw=new Gson().toJson(storeListModel);
                                                 Log.d("Hlw",hlw);
                                                 storeList = storeListModel.getData().getStores();
+                                                String aaa=new Gson().toJson(storeList);
+                                                //Log.d("jsjsjs",aaa);
                                                 storeadapter = new Storeadapter(storeList, StorelistingActivity.this);
                                                 storerecyclerview.setAdapter(storeadapter);
                                                 storeadapter.notifyDataSetChanged();
@@ -290,7 +297,7 @@ public class StorelistingActivity extends AppCompatActivity {
 
                             Call<StoreListModel> call = ApiExecutor.getApiService(StorelistingActivity.this)
                                     .apiStoreCategoryList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon(),
-                                            arrListLocation);
+                                            arrListLocation,address);
                             //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
                             call.enqueue(new Callback<StoreListModel>() {
                                 @Override
@@ -430,7 +437,7 @@ public class StorelistingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(StorelistingActivity.this, SotoreDetailsActivity.class)
-                            .putExtra("storeId", storeList.get(position).getId()));
+                            .putExtra("storeId", storeList.get(position).getId()).putExtra("address",sessonManager.getEditaddress()));
                 }
             });
             String isSale = String.valueOf(storeList.get(position).getIsSale());

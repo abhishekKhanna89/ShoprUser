@@ -56,7 +56,7 @@ public class FindingShopprActivity extends AppCompatActivity {
     SessonManager sessonManager;
     int chat_id;
     int shopId;
-    String  address;
+    String  address,city;
     ArrayList<String> arrListLocation = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,8 @@ public class FindingShopprActivity extends AppCompatActivity {
         setContentView(R.layout.activity_finding_shoppr);
         sessonManager = new SessonManager(this);
         address = getIntent().getStringExtra("address");
+        city=getIntent().getStringExtra("city");
+        //Log.d("ressCity",city);
 
         rippleBackground=(RippleBackground)findViewById(R.id.content);
         centerImage=findViewById(R.id.centerImage);
@@ -121,7 +123,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                             String b=sessonManager.getLon();
                             //Log.d("ssss",a+b);
                             Call<StartChatModel> call = ApiExecutor.getApiService(FindingShopprActivity.this)
-                                    .apiChatStart("Bearer " + sessonManager.getToken(),shop_id,sessonManager.getLat(),sessonManager.getLon(),arrListLocation);
+                                    .apiChatStart("Bearer " + sessonManager.getToken(),shop_id,sessonManager.getLat(),sessonManager.getLon(),arrListLocation,city);
                             call.enqueue(new Callback<StartChatModel>() {
                                 @Override
                                 public void onResponse(Call<StartChatModel> call, Response<StartChatModel> response) {
@@ -196,7 +198,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                         if (CommonUtils.isOnline(FindingShopprActivity.this)) {
                             //sessonManager.showProgress(FindingShopprActivity.this);
                             Call<AutoAssignModel>call=ApiExecutor.getApiService(FindingShopprActivity.this)
-                                    .apiAutoAssign("Bearer " + sessonManager.getToken(),chat_id,arrListLocation);
+                                    .apiAutoAssign("Bearer " + sessonManager.getToken(),chat_id,arrListLocation,address);
                             call.enqueue(new Callback<AutoAssignModel>() {
                                 @Override
                                 public void onResponse(Call<AutoAssignModel> call, Response<AutoAssignModel> response) {

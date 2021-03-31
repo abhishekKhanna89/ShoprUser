@@ -84,13 +84,15 @@ public interface ApiService {
                                      @Query("category_id[]") List<String> category_id,
                                      @Query("search")String search,
                                      @Query("sortby")String sortby,
-                                     @Query("location")ArrayList<String>location);
+                                     @Query("location")ArrayList<String>location,
+                                     @Query("city")String city);
 
     @NonNull
     @POST("stores-list")
     Call<StoreListModel>apiStoreCategoryList(@Header("Authorization") String token,@Query("lat")String lat,
                                              @Query("lang")String lang,
-                                             @Query("location")ArrayList<String>location);
+                                             @Query("location")ArrayList<String>location,
+                                             @Query("city")String city);
 
     @NonNull
     @GET("store-details/{id}")
@@ -104,7 +106,8 @@ public interface ApiService {
     @NonNull
     @POST("shoppr-list")
     Call<ShoprListModel> apiShoprList(@Header("Authorization") String token,
-                                      @Query("location")ArrayList<String>location);
+                                      @Query("location")ArrayList<String>location,
+                                      @Query("city")String city);
 
     @NonNull
     @GET("customer-balance")
@@ -133,7 +136,8 @@ public interface ApiService {
                                      @Path("store_id")int store_id,
                                      @Query("lat")String lat,
                                      @Query("lang")String lang,
-                                     @Query("location")ArrayList<String>location);
+                                     @Query("location")ArrayList<String>location,
+                                     @Query("city")String city);
    /* @NonNull
     @GET("start-chat/{store_id}")
     Call<StartChatModel>apiChatStart(@Header("Authorization") String token);*/
@@ -233,11 +237,13 @@ public interface ApiService {
     @POST("auto-assign/{chat_id}")
     Call<AutoAssignModel>apiAutoAssign(@Header("Authorization") String token,
                                        @Path("chat_id")int chat_id,
-                                       @Query("location")ArrayList<String>location);
+                                       @Query("location")ArrayList<String>location,
+                                       @Query("city")String city);
 
 
     @POST("check-availability")
-    Call<CheckLocationModel>apiCheckLocation(@Header("Authorization") String token, @Query("location")ArrayList<String>location);
+    Call<CheckLocationModel>apiCheckLocation(@Header("Authorization") String token, @Query("location")ArrayList<String>location,
+                                             @Query("city")String city);
 
     @NonNull
     @GET("logout")

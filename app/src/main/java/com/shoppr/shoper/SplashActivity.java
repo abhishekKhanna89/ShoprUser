@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-import com.facebook.login.Login;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.util.SessonManager;
@@ -24,6 +23,7 @@ public class SplashActivity extends AppCompatActivity {
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
             String newToken = instanceIdResult.getToken();
+            //Log.d("resToken",newToken);
             sessonManager.setNotificationToken(newToken);
             //Log.e("newToken", newToken);
             //getActivity().getPreferences(Context.MODE_PRIVATE).edit().putString("fb", newToken).apply();
@@ -46,6 +46,6 @@ public class SplashActivity extends AppCompatActivity {
                     Intent i = new Intent(getBaseContext(), LoginActivity.class);
                     startActivity(i);*/
             }
-        }, 5000);
+        }, 2000);
     }
 }

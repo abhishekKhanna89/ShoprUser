@@ -76,7 +76,7 @@
         <activity
             android:name=".activity.ChatHistoryActivity"
             android:label="Chat History"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.TrackLoactionActivity"
             android:screenOrientation="portrait" />
@@ -139,9 +139,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-        <meta-data
             android:name="com.razorpay.ApiKey"
             android:value="rzp_test_UOxHxOruy0x9uP" />
 
@@ -169,7 +166,8 @@
         <service
             android:name=".notifications.FirebaseMessageReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

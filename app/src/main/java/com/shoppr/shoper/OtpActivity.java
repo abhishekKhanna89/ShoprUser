@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shoppr.shoper.Model.OtpVerifyModel;
 import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
@@ -49,6 +50,7 @@ public class OtpActivity extends AppCompatActivity {
     //firebase auth object
     FirebaseAuth mAuth;
     Progressbar progressbar;
+    String newToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,12 @@ public class OtpActivity extends AppCompatActivity {
         type=getIntent().getStringExtra("type");
         mobile=getIntent().getStringExtra("mobile");
         //sendVerificationCode(mobile);
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+            newToken = instanceIdResult.getToken();
+            //Log.e("newToken", newToken);
+            //getActivity().getPreferences(Context.MODE_PRIVATE).edit().putString("fb", newToken).apply();
+        });
 
         btnsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +100,13 @@ public class OtpActivity extends AppCompatActivity {
             otpVerifyRequest.setOtp(editusername.getText().toString());
             otpVerifyRequest.setMobile(mobile);
             otpVerifyRequest.setType(type);
-            otpVerifyRequest.setNotification_token(sessonManager.getNotificationToken());
+            if (sessonManager.getNotificationToken()!=null){
+                otpVerifyRequest.setNotification_token(sessonManager.getNotificationToken());
+                Log.d("notification",sessonManager.getNotificationToken());
+            }else if (newToken!=null){
+                otpVerifyRequest.setNotification_token(newToken);
+            }
+
             Call<OtpVerifyModel> call= ApiExecutor.getApiService(OtpActivity.this)
                     .otpService(otpVerifyRequest);
             call.enqueue(new Callback<OtpVerifyModel>() {
