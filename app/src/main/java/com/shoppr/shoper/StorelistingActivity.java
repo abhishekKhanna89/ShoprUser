@@ -74,8 +74,7 @@ public class StorelistingActivity extends AppCompatActivity {
 
     private SearchView searchView;
     String search;
-    String address;
-    ArrayList<String> arrListLocation = new ArrayList<>();
+    String address,cityName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,10 +95,11 @@ public class StorelistingActivity extends AppCompatActivity {
             }
         });
         address = getIntent().getStringExtra("address");
-
-        //Log.d("ress",address);
+        cityName=getIntent().getStringExtra("city");
+        Log.d("cityName",cityName);
         textAddress.setText(address);
         sessonManager.setEditaddress(address);
+        sessonManager.setCityName(cityName);
 
 
 
@@ -142,13 +142,13 @@ public class StorelistingActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         JSONArray jsonArray = jsonObject.getJSONArray("predictions");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject searchObj = jsonArray.getJSONObject(i);
-                            arrListLocation.add(searchObj.getString("terms"));
+                        JSONObject jsonObject1=jsonArray.getJSONObject(0);
+                        JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                        String location = jsonArray1.toString();
 //sessonManager.showProgress(StorelistingActivity.this);
                             Call<StoreListModel> call = ApiExecutor.getApiService(StorelistingActivity.this)
                                     .apiStoreList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon(),checkedFriends,search,radioName,
-                                            arrListLocation,address);
+                                            location,cityName);
                             //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
                             call.enqueue(new Callback<StoreListModel>() {
                                 @Override
@@ -186,7 +186,6 @@ public class StorelistingActivity extends AppCompatActivity {
                                     //sessonManager.hideProgress();
                                 }
                             });
-                        }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -291,13 +290,12 @@ public class StorelistingActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         JSONArray jsonArray = jsonObject.getJSONArray("predictions");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject searchObj = jsonArray.getJSONObject(i);
-                            arrListLocation.add(searchObj.getString("terms"));
-
+                        JSONObject jsonObject1=jsonArray.getJSONObject(0);
+                        JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                        String location = jsonArray1.toString();
                             Call<StoreListModel> call = ApiExecutor.getApiService(StorelistingActivity.this)
                                     .apiStoreCategoryList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon(),
-                                            arrListLocation,address);
+                                            location,cityName);
                             //Log.d("location",sessonManager.getLat()+":"+sessonManager.getLon());
                             call.enqueue(new Callback<StoreListModel>() {
                                 @Override
@@ -334,7 +332,6 @@ public class StorelistingActivity extends AppCompatActivity {
                                     sessonManager.hideProgress();
                                 }
                             });
-                        }
 
                     } catch (JSONException e) {
                         e.printStackTrace();

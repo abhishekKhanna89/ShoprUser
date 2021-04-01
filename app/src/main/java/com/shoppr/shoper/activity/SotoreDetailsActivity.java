@@ -65,7 +65,7 @@ public class SotoreDetailsActivity extends AppCompatActivity {
         sessonManager=new SessonManager(this);
 
         storeId=getIntent().getIntExtra("storeId",0);
-        Log.d("ShoprId",""+storeId);
+        Log.d("ShoprId",""+sessonManager.getCityName());
 
         /*Todo:- ViewPager With TabLayout find id*/
         mViewPager = (ViewPager)findViewById(R.id.viewPage);
@@ -86,7 +86,8 @@ public class SotoreDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                  startActivity(new Intent(SotoreDetailsActivity.this,FindingShopprActivity.class)
                 .putExtra("shopId",shopId).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                 .putExtra("address",sessonManager.getEditaddress()));  /*startActivity(new Intent(SotoreDetailsActivity.this,ChatActivity.class)
+                 .putExtra("address",sessonManager.getEditaddress())
+                 .putExtra("city",sessonManager.getCityName()));  /*startActivity(new Intent(SotoreDetailsActivity.this,ChatActivity.class)
                 .putExtra("shopId",shopId).putExtra("chat_status","3").addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));  startActivity(new Intent(SotoreDetailsActivity.this,ChatActivity.class)
                 .putExtra("shopId",shopId).putExtra("chat_status","3").addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
             }
@@ -218,7 +219,8 @@ public class SotoreDetailsActivity extends AppCompatActivity {
     }
 
     public void store_list(View view) {
-        startActivity(new Intent(SotoreDetailsActivity.this, StorelistingActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("address",sessonManager.getEditaddress()));
+        startActivity(new Intent(SotoreDetailsActivity.this, StorelistingActivity.class).putExtra("address",sessonManager.getEditaddress())
+                .putExtra("city",sessonManager.getCityName())
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 }

@@ -57,7 +57,6 @@ public class FindingShopprActivity extends AppCompatActivity {
     int chat_id;
     int shopId;
     String  address,city;
-    ArrayList<String> arrListLocation = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,16 +113,16 @@ public class FindingShopprActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("predictions");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject searchObj = jsonArray.getJSONObject(i);
-                        arrListLocation.add(searchObj.getString("terms"));
+                    JSONObject jsonObject1=jsonArray.getJSONObject(0);
+                    JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                    String location = jsonArray1.toString();
                         if (CommonUtils.isOnline(FindingShopprActivity.this)) {
                             //sessonManager.showProgress(FindingShopprActivity.this);
                             String a=sessonManager.getLat();
                             String b=sessonManager.getLon();
                             //Log.d("ssss",a+b);
                             Call<StartChatModel> call = ApiExecutor.getApiService(FindingShopprActivity.this)
-                                    .apiChatStart("Bearer " + sessonManager.getToken(),shop_id,sessonManager.getLat(),sessonManager.getLon(),arrListLocation,city);
+                                    .apiChatStart("Bearer " + sessonManager.getToken(),shop_id,sessonManager.getLat(),sessonManager.getLon(),location,city);
                             call.enqueue(new Callback<StartChatModel>() {
                                 @Override
                                 public void onResponse(Call<StartChatModel> call, Response<StartChatModel> response) {
@@ -163,8 +162,6 @@ public class FindingShopprActivity extends AppCompatActivity {
                         } else {
                             CommonUtils.showToastInCenter(FindingShopprActivity.this, getString(R.string.please_check_network));
                         }
-                        break;
-                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -192,13 +189,13 @@ public class FindingShopprActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("predictions");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject searchObj = jsonArray.getJSONObject(i);
-                        arrListLocation.add(searchObj.getString("terms"));
+                    JSONObject jsonObject1=jsonArray.getJSONObject(0);
+                    JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                    String location = jsonArray1.toString();
                         if (CommonUtils.isOnline(FindingShopprActivity.this)) {
                             //sessonManager.showProgress(FindingShopprActivity.this);
                             Call<AutoAssignModel>call=ApiExecutor.getApiService(FindingShopprActivity.this)
-                                    .apiAutoAssign("Bearer " + sessonManager.getToken(),chat_id,arrListLocation,address);
+                                    .apiAutoAssign("Bearer " + sessonManager.getToken(),chat_id,location,city);
                             call.enqueue(new Callback<AutoAssignModel>() {
                                 @Override
                                 public void onResponse(Call<AutoAssignModel> call, Response<AutoAssignModel> response) {
@@ -235,8 +232,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                         } else {
                             CommonUtils.showToastInCenter(FindingShopprActivity.this, getString(R.string.please_check_network));
                         }
-                        break;
-                    }
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();

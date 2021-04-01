@@ -97,7 +97,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     String merchant;
     /*Todo:- Address Details*/
     TextView boldAddressText, smallAddressText;
-    String locationAddress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,23 +113,20 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         boldAddressText = findViewById(R.id.boldAddressText);
         smallAddressText = findViewById(R.id.smallAddressText);
 
-
         addBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //location_address = autoCompleteTextViewLoaction.getText().toString();
-                //Log.d("locality",location_address);
-                //Log.d("res",location_address);
                 if (merchant != null) {
                     Intent intent = new Intent();
-                    intent.putExtra("location_address", locationAddress);
+                    intent.putExtra("location_address", location_address);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
                     startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
-                            .putExtra("location_address", locationAddress)
-                            .putExtra("value", "0")
+                            .putExtra("location_address", location_address)
+                            .putExtra("localitys",locality)
+                            .putExtra("addressLocationValue", "0")
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 }
 
@@ -254,7 +251,8 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
         Address address = list.get(0);
 
-        String localitys = address.getLocality();
+        locality = address.getLocality();
+        Log.d("llllll",locality);
 
         location_address = address.getAddressLine(0);
         String[] separated = location_address.split(",");
@@ -262,7 +260,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         boldAddressText.setText(second);
         smallAddressText.setText(location_address);
 
-        locationAddress=smallAddressText.getText().toString();
+        location_address=smallAddressText.getText().toString();
     }
 
     private void getLocationPermission() {

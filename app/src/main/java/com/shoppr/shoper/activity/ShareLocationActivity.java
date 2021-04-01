@@ -110,10 +110,10 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
     private FusedLocationProviderClient mFusedLocationProviderClient;
     ArrayAdapter<String> arrayAdapter_stateLocation;
     ArrayList<String> arrListLocation = new ArrayList<>();
-    ArrayList<String> listTermsLocation = new ArrayList<>();
+
 
     ImageView imgClose;
-    String locality, subLocality,cityName;
+    String locality, subLocality,cityName,localitys;
     SessonManager sessonManager;
     int chat_id;
     /*Todo:- Address Details*/
@@ -346,11 +346,11 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         JSONArray jsonArray = jsonObject.getJSONArray("predictions");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject searchObj = jsonArray.getJSONObject(i);
-                            listTermsLocation.add(searchObj.getString("terms"));
+                        JSONObject jsonObject1=jsonArray.getJSONObject(0);
+                        JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                        String location = jsonArray1.toString();
                             Call<CheckLocationModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(),listTermsLocation,cityName);
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(),location,locality);
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, retrofit2.Response<CheckLocationModel> response) {
@@ -373,8 +373,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
 
                                 }
                             });
-                            break;
-                        }
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -466,7 +465,6 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onErrorResponse(VolleyError error) {
                 arrListLocation.clear();
-                listTermsLocation.clear();
             }
         }) {
         };
@@ -528,7 +526,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                                 }
 
                                 Address address = list.get(0);
-                                String localitys = address.getLocality();
+                                localitys = address.getLocality();
                                 location_address = address.getAddressLine(0);
                                 cityName= address.getAddressLine(0);
                                 String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + location_address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
@@ -540,11 +538,11 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                                         try {
                                             JSONObject jsonObject = new JSONObject(response);
                                             JSONArray jsonArray = jsonObject.getJSONArray("predictions");
-                                            for (int i = 0; i < jsonArray.length(); i++) {
-                                                JSONObject searchObj = jsonArray.getJSONObject(i);
-                                                listTermsLocation.add(searchObj.getString("terms"));
+                                            JSONObject jsonObject1=jsonArray.getJSONObject(0);
+                                            JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                                            String location = jsonArray1.toString();
                                                 Call<CheckLocationModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
-                                                        .apiCheckLocation("Bearer " + sessonManager.getToken(),listTermsLocation,cityName);
+                                                        .apiCheckLocation("Bearer " + sessonManager.getToken(),location,localitys);
                                                 call.enqueue(new Callback<CheckLocationModel>() {
                                                     @Override
                                                     public void onResponse(Call<CheckLocationModel> call, retrofit2.Response<CheckLocationModel> response) {
@@ -567,8 +565,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
 
                                                     }
                                                 });
-                                                break;
-                                            }
+
 
                                         } catch (JSONException e) {
                                             e.printStackTrace();

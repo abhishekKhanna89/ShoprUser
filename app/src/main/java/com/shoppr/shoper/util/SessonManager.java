@@ -32,6 +32,7 @@ public class SessonManager {
 
 
     public static final String editaddress="editaddress";
+    public static final String CityName="city_name";
     public static final String CHAT_ID="chat_id";
 
     public static final String strList="sList";
@@ -174,6 +175,14 @@ public class SessonManager {
 
     public String getCurrenttime() {
         return sharedPreference.getString(CURRENTTIME, "0");
+    }
+
+    public void setCityName(String cityName){
+        editor.putString(CityName,cityName);
+        editor.apply();
+    }
+    public String getCityName(){
+        return sharedPreference.getString(CityName,"");
     }
 
     public void hideProgress() {
