@@ -156,6 +156,8 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
             if (order.getStatus().equalsIgnoreCase("Confirmed")){
                 holder.statusText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
                 holder.statusText.setText("Status :"+order.getStatus());
+            }else {
+                holder.statusText.setText("Status :"+order.getStatus());
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

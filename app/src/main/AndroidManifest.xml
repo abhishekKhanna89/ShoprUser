@@ -123,10 +123,7 @@
             android:name=".RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/loginTheme" />
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

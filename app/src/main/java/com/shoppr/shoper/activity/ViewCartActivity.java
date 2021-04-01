@@ -81,6 +81,17 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_arrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        btn_payNow = (Button) findViewById(R.id.btn_payNow);
+        btn_continue = (Button) findViewById(R.id.btn_continue_shoping);
+        linrBottomOrder =findViewById(R.id.liner_order);
+        btn_cod =findViewById(R.id.btn_cod);
+        totalAmountText = findViewById(R.id.totalAmountText);
+        serviceChargeText = findViewById(R.id.serviceChargeText);
+        groundTotalText = findViewById(R.id.groundTotalText);
+        imgCart = (ImageView) findViewById(R.id.imge_cart_img);
+        cardOrderSummary=findViewById(R.id.cardOrderSummary);
+        walletCardView=findViewById(R.id.walletCardView);
+
         valueId=getIntent().getStringExtra("valueId");
         if (valueId!=null&&valueId.equalsIgnoreCase("1")){
             chatId=getIntent().getIntExtra("chat_id",0);
@@ -96,16 +107,6 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ViewCartActivity.this, 1);
         RvMyCart.setLayoutManager(layoutManager);
 
-        btn_payNow = (Button) findViewById(R.id.btn_payNow);
-        btn_continue = (Button) findViewById(R.id.btn_continue_shoping);
-        linrBottomOrder =findViewById(R.id.liner_order);
-        btn_cod =findViewById(R.id.btn_cod);
-        totalAmountText = findViewById(R.id.totalAmountText);
-        serviceChargeText = findViewById(R.id.serviceChargeText);
-        groundTotalText = findViewById(R.id.groundTotalText);
-        imgCart = (ImageView) findViewById(R.id.imge_cart_img);
-        cardOrderSummary=findViewById(R.id.cardOrderSummary);
-        walletCardView=findViewById(R.id.walletCardView);
 
         /*Todo:- CheckBox Button*/
         checkbox=findViewById(R.id.checkbox);
@@ -258,10 +259,10 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                                 totalAmountText.setText("₹ " +cartViewModel.getData().getTotal());
                                 serviceChargeText.setText("₹ " +cartViewModel.getData().getServiceCharge());
                                 groundTotalText.setText("₹ " +cartViewModel.getData().getGrandTotal());
-                                if (0<cartViewModel.getData().getWallet_balance()){
+                                if (cartViewModel.getData().getWallet_balance()>0){
                                     walletCardView.setVisibility(View.VISIBLE);
                                     checkbox.setText("₹ " +cartViewModel.getData().getWallet_balance());
-                                }else {
+                                }else if(cartViewModel.getData().getWallet_balance()==0){
                                     walletCardView.setVisibility(View.GONE);
                                 }
                                 arrCartItemList = (ArrayList<Item>) cartViewModel.getData().getItems();
@@ -269,11 +270,9 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                                     btn_continue.setVisibility(View.VISIBLE);
                                     imgCart.setVisibility(View.VISIBLE);
                                     cardOrderSummary.setVisibility(View.GONE);
-                                    walletCardView.setVisibility(View.GONE);
                                 }else {
                                     cardOrderSummary.setVisibility(View.VISIBLE);
                                     linrBottomOrder.setVisibility(View.VISIBLE);
-                                    walletCardView.setVisibility(View.VISIBLE);
                                 }
                                 MyCartAdapter myCartAdapter = new MyCartAdapter(ViewCartActivity.this, arrCartItemList);
                                 RvMyCart.setAdapter(myCartAdapter);
