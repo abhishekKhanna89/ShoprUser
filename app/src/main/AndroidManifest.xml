@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+
     <application
         android:name=".SendBird.BaseApplication"
         android:allowBackup="true"
@@ -28,9 +29,10 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/security_config"
         android:theme="@style/Theme.Shoper"
         android:usesCleartextTraffic="true"
-        tools:targetApi="m">
+        tools:targetApi="n">
         <activity android:name=".activity.CallingServiceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CallTheme"/>
@@ -101,9 +103,6 @@
             android:name=".activity.UpdateProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.AddMoneyActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -141,7 +140,6 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
         <activity
             android:name=".StorelistingActivity"

@@ -73,8 +73,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager = new SessonManager(LoginActivity.this);
-
-
         btnsubmit=findViewById(R.id.btnsubmit);
         editusername=findViewById(R.id.editusername);
 
@@ -199,9 +197,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
 
         //we set the listner to the location manager
+        if (locman!=null){
+            locman.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, loclis);
+        }
 
 
-        locman.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, loclis);
         /*
         1st para=Provider i.e. from where are we getting our data; our phones network or gps?
         2nd para=time in milliseconds after which locations must be updated
@@ -209,7 +209,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         4th para=locations listner
          */
 
-        new CountDownTimer(10000, 1000) {
+        new CountDownTimer(0, 0) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -230,7 +230,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                locman.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, loclis);
+                if (locman!=null){
+                    locman.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, loclis);
+                }
+
             }
         }.start();
 
@@ -251,6 +254,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
                             Toast.makeText(LoginActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             if((!editusername.getText().toString().isEmpty())){
+                                sessonManager.getNotificationToken();
                                 startActivity(new Intent(LoginActivity.this,OtpActivity.class)
                                         .putExtra("type","login")
                                         .putExtra("mobile",editusername.getText().toString())
@@ -259,6 +263,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 finish();
                             }else {
                                 sessonManager.getToken();
+                                sessonManager.getNotificationToken();
                                 PrefUtils.getAppId(LoginActivity.this);
                                 //sessonManager.setToken(response.body().getToken());
                                 startActivity(new Intent(LoginActivity.this,MapsActivity.class)

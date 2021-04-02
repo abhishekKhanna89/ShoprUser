@@ -79,6 +79,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_loaction);
+
         sessonManager=new SessonManager(this);
 
         messageId=getIntent().getStringExtra("chatId");

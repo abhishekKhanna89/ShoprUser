@@ -126,6 +126,7 @@ public class OtpActivity extends AppCompatActivity {
                                     AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
                                         if (isSuccess) {
                                             setResult(RESULT_OK, null);
+                                            sessonManager.getNotificationToken();
                                             //Toast.makeText(OtpActivity.this, ""+isSuccess, Toast.LENGTH_SHORT).show();
                                             Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(OtpActivity.this, MapsActivity.class)

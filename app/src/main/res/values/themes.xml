@@ -14,6 +14,8 @@
         <!-- Customize your theme here. -->
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowIsTranslucent">true</item>
+
+
     </style>
     <style name="CallTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/callBackground</item>
@@ -72,4 +74,8 @@
         <item name="android:typeface">sans</item>
     </style>
 
+
+    <style name="AppTheme" parent="android:Theme">
+        <item name="android:windowDisablePreview">true</item>
+    </style>
 </resources>

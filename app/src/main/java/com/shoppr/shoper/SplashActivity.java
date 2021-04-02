@@ -14,37 +14,38 @@ import com.shoppr.shoper.util.SessonManager;
 
 public class SplashActivity extends AppCompatActivity {
     SessonManager sessonManager;
+    String newToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getSupportActionBar().hide();
         sessonManager = new SessonManager(SplashActivity.this);
-
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            //Log.d("resToken",newToken);
+            newToken = instanceIdResult.getToken();
             sessonManager.setNotificationToken(newToken);
-            //Log.e("newToken", newToken);
-            //getActivity().getPreferences(Context.MODE_PRIVATE).edit().putString("fb", newToken).apply();
+            // Log.d("notificationToken",newToken);
         });
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if(sessonManager.getToken().isEmpty()){
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    Log.d("resSession",sessonManager.getToken());
+                    sessonManager.getNotificationToken();
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                     finish();
                 }
                 else {
-                    startActivity(new Intent(SplashActivity.this, MapsActivity.class));
+                    sessonManager.getNotificationToken();
+                    Intent intent = new Intent(SplashActivity.this, MapsActivity.class);
+                  //  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                     finish();
 
                 }
 
-                // This method w
-                /*finish();
-                    Intent i = new Intent(getBaseContext(), LoginActivity.class);
-                    startActivity(i);*/
             }
         }, 2000);
     }

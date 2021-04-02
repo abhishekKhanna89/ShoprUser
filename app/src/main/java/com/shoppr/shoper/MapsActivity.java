@@ -48,6 +48,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.shoppr.shoper.Model.CheckLocation.CheckLocationModel;
@@ -114,9 +115,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     /*Todo:- Location Manager*/
     private Location location;
     private GoogleApiClient googleApiClient;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+   // private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private LocationRequest locationRequest;
-    private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
+   // private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
     // lists for permissions
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -147,7 +148,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_maps);
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -493,7 +493,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     protected void onStart() {
         super.onStart();
-        myProfile();
         if (googleApiClient != null) {
             googleApiClient.connect();
         }
@@ -502,7 +501,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     protected void onResume() {
         super.onResume();
-        myProfile();
         if (!checkPlayServices()) {
             //locationTv.setText("You need to install Google Play Services to use the App properly");
         }
@@ -511,7 +509,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     protected void onPause() {
         super.onPause();
-        myProfile();
         // stop location updates
         if (googleApiClient != null && googleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
@@ -525,7 +522,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST);
+                apiAvailability.getErrorDialog(this, resultCode, 0);
             } else {
                 finish();
             }
@@ -561,8 +558,8 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     private void startLocationUpdates() {
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+        locationRequest.setInterval(0);
+        locationRequest.setFastestInterval(0);
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -678,6 +675,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                         } else {
                                             //Toast.makeText(MapsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                             //progressbar.hideProgress();
+                                            mainPage.setVisibility(View.GONE);
                                             secondPage.setVisibility(View.VISIBLE);
                                         }
 
@@ -823,7 +821,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 .show();
     }
     private void openPlayStore() {
-        if (this == null) {
+        if (getApplication() == null) {
             return;
         }
         final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
