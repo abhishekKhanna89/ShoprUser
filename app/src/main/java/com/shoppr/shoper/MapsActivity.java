@@ -287,7 +287,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         if (CommonUtils.isOnline(MapsActivity.this)) {
             //Log.d("resAddd",addressText.getText().toString());
             urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
-            Log.d("addressEEEE",key);
+            //Log.d("addressEEEE",key);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -533,6 +533,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         return true;
     }
 
+    /*Todo:- GPS*/
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
@@ -747,6 +748,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             }
         }
     }
+    /*Todo:- update version*/
     private void appCheckVersionApi() {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, VERSION_URL, new com.android.volley.Response.Listener<String>() {
             @Override
