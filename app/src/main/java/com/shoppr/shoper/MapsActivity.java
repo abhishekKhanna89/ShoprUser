@@ -604,7 +604,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                             JSONObject jsonObject1=jsonArray.getJSONObject(0);
                             JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
                             String location = jsonArray1.toString();
-                            Log.d("loactionTTTTT",location);
+                            Log.d("loactionTTTTT",location+"hhh  "+city_name);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
                                     .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName);
                             call.enqueue(new Callback<CheckLocationModel>() {
@@ -659,6 +659,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                             JSONObject jsonObject1=jsonArray.getJSONObject(0);
                             JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
                             String location = jsonArray1.toString();
+                            Log.d("jnxdjhxj",location);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
                                     .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName);
                             call.enqueue(new Callback<CheckLocationModel>() {
