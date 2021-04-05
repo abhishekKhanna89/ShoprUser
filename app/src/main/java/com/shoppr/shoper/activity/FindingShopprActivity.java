@@ -3,14 +3,21 @@ package com.shoppr.shoper.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +27,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.developer.kalert.KAlertDialog;
 import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.AutoAssign.AutoAssignModel;
@@ -57,6 +65,7 @@ public class FindingShopprActivity extends AppCompatActivity {
     int chat_id;
     int shopId;
     String  address,city;
+    private PopupWindow pwindo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -212,6 +221,24 @@ public class FindingShopprActivity extends AppCompatActivity {
                                                 Toast.makeText(FindingShopprActivity.this, "" + autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         }else {
+                                            Dialog d=new Dialog(FindingShopprActivity.this);
+                                            d.setContentView(R.layout.your_layout_screen);
+                                            d.setCanceledOnTouchOutside(false);
+                                            d.setCancelable(false);
+                                            Button btnHome=d.findViewById(R.id.btnHome);
+                                            btnHome.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    startActivity(new Intent(FindingShopprActivity.this,MapsActivity.class)
+                                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                                    d.dismiss();
+                                                }
+                                            });
+                                            TextView errorText=d.findViewById(R.id.errorText);
+                                            errorText.setText(response.body().getMessage());
+                                            d.show();
+                                            Log.d("failedResponse",response.body().getMessage());
                                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                                     sessonManager.setToken("");
