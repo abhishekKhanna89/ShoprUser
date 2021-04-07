@@ -74,6 +74,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
     String str_dest,str_org,url;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     CountDownTimer countDownTimer;
+    String location_address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +116,12 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+                                for (int i=0;i<list.size();i++){
+                                    Address address = list.get(i);
+                                    String localitys = address.getLocality();
+                                    location_address = address.getAddressLine(0);
+                                }
 
-                                Address address = list.get(0);
-                                String localitys = address.getLocality();
-                                String location_address = address.getAddressLine(0);
                                 int heightC =120;
                                 int widthC = 80;
                                 BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.pin_logo);

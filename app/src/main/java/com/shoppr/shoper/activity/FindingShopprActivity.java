@@ -129,7 +129,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                             //sessonManager.showProgress(FindingShopprActivity.this);
                             String a=sessonManager.getLat();
                             String b=sessonManager.getLon();
-                            //Log.d("ssss",a+b);
+                            Log.d("ssss",a+b);
                             Call<StartChatModel> call = ApiExecutor.getApiService(FindingShopprActivity.this)
                                     .apiChatStart("Bearer " + sessonManager.getToken(),shop_id,sessonManager.getLat(),sessonManager.getLon(),location,city);
                             call.enqueue(new Callback<StartChatModel>() {

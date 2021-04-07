@@ -574,6 +574,8 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     private void serviceMap(Location location) {
         if (location != null) {
+            sessonManager.setLat(String.valueOf(location.getLatitude()));
+            sessonManager.setLon(String.valueOf(location.getLongitude()));
             Geocoder geocoder = new Geocoder(MapsActivity.this);
             List<Address> list = null;
             try {
@@ -725,6 +727,8 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         }
         Log.d("ressssssssLoa",""+location);
         if (location != null) {
+            sessonManager.setLat(String.valueOf(location.getLatitude()));
+            sessonManager.setLon(String.valueOf(location.getLongitude()));
             Geocoder geocoder = new Geocoder(MapsActivity.this);
             List<Address> list = null;
             try {
