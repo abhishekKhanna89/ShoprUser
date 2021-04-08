@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,11 +23,15 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.sendbird.calls.DirectCall;
+import com.sendbird.calls.SendBirdCall;
 import com.shoppr.shoper.Model.OtpVerifyModel;
 import com.shoppr.shoper.SendBird.BaseApplication;
+import com.shoppr.shoper.SendBird.call.CallService;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.requestdata.OtpVerifyRequest;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.Progressbar;
@@ -119,21 +124,32 @@ public class OtpActivity extends AppCompatActivity {
                             OtpVerifyModel otpVerifyModel=response.body();
                             String userId=otpVerifyModel.getUser_id();
                             String sendbird_token=otpVerifyModel.getSendbird_token();
-                            String savedAppId = PrefUtils.getAppId(OtpActivity.this);
+                            String  savedAppId=BaseApplication.APP_ID;
+                            //String savedAppId = PrefUtils.getAppId(OtpActivity.this);
                             if((!editusername.getText().toString().isEmpty())){
                                 sessonManager.setToken(response.body().getToken());
-                                if (((BaseApplication)getApplication()).initSendBirdCall(savedAppId)) {
+
+                                Log.d("savedid+++",savedAppId);
+                                //Log.d("savedid+++", String.valueOf(((BaseApplication)getApplication()).initSendBirdCall(savedAppId)));
+                                if (!TextUtils.isEmpty(savedAppId) && !TextUtils.isEmpty(userId) &&((BaseApplication)getApplication()).initSendBirdCall(savedAppId)) {
                                     AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
                                         if (isSuccess) {
                                             setResult(RESULT_OK, null);
                                             sessonManager.getNotificationToken();
-                                            //Toast.makeText(OtpActivity.this, ""+isSuccess, Toast.LENGTH_SHORT).show();
                                             Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(OtpActivity.this, MapsActivity.class)
-                                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                            finish();
+
+                                            CallService.dial(OtpActivity.this, "lakshmikant", false);
+
+                                            //CallService.stopService(getApplicationContext());
+
+                                           /* Intent intent = new Intent(OtpActivity.this, MapsActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(intent);
+                                            finish();*/
+
                                         }
                                     });
+
                                 }
                             }
                         }else {

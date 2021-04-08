@@ -20,23 +20,27 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-
     <application
         android:name=".SendBird.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
+        android:networkSecurityConfig="@xml/security_config"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="true"
-        android:networkSecurityConfig="@xml/security_config"
         android:theme="@style/Theme.Shoper"
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
-        <activity android:name=".activity.CallingServiceActivity"
+        <activity
+            android:name=".activity.InitilizingActivity"
+            android:label="@string/title_activity_initilizing"
+            android:theme="@style/Theme.Shoper.NoActionBar"></activity>
+        <activity
+            android:name=".activity.CallingServiceActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CallTheme"/>
+            android:theme="@style/CallTheme" />
         <activity
             android:name=".activity.ImageZoomActivity"
             android:label="Gallery"
@@ -79,7 +83,7 @@
         <activity
             android:name=".activity.ChatHistoryActivity"
             android:label="Chat History"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.TrackLoactionActivity"
             android:screenOrientation="portrait" />
@@ -123,7 +127,6 @@
             android:name=".RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/loginTheme" />
-
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -206,10 +209,13 @@
 
         <service
             android:name=".SendBird.call.CallService"
+            android:enabled="true"
+            android:exported="true"
             android:stopWithTask="false" />
         <service
             android:name=".SendBird.fcm.MyFirebaseMessagingService"
-            android:exported="false">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

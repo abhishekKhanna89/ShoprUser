@@ -23,6 +23,8 @@ import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.SendBird.utils.ToastUtils;
 import com.shoppr.shoper.SendBird.utils.UserInfoUtils;
+import com.shoppr.shoper.SplashActivity;
+import com.shoppr.shoper.activity.InitilizingActivity;
 
 
 public class CallService extends Service {
@@ -197,28 +199,36 @@ public class CallService extends Service {
     }
 
     public static void dial(Context context, String doDialWithCalleeId, boolean isVideoCall) {
-        if (SendBirdCall.getOngoingCallCount() > 0) {
-            ToastUtils.showToast(context, "Ringing.");
-            Log.i(BaseApplication.TAG, "[CallService] dial() => SendBirdCall.getOngoingCallCount(): " + SendBirdCall.getOngoingCallCount());
-            return;
+
+
+        if (doDialWithCalleeId.equals("lakshmikant")) {
+        context.startActivity(new Intent(context, InitilizingActivity.class));
+
+        } else {
+
+            if (SendBirdCall.getOngoingCallCount() > 0) {
+                ToastUtils.showToast(context, "Ringing.");
+                Log.i(BaseApplication.TAG, "[CallService] dial() => SendBirdCall.getOngoingCallCount(): " + SendBirdCall.getOngoingCallCount());
+                return;
+            }
+
+            Log.i(BaseApplication.TAG, "[CallService] dial()");
+
+            ServiceData serviceData = new ServiceData();
+            serviceData.isHeadsUpNotification = false;
+            serviceData.remoteNicknameOrUserId = doDialWithCalleeId;
+            serviceData.callState = CallActivity.STATE.STATE_OUTGOING;
+            serviceData.callId = null;
+            serviceData.isVideoCall = isVideoCall;
+            serviceData.calleeIdToDial = doDialWithCalleeId;
+            serviceData.doDial = true;
+            serviceData.doAccept = false;
+            serviceData.doLocalVideoStart = false;
+
+            startService(context, serviceData);
+
+            context.startActivity(getCallActivityIntent(context, serviceData, false));
         }
-
-        Log.i(BaseApplication.TAG, "[CallService] dial()");
-
-        ServiceData serviceData = new ServiceData();
-        serviceData.isHeadsUpNotification = false;
-        serviceData.remoteNicknameOrUserId = doDialWithCalleeId;
-        serviceData.callState = CallActivity.STATE.STATE_OUTGOING;
-        serviceData.callId = null;
-        serviceData.isVideoCall = isVideoCall;
-        serviceData.calleeIdToDial = doDialWithCalleeId;
-        serviceData.doDial = true;
-        serviceData.doAccept = false;
-        serviceData.doLocalVideoStart = false;
-
-        startService(context, serviceData);
-
-        context.startActivity(getCallActivityIntent(context, serviceData, false));
     }
 
     public static void onRinging(Context context, @NonNull DirectCall call) {

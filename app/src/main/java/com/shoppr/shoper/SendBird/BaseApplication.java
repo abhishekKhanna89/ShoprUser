@@ -33,16 +33,14 @@ public class BaseApplication extends MultiDexApplication { // multidex
     public static final String VERSION = "1.4.0";
 
     public static final String TAG = "SendBirdCalls";
-
     // Refer to "https://github.com/sendbird/quickstart-calls-android".
-    public static final String APP_ID = "CE02AC82-1E42-44C9-A255-26BA2220CA74";
+    public static final String APP_ID = "A7EF97E9-E7B5-4E23-A6C9-B85E4B84C549";
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.i(BaseApplication.TAG, "[BaseApplication] onCreate()");
-
-        initSendBirdCall(PrefUtils.getAppId(getApplicationContext()));
+        //initSendBirdCall(PrefUtils.getAppId(getApplicationContext()));
     }
 
     public boolean initSendBirdCall(String appId) {
