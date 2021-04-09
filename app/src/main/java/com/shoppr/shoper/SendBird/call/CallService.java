@@ -227,7 +227,7 @@ public class CallService extends Service {
             startService(context, serviceData);
 
             context.startActivity(getCallActivityIntent(context, serviceData, false));
-//        }
+        //}
     }
 
     public static void onRinging(Context context, @NonNull DirectCall call) {
