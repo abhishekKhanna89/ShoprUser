@@ -202,8 +202,7 @@ public class CallService extends Service {
 
 
         if (doDialWithCalleeId.equals("lakshmikant")) {
-        context.startActivity(new Intent(context, InitilizingActivity.class));
-
+           context.startActivity(new Intent(context, InitilizingActivity.class));
         } else {
 
             if (SendBirdCall.getOngoingCallCount() > 0) {
