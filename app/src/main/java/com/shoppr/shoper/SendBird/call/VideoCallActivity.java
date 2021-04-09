@@ -2,6 +2,7 @@ package com.shoppr.shoper.SendBird.call;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.sendbird.calls.SendBirdVideoView;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.SendBird.utils.ToastUtils;
+import com.shoppr.shoper.activity.InitilizingActivity;
 
 
 import org.webrtc.RendererCommon;
@@ -173,7 +175,9 @@ public class VideoCallActivity extends CallActivity {
                 if (e != null) {
                     Log.i(BaseApplication.TAG, "[VideoCallActivity] dial() => e: " + e.getMessage());
                     if (e.getMessage() != null) {
-                        ToastUtils.showToast(mContext, e.getMessage());
+
+                        startActivity(new Intent(this, InitilizingActivity.class));
+                        //ToastUtils.showToast(mContext, e.getMessage());
                     }
 
                     finishWithEnding(e.getMessage());

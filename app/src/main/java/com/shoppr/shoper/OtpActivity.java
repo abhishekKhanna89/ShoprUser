@@ -23,8 +23,12 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.sendbird.calls.CallOptions;
+import com.sendbird.calls.DialParams;
 import com.sendbird.calls.DirectCall;
 import com.sendbird.calls.SendBirdCall;
+import com.sendbird.calls.SendBirdException;
+import com.sendbird.calls.handler.DialHandler;
 import com.shoppr.shoper.Model.OtpVerifyModel;
 import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.SendBird.call.CallService;
@@ -137,15 +141,19 @@ public class OtpActivity extends AppCompatActivity {
                                             setResult(RESULT_OK, null);
                                             sessonManager.getNotificationToken();
                                             Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            DialParams params = new DialParams("laskmikant22");
+                                            params.setVideoCall(true);
+                                            params.setCallOptions(new CallOptions());
+                                            SendBirdCall.dial(params, new DialHandler() {
+                                                @Override
+                                                public void onResult(DirectCall call, SendBirdException e) {
 
-                                            CallService.dial(OtpActivity.this, "lakshmikant", false);
-
-                                            //CallService.stopService(getApplicationContext());
-
-                                           /* Intent intent = new Intent(OtpActivity.this, MapsActivity.class);
+                                                }
+                                            });
+                                            Intent intent = new Intent(OtpActivity.this, MapsActivity.class);
                                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                             startActivity(intent);
-                                            finish();*/
+                                            finish();
 
                                         }
                                     });

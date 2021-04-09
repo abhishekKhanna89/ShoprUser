@@ -201,9 +201,9 @@ public class CallService extends Service {
     public static void dial(Context context, String doDialWithCalleeId, boolean isVideoCall) {
 
 
-        if (doDialWithCalleeId.equals("lakshmikant")) {
-           context.startActivity(new Intent(context, InitilizingActivity.class));
-        } else {
+//        if (doDialWithCalleeId.equals("lakshmikant")) {
+//           context.startActivity(new Intent(context, InitilizingActivity.class));
+//        } else {
 
             if (SendBirdCall.getOngoingCallCount() > 0) {
                 ToastUtils.showToast(context, "Ringing.");
@@ -227,7 +227,7 @@ public class CallService extends Service {
             startService(context, serviceData);
 
             context.startActivity(getCallActivityIntent(context, serviceData, false));
-        }
+//        }
     }
 
     public static void onRinging(Context context, @NonNull DirectCall call) {

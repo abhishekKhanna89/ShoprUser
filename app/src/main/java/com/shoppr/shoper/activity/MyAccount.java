@@ -18,6 +18,7 @@ import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.util.CommonUtils;
@@ -98,11 +99,15 @@ public class MyAccount extends AppCompatActivity {
                                     public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
                                         if (response.body()!=null) {
                                             if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                                sessonManager.setToken("");
-                                                PrefUtils.setAppId(MyAccount.this, "");
-                                                Toast.makeText(MyAccount.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
-                                                startActivity(new Intent(MyAccount.this, LoginActivity.class));
-                                                finishAffinity();
+                                                AuthenticationUtils.deauthenticate(MyAccount.this, isSuccess -> {
+                                                    if (getApplication() != null) {
+                                                        sessonManager.setToken("");
+                                                        PrefUtils.setAppId(MyAccount.this, "");
+                                                        Toast.makeText(MyAccount.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                                        startActivity(new Intent(MyAccount.this, LoginActivity.class));
+                                                        finishAffinity();
+                                                    }
+                                                });
 
                                             }
                                         }
