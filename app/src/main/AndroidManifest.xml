@@ -162,8 +162,7 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".notifications.FirebaseMessageReceiver"
+        <service android:name=".notifications.FirebaseMessageReceiver"
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false">
@@ -212,14 +211,14 @@
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false" />
-        <service
-            android:name=".SendBird.fcm.MyFirebaseMessagingService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+<!--        <service-->
+<!--            android:name=".SendBird.fcm.MyFirebaseMessagingService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
 
         <meta-data
             android:name="preloaded_fonts"

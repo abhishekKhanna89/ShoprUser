@@ -132,31 +132,16 @@ public class OtpActivity extends AppCompatActivity {
                             //String savedAppId = PrefUtils.getAppId(OtpActivity.this);
                             if((!editusername.getText().toString().isEmpty())){
                                 sessonManager.setToken(response.body().getToken());
-
-                                Log.d("savedid+++",savedAppId);
-                                //Log.d("savedid+++", String.valueOf(((BaseApplication)getApplication()).initSendBirdCall(savedAppId)));
-                                if (!TextUtils.isEmpty(savedAppId) && !TextUtils.isEmpty(userId) &&((BaseApplication)getApplication()).initSendBirdCall(savedAppId)) {
+                                if (((BaseApplication)getApplication()).initSendBirdCall(savedAppId)) {
                                     AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
-                                        if (isSuccess) {
-                                            setResult(RESULT_OK, null);
-                                            sessonManager.getNotificationToken();
-                                            Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                            DialParams params = new DialParams("laskmikant22");
-                                            params.setVideoCall(true);
-                                            params.setCallOptions(new CallOptions());
-                                            SendBirdCall.dial(params, new DialHandler() {
-                                                @Override
-                                                public void onResult(DirectCall call, SendBirdException e) {
-
+                                                if (isSuccess) {
+                                                    setResult(RESULT_OK, null);
+                                                    Intent intent = new Intent(OtpActivity.this, MapsActivity.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                    startActivity(intent);
+                                                    finish();
                                                 }
                                             });
-                                            Intent intent = new Intent(OtpActivity.this, MapsActivity.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            startActivity(intent);
-                                            finish();
-
-                                        }
-                                    });
 
                                 }
                             }

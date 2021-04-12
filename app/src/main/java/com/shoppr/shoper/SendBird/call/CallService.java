@@ -212,7 +212,6 @@ public class CallService extends Service {
             }
 
             Log.i(BaseApplication.TAG, "[CallService] dial()");
-
             ServiceData serviceData = new ServiceData();
             serviceData.isHeadsUpNotification = false;
             serviceData.remoteNicknameOrUserId = doDialWithCalleeId;

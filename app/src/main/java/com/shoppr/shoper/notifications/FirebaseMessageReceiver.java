@@ -22,7 +22,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.sendbird.calls.SendBirdCall;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.activity.ChatDetailsActivity;
 import com.shoppr.shoper.activity.FindingShopprActivity;
@@ -43,27 +45,19 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     public void
     onMessageReceived(RemoteMessage remoteMessage) {
         sessonManager = new SessonManager(this);
-
-        // Second case when notification payload is
-        // received.
-        if (remoteMessage.getNotification() != null) {
-
-            // Since the notification is received directly from
-            // FCM, the title and the body can be fetched
-            // directly as below.
+        if (SendBirdCall.handleFirebaseMessageData(remoteMessage.getData())) {
+            Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());
+        }else {
+            Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());
             showNotification(
                     remoteMessage.getNotification().getTitle(),
                     remoteMessage.getNotification().getBody(),
                     remoteMessage);
 
-
-            //Log.d("chatid===",chat_id);
-
             Intent intent = new Intent("message_subject_intent");
-           // intent.putExtra("findingchatid", chat_id);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
         }
+
     }
 
     // Method to get the custom Design for the display of
@@ -88,23 +82,11 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 
     // Method to display the notifications
     public void showNotification(String title, String message, RemoteMessage remoteMessage) {
-        //Log.d("title",title);
-        // Pass the intent to switch to the MainActivity
         JSONObject jsonObject = new JSONObject(remoteMessage.getData());
-        //Log.d("ChatId+",""+jsonObject);
         try {
             chat_id = jsonObject.getString("chat_id");
-
-
-          // sessonManager.setChatId(chat_id);
-           // Log.d("ChatId+",chat_id);
             type = jsonObject.getString("type");
-           /* if (type.equalsIgnoreCase("chat-assigned")){
-                startActivity(new Intent(this, ChatDetailsActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                //sessonManager.setChatId("");
-                //sessonManager.setChatId(chat_id);
-            }*/
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -114,16 +96,8 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         intent.putExtra("chat_status","1");
         intent.setAction(Intent.ACTION_MAIN);
 
-
-        //Log.d("checkchatid+",chat_id);
-      //  sessonManager.setChatId(chat_id);
-        // Assign channel ID
         String channel_id = "notification_channel";
-        // Here FLAG_ACTIVITY_CLEAR_TOP flag is set to clear
-        // the activities present in the activity stack,
-        // on the top of the Activity that is to be launched
-        // Pass the intent to PendingIntent to start the
-        // next Activity
+
         PendingIntent pendingIntent
                 = PendingIntent.getActivity(
                 this, 0, intent,

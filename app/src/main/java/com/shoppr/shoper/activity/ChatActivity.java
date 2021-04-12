@@ -160,6 +160,7 @@ public class ChatActivity extends AppCompatActivity {
 
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
         checkPermissions1();
+
         /*Todo:- Recording Library*/
         recordView = (RecordView) findViewById(R.id.record_view);
         recordButton = (RecordButton) findViewById(R.id.record_button);
@@ -1025,8 +1026,8 @@ public class ChatActivity extends AppCompatActivity {
                             if (initiateVideoCallModel.getData()!=null){
                                 String savedUserId=initiateVideoCallModel.getData().getUser_id();
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
-                                String savedCalleeId = PrefUtils.getCalleeId(ChatActivity.this);
-                                CallService.dial(ChatActivity.this, savedCalleeId, true);
+                                CallService.dial(ChatActivity.this, savedUserId, true);
+
                                 bottomSheetDialog.dismiss();
                             }
                         }
@@ -1056,8 +1057,8 @@ public class ChatActivity extends AppCompatActivity {
                             if (initiateVideoCallModel.getData()!=null){
                                 String savedUserId=initiateVideoCallModel.getData().getUser_id();
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
-                                String savedCalleeId = PrefUtils.getCalleeId(ChatActivity.this);
-                                CallService.dial(ChatActivity.this, savedCalleeId, false);
+                                CallService.dial(ChatActivity.this, savedUserId, false);
+
                                 bottomSheetDialog.dismiss();
                             }
                         }

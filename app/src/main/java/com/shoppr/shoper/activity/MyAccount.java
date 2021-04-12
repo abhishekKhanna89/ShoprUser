@@ -102,13 +102,15 @@ public class MyAccount extends AppCompatActivity {
                                                 AuthenticationUtils.deauthenticate(MyAccount.this, isSuccess -> {
                                                     if (getApplication() != null) {
                                                         sessonManager.setToken("");
-                                                        PrefUtils.setAppId(MyAccount.this, "");
+                                                        PrefUtils.setAppId(MyAccount.this,"");
                                                         Toast.makeText(MyAccount.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
                                                         startActivity(new Intent(MyAccount.this, LoginActivity.class));
-                                                        finishAffinity();
+finishAffinity();
+
+                                                    }else {
+                                                        Toast.makeText(MyAccount.this, "AAA", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
-
                                             }
                                         }
                                     }
