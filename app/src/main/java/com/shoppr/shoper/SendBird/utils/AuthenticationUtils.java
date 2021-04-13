@@ -123,21 +123,21 @@ public class AuthenticationUtils {
     }
 
     public static void deauthenticate(Context context, DeauthenticateHandler handler) {
-        if (SendBirdCall.getCurrentUser()!=null){
-            Toast.makeText(context, "A", Toast.LENGTH_SHORT).show();
+        /*if (SendBirdCall.getCurrentUser()!=null){
+            //Toast.makeText(context, "A", Toast.LENGTH_SHORT).show();
         }else {
             if (handler!=null){
                 handler.onResult(false);
-                Toast.makeText(context, "B", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "B", Toast.LENGTH_SHORT).show();
             }
             return;
-        }
-        /*if (SendBirdCall.getCurrentUser() == null) {
+        }*/
+        if (SendBirdCall.getCurrentUser() == null) {
             if (handler != null) {
                 handler.onResult(false);
             }
             return;
-        }*/
+        }
 
        /* Log.i(BaseApplication.TAG, "[AuthenticationUtils] deauthenticate(userId: " + SendBirdCall.getCurrentUser().getUserId() + ")");*/
         String pushToken = PrefUtils.getPushToken(context);

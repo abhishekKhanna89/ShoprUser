@@ -40,7 +40,7 @@ public class BaseApplication extends MultiDexApplication { // multidex
     public void onCreate() {
         super.onCreate();
         Log.i(BaseApplication.TAG, "[BaseApplication] onCreate()");
-        //initSendBirdCall(PrefUtils.getAppId(getApplicationContext()));
+        initSendBirdCall(PrefUtils.getAppId(getApplicationContext()));
     }
 
     public boolean initSendBirdCall(String appId) {

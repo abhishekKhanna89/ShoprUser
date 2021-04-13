@@ -23,6 +23,7 @@ public class SplashActivity extends AppCompatActivity {
     String mEncodedAuthInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("Sendbird", "start1");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getSupportActionBar().hide();
@@ -33,6 +34,9 @@ public class SplashActivity extends AppCompatActivity {
             // Log.d("notificationToken",newToken);
         });
 
+        AuthenticationUtils.autoAuthenticate(this, userId -> {
+
+        });
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -77,10 +81,10 @@ public class SplashActivity extends AppCompatActivity {
         }
         return result;
     }
-    private void autoAuthenticate() {
-        AuthenticationUtils.autoAuthenticate(SplashActivity.this, userId -> {
-
-        });
-    }
+//    private void autoAuthenticate() {
+//        AuthenticationUtils.autoAuthenticate(SplashActivity.this, userId -> {
+//
+//        });
+//    }
 
 }

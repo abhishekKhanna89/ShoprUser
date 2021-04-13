@@ -108,7 +108,7 @@ public class MyAccount extends AppCompatActivity {
 finishAffinity();
 
                                                     }else {
-                                                        Toast.makeText(MyAccount.this, "AAA", Toast.LENGTH_SHORT).show();
+
                                                     }
                                                 });
                                             }
