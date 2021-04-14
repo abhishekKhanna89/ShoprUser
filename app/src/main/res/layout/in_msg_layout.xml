@@ -29,13 +29,12 @@
                     android:id="@+id/Image"
                     android:layout_width="200dp"
                     android:layout_height="150dp"
-                    android:padding="5dp"
                     android:scaleType="fitXY" />
                 <TextView
                     android:id="@+id/Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+
                     android:fontFamily="sans-serif"
                     android:text="Location"
                     android:textColor="#fff" />
@@ -45,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:padding="5dp"
+
                     android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#fff"
@@ -76,7 +75,6 @@
                 android:layout_gravity="end"
                 android:elevation="2dp"
                 android:fontFamily="sans-serif"
-                android:padding="10dp"
                 android:textColor="#fff"
                 android:textSize="18dp" />
 
@@ -85,7 +83,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:padding="5dp"
                 android:fontFamily="sans-serif"
                 android:text="11:00 AM"
                 android:textColor="#fff"
@@ -172,7 +169,6 @@
                     android:id="@+id/productMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
                     android:fontFamily="sans-serif"
                     android:text="Location"
                     android:textColor="#fff" />
@@ -236,7 +232,6 @@
                         android:id="@+id/dateProduct"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
                         android:fontFamily="sans-serif"
                         android:text="11:00 AM"
                         android:textColor="#fff"
@@ -265,7 +260,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
                 android:textSize="18dp"
                 android:fontFamily="sans-serif"
                 android:text="Please rate my services"
@@ -284,7 +278,6 @@
                 android:id="@+id/ratingsMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
                 android:fontFamily="sans-serif"
                 android:text="Location"
                 android:textColor="#fff" />
@@ -293,7 +286,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:padding="5dp"
                 android:fontFamily="sans-serif"
                 android:text="11:00 AM"
                 android:textColor="#fff"
@@ -347,14 +339,12 @@
                 android:id="@+id/locationImage"
                 android:layout_width="200dp"
                 android:layout_height="150dp"
-                android:padding="5dp"
                 android:scaleType="fitXY" />
 
             <TextView
                 android:id="@+id/locationText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:text="Location"
                 android:fontFamily="sans-serif"
                 android:textColor="#fff" />
@@ -371,7 +361,6 @@
                     android:id="@+id/locationDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#fff"
@@ -401,7 +390,6 @@
                 android:id="@+id/addressText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:fontFamily="sans-serif"
                 android:text="Please share your delivery address\nAnd share the location on the map."
                 android:textColor="#fff"
@@ -411,7 +399,6 @@
                 android:id="@+id/addressLinkText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:fontFamily="sans-serif"
                 android:text="@string/your_string_here"
                 android:textColor="@color/blue"
@@ -429,7 +416,6 @@
                     android:id="@+id/addressDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#fff"
@@ -493,7 +479,6 @@
                     android:layout_gravity="end"
                     android:elevation="2dp"
                     android:fontFamily="sans-serif"
-                    android:padding="10dp"
                     android:textColor="#fff"
                     android:textSize="18dp" />
 
@@ -502,7 +487,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:padding="5dp"
                     android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#fff"

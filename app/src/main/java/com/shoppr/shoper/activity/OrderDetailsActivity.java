@@ -61,6 +61,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         int orderId=getIntent().getIntExtra("orderId",0);
+        Log.d("ressssss",""+orderId);
         sessonManager=new SessonManager(this);
         progressbar = new Progressbar();
         /*Todo:- RecyclerView*/

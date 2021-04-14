@@ -56,6 +56,7 @@ import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.StorelistingActivity;
 import com.shoppr.shoper.activity.AddMoneyActivity;
 import com.shoppr.shoper.activity.ChatActivity;
+import com.shoppr.shoper.activity.OrderDetailsActivity;
 import com.shoppr.shoper.activity.ShareLocationActivity;
 import com.shoppr.shoper.activity.TrackLoactionActivity;
 import com.shoppr.shoper.activity.ViewCartActivity;
@@ -256,6 +257,21 @@ import static android.os.FileUtils.copy;
                    context.startActivity(new Intent(context, ViewCartActivity.class)
                    .putExtra("valueId","2")
                    .putExtra("chat_id",chat_id));
+               }
+           });
+       }
+
+       if (chat.getType().equalsIgnoreCase("order_confirmed")){
+           holder.orderConfirmLayout.setVisibility(View.VISIBLE);
+           holder.orderConfirmMessage.setText(chat.getMessage());
+           holder.orderConfirmDate.setText(chat.getCreatedAt());
+           holder.detailsBtn.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   String chat_id= String.valueOf(chat.getChatId());
+                   context.startActivity(new Intent(context, OrderDetailsActivity.class)
+                           .putExtra("orderId",chat.getOrder_id())
+                           .putExtra("position",position));
                }
            });
        }
@@ -619,6 +635,10 @@ import static android.os.FileUtils.copy;
          Button paymentBtn;
          TextView paymentDate;
 
+         /*Todo:- Confirm Details*/
+         ChatMessageView orderConfirmLayout;
+         TextView orderConfirmMessage,orderConfirmDate;
+         Button detailsBtn;
         public Holder(@NonNull View itemView) {
             super(itemView);
             /*Todo:- Location*/
@@ -678,6 +698,11 @@ import static android.os.FileUtils.copy;
             paymentBtn=itemView.findViewById(R.id.paymentBtn);
             paymentDate=itemView.findViewById(R.id.paymentDate);
 
+            /*Todo:- Confirm Details*/
+            orderConfirmLayout=itemView.findViewById(R.id.orderConfirmLayout);
+            orderConfirmMessage=itemView.findViewById(R.id.orderConfirmMessage);
+            orderConfirmDate=itemView.findViewById(R.id.orderConfirmDate);
+            detailsBtn=itemView.findViewById(R.id.detailsBtn);
         }
      }
      public void recycle() {
