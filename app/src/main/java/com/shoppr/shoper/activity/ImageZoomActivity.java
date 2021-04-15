@@ -18,9 +18,11 @@ import android.widget.Toast;
 
 import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.MapsActivity;
+import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.adapter.SliderAdapter;
@@ -92,11 +94,18 @@ public class ImageZoomActivity extends AppCompatActivity {
                         }else {
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                    sessonManager.setToken("");
-                                    PrefUtils.setAppId(ImageZoomActivity.this, "");
-                                    Toast.makeText(ImageZoomActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(ImageZoomActivity.this, LoginActivity.class));
-                                    finishAffinity();
+                                    AuthenticationUtils.deauthenticate(ImageZoomActivity.this, isSuccess -> {
+                                        if (getApplication() != null) {
+                                            sessonManager.setToken("");
+                                            PrefUtils.setAppId(ImageZoomActivity.this,"");
+                                            Toast.makeText(ImageZoomActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(ImageZoomActivity.this, LoginActivity.class));
+                                            finishAffinity();
+
+                                        }else {
+
+                                        }
+                                    });
                                 }
                             }
                         }

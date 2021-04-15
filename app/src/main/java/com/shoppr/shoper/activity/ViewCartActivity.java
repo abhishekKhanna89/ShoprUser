@@ -34,8 +34,10 @@ import com.shoppr.shoper.Model.CartView.CartViewModel;
 import com.shoppr.shoper.Model.CartView.Item;
 import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
+import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.PaymentSuccess.PaymentSuccessModel;
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.InitiatePaymentRequest;
@@ -279,11 +281,18 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                         }else {
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                    sessonManager.setToken("");
-                                    PrefUtils.setAppId(ViewCartActivity.this, "");
-                                    Toast.makeText(ViewCartActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(ViewCartActivity.this, LoginActivity.class));
-                                    finishAffinity();
+                                    AuthenticationUtils.deauthenticate(ViewCartActivity.this, isSuccess -> {
+                                        if (getApplication() != null) {
+                                            sessonManager.setToken("");
+                                            PrefUtils.setAppId(ViewCartActivity.this,"");
+                                            Toast.makeText(ViewCartActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(ViewCartActivity.this, LoginActivity.class));
+                                            finishAffinity();
+
+                                        }else {
+
+                                        }
+                                    });
                                 }
                             }
                         }

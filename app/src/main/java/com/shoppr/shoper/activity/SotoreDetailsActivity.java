@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.MapsActivity;
+import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.StorelistingActivity;
@@ -170,11 +172,18 @@ public class SotoreDetailsActivity extends AppCompatActivity {
                         }else {
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                    sessonManager.setToken("");
-                                    PrefUtils.setAppId(SotoreDetailsActivity.this, "");
-                                    Toast.makeText(SotoreDetailsActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(SotoreDetailsActivity.this, LoginActivity.class));
-                                    finishAffinity();
+                                    AuthenticationUtils.deauthenticate(SotoreDetailsActivity.this, isSuccess -> {
+                                        if (getApplication() != null) {
+                                            sessonManager.setToken("");
+                                            PrefUtils.setAppId(SotoreDetailsActivity.this,"");
+                                            Toast.makeText(SotoreDetailsActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(SotoreDetailsActivity.this, LoginActivity.class));
+                                            finishAffinity();
+
+                                        }else {
+
+                                        }
+                                    });
                                 }
                             }
                         }

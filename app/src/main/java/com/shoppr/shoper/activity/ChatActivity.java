@@ -57,9 +57,11 @@ import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.ChatModel;
 import com.shoppr.shoper.Model.InitiateVideoCall.InitiateVideoCallModel;
+import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.call.CallService;
+import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.SendBird.utils.ToastUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
@@ -501,12 +503,19 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         }else {
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
-                                if (response.body().getMessage().equals("logout")){
-                                    sessonManager.setToken("");
-                                    PrefUtils.setAppId(ChatActivity.this, "");
-                                    Toast.makeText(ChatActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(ChatActivity.this, LoginActivity.class));
-                                    finishAffinity();
+                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                                    AuthenticationUtils.deauthenticate(ChatActivity.this, isSuccess -> {
+                                        if (getApplication() != null) {
+                                            sessonManager.setToken("");
+                                            PrefUtils.setAppId(ChatActivity.this,"");
+                                            Toast.makeText(ChatActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(ChatActivity.this, LoginActivity.class));
+                                            finishAffinity();
+
+                                        }else {
+
+                                        }
+                                    });
                                 }
                             }
                         }

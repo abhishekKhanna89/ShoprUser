@@ -11,7 +11,7 @@ public class ChatMessageModel {
     private String status;
     @SerializedName("message")
     @Expose
-    private List<Object> message = null;
+    private String message ;
     @SerializedName("data")
     @Expose
     private Data data;
@@ -25,11 +25,11 @@ public class ChatMessageModel {
         this.status = status;
     }
 
-    public List<Object> getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(List<Object> message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 

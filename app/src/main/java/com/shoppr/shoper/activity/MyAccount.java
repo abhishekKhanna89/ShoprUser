@@ -107,7 +107,16 @@ public class MyAccount extends AppCompatActivity {
                                                         startActivity(new Intent(MyAccount.this, LoginActivity.class));
 finishAffinity();
 
-                                                    }else {
+                                                    }
+                                                });
+                                            }else {
+                                                AuthenticationUtils.deauthenticate(MyAccount.this, isSuccess -> {
+                                                    if (getApplication() != null) {
+                                                        sessonManager.setToken("");
+                                                        PrefUtils.setAppId(MyAccount.this,"");
+                                                        Toast.makeText(MyAccount.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                                        startActivity(new Intent(MyAccount.this, LoginActivity.class));
+                                                        finishAffinity();
 
                                                     }
                                                 });
@@ -154,11 +163,16 @@ finishAffinity();
                         }else {
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                    sessonManager.setToken("");
-                                    PrefUtils.setAppId(MyAccount.this, "");
-                                    Toast.makeText(MyAccount.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(MyAccount.this, LoginActivity.class));
-                                    finishAffinity();
+                                    AuthenticationUtils.deauthenticate(MyAccount.this, isSuccess -> {
+                                        if (getApplication() != null) {
+                                            sessonManager.setToken("");
+                                            PrefUtils.setAppId(MyAccount.this,"");
+                                            Toast.makeText(MyAccount.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(MyAccount.this, LoginActivity.class));
+                                            finishAffinity();
+
+                                        }
+                                    });
                                 }
                             }
                         }

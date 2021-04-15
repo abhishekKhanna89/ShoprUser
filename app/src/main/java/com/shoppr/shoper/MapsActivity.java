@@ -53,8 +53,10 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.shoppr.shoper.Model.CheckLocation.CheckLocationModel;
+import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
+import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.ChatActivity;
@@ -260,13 +262,19 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(cir_man_hair_cut);
                             }
                         } else {
+
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                    sessonManager.setToken("");
-                                    PrefUtils.setAppId(MapsActivity.this, "");
-                                    Toast.makeText(MapsActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(MapsActivity.this, LoginActivity.class));
-                                    finishAffinity();
+                                    AuthenticationUtils.deauthenticate(MapsActivity.this, isSuccess -> {
+                                        if (getApplication() != null) {
+                                            sessonManager.setToken("");
+                                            PrefUtils.setAppId(MapsActivity.this,"");
+                                            Toast.makeText(MapsActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                                            finishAffinity();
+
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -328,11 +336,34 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                     } else {
                                         if (response.body().getStatus().equalsIgnoreCase("failed")){
                                             if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                                sessonManager.setToken("");
-                                                PrefUtils.setAppId(MapsActivity.this, "");
-                                                Toast.makeText(MapsActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                                startActivity(new Intent(MapsActivity.this, LoginActivity.class));
-                                                finishAffinity();
+                                                Call<LogoutModel>call1=ApiExecutor.getApiService(MapsActivity.this)
+                                                        .apiLogoutStatus("Bearer "+sessonManager.getToken());
+                                                call1.enqueue(new Callback<LogoutModel>() {
+                                                    @Override
+                                                    public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                                                        if (response.body()!=null) {
+                                                            if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                                                AuthenticationUtils.deauthenticate(MapsActivity.this, isSuccess -> {
+                                                                    if (getApplication() != null) {
+                                                                        sessonManager.setToken("");
+                                                                        PrefUtils.setAppId(MapsActivity.this,"");
+                                                                        Toast.makeText(MapsActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                                                        startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                                                                        finishAffinity();
+
+                                                                    }else {
+
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<LogoutModel> call, Throwable t) {
+
+                                                    }
+                                                });
                                             }
                                         }
                                     }
@@ -840,4 +871,5 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
+
 }

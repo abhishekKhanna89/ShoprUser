@@ -43,10 +43,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Model.StoreList.Category;
 import com.shoppr.shoper.Model.StoreList.Store;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
+import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.MyAccount;
@@ -170,11 +172,34 @@ public class StorelistingActivity extends AppCompatActivity {
                                         }else {
                                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                                    sessonManager.setToken("");
-                                                    PrefUtils.setAppId(StorelistingActivity.this, "");
-                                                    Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                                    startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
-                                                    finishAffinity();
+                                                    Call<LogoutModel>call1=ApiExecutor.getApiService(StorelistingActivity.this)
+                                                            .apiLogoutStatus("Bearer "+sessonManager.getToken());
+                                                    call1.enqueue(new Callback<LogoutModel>() {
+                                                        @Override
+                                                        public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                                                            if (response.body()!=null) {
+                                                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                                                    AuthenticationUtils.deauthenticate(StorelistingActivity.this, isSuccess -> {
+                                                                        if (getApplication() != null) {
+                                                                            sessonManager.setToken("");
+                                                                            PrefUtils.setAppId(StorelistingActivity.this,"");
+                                                                            Toast.makeText(StorelistingActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                                                            startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
+                                                                            finishAffinity();
+
+                                                                        }else {
+
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<LogoutModel> call, Throwable t) {
+
+                                                        }
+                                                    });
                                                 }
                                             }
                                         }
@@ -316,11 +341,34 @@ public class StorelistingActivity extends AppCompatActivity {
                                         }else {
                                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                                    sessonManager.setToken("");
-                                                    PrefUtils.setAppId(StorelistingActivity.this, "");
-                                                    Toast.makeText(StorelistingActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                                    startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
-                                                    finishAffinity();
+                                                    Call<LogoutModel>call1=ApiExecutor.getApiService(StorelistingActivity.this)
+                                                            .apiLogoutStatus("Bearer "+sessonManager.getToken());
+                                                    call1.enqueue(new Callback<LogoutModel>() {
+                                                        @Override
+                                                        public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                                                            if (response.body()!=null) {
+                                                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                                                    AuthenticationUtils.deauthenticate(StorelistingActivity.this, isSuccess -> {
+                                                                        if (getApplication() != null) {
+                                                                            sessonManager.setToken("");
+                                                                            PrefUtils.setAppId(StorelistingActivity.this,"");
+                                                                            Toast.makeText(StorelistingActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                                                            startActivity(new Intent(StorelistingActivity.this, LoginActivity.class));
+                                                                            finishAffinity();
+
+                                                                        }else {
+
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<LogoutModel> call, Throwable t) {
+
+                                                        }
+                                                    });
                                                 }
                                             }
                                         }
