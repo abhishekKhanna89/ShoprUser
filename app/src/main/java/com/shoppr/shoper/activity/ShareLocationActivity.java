@@ -343,14 +343,16 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                 public void onResponse(String response) {
                     progressbar.hideProgress();
                     Log.d("EditLocationResponse",response);
+                    String complete=response;
                     try {
                         JSONObject jsonObject = new JSONObject(response);
+                        Log.d("resJsonAll",""+jsonObject);
                         JSONArray jsonArray = jsonObject.getJSONArray("predictions");
                         JSONObject jsonObject1=jsonArray.getJSONObject(0);
                         JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
                         String location = jsonArray1.toString();
                             Call<CheckLocationModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(),location,locality);
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(),location,locality,complete);
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, retrofit2.Response<CheckLocationModel> response) {
@@ -535,14 +537,16 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                                     public void onResponse(String response) {
                                         progressbar.hideProgress();
                                         Log.d("EditLocationResponse",response);
+                                        String complete=response;
                                         try {
                                             JSONObject jsonObject = new JSONObject(response);
+                                            Log.d("resJsonAll",""+jsonObject);
                                             JSONArray jsonArray = jsonObject.getJSONArray("predictions");
                                             JSONObject jsonObject1=jsonArray.getJSONObject(0);
                                             JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
                                             String location = jsonArray1.toString();
                                                 Call<CheckLocationModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
-                                                        .apiCheckLocation("Bearer " + sessonManager.getToken(),location,localitys);
+                                                        .apiCheckLocation("Bearer " + sessonManager.getToken(),location,localitys,complete);
                                                 call.enqueue(new Callback<CheckLocationModel>() {
                                                     @Override
                                                     public void onResponse(Call<CheckLocationModel> call, retrofit2.Response<CheckLocationModel> response) {

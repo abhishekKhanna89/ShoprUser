@@ -243,7 +243,7 @@ public interface ApiService {
 
     @POST("check-availability")
     Call<CheckLocationModel>apiCheckLocation(@Header("Authorization") String token, @Query("location")String location,
-                                             @Query("city")String city);
+                                             @Query("city")String city,@Query("complete")String complete);
 
     @NonNull
     @GET("logout")

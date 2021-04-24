@@ -366,6 +366,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             currentLocation = (Location) task.getResult();
+                            Log.d("currentLocation",""+currentLocation);
                             if (currentLocation != null) {
                                 lateee = currentLocation.getLatitude();
                                 lngeee = currentLocation.getLongitude();
@@ -384,7 +385,8 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                                 Geocoder geocoder = new Geocoder(EditLocationActivity.this);
                                 List<Address> list = null;
                                 try {
-                                    list = geocoder.getFromLocation(lateee, lngeee, 1);
+                                    list = geocoder.getFromLocation(lateee, lngeee,50);
+                                    Log.d("locationList",new Gson().toJson(list));
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

@@ -633,15 +633,18 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                     @Override
                     public void onResponse(String response) {
                         Log.d("resJSon",response);
+
                         try {
                             JSONObject jsonObject = new JSONObject(response);
+                            String complete=jsonObject.toString();
+                            Log.d("resJsonAll",""+jsonObject);
                             JSONArray jsonArray = jsonObject.getJSONArray("predictions");
                             JSONObject jsonObject1=jsonArray.getJSONObject(0);
                             JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
                             String location = jsonArray1.toString();
                             Log.d("loactionTTTTT",location+"hhh  "+city_name);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName);
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName,complete);
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, Response<CheckLocationModel> response) {
@@ -688,15 +691,18 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
                         try {
                             JSONObject jsonObject = new JSONObject(response);
+                            String complete=jsonObject.toString();
+                            Log.d("resJsonAll",""+jsonObject);
                             JSONArray jsonArray = jsonObject.getJSONArray("predictions");
                             JSONObject jsonObject1=jsonArray.getJSONObject(0);
                             JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
                             String location = jsonArray1.toString();
                             Log.d("jnxdjhxj",location);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName);
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName,complete);
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, Response<CheckLocationModel> response) {
