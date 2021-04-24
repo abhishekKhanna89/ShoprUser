@@ -129,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     private static final int ALL_PERMISSIONS_RESULT = 1011;
 
 
-    String key;
+    String key, latitude, longitude;
     //ArrayList<String> arrListLocation = new ArrayList<>();
 
 
@@ -296,17 +296,20 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     private void viewListShopr() {
         if (CommonUtils.isOnline(MapsActivity.this)) {
             //Log.d("resAddd",addressText.getText().toString());
-            urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+            //urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
             //Log.d("addressEEEE",key);
+
+            urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+
             StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     Log.d("EditLocationResponse", response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                        JSONArray jsonArray = jsonObject.getJSONArray("results");
                         JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                        JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                        JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
                         String location = jsonArray1.toString();
                         Log.d("arrListLocation",""+location+"cityName"+cityName);
                         Call<ShoprListModel> call = ApiExecutor.getApiService(MapsActivity.this).apiShoprList("Bearer " + sessonManager.getToken(),location,cityName);
@@ -620,15 +623,22 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             Address address = list.get(0);
             cityName = address.getLocality();
             String location_address = address.getAddressLine(0);
+            Log.d("mycordinates", ""+address.getLatitude()+", "+address.getLongitude());
             Log.d("resLocation",location_address);
             String addressLocationValue=getIntent().getStringExtra("addressLocationValue");
             if (addressLocationValue!=null&&addressLocationValue.equalsIgnoreCase("0")){
                String addressLocation=getIntent().getStringExtra("location_address");
+               String latitude=getIntent().getStringExtra("latitude");
+               String longitude=getIntent().getStringExtra("longitude");
                String city_name=getIntent().getStringExtra("localitys");
                cityName=city_name;
                //Log.d("resCity",city_name);
                 key = addressLocation;
-                String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+                //String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+
+                String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+
+
                 StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -637,10 +647,11 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String complete=jsonObject.toString();
-                            Log.d("resJsonAll",""+jsonObject);
-                            JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                            //Log.d("resJsonAll",""+jsonObject);
+                            JSONArray jsonArray = jsonObject.getJSONArray("results");
+                            Log.d("resJsonAll",""+jsonArray);
                             JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                            JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                            JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
                             String location = jsonArray1.toString();
                             Log.d("loactionTTTTT",location+"hhh  "+city_name);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
@@ -687,7 +698,11 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             }else
                 {
                 key = location_address;
-                String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+                latitude = address.getLatitude()+"";
+                longitude = address.getLongitude()+"";
+//                String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+                String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+address.getLatitude()+","+address.getLongitude()+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+
                 StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -696,18 +711,20 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                             JSONObject jsonObject = new JSONObject(response);
                             String complete=jsonObject.toString();
                             Log.d("resJsonAll",""+jsonObject);
-                            JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                            JSONArray jsonArray = jsonObject.getJSONArray("results");
                             JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                            JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                            JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
                             String location = jsonArray1.toString();
                             Log.d("jnxdjhxj",location);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName,complete);
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName,"demo");
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, Response<CheckLocationModel> response) {
+                                    Log.d("apiexecution","Started");
                                     //CheckLocationModel checkLocationModel=response.body();
                                     if (response.body() != null) {
+                                        Log.d("apiexecution","body received");
                                         if (response.body().getStatus() != null && response.body().getStatus().equalsIgnoreCase("success")) {
                                             // progressbar.hideProgress();
                                             addressText.setText(key);
@@ -724,11 +741,14 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
 
                                     }
+                                    //Log.d("apiexecution",response.toString());
                                 }
 
                                 @Override
                                 public void onFailure(Call<CheckLocationModel> call, Throwable t) {
                                     // progressbar.hideProgress();
+                                    Log.d("apiexecution","body failed");
+
                                 }
                             });
                         } catch (JSONException e) {

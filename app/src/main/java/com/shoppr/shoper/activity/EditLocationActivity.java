@@ -80,7 +80,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     LatLng latLng;
     Marker marker;
     Location currentLocation;
-    public static String latitude, longitude, location_address;
+    public static String latitude, longitude, location_address, lat, lang;
     double lateee;
     double lngeee;
     Circle circle;
@@ -119,12 +119,16 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                 if (merchant != null) {
                     Intent intent = new Intent();
                     intent.putExtra("location_address", location_address);
+                    intent.putExtra("latitude", lat);
+                    intent.putExtra("longitude", lang);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
                     startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
                             .putExtra("location_address", location_address)
                             .putExtra("localitys",locality)
+                            .putExtra("latitude", lat)
+                            .putExtra("longitude", lang)
                             .putExtra("addressLocationValue", "0")
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -223,6 +227,8 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
                     latitude = String.valueOf(latLng.latitude);
                     longitude = String.valueOf(latLng.longitude);
+                    lat=latitude;
+                    lang=longitude;
 
                     mMap.addMarker(new MarkerOptions().position(latLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
@@ -396,7 +402,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                                 String localitys = address.getLocality();
                                 //Log.d("locality",localitys);
                                 location_address = address.getAddressLine(0);
-                                Log.d("locality",location_address);
+                                Log.d("addresslocality",address.toString());
                                 locality = address.getLocality();
                                 subLocality = address.getSubLocality();
                                 autoCompleteTextViewLoaction.setText(address.getAddressLine(0));
