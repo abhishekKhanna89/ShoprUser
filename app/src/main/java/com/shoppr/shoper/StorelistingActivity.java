@@ -105,6 +105,7 @@ public class StorelistingActivity extends AppCompatActivity {
 
 
 
+
         storerecyclerview = findViewById(R.id.storerecyclerview);
         storerecyclerview.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(StorelistingActivity.this, 1);
@@ -136,16 +137,19 @@ public class StorelistingActivity extends AppCompatActivity {
     }
     public void setmethod() {
         if (CommonUtils.isOnline(StorelistingActivity.this)) {
-            String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+            String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+sessonManager.getLat()+","+sessonManager.getLon()+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+           // String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     Log.d("EditLocationResponse", response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                        //Log.d("resJsonAll",""+jsonObject);
+                        JSONArray jsonArray = jsonObject.getJSONArray("results");
+                        Log.d("resJsonAll",""+jsonArray);
                         JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                        JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                        JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
                         String location = jsonArray1.toString();
 //sessonManager.showProgress(StorelistingActivity.this);
                             Call<StoreListModel> call = ApiExecutor.getApiService(StorelistingActivity.this)
@@ -307,16 +311,19 @@ public class StorelistingActivity extends AppCompatActivity {
         filterRecycler.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
         if (CommonUtils.isOnline(StorelistingActivity.this)) {
             sessonManager.showProgress(StorelistingActivity.this);
-            String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+            String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+sessonManager.getLat()+","+sessonManager.getLon()+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+            //String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     Log.d("EditLocationResponse", response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                        //Log.d("resJsonAll",""+jsonObject);
+                        JSONArray jsonArray = jsonObject.getJSONArray("results");
+                        Log.d("resJsonAll",""+jsonArray);
                         JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                        JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                        JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
                         String location = jsonArray1.toString();
                             Call<StoreListModel> call = ApiExecutor.getApiService(StorelistingActivity.this)
                                     .apiStoreCategoryList("Bearer " + sessonManager.getToken(),sessonManager.getLat(), sessonManager.getLon(),

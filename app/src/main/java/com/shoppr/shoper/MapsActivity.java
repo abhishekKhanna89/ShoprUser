@@ -141,7 +141,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     private boolean firstLocation=true;
 
     /*Todo:- Version Check*/
-    String VERSION_URL = "http://shoppr.avaskmcompany.xyz/api/app-version";
+    String VERSION_URL = ApiExecutor.baseUrl+"app-version";
     String sCurrentVersion;
     int hoursmilllisecond = 86400000;
     int value = 0, savedMillistime;
@@ -253,6 +253,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             call.enqueue(new Callback<MyProfileModel>() {
                 @Override
                 public void onResponse(Call<MyProfileModel> call, Response<MyProfileModel> response) {
+
                     //sessonManager.hideProgress();
                     if (response.body() != null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
@@ -658,7 +659,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                             String location = jsonArray1.toString();
                             Log.d("loactionTTTTT",location+"hhh  "+city_name);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName,complete);
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName);
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, Response<CheckLocationModel> response) {
@@ -720,7 +721,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                             String location = jsonArray1.toString();
                             Log.d("jnxdjhxj",location);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName,"demo");
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName);
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, Response<CheckLocationModel> response) {

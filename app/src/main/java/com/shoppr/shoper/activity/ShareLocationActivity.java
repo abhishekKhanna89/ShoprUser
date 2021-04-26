@@ -162,6 +162,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         imgClose = findViewById(R.id.imgClose);
         chat_id = getIntent().getIntExtra("chatId", 0);
 
+        Log.d("chat_id",""+chat_id);
         autoCompleteTextViewLoaction = findViewById(R.id.AutoComplte_tv_home);
 
 
@@ -195,7 +196,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     //sessonManager.showProgress(ChatActivity.this);
                     ShareLocationRequest shareLocationRequest=new ShareLocationRequest();
                     shareLocationRequest.setType("address");
-                    shareLocationRequest.setAddress(location_address+","+house_detailsEt.getText()+","+landMarkEt.getText().toString());
+                    shareLocationRequest.setAddress(location_address+","+house_detailsEt.getText().toString()+","+landMarkEt.getText().toString());
                     shareLocationRequest.setLat(latitude);
                     shareLocationRequest.setLang(longitude);
 
@@ -322,7 +323,8 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
 
     private void getAddress(double lat, double log) {
         Geocoder geocoder = new Geocoder(ShareLocationActivity.this);
-
+        latitude = String.valueOf(lat);
+        longitude = String.valueOf(log);
         //  String addresses = String.valueOf(geocoder.getFromLocation(lat, log, 1));
 
         List<Address> addressess = null;
@@ -337,7 +339,8 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
             String second = separated[1];
             boldAddressText.setText(second);
             smallAddressText.setText(location_address);
-            String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + location_address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+            String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+            //String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + location_address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
             StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -346,13 +349,14 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     String complete=response;
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        Log.d("resJsonAll",""+jsonObject);
-                        JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                        //Log.d("resJsonAll",""+jsonObject);
+                        JSONArray jsonArray = jsonObject.getJSONArray("results");
+                        Log.d("resJsonAll",""+jsonArray);
                         JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                        JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                        JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
                         String location = jsonArray1.toString();
                             Call<CheckLocationModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(),location,locality,complete);
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(),location,locality);
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, retrofit2.Response<CheckLocationModel> response) {
@@ -433,11 +437,11 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void hitUrlForSearchLocation(final String key) {
-        String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+        String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //Log.d("ResponseSearch", response);
+                Log.d("ResponseSearch", response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("predictions");
@@ -531,22 +535,23 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                                 localitys = address.getLocality();
                                 location_address = address.getAddressLine(0);
                                 cityName= address.getAddressLine(0);
-                                String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + location_address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+                                String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+                                //String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + location_address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
                                 StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
                                         progressbar.hideProgress();
                                         Log.d("EditLocationResponse",response);
-                                        String complete=response;
                                         try {
                                             JSONObject jsonObject = new JSONObject(response);
-                                            Log.d("resJsonAll",""+jsonObject);
-                                            JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                                            //Log.d("resJsonAll",""+jsonObject);
+                                            JSONArray jsonArray = jsonObject.getJSONArray("results");
+                                            Log.d("resJsonAll",""+jsonArray);
                                             JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                                            JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                                            JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
                                             String location = jsonArray1.toString();
                                                 Call<CheckLocationModel>call=ApiExecutor.getApiService(ShareLocationActivity.this)
-                                                        .apiCheckLocation("Bearer " + sessonManager.getToken(),location,localitys,complete);
+                                                        .apiCheckLocation("Bearer " + sessonManager.getToken(),location,localitys);
                                                 call.enqueue(new Callback<CheckLocationModel>() {
                                                     @Override
                                                     public void onResponse(Call<CheckLocationModel> call, retrofit2.Response<CheckLocationModel> response) {

@@ -116,16 +116,17 @@ public class FindingShopprActivity extends AppCompatActivity {
     }
 
     private void viewStartChat1(int shop_id) {
-        String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+       String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+sessonManager.getLat()+","+sessonManager.getLon()+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+        //String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("EditLocationResponse", response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                    JSONArray jsonArray = jsonObject.getJSONArray("results");
                     JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                    JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                    JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
                     String location = jsonArray1.toString();
                         if (CommonUtils.isOnline(FindingShopprActivity.this)) {
                             //sessonManager.showProgress(FindingShopprActivity.this);
@@ -216,16 +217,19 @@ public class FindingShopprActivity extends AppCompatActivity {
 
     }
     private void autoAssign(int chat_id) {
-        String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
+        String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+sessonManager.getLat()+","+sessonManager.getLon()+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+        //String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + address + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("EditLocationResponse", response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                    //Log.d("resJsonAll",""+jsonObject);
+                    JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    Log.d("resJsonAll",""+jsonArray);
                     JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                    JSONArray jsonArray1=jsonObject1.getJSONArray("terms");
+                    JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
                     String location = jsonArray1.toString();
                         if (CommonUtils.isOnline(FindingShopprActivity.this)) {
                             //sessonManager.showProgress(FindingShopprActivity.this);
