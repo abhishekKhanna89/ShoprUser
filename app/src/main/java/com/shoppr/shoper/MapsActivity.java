@@ -639,6 +639,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
 
 
+
+
+
                 StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
