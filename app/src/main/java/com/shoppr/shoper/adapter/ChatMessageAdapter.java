@@ -431,8 +431,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         holder.addressLinkText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int chatId=chat.getChatId();
+                //Log.d("chat_id",""+chatId);
                 context.startActivity(new Intent(context, ShareLocationActivity.class)
-                        .putExtra("chatId", chat.getChatId())
+                        .putExtra("chatId", chatId)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });

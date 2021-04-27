@@ -300,7 +300,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             //urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
             //Log.d("addressEEEE",key);
 
-            urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+            urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+sessonManager.getLat()+","+sessonManager.getLon()+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
 
             StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                 @Override
@@ -611,8 +611,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     private void serviceMap(Location location) {
         if (location != null) {
-            sessonManager.setLat(String.valueOf(location.getLatitude()));
-            sessonManager.setLon(String.valueOf(location.getLongitude()));
             Geocoder geocoder = new Geocoder(MapsActivity.this);
             List<Address> list = null;
             try {
@@ -632,14 +630,15 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                String latitude=getIntent().getStringExtra("latitude");
                String longitude=getIntent().getStringExtra("longitude");
                String city_name=getIntent().getStringExtra("localitys");
+               sessonManager.setLat(latitude);
+               sessonManager.setLon(longitude);
                cityName=city_name;
+
                //Log.d("resCity",city_name);
                 key = addressLocation;
                 //String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
 
                 String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
-
-
 
 
 
@@ -702,8 +701,11 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             }else
                 {
                 key = location_address;
-                latitude = address.getLatitude()+"";
-                longitude = address.getLongitude()+"";
+                latitude = String.valueOf(address.getLatitude());
+                longitude = String.valueOf(address.getLongitude());
+                sessonManager.setLat(latitude);
+                sessonManager.setLon(longitude);
+                //Log.d("sss",latitude+longitude);
 //                String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
                 String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+address.getLatitude()+","+address.getLongitude()+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
 
@@ -790,8 +792,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         }
         Log.d("ressssssssLoa",""+location);
         if (location != null) {
-            sessonManager.setLat(String.valueOf(location.getLatitude()));
-            sessonManager.setLon(String.valueOf(location.getLongitude()));
             Geocoder geocoder = new Geocoder(MapsActivity.this);
             List<Address> list = null;
             try {

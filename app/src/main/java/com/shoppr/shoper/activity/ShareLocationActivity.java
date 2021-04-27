@@ -191,7 +191,7 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
             public void onClick(View view) {
 
                 location_address= autoCompleteTextViewLoaction.getText().toString();
-                //Log.d("locality",location_address);
+                Log.d("locality",location_address+":"+"latitude"+latitude+":"+"longitude"+longitude);
                 if (CommonUtils.isOnline(ShareLocationActivity.this)) {
                     //sessonManager.showProgress(ChatActivity.this);
                     ShareLocationRequest shareLocationRequest=new ShareLocationRequest();
