@@ -140,8 +140,9 @@ public class FindingShopprActivity extends AppCompatActivity {
                                 public void onResponse(Call<StartChatModel> call, Response<StartChatModel> response) {
                                     //sessonManager.hideProgress();
                                     if (response.body() != null) {
+                                        StartChatModel startChatModel = response.body();
                                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                            StartChatModel startChatModel = response.body();
+
                                             if (startChatModel.getData() != null) {
                                                 chat_id = startChatModel.getData().getId();
                                                 Log.d("chatid",""+chat_id);
@@ -152,7 +153,7 @@ public class FindingShopprActivity extends AppCompatActivity {
 
                                             }
                                         }else {
-                                            //Toast.makeText(FindingShopprActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(FindingShopprActivity.this, ""+startChatModel.getMessage(), Toast.LENGTH_SHORT).show();
                                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                                     Call<LogoutModel>call1=ApiExecutor.getApiService(FindingShopprActivity.this)
@@ -240,8 +241,9 @@ public class FindingShopprActivity extends AppCompatActivity {
                                 public void onResponse(Call<AutoAssignModel> call, Response<AutoAssignModel> response) {
                                     //Toast.makeText(FindingShopprActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                     if (response.body() != null) {
+                                        AutoAssignModel autoAssignModel=response.body();
                                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                            AutoAssignModel autoAssignModel=response.body();
+
                                             if (autoAssignModel!=null) {
                                                 Toast.makeText(FindingShopprActivity.this, "" + autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
                                                 startActivity(new Intent(FindingShopprActivity.this, ChatActivity.class)
@@ -251,6 +253,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                                                 Toast.makeText(FindingShopprActivity.this, "" + autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         }else {
+                                            Toast.makeText(FindingShopprActivity.this, ""+autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
                                             Dialog d=new Dialog(FindingShopprActivity.this);
                                             d.setContentView(R.layout.your_layout_screen);
                                             d.setCanceledOnTouchOutside(false);

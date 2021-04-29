@@ -123,9 +123,9 @@ public class OtpActivity extends AppCompatActivity {
                 public void onResponse(Call<OtpVerifyModel> call, Response<OtpVerifyModel> response) {
                     progressbar.hideProgress();
                     if (response.body()!=null){
+                        OtpVerifyModel otpVerifyModel=response.body();
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
                             Log.d("ressOtp",response.body().getStatus());
-                            OtpVerifyModel otpVerifyModel=response.body();
                             String userId=otpVerifyModel.getUser_id();
                             String sendbird_token=otpVerifyModel.getSendbird_token();
                             String  savedAppId=BaseApplication.APP_ID;
@@ -146,7 +146,7 @@ public class OtpActivity extends AppCompatActivity {
                                 }
                             }
                         }else {
-                            Toast.makeText(OtpActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OtpActivity.this, ""+otpVerifyModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

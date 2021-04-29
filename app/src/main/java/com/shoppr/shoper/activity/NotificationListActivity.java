@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shoppr.shoper.Model.NotificationList.Datum;
 import com.shoppr.shoper.Model.NotificationList.NotificationListModel;
@@ -98,8 +99,9 @@ public class NotificationListActivity extends AppCompatActivity implements Swipe
                     swipeRefreshLayout.setRefreshing(false);
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        NotificationListModel notificationListModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            NotificationListModel notificationListModel=response.body();
+
                             if (notificationListModel.getData().getNotifications().getData()!=null){
                                 page=notificationListModel.getData().getNotifications().getLastPage();
                                 notificationList.addAll(notificationListModel.getData().getNotifications().getData());
@@ -108,6 +110,8 @@ public class NotificationListActivity extends AppCompatActivity implements Swipe
                                     currentPage= currentPage+1;
                                 }
                             }
+                        }else {
+                            Toast.makeText(NotificationListActivity.this, ""+notificationListModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

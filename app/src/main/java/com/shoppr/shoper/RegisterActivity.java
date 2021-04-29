@@ -68,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
                     sessonManager.hideProgress();
                     //Log.d("response",response.body().getStatus());
                     if (response.body()!=null){
+                        LoginModel loginModel=response.body();
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
                             Toast.makeText(RegisterActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             if((!editmobile.getText().toString().isEmpty())){
@@ -86,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 finish();
                             }
                         }else {
-                            Toast.makeText(RegisterActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, ""+loginModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

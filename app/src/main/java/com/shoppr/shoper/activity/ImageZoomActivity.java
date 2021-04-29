@@ -70,8 +70,9 @@ public class ImageZoomActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<StoreListDetailsModel> call, Response<StoreListDetailsModel> response) {
                     if (response.body()!=null) {
+                        StoreListDetailsModel storeListDetailsModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            StoreListDetailsModel storeListDetailsModel=response.body();
+
                             imageList=storeListDetailsModel.getData().getStoresDetails().getImages();
                             for (int i=0;i<imageList.size();i++){
                                 Picasso.get().load(imageList.get(i).getImage()).into(selectedImage);
@@ -92,6 +93,7 @@ public class ImageZoomActivity extends AppCompatActivity {
 
 
                         }else {
+                            Toast.makeText(ImageZoomActivity.this, ""+storeListDetailsModel.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                     AuthenticationUtils.deauthenticate(ImageZoomActivity.this, isSuccess -> {

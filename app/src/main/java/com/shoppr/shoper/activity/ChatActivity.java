@@ -361,18 +361,16 @@ public class ChatActivity extends AppCompatActivity {
                                     call.enqueue(new Callback<SendModel>() {
                                         @Override
                                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
-                                            SendModel sendModel=response.body();
-                                            Gson gson=new Gson();
-                                            String js=gson.toJson(sendModel);
-                                            Log.d("responseSend",js);
+
                                             //sessonManager.hideProgress();
                                             if (response.body()!=null) {
+                                                SendModel sendModel=response.body();
                                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                                     editText.getText().clear();
                                                     chatMessageList(chat_id);
                                                     //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
                                                 }else {
-                                                    //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ChatActivity.this, ""+sendModel.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
@@ -481,8 +479,9 @@ public class ChatActivity extends AppCompatActivity {
                 public void onResponse(Call<ChatMessageModel> call, Response<ChatMessageModel> response) {
                     //sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        ChatMessageModel chatMessageModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            ChatMessageModel chatMessageModel=response.body();
+
                             if (chatMessageModel.getData()!=null){
                                 chatList=chatMessageModel.getData().getChats();
                                 String cartCount=chatMessageModel.getData().getItems_count();
@@ -502,6 +501,7 @@ public class ChatActivity extends AppCompatActivity {
                                 chatMessageAdapter.notifyDataSetChanged();
                             }
                         }else {
+                            Toast.makeText(ChatActivity.this, ""+chatMessageModel.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                     AuthenticationUtils.deauthenticate(ChatActivity.this, isSuccess -> {
@@ -647,11 +647,12 @@ public class ChatActivity extends AppCompatActivity {
                     //sessonManager.hideProgress();
                    // Log.d("res",response.message());
                     if (response.body()!=null) {
+                        SendModel sendModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             chatMessageList(chat_id);
-                            //Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChatActivity.this, ""+sendModel.getStatus(), Toast.LENGTH_SHORT).show();
                         }else {
-                           // Toast.makeText(ChatActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChatActivity.this, sendModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -902,11 +903,12 @@ public class ChatActivity extends AppCompatActivity {
                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
                             //sessonManager.hideProgress();
                             if (response.body() != null) {
+                                SendModel sendModel=response.body();
                                 if (response.body().getStatus() != null && response.body().getStatus().equalsIgnoreCase("success")) {
                                     chatMessageList(chat_id);
-                                    Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ChatActivity.this, "" + sendModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(ChatActivity.this, "" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ChatActivity.this, "" + sendModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -1030,8 +1032,9 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<InitiateVideoCallModel> call, Response<InitiateVideoCallModel> response) {
                     if (response.body()!=null) {
+                        InitiateVideoCallModel initiateVideoCallModel = response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            InitiateVideoCallModel initiateVideoCallModel = response.body();
+
                             if (initiateVideoCallModel.getData()!=null){
                                 String savedUserId=initiateVideoCallModel.getData().getUser_id();
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
@@ -1039,6 +1042,8 @@ public class ChatActivity extends AppCompatActivity {
 
                                 bottomSheetDialog.dismiss();
                             }
+                        }else {
+                            Toast.makeText(ChatActivity.this, ""+initiateVideoCallModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -1061,8 +1066,9 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<InitiateVideoCallModel> call, Response<InitiateVideoCallModel> response) {
                     if (response.body()!=null) {
+                        InitiateVideoCallModel initiateVideoCallModel = response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            InitiateVideoCallModel initiateVideoCallModel = response.body();
+
                             if (initiateVideoCallModel.getData()!=null){
                                 String savedUserId=initiateVideoCallModel.getData().getUser_id();
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
@@ -1070,6 +1076,8 @@ public class ChatActivity extends AppCompatActivity {
 
                                 bottomSheetDialog.dismiss();
                             }
+                        }else {
+                            Toast.makeText(ChatActivity.this, ""+initiateVideoCallModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

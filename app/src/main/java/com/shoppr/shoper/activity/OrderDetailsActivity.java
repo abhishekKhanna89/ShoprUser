@@ -113,8 +113,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 public void onResponse(Call<OrderHistoryModel> call, Response<OrderHistoryModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        OrderHistoryModel ordersDetailsModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            OrderHistoryModel ordersDetailsModel=response.body();
+
                             if (ordersDetailsModel.getData()!=null){
                                 refId=ordersDetailsModel.getData().getOrder().getRefid();
                                 invoice_link=ordersDetailsModel.getData().getShow_invoice_link();
@@ -155,6 +156,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                 rv_order_details.setAdapter(orderDetailsAdapter);
                                 orderDetailsAdapter.notifyDataSetChanged();
                             }
+                        }else {
+                            Toast.makeText(OrderDetailsActivity.this, ""+ordersDetailsModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

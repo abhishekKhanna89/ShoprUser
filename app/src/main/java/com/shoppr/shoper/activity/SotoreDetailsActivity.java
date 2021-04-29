@@ -109,8 +109,9 @@ public class SotoreDetailsActivity extends AppCompatActivity {
                 public void onResponse(Call<StoreListDetailsModel> call, Response<StoreListDetailsModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        StoreListDetailsModel storeListDetailsModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            StoreListDetailsModel storeListDetailsModel=response.body();
+
                             imageList=storeListDetailsModel.getData().getStoresDetails().getImages();
                             shopId=storeListDetailsModel.getData().getStoresDetails().getId();
                             Log.d("ShopId",""+shopId);
@@ -170,6 +171,7 @@ public class SotoreDetailsActivity extends AppCompatActivity {
 
                             }
                         }else {
+                            Toast.makeText(SotoreDetailsActivity.this, ""+storeListDetailsModel.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                     AuthenticationUtils.deauthenticate(SotoreDetailsActivity.this, isSuccess -> {

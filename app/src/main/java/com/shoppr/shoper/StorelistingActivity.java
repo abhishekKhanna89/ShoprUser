@@ -161,8 +161,9 @@ public class StorelistingActivity extends AppCompatActivity {
                                 public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {
                                     //sessonManager.hideProgress();
                                     if (response.body() != null) {
+                                        StoreListModel storeListModel = response.body();
                                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                            StoreListModel storeListModel = response.body();
+
                                             if (storeListModel.getData().getStores() != null) {
                                                 String hlw=new Gson().toJson(storeListModel);
                                                 Log.d("Hlw",hlw);
@@ -174,6 +175,7 @@ public class StorelistingActivity extends AppCompatActivity {
                                                 storeadapter.notifyDataSetChanged();
                                             }
                                         }else {
+                                            Toast.makeText(StorelistingActivity.this, ""+storeListModel.getMessage(), Toast.LENGTH_SHORT).show();
                                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                                     Call<LogoutModel>call1=ApiExecutor.getApiService(StorelistingActivity.this)
@@ -334,8 +336,9 @@ public class StorelistingActivity extends AppCompatActivity {
                                 public void onResponse(Call<StoreListModel> call, Response<StoreListModel> response) {
                                     sessonManager.hideProgress();
                                     if (response.body() != null) {
+                                        StoreListModel storeListModel = response.body();
                                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                            StoreListModel storeListModel = response.body();
+
                                             Gson gson=new Gson();
                                             String jshsh=gson.toJson(storeListModel);
                                             Log.d("ress",jshsh);
@@ -346,6 +349,7 @@ public class StorelistingActivity extends AppCompatActivity {
                                                 fullScreenAdapter.notifyDataSetChanged();
                                             }
                                         }else {
+                                            Toast.makeText(StorelistingActivity.this, ""+storeListModel.getMessage(), Toast.LENGTH_SHORT).show();
                                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                                     Call<LogoutModel>call1=ApiExecutor.getApiService(StorelistingActivity.this)

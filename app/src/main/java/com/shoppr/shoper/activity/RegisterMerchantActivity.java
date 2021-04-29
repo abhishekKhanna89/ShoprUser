@@ -165,8 +165,9 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                 public void onResponse(Call<GetRegisterMerchantModel> call, Response<GetRegisterMerchantModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        GetRegisterMerchantModel getRegisterMerchantModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            GetRegisterMerchantModel getRegisterMerchantModel=response.body();
+
                             if (getRegisterMerchantModel.getData().getApplication()!=null){
                                 updateBtn.setVisibility(View.GONE);
                                 msgPrintText.setVisibility(View.VISIBLE);
@@ -183,6 +184,8 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                                 editAddress.setText(getRegisterMerchantModel.getData().getApplication().getAddress());
                                 msgPrintText.setText(getRegisterMerchantModel.getData().getMessage());
                             }
+                        }else {
+                            Toast.makeText(RegisterMerchantActivity.this, ""+getRegisterMerchantModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

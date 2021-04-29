@@ -250,6 +250,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                     sessonManager.hideProgress();
+                    LoginModel loginModel=response.body();
                     if (response.body()!=null){
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
                             Toast.makeText(LoginActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -272,7 +273,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 finish();
                             }
                         }else {
-                            Toast.makeText(LoginActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, ""+loginModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

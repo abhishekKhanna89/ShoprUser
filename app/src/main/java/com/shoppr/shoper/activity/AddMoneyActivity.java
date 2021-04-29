@@ -153,9 +153,10 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
                 public void onResponse(Call<RechargeModel> call, Response<RechargeModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        RechargeModel rechargeModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            Toast.makeText(AddMoneyActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
-                            RechargeModel rechargeModel=response.body();
+                            Toast.makeText(AddMoneyActivity.this, ""+rechargeModel.getMessage(), Toast.LENGTH_SHORT).show();
+
                             if (rechargeModel.getData()!=null){
                                 order_id=rechargeModel.getData().getOrderId();
                                 email=rechargeModel.getData().getEmail();
@@ -163,6 +164,8 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
                                 amount= String.valueOf(rechargeModel.getData().getAmount());
                                 startPayment(amount);
                             }
+                        }else {
+                            Toast.makeText(AddMoneyActivity.this, ""+rechargeModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -216,11 +219,13 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
                 public void onResponse(Call<CustomerBalancceModel> call, Response<CustomerBalancceModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        CustomerBalancceModel customerBalancceModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            CustomerBalancceModel customerBalancceModel=response.body();
+
                             if (customerBalancceModel.getData()!=null){
                                 customerBalance.setText(String.valueOf("₹ "+customerBalancceModel.getData()));
                             }else {
+                                Toast.makeText(AddMoneyActivity.this, ""+customerBalancceModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 if (response.body().getStatus().equalsIgnoreCase("failed")){
                                     if (response.body().getMessage().equalsIgnoreCase("logout")){
                                         AuthenticationUtils.deauthenticate(AddMoneyActivity.this, isSuccess -> {
@@ -300,6 +305,7 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
                 public void onResponse(Call<VerifyRechargeModel> call, Response<VerifyRechargeModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        VerifyRechargeModel verifyRechargeModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             if (value!=null&&value.equalsIgnoreCase("1")){
                                 Intent intent=new Intent(AddMoneyActivity.this,ChatActivity.class);
@@ -310,9 +316,9 @@ public class AddMoneyActivity extends AppCompatActivity implements  PaymentResul
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                             }
-                            Toast.makeText(AddMoneyActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddMoneyActivity.this,verifyRechargeModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }else {
-                            Toast.makeText(AddMoneyActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddMoneyActivity.this,verifyRechargeModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

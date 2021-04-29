@@ -80,7 +80,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     LatLng latLng;
     Marker marker;
     Location currentLocation;
-    public static String latitude, longitude, location_address, lat, lang;
+    public static String latitude, longitude, location_address;
     double lateee;
     double lngeee;
     Circle circle;
@@ -119,16 +119,17 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                 if (merchant != null) {
                     Intent intent = new Intent();
                     intent.putExtra("location_address", location_address);
-                    intent.putExtra("latitude", lat);
-                    intent.putExtra("longitude", lang);
+                    intent.putExtra("latitude", latitude);
+                    intent.putExtra("longitude", longitude);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
+                    Log.d("locationData",latitude+longitude);
                     startActivity(new Intent(EditLocationActivity.this, MapsActivity.class)
                             .putExtra("location_address", location_address)
                             .putExtra("localitys",locality)
-                            .putExtra("latitude", lat)
-                            .putExtra("longitude", lang)
+                            .putExtra("latitude", latitude)
+                            .putExtra("longitude", longitude)
                             .putExtra("addressLocationValue", "0")
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -227,9 +228,6 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
                     latitude = String.valueOf(latLng.latitude);
                     longitude = String.valueOf(latLng.longitude);
-                    lat=latitude;
-                    lang=longitude;
-
                     mMap.addMarker(new MarkerOptions().position(latLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
 
@@ -376,6 +374,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                             if (currentLocation != null) {
                                 lateee = currentLocation.getLatitude();
                                 lngeee = currentLocation.getLongitude();
+
                                 latitude = String.valueOf(currentLocation.getLatitude());
                                 longitude = String.valueOf(currentLocation.getLongitude());
                                 if (marker != null) {

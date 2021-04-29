@@ -85,8 +85,9 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
                     swipeRefreshLayout.setRefreshing(false);
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        OrderDetailsModel orderDetailsModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            OrderDetailsModel orderDetailsModel=response.body();
+
                             if (orderDetailsModel.getData().getOrders()!=null){
                                 if (orderDetailsModel.getData().getOrders().size()==0){
                                     orderEmptyText.setVisibility(View.VISIBLE);
@@ -100,6 +101,8 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
                                 myOrderRecycler.setAdapter(myOrderAdapter);
                                 myOrderAdapter.notifyDataSetChanged();
                             }
+                        }else {
+                            Toast.makeText(MyOrderActivity.this, ""+orderDetailsModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

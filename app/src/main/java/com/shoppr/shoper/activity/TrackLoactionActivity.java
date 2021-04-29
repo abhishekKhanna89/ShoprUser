@@ -99,9 +99,10 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                 @Override
                 public void onResponse(Call<TrackLoactionModel> call, Response<TrackLoactionModel> response) {
                     if (response.body()!=null) {
+                        TrackLoactionModel trackLoactionModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             //Toast.makeText(TrackLoactionActivity.this, response.body().getStatus(), Toast.LENGTH_SHORT).show();
-                            TrackLoactionModel trackLoactionModel=response.body();
+
                             if (trackLoactionModel.getData().getShoppr()!=null){
                                 /*Todo:- Customer Lat Lang*/
                                  lat=trackLoactionModel.getData().getCustomer().getLat();
@@ -164,7 +165,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                             }
                         }else
                         {
-                            Toast.makeText(TrackLoactionActivity.this, response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TrackLoactionActivity.this, trackLoactionModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

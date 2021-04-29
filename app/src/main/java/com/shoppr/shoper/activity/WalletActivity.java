@@ -57,8 +57,9 @@ public class WalletActivity extends AppCompatActivity {
                 public void onResponse(Call<WalletHistoryModel> call, Response<WalletHistoryModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        WalletHistoryModel walletHistoryModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            WalletHistoryModel walletHistoryModel=response.body();
+
                             if (walletHistoryModel.getData()!=null){
                                 balanceText.setText("\u20B9 "+walletHistoryModel.getData().getBalance());
                                 historyList= walletHistoryModel.getData().getWalletTransactions();
@@ -66,6 +67,8 @@ public class WalletActivity extends AppCompatActivity {
                                 recyclerView.setAdapter(recyclerAdapter);
                                 recyclerAdapter.notifyDataSetChanged();
                             }
+                        }else {
+                            Toast.makeText(WalletActivity.this, ""+walletHistoryModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

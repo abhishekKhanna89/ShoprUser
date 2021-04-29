@@ -150,8 +150,9 @@ finishAffinity();
                 public void onResponse(Call<MyProfileModel> call, Response<MyProfileModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null){
+                        MyProfileModel myProfileModel=response.body();
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
-                            MyProfileModel myProfileModel=response.body();
+
                             if(myProfileModel.getData()!=null) {
                                 sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(image_order);
@@ -161,6 +162,7 @@ finishAffinity();
                                 sessonManager.setMobileNo(myProfileModel.getData().getMobile());
                             }
                         }else {
+                            Toast.makeText(MyAccount.this, ""+myProfileModel.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                     AuthenticationUtils.deauthenticate(MyAccount.this, isSuccess -> {

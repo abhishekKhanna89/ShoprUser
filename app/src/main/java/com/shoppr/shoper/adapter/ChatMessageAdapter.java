@@ -318,8 +318,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                         public void onResponse(Call<AcceptModel> call, Response<AcceptModel> response) {
                             //sessonManager.hideProgress();
                             if (response.body() != null) {
+                                AcceptModel acceptModel = response.body();
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    AcceptModel acceptModel = response.body();
+
                                     if (acceptModel.getStatus().equalsIgnoreCase("success")) {
                                         holder.greenLayout.setVisibility(View.VISIBLE);
                                         holder.closeRedLayout.setVisibility(View.GONE);
@@ -329,7 +330,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                                         context.startActivity(new Intent(context, ChatActivity.class)
                                                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                     }
-                                    Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "" + acceptModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -357,8 +358,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                         public void onResponse(Call<RejectedModel> call, Response<RejectedModel> response) {
                             //sessonManager.hideProgress();
                             if (response.body() != null) {
+                                RejectedModel rejectedModel = response.body();
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    RejectedModel rejectedModel = response.body();
                                     if (rejectedModel.getStatus().equalsIgnoreCase("success")) {
                                         holder.closeRedLayout.setVisibility(View.VISIBLE);
                                         holder.greenLayout.setVisibility(View.GONE);
@@ -368,9 +369,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                                         context.startActivity(new Intent(context, ChatActivity.class)
                                                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                     }
-                                    Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "" + rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "" +rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -398,8 +399,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                         public void onResponse(Call<CancelModel> call, Response<CancelModel> response) {
                             //sessonManager.hideProgress();
                             if (response.body() != null) {
+                                CancelModel cancelModel = response.body();
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    CancelModel cancelModel = response.body();
+
                                     if (cancelModel.getStatus().equalsIgnoreCase("success")) {
                                         holder.closeRedLayout.setVisibility(View.VISIBLE);
                                         holder.greenLayout.setVisibility(View.GONE);
@@ -409,9 +411,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                                         context.startActivity(new Intent(context, ChatActivity.class)
                                                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                     }
-                                    Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "" + cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "" +cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -535,13 +537,14 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                                     //sessonManager.hideProgress();
                                     //Log.d("response",response.body().getStatus());
                                     if (response.body() != null) {
+                                        RatingsModel ratingsModel=response.body();
                                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                             Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                             context.startActivity(new Intent(context, ChatActivity.class)
                                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                         } else {
-                                            Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "" + ratingsModel.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }

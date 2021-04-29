@@ -84,8 +84,9 @@ public class ChatHistoryActivity extends AppCompatActivity {
                 public void onResponse(Call<ChatListModel> call, Response<ChatListModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null){
+                        ChatListModel chatsListModel=response.body();
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
-                            ChatListModel chatsListModel=response.body();
+
                             if(chatsListModel.getData().getUserchats()!=null) {
                                 if (chatsListModel.getData().getUserchats().size()==0){
                                     historyEmptyText.setVisibility(View.VISIBLE);
@@ -99,6 +100,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
                                 recyclerChatHistory.setAdapter(chatHistoryAdapter);
                             }
                         }else {
+                            Toast.makeText(ChatHistoryActivity.this, ""+chatsListModel.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                     AuthenticationUtils.deauthenticate(ChatHistoryActivity.this, isSuccess -> {

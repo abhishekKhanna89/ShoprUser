@@ -208,11 +208,12 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                         public void onResponse(Call<SendModel> call, retrofit2.Response<SendModel> response) {
                             //sessonManager.hideProgress();
                             if (response.body()!=null) {
+                                SendModel sendModel=response.body();
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ShareLocationActivity.this, ""+sendModel.getMessage(), Toast.LENGTH_SHORT).show();
                                     finish();
                                 }else {
-                                    Toast.makeText(ShareLocationActivity.this, ""+response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ShareLocationActivity.this, ""+sendModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }

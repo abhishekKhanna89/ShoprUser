@@ -140,11 +140,14 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                         public void onResponse(Call<InitiatOrderModel> call, Response<InitiatOrderModel> response) {
                             progressbar.hideProgress();
                             if (response.body()!=null) {
+                                InitiatOrderModel initiatOrderModel=response.body();
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    InitiatOrderModel initiatOrderModel=response.body();
+
                                     int orderId=initiatOrderModel.getData().getOrderId();
                                     String online="online";
                                     initiatPayment(orderId,online);
+                                }else {
+                                    Toast.makeText(ViewCartActivity.this, ""+initiatOrderModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -171,11 +174,13 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                         public void onResponse(Call<InitiatOrderModel> call, Response<InitiatOrderModel> response) {
                             progressbar.hideProgress();
                             if (response.body()!=null) {
+                                InitiatOrderModel initiatOrderModel=response.body();
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    InitiatOrderModel initiatOrderModel=response.body();
                                     int orderId=initiatOrderModel.getData().getOrderId();
                                     String cod="cod";
                                     initiatPayment(orderId,cod);
+                                }else {
+                                    Toast.makeText(ViewCartActivity.this, ""+initiatOrderModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -216,8 +221,9 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                 public void onResponse(Call<InitiatPaymentModel> call, Response<InitiatPaymentModel> response) {
                     progressbar.hideProgress();
                     if (response.body()!=null) {
+                        InitiatPaymentModel initiatPaymentModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            InitiatPaymentModel initiatPaymentModel=response.body();
+
                             if (initiatPaymentModel.getData().getPaymentDone().equalsIgnoreCase("No")){
                                 razorpay_order_id=initiatPaymentModel.getData().getRazorpayOrderId();
                                 total=initiatPaymentModel.getData().getTotal();
@@ -227,6 +233,8 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                                 .putExtra("refid",initiatPaymentModel.getData().getRefid())
                                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             }
+                        }else {
+                            Toast.makeText(ViewCartActivity.this, ""+initiatPaymentModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -279,6 +287,7 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
 
                             }
                         }else {
+                            Toast.makeText(ViewCartActivity.this, ""+cartViewModel.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                     AuthenticationUtils.deauthenticate(ViewCartActivity.this, isSuccess -> {
@@ -357,13 +366,14 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                 public void onResponse(Call<PaymentSuccessModel> call, Response<PaymentSuccessModel> response) {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
+                        PaymentSuccessModel paymentSuccessModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            PaymentSuccessModel paymentSuccessModel=response.body();
+
                             startActivity(new Intent(ViewCartActivity.this,OrderConfirmActivity.class)
                                     .putExtra("refid",paymentSuccessModel.getData().getRefid())
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }else {
-                            Toast.makeText(ViewCartActivity.this,response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ViewCartActivity.this,paymentSuccessModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -465,13 +475,17 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                 @Override
                 public void onResponse(Call<CartCancelModel> call, Response<CartCancelModel> response) {
                     progressbar.hideProgress();
-                    if (response.body().getStatus().equalsIgnoreCase("success")){
-                        hitCartDetailsApi(chatId);
-                    }else {
-                        btn_continue.setVisibility(View.VISIBLE);
-                        imgCart.setVisibility(View.VISIBLE);
-                        cardOrderSummary.setVisibility(View.GONE);
-                        walletCardView.setVisibility(View.GONE);
+                    if (response.body()!=null) {
+                        CartCancelModel cartCancelModel = response.body();
+                        if (response.body().getStatus().equalsIgnoreCase("success")) {
+                            hitCartDetailsApi(chatId);
+                        } else {
+                            Toast.makeText(ViewCartActivity.this, "" + cartCancelModel.getMessage(), Toast.LENGTH_SHORT).show();
+                            btn_continue.setVisibility(View.VISIBLE);
+                            imgCart.setVisibility(View.VISIBLE);
+                            cardOrderSummary.setVisibility(View.GONE);
+                            walletCardView.setVisibility(View.GONE);
+                        }
                     }
                 }
 

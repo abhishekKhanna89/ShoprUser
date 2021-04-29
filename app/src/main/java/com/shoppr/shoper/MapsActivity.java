@@ -256,14 +256,15 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
                     //sessonManager.hideProgress();
                     if (response.body() != null) {
+                        MyProfileModel myProfileModel = response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                            MyProfileModel myProfileModel = response.body();
+
                             if (myProfileModel.getData() != null) {
                                 //sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(cir_man_hair_cut);
                             }
                         } else {
-
+                            Toast.makeText(MapsActivity.this, ""+myProfileModel.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.body().getStatus().equalsIgnoreCase("failed")){
                                 if (response.body().getMessage().equalsIgnoreCase("logout")){
                                     AuthenticationUtils.deauthenticate(MapsActivity.this, isSuccess -> {
@@ -278,6 +279,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                     });
                                 }
                             }
+
                         }
                     }
                 }
@@ -320,8 +322,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                             public void onResponse(Call<ShoprListModel> call, Response<ShoprListModel> response) {
                                 //sessonManager.hideProgress();
                                 if (response.body() != null) {
+                                    ShoprListModel shoprListModel = response.body();
                                     if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                        ShoprListModel shoprListModel = response.body();
+
 
                                         if (shoprListModel.getData() != null) {
                                             for (int i = 0; i < shoprListModel.getData().getShopper().size(); i++) {
@@ -338,6 +341,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                             }
                                         }
                                     } else {
+                                        Toast.makeText(MapsActivity.this, ""+shoprListModel.getMessage(), Toast.LENGTH_SHORT).show();
                                         if (response.body().getStatus().equalsIgnoreCase("failed")){
                                             if (response.body().getMessage().equalsIgnoreCase("logout")){
                                                 Call<LogoutModel>call1=ApiExecutor.getApiService(MapsActivity.this)
@@ -630,6 +634,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                String latitude=getIntent().getStringExtra("latitude");
                String longitude=getIntent().getStringExtra("longitude");
                String city_name=getIntent().getStringExtra("localitys");
+                Log.d("resLocation",latitude+longitude);
                sessonManager.setLat(latitude);
                sessonManager.setLon(longitude);
                cityName=city_name;
@@ -693,7 +698,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 }, new com.android.volley.Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Toast.makeText(MapsActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 RequestQueue requestQueue=Volley.newRequestQueue(this);
