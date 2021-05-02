@@ -107,7 +107,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
     Bitmap bitmap = null;
     private String photoPath;
     String imageEncoded;
-    private static String baseUrl = "http://shoppr.avaskmcompany.xyz/api/";
+    private static String baseUrl = ApiExecutor.baseUrl;
 
     /*Todo:- Voice Recorder*/
     //private boolean isRecording = false;
