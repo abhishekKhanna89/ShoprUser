@@ -196,7 +196,8 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
                     //sessonManager.showProgress(ChatActivity.this);
                     ShareLocationRequest shareLocationRequest=new ShareLocationRequest();
                     shareLocationRequest.setType("address");
-                    shareLocationRequest.setAddress(location_address+","+house_detailsEt.getText().toString()+","+landMarkEt.getText().toString());
+                    shareLocationRequest.setAddress(house_detailsEt.getText().toString()+","+landMarkEt.getText().toString()+"\n"+
+                            location_address);
                     shareLocationRequest.setLat(latitude);
                     shareLocationRequest.setLang(longitude);
 
