@@ -277,9 +277,11 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
                                     btn_continue.setVisibility(View.VISIBLE);
                                     imgCart.setVisibility(View.VISIBLE);
                                     cardOrderSummary.setVisibility(View.GONE);
+                                    walletCardView.setVisibility(View.GONE);
                                 }else {
                                     cardOrderSummary.setVisibility(View.VISIBLE);
                                     linrBottomOrder.setVisibility(View.VISIBLE);
+                                    walletCardView.setVisibility(View.VISIBLE);
                                 }
                                 MyCartAdapter myCartAdapter = new MyCartAdapter(ViewCartActivity.this, arrCartItemList);
                                 RvMyCart.setAdapter(myCartAdapter);

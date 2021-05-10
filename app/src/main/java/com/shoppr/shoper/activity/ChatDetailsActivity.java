@@ -596,7 +596,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                 bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
 
             }
-            ProfileUpdateAPI();
+            //ProfileUpdateAPI();
             //circleImage.setImageBitmap(bitmap);
 
         } catch (Exception e) {
@@ -605,7 +605,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void ProfileUpdateAPI() {
+    /*private void ProfileUpdateAPI() {
         if (CommonUtils.isOnline(ChatDetailsActivity.this)) {
             //sessonManager.showProgress(ChatActivity.this);
             HashMap<String, RequestBody> partMap = new HashMap<>();
@@ -652,7 +652,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
         } else {
             CommonUtils.showToastInCenter(ChatDetailsActivity.this, getString(R.string.please_check_network));
         }
-    }
+    }*/
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -692,7 +692,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
 
                         //   deedBitMap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mImageUri);
                         cursor1.close();
-                        ProfileUpdateAPI();
+                        //ProfileUpdateAPI();
                         //circleImage.setImageBitmap(bitmap);
 
 
@@ -726,7 +726,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                     //  deedBitMap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mImageUri);
 
                     cursor1.close();
-                    ProfileUpdateAPI();
+                    //ProfileUpdateAPI();
                     //circleImage.setImageBitmap(bitmap);
 
 

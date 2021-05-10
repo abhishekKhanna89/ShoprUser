@@ -1,7 +1,9 @@
 package com.shoppr.shoper.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,7 +14,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -76,7 +79,10 @@ import com.shoppr.shoper.util.SessonManager;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -153,6 +159,12 @@ public class ChatActivity extends AppCompatActivity {
     /*Todo:- Recording Library*/
     RecordView recordView;
     RecordButton recordButton;
+    /*Todo:- image upload*/
+    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    File destination;
+    String userChoosenTask;
+    byte[] byteArray;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,7 +172,7 @@ public class ChatActivity extends AppCompatActivity {
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager = new SessonManager(this);
 
-        askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
+       //askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
         checkPermissions1();
 
         /*Todo:- Recording Library*/
@@ -168,7 +180,7 @@ public class ChatActivity extends AppCompatActivity {
         recordButton = (RecordButton) findViewById(R.id.record_button);
         recordButton.setRecordView(recordView);
         recordButton.setListenForRecord(true);
-
+        checkPermissions();
         //Cancel Bounds is when the Slide To Cancel text gets before the timer . default is 8
         recordView.setCancelBounds(8);
 
@@ -307,7 +319,8 @@ public class ChatActivity extends AppCompatActivity {
         chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDialog();
+                selectImage();
+                //startDialog();
             }
         });
         msgDtoList=new ArrayList<>();
@@ -425,49 +438,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
     }
-
-
-    private void startDialog() {
-        AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
-        myAlertDialog.setTitle("Upload Pictures Option");
-        myAlertDialog.setMessage("How do you want to set your picture?");
-
-        myAlertDialog.setPositiveButton("Gallery", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_IMAGE_MULTIPLE);
-
-                } else {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), 786);
-                }
-
-
-            }
-        });
-
-        myAlertDialog.setNegativeButton("Camera", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_IMAGE_MULTIPLE);
-
-                } else {
-                    try {
-                        takeCameraImg();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        });
-        myAlertDialog.show();
-    }
-
-
     private void chatMessageList(int chat_id) {
 
         Log.d("chatiddssss", String.valueOf(chat_id));
@@ -532,89 +502,118 @@ public class ChatActivity extends AppCompatActivity {
             CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
         }
     }
-
     @Override
     protected void onDestroy() {
         // Unregister since the activity is about to be closed.
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onDestroy();
     }
+/*Todo:-Image Upload*/
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                boolean result=Utility.checkPermission(ChatActivity.this);
+
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask ="Take Photo";
+                    if(result)
+                        cameraIntent();
+
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask ="Choose from Library";
+                    if(result)
+                        galleryIntent();
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void galleryIntent()
+    {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
+    }
+
+    private void cameraIntent()
+    {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if ((resultCode == RESULT_OK && requestCode == 1)) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
 
+    @SuppressWarnings("deprecation")
+    private void onSelectFromGalleryResult(Intent data) {
+        Bitmap bm=null;
+        if (data != null) {
             try {
-                rotateImage();
-            } catch (Exception e) {
+                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+            } catch (IOException e) {
                 e.printStackTrace();
-
             }
-
-
-        } else if ((requestCode == 786)) {
-            selectFromGallery(data);
         }
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        //bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bm.compress(Bitmap.CompressFormat.JPEG, 90, stream);
+        byteArray=stream.toByteArray();
+        destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
 
-    }
-
-    private void takeCameraImg() throws IOException {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            try {
-                photoFile = createFile();
-                //Log.d("checkexcesdp", String.valueOf(photoFile));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                //Log.d("checkexcep", ex.getMessage());
-            }
-            photoFile = createFile();
-            photoUri = FileProvider.getUriForFile(ChatActivity.this, getPackageName() + ".provider", photoFile);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            startActivityForResult(takePictureIntent, 1);
-        }
-
-    }
-
-    private File createFile() throws IOException {
-        String imageFileName = "GOOGLES" + System.currentTimeMillis();
-        String storageDir = Environment.getExternalStorageDirectory() + "/skImages";
-        Log.d("storagepath===", storageDir);
-        File dir = new File(storageDir);
-        if (!dir.exists())
-            dir.mkdir();
-
-        File image = new File(storageDir + "/" + imageFileName + ".jpg");
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentMPath = image.getAbsolutePath();
-        return image;
-    }
-
-    public void rotateImage() throws IOException {
-
+        FileOutputStream fo;
         try {
-            String photoPath = photoFile.getAbsolutePath();
-            imagePathList.add(photoPath);
-
-            // Log.d("ress",""+imagePathList);
-            bitmap = MediaStore.Images.Media.getBitmap(ChatActivity.this.getContentResolver(), photoUri);
-            bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
-
-            if (Build.VERSION.SDK_INT > 23) {
-                bitmap = handleSamplingAndRotationBitmap(getApplicationContext(), photoUri);
-
-            } else {
-                bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), photoUri);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
-
-            }
-            ProfileUpdateAPI();
-            //circleImage.setImageBitmap(bitmap);
-
-        } catch (Exception e) {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(stream.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        ProfileUpdateAPI();
+    }
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        byteArray=bytes.toByteArray();
+        destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ProfileUpdateAPI();
+
     }
 
     private void ProfileUpdateAPI() {
@@ -622,21 +621,9 @@ public class ChatActivity extends AppCompatActivity {
             //sessonManager.showProgress(ChatActivity.this);
             HashMap<String, RequestBody> partMap = new HashMap<>();
             partMap.put("type", ApiFactory.getRequestBodyFromString("image"));
-            MultipartBody.Part[] imageArray1 = new MultipartBody.Part[imagePathList.size()];
-            //Log.d("arrayLis",""+imageArray1);
-
-            for (int i = 0; i < imageArray1.length; i++) {
-                File file = new File(imagePathList.get(i));
-                try {
-                    File compressedfile = new Compressor(ChatActivity.this).compressToFile(file);
-                    RequestBody requestBodyArray = RequestBody.create(MediaType.parse("image/*"), compressedfile);
-                    imageArray1[i] = MultipartBody.Part.createFormData("file", compressedfile.getName(), requestBodyArray);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
+            RequestBody backBike = RequestBody
+                    .create(MediaType.parse("image/*"),byteArray);
+            MultipartBody.Part imageArray1 = MultipartBody.Part.createFormData("file", destination.getName(), backBike);
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer "+sessonManager.getToken());
             ApiService iApiServices = ApiFactory.createRetrofitInstance(baseUrl).create(ApiService.class);
@@ -650,7 +637,7 @@ public class ChatActivity extends AppCompatActivity {
                         SendModel sendModel=response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             chatMessageList(chat_id);
-                            Toast.makeText(ChatActivity.this, ""+sendModel.getStatus(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChatActivity.this, ""+sendModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }else {
                             Toast.makeText(ChatActivity.this, sendModel.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -666,206 +653,44 @@ public class ChatActivity extends AppCompatActivity {
             CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
         }
     }
+    public static class Utility {
+        public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void selectFromGallery(Intent data) {
-        if (data != null) {
-            try {
-
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                if (data.getClipData() != null) {
-                    int imageCount = data.getClipData().getItemCount();
-                    for (int i = 0; i < imageCount; i++) {
-                        Uri mImageUri = data.getClipData().getItemAt(i).getUri();
-                        photoPath = Helper.pathFromUri(ChatActivity.this, mImageUri);
-                        imagePathList.add(photoPath);
-
-
-                        // Get the cursor
-                        Cursor cursor1 = getApplicationContext().getContentResolver().query(mImageUri,
-                                filePathColumn, null, null, null);
-                        // Move to first row
-                        cursor1.moveToFirst();
-
-                        int columnIndex1 = cursor1.getColumnIndex(filePathColumn[0]);
-                        imageEncoded = cursor1.getString(columnIndex1);
-
-                        if (Build.VERSION.SDK_INT > 23) {
-                            // Log.d("inelswe", "inelse");
-                            bitmap = handleSamplingAndRotationBitmap(getApplicationContext(), mImageUri);
-
-                        } else {
-                            // Log.d("inelse", "inelse");
-                            bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mImageUri);
-                            bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
-
-                        }
-
-
-                        //   deedBitMap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mImageUri);
-                        cursor1.close();
-                        ProfileUpdateAPI();
-                        //circleImage.setImageBitmap(bitmap);
-
-
-                    }
-                } else {
-                    Uri mImageUri = data.getData();
-                    photoPath = Helper.pathFromUri(ChatActivity.this, mImageUri);
-                    imagePathList.add(photoPath);
-
-                    // Get the cursor
-                    Cursor cursor1 = getApplicationContext().getContentResolver().query(mImageUri,
-                            filePathColumn, null, null, null);
-                    // Move to first row
-                    cursor1.moveToFirst();
-
-                    int columnIndex1 = cursor1.getColumnIndex(filePathColumn[0]);
-                    imageEncoded = cursor1.getString(columnIndex1);
-
-
-                    if (Build.VERSION.SDK_INT > 23) {
-                        //Log.d("inelswe", "inelse");
-                        bitmap = handleSamplingAndRotationBitmap(getApplicationContext(), mImageUri);
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        public static boolean checkPermission(final Context context)
+        {
+            int currentAPIVersion = Build.VERSION.SDK_INT;
+            if(currentAPIVersion>=android.os.Build.VERSION_CODES.M)
+            {
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+                        alertBuilder.setCancelable(true);
+                        alertBuilder.setTitle("Permission necessary");
+                        alertBuilder.setMessage("External storage permission is necessary");
+                        alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                            }
+                        });
+                        AlertDialog alert = alertBuilder.create();
+                        alert.show();
 
                     } else {
-                        //Log.d("inelse", "inelse");
-                        bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mImageUri);
-                        bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
-
+                        ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                     }
-
-                    //  deedBitMap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mImageUri);
-
-                    cursor1.close();
-                    ProfileUpdateAPI();
-                    //circleImage.setImageBitmap(bitmap);
-
-
+                    return false;
+                } else {
+                    return true;
                 }
-
-
-            } catch (Exception e) {
-
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-
-    public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage)
-            throws IOException {
-        int MAX_HEIGHT = 1024;
-        int MAX_WIDTH = 1024;
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        InputStream imageStream = context.getContentResolver().openInputStream(selectedImage);
-        BitmapFactory.decodeStream(imageStream, null, options);
-        imageStream.close();
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, MAX_WIDTH, MAX_HEIGHT);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        imageStream = context.getContentResolver().openInputStream(selectedImage);
-        Bitmap img = BitmapFactory.decodeStream(imageStream, null, options);
-
-        img = rotateImageIfRequired(context, img, selectedImage);
-        return img;
-    }
-
-    private static int calculateInSampleSize(BitmapFactory.Options options,
-                                             int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            // Calculate ratios of height and width to requested height and width
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-
-            // Choose the smallest ratio as inSampleSize value, this will guarantee a final image
-            // with both dimensions larger than or equal to the requested height and width.
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-
-            // This offers some additional logic in case the image has a strange
-            // aspect ratio. For example, a panorama may have a much larger
-            // width than height. In these cases the total pixels might still
-            // end up being too large to fit comfortably in memory, so we should
-            // be more aggressive with sample down the image (=larger inSampleSize).
-
-            final float totalPixels = width * height;
-
-            // Anything more than 2x the requested pixels we'll sample down further
-            final float totalReqPixelsCap = reqWidth * reqHeight * 2;
-
-            while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
-                inSampleSize++;
-            }
-        }
-        return inSampleSize;
-    }
-
-    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
-
-        InputStream input = context.getContentResolver().openInputStream(selectedImage);
-        ExifInterface ei = null;
-        if (Build.VERSION.SDK_INT > 23) {
-            ei = new ExifInterface(input);
-        }
-
-
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                return rotateImage(img, 90);
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                return rotateImage(img, 180);
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return rotateImage(img, 270);
-            default:
-                return img;
-        }
-
-
-    }
-
-    private static Bitmap rotateImage(Bitmap img, int degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
-        img.recycle();
-        return rotatedImg;
-    }
-    private void askForPermissioncamera(String permission, Integer requestCode) {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(ChatActivity.this, permission)) {
-
-                //This is called if user has denied the permission before
-                //In this case I am just asking the permission again
-                ActivityCompat.requestPermissions(ChatActivity.this, new String[]{permission}, requestCode);
-
             } else {
-
-                ActivityCompat.requestPermissions(ChatActivity.this, new String[]{permission}, requestCode);
+                return true;
             }
-        } else {
-//            Toast.makeText(this, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
         }
-
-
     }
+
+    /*Todo:- Audio Upload*/
     private void stopRecording() {
         //Stop Timer, very obvious
         //Change text on page to file saved
@@ -985,12 +810,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
+    public void onRestart() {
         super.onRestart();
         chatMessageList(chat_id);
         //Toast.makeText(this, "Restart", Toast.LENGTH_SHORT).show();
         //ChatActivity.this.finish();
     }
+
 
     public void back(View view) {
         onBackPressed();
@@ -1117,5 +943,9 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Toast.makeText(this, "Start", Toast.LENGTH_SHORT).show();
+    }
+
+    public void yourDesiredMethod() {
+        chatMessageList(chat_id);
     }
 }

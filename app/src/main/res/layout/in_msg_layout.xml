@@ -34,7 +34,6 @@
                     android:id="@+id/Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:fontFamily="sans-serif"
                     android:text="Location"
                     android:textColor="#fff" />
@@ -44,7 +43,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-
                     android:fontFamily="sans-serif"
                     android:text="11:00 AM"
                     android:textColor="#fff"
@@ -343,6 +341,20 @@
 
             <TextView
                 android:id="@+id/locationText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:fontFamily="sans-serif"
+                android:textColor="#fff" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.5dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:background="@color/white"/>
+
+            <TextView
+                android:id="@+id/location2Text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Location"

@@ -78,6 +78,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import me.himanshusoni.chatmessageview.ChatMessageView;
@@ -123,6 +124,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     }
 
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
@@ -207,7 +209,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             url += "&markers=color:red%7Clabel:%7C" + lat + ", " + lon;
             url += "&key=AIzaSyCHl8Ff_ghqPjWqlT2BXJH5BOYH1q-sw0E";
             Picasso.get().load(url).into(holder.locationImage);
-            holder.locationText.setText(chat.getMessage());
+            String currentString = chat.getMessage();
+            String[] parts = currentString.split("#");
+            String a=parts[0];
+            String b=parts[1];
+            holder.location2Text.setText(b);
+            holder.locationText.setText(a);
             holder.locationDate.setText(chat.getCreatedAt());
         } else {
             holder.mapLayout.setVisibility(View.GONE);
@@ -327,8 +334,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                                         holder.rejectText.setVisibility(View.GONE);
                                         holder.cancelText.setVisibility(View.VISIBLE);
                                         holder.acceptText.setVisibility(View.GONE);
-                                        context.startActivity(new Intent(context, ChatActivity.class)
-                                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                        if (context instanceof ChatActivity) {
+                                            ((ChatActivity)context).yourDesiredMethod();
+                                        }
+                                       /* context.startActivity(new Intent(context, ChatActivity.class)
+                                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
                                     }
                                     Toast.makeText(context, "" + acceptModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
@@ -346,6 +356,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
             }
         });
+
         holder.rejectText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -366,8 +377,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                                         holder.acceptText.setVisibility(View.GONE);
                                         holder.rejectText.setVisibility(View.GONE);
                                         holder.cancelText.setVisibility(View.GONE);
-                                        context.startActivity(new Intent(context, ChatActivity.class)
-                                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                        if (context instanceof ChatActivity) {
+                                            ((ChatActivity)context).yourDesiredMethod();
+                                        }
                                     }
                                     Toast.makeText(context, "" + rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
@@ -408,8 +420,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                                         holder.acceptText.setVisibility(View.GONE);
                                         holder.rejectText.setVisibility(View.GONE);
                                         holder.cancelText.setVisibility(View.GONE);
-                                        context.startActivity(new Intent(context, ChatActivity.class)
-                                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                        if (context instanceof ChatActivity) {
+                                            ((ChatActivity)context).yourDesiredMethod();
+                                        }
                                     }
                                     Toast.makeText(context, "" + cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
@@ -541,8 +554,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                             Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
-                                            context.startActivity(new Intent(context, ChatActivity.class)
-                                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                            if (context instanceof ChatActivity) {
+                                                ((ChatActivity)context).yourDesiredMethod();
+                                            }
                                         } else {
                                             Toast.makeText(context, "" + ratingsModel.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
@@ -595,7 +609,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     public class Holder extends RecyclerView.ViewHolder {
         /*Todo:- Location*/
         ImageView locationImage;
-        TextView locationText, locationDate;
+        TextView locationText, locationDate,location2Text;
         ChatMessageView mapLayout;
         /*Todo:- Text*/
         TextView message_body, dateText;
@@ -651,6 +665,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             locationText = itemView.findViewById(R.id.locationText);
             locationDate = itemView.findViewById(R.id.locationDate);
             mapLayout = itemView.findViewById(R.id.mapLayout);
+            location2Text=itemView.findViewById(R.id.location2Text);
             /*Todo:- Text*/
             message_body = itemView.findViewById(R.id.message_body);
             dateText = itemView.findViewById(R.id.dateText);
@@ -686,6 +701,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             addressText = itemView.findViewById(R.id.addressText);
             addressLinkText = itemView.findViewById(R.id.addressLinkText);
             addressDate = itemView.findViewById(R.id.addressDate);
+
             /*Todo:- Track Location*/
             trackLocationLayout = itemView.findViewById(R.id.trackLocationLayout);
             trackLocationText = itemView.findViewById(R.id.trackLocationText);

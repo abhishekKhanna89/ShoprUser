@@ -167,7 +167,7 @@ public interface ApiService {
 
     @Multipart
     @POST("send-message/{chat_id}")
-    Call<SendModel>apiImageSend(@HeaderMap Map<String, String> token, @Path("chat_id")int chat_id, @Part MultipartBody.Part[] images, @PartMap() Map<String, RequestBody> partMap);
+    Call<SendModel>apiImageSend(@HeaderMap Map<String, String> token, @Path("chat_id")int chat_id,@Part MultipartBody.Part image, @PartMap() Map<String, RequestBody> partMap);
 
     @Multipart
     @POST("send-message/{chat_id}")
