@@ -127,15 +127,7 @@ public class ChatActivity extends AppCompatActivity {
     String body;
     List<ChatModel> msgDtoList;
     ChatAppMsgAdapter chatAppMsgAdapter;
-    /*Todo:- Image Choose*/
-    int PICK_IMAGE_MULTIPLE = 1;
-    File photoFile;
-    Uri photoUri;
-    String mCurrentMPath;
-    ArrayList<String> imagePathList = new ArrayList<>();
-    Bitmap bitmap = null;
-    private String photoPath;
-    String imageEncoded;
+
     private static String baseUrl=ApiExecutor.baseUrl;
 
     /*Todo:- Voice Recorder*/
