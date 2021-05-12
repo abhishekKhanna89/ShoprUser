@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.shoppr.shoper.R;
+import com.shoppr.shoper.Service.ApiExecutor;
 
 public class HelpActivity extends AppCompatActivity {
     WebView mWebview;
@@ -42,7 +43,7 @@ public class HelpActivity extends AppCompatActivity {
             }
         });
 
-        mWebview .loadUrl("http://shoppr.avaskmcompany.xyz/api/chat");
+        mWebview .loadUrl(ApiExecutor.baseUrl+"chat");
         setContentView(mWebview );
     }
 

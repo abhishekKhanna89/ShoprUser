@@ -273,10 +273,12 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView = findViewById(R.id.chatRecyclerView);
         chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
         chatRecyclerView.setHasFixedSize(true);
-        chatRecyclerView.setItemViewCacheSize(20);
+        chatRecyclerView.setItemViewCacheSize(1000);
         chatRecyclerView.setDrawingCacheEnabled(true);
         chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         chatRecyclerView.setNestedScrollingEnabled(false);
+
+        chatMessageList(chat_id);
 
         if (chatList!=null){
             if (chatList.size()==0){

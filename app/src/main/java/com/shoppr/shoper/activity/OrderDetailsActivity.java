@@ -48,7 +48,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
             serviceChargeText,
             groundTotalText,
             walletAmountText,
-            totalPaidText;
+            totalPaidText,payment_text;
     ArrayList<Detail> arrCartItemList;
     double total_paid;
     TextView emptyDeatils;
@@ -60,9 +60,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        int orderId=getIntent().getIntExtra("orderId",0);
-        Log.d("ressssss",""+orderId);
         sessonManager=new SessonManager(this);
+        int orderId=getIntent().getIntExtra("orderId",0);
+        Log.d("ressssss",sessonManager.getToken());
+
         progressbar = new Progressbar();
         /*Todo:- RecyclerView*/
         rv_order_details=findViewById(R.id.rv_order_details);
@@ -80,6 +81,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         groundTotalText=findViewById(R.id.groundTotalText);
         walletAmountText=findViewById(R.id.walletAmountText);
         totalPaidText=findViewById(R.id.totalPaidText);
+        payment_text=findViewById(R.id.payment_text);
 
 
 
@@ -114,6 +116,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     sessonManager.hideProgress();
                     if (response.body()!=null) {
                         OrderHistoryModel ordersDetailsModel=response.body();
+                        Log.d("resOrderDetails",new Gson().toJson(ordersDetailsModel));
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
 
                             if (ordersDetailsModel.getData()!=null){
@@ -122,6 +125,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                 if (invoice_link.equalsIgnoreCase("0")){
                                     invoiceDownload.setVisibility(View.GONE);
                                 }
+                                payment_text.setText(ordersDetailsModel.getData().getPayment_text());
                                 orderIdText.setText(ordersDetailsModel.getData().getOrder().getRefid());
                                 totalAmountText.setText("₹ " +ordersDetailsModel.getData().getOrder().getTotal());
                                 serviceChargeText.setText("₹ " +ordersDetailsModel.getData().getOrder().getServiceCharge());
@@ -130,7 +134,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                 // add both number and store it to sum
                                 double sum = num1 + num2;
                                 groundTotalText.setText("₹ " +sum);
-                                walletAmountText.setText(ordersDetailsModel.getData().getOrder().getBalanceUsed());
+                                walletAmountText.setText("₹ "+ordersDetailsModel.getData().getOrder().getBalanceUsed());
 
 
                                 double grandPrice=Double.parseDouble(String.valueOf(sum));
@@ -138,7 +142,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                 if (grandPrice>walletPrice){
                                     total_paid=grandPrice-walletPrice;
                                 }else if (grandPrice<walletPrice){
-                                    total_paid=walletPrice-grandPrice;
+                                    total_paid=0;
                                 }
                                 totalPaidText.setText("₹ " +total_paid);
 
