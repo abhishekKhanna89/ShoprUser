@@ -28,6 +28,7 @@ import com.shoppr.shoper.Model.PaymentSuccess.PaymentSuccessModel;
 import com.shoppr.shoper.Model.RatingsModel;
 import com.shoppr.shoper.Model.Recharge.RechargeModel;
 import com.shoppr.shoper.Model.RejectedModel;
+import com.shoppr.shoper.Model.ResendOtp.ResendOtpModel;
 import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Model.StartChat.StartChatModel;
@@ -249,4 +250,8 @@ public interface ApiService {
     @GET("logout")
     Call<LogoutModel>apiLogoutStatus(@Header("Authorization") String token);
 
+
+    @POST("resend-otp")
+    Call<ResendOtpModel>apiResendOtp(@Query("type")String type,
+                                     @Query("mobile")String mobile);
 }

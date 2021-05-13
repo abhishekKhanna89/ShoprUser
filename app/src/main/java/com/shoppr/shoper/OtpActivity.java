@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Api;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseException;
@@ -30,6 +31,7 @@ import com.sendbird.calls.SendBirdCall;
 import com.sendbird.calls.SendBirdException;
 import com.sendbird.calls.handler.DialHandler;
 import com.shoppr.shoper.Model.OtpVerifyModel;
+import com.shoppr.shoper.Model.ResendOtp.ResendOtpModel;
 import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.SendBird.call.CallService;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
@@ -215,4 +217,23 @@ public class OtpActivity extends AppCompatActivity {
     }
 
 
+    public void resend(View view) {
+        Call<ResendOtpModel>call= ApiExecutor.getApiService(this).apiResendOtp(type,mobile);
+        call.enqueue(new Callback<ResendOtpModel>() {
+            @Override
+            public void onResponse(Call<ResendOtpModel> call, Response<ResendOtpModel> response) {
+                ResendOtpModel resendOtpModel=response.body();
+                if (response.body().getStatus().equalsIgnoreCase("success")){
+                    Toast.makeText(OtpActivity.this,resendOtpModel.getMessage(), Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(OtpActivity.this, resendOtpModel.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResendOtpModel> call, Throwable t) {
+
+            }
+        });
+    }
 }
