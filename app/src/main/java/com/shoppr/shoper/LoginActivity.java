@@ -253,7 +253,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     LoginModel loginModel=response.body();
                     if (response.body()!=null){
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
-                            Toast.makeText(LoginActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, loginModel.getMessage(), Toast.LENGTH_SHORT).show();
                             if((!editusername.getText().toString().isEmpty())){
                                 sessonManager.getNotificationToken();
                                 startActivity(new Intent(LoginActivity.this,OtpActivity.class)
@@ -263,6 +263,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 finishAffinity();
                                 finish();
                             }else {
+                                Toast.makeText(LoginActivity.this, loginModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 sessonManager.getToken();
                                 sessonManager.getNotificationToken();
                                 PrefUtils.getAppId(LoginActivity.this);
