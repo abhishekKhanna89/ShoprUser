@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (response.body()!=null){
                         LoginModel loginModel=response.body();
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
-                            Toast.makeText(RegisterActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, ""+loginModel.getMessage(), Toast.LENGTH_SHORT).show();
                             if((!editmobile.getText().toString().isEmpty())){
                                 startActivity(new Intent(RegisterActivity.this,OtpActivity.class)
                                         .putExtra("type","register")
@@ -79,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 finishAffinity();
                                 finish();
                             }else {
+                                Toast.makeText(RegisterActivity.this, loginModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 sessonManager.getToken();
                                 //sessonManager.setToken(response.body().getToken());
                                 startActivity(new Intent(RegisterActivity.this,MapsActivity.class)

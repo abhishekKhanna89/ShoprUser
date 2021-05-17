@@ -159,11 +159,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/chatRecyclerView"
-        android:divider="#fff"
-
-        android:splitMotionEvents="false"
-        android:overScrollMode="always"
-        android:animateLayoutChanges="false"
+        app:fastScrollEnabled="true"
+        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
+        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
         android:layout_height="match_parent" />
     </RelativeLayout>
     <Chronometer

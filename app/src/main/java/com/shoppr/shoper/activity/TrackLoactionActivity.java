@@ -122,7 +122,6 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                                     String localitys = address.getLocality();
                                     location_address = address.getAddressLine(0);
                                 }
-
                                 int heightC =120;
                                 int widthC = 80;
                                 BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.pin_logo);
@@ -132,10 +131,10 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                                         .setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(customer, 15));
                                 /*Todo:- Driver Lat Lang*/
-                                 lat_driver=trackLoactionModel.getData().getShoppr().getLat();
-                                 lang_driver=trackLoactionModel.getData().getShoppr().getLang();
+                                lat_driver=trackLoactionModel.getData().getShoppr().getLat();
+                                lang_driver=trackLoactionModel.getData().getShoppr().getLang();
                                 Log.d("DriverLaaLANG",lat_driver+"::"+lang_driver);
-                                 driver=new LatLng(lat_driver,lang_driver);
+                                driver=new LatLng(lat_driver,lang_driver);
                                 Geocoder geocoderD = new Geocoder(TrackLoactionActivity.this);
                                 List<Address> listD = null;
                                 try {
@@ -149,7 +148,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                                 String location_addressD = addressD.getAddressLine(0);
                                  int heightD =120;
                                  int widthD = 80;
-                                 BitmapDrawable bitmapdrawD = (BitmapDrawable)getResources().getDrawable(R.drawable.scooter);
+                                 BitmapDrawable bitmapdrawD = (BitmapDrawable)getResources().getDrawable(R.drawable.rider_icon);
                                  Bitmap bD = bitmapdrawD.getBitmap();
                                  Bitmap smallMarkerD = Bitmap.createScaledBitmap(bD, widthD, heightD, false);
                                  mMap.addMarker(new MarkerOptions().position(driver).title(location_addressD))
@@ -377,10 +376,8 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     protected void onDestroy() {
-
         countDownTimer.cancel();
         super.onDestroy();
     }
-
 
 }

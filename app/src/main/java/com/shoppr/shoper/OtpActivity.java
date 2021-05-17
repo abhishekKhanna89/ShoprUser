@@ -127,6 +127,7 @@ public class OtpActivity extends AppCompatActivity {
                     if (response.body()!=null){
                         OtpVerifyModel otpVerifyModel=response.body();
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
+
                             Log.d("ressOtp",response.body().getStatus());
                             String userId=otpVerifyModel.getUser_id();
                             String sendbird_token=otpVerifyModel.getSendbird_token();
@@ -138,6 +139,7 @@ public class OtpActivity extends AppCompatActivity {
                                     AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
                                                 if (isSuccess) {
                                                     setResult(RESULT_OK, null);
+                                                    Toast.makeText(OtpActivity.this, otpVerifyModel.getMessage(), Toast.LENGTH_SHORT).show();
                                                     Intent intent = new Intent(OtpActivity.this, MapsActivity.class);
                                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                     startActivity(intent);
@@ -145,6 +147,8 @@ public class OtpActivity extends AppCompatActivity {
                                                 }
                                             });
 
+                                }else {
+                                    Toast.makeText(OtpActivity.this, otpVerifyModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }else {
@@ -218,22 +222,28 @@ public class OtpActivity extends AppCompatActivity {
 
 
     public void resend(View view) {
-        Call<ResendOtpModel>call= ApiExecutor.getApiService(this).apiResendOtp(type,mobile);
-        call.enqueue(new Callback<ResendOtpModel>() {
-            @Override
-            public void onResponse(Call<ResendOtpModel> call, Response<ResendOtpModel> response) {
-                ResendOtpModel resendOtpModel=response.body();
-                if (response.body().getStatus().equalsIgnoreCase("success")){
-                    Toast.makeText(OtpActivity.this,resendOtpModel.getMessage(), Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(OtpActivity.this, resendOtpModel.getMessage(), Toast.LENGTH_SHORT).show();
+        progressbar.showProgress(OtpActivity.this);
+        if (CommonUtils.isOnline(OtpActivity.this)) {
+            Call<ResendOtpModel> call = ApiExecutor.getApiService(this).apiResendOtp(type, mobile);
+            call.enqueue(new Callback<ResendOtpModel>() {
+                @Override
+                public void onResponse(Call<ResendOtpModel> call, Response<ResendOtpModel> response) {
+                    progressbar.hideProgress();
+                    ResendOtpModel resendOtpModel = response.body();
+                    if (response.body().getStatus().equalsIgnoreCase("success")) {
+                        Toast.makeText(OtpActivity.this, resendOtpModel.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(OtpActivity.this, resendOtpModel.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResendOtpModel> call, Throwable t) {
-
-            }
-        });
+                @Override
+                public void onFailure(Call<ResendOtpModel> call, Throwable t) {
+                    progressbar.hideProgress();
+                }
+            });
+        }else {
+            CommonUtils.showToastInCenter(OtpActivity.this, getString(R.string.please_check_network));
+        }
     }
 }

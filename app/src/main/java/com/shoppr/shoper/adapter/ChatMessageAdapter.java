@@ -211,10 +211,15 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             Picasso.get().load(url).into(holder.locationImage);
             String currentString = chat.getMessage();
             String[] parts = currentString.split("#");
-            String a=parts[0];
-            String b=parts[1];
-            holder.location2Text.setText(b);
-            holder.locationText.setText(a);
+            try {
+                String a=parts[0];
+                String b=parts[1];
+                holder.location2Text.setText(b);
+                holder.locationText.setText(a);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
             holder.locationDate.setText(chat.getCreatedAt());
         } else {
             holder.mapLayout.setVisibility(View.GONE);
