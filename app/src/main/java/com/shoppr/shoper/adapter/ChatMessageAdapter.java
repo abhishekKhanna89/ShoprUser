@@ -155,18 +155,21 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             //Glide.with(context).load(chat.getFilePath()).into(holder.image);
             holder.imageText.setText(chat.getMessage());
             holder.dateImage.setText(chat.getCreatedAt());
+            holder.imageLayout.setVisibility(View.VISIBLE);
 
-        } else {
+        }/* else {
             holder.imageLayout.setVisibility(View.GONE);
 
-        }
-        if (chat.getType().equalsIgnoreCase("text")) {
+        }*/
+        else if (chat.getType().equalsIgnoreCase("text")) {
             holder.message_body.setText(chat.getMessage());
             holder.dateText.setText(chat.getCreatedAt());
-        } else {
+            holder.textLayout.setVisibility(View.VISIBLE);
+        }/* else {
             holder.textLayout.setVisibility(View.GONE);
-        }
-        if (chat.getType().equalsIgnoreCase("product")) {
+        }*/
+        else if (chat.getType().equalsIgnoreCase("product")) {
+            holder.productLayout.setVisibility(View.VISIBLE);
             if (chat.getFilePath().length() == 0) {
 
             } else {
@@ -176,30 +179,33 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             holder.productMessage.setText(chat.getMessage());
             holder.dateProduct.setText(chat.getCreatedAt());
             holder.pqText.setText(chat.getQuantity() + " for " + "₹" + chat.getPrice());
-        } else {
+            //
+        }/* else {
             holder.productLayout.setVisibility(View.GONE);
-        }
-        if (chat.getType().equalsIgnoreCase("rating")) {
+        }*/
+        else if (chat.getType().equalsIgnoreCase("rating")) {
             holder.ratingsMessage.setText(chat.getMessage());
             holder.dateRating.setText(chat.getCreatedAt());
             holder.ratingBar.setRating(Float.parseFloat(chat.getQuantity()));
-
-        } else {
+            holder.ratingLayout.setVisibility(View.VISIBLE);
+        } /*else {
             holder.ratingLayout.setVisibility(View.GONE);
-        }
-        if (chat.getType().equalsIgnoreCase("audio")) {
+        }*/
+        else if (chat.getType().equalsIgnoreCase("audio")) {
             holder.voicePlayerView.setAudio(chat.getFilePath());
-        } else {
+            holder.voicePlayerView.setVisibility(View.VISIBLE);
+        } /*else {
             holder.voicePlayerView.setVisibility(View.GONE);
-        }
+        }*/
 
-        if (chat.getType().equalsIgnoreCase("address-request")) {
+        else if (chat.getType().equalsIgnoreCase("address-request")) {
             holder.addressText.setText(chat.getMessage());
             holder.addressDate.setText(chat.getCreatedAt());
-        } else {
+            holder.addressLayout.setVisibility(View.VISIBLE);
+        } /*else {
             holder.addressLayout.setVisibility(View.GONE);
-        }
-        if (chat.getType().equalsIgnoreCase("address")) {
+        }*/
+        else if (chat.getType().equalsIgnoreCase("address")) {
             String lat = chat.getLat();
             String lon = chat.getLang();
             String url = "https://maps.googleapis.com/maps/api/staticmap?";
@@ -221,11 +227,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             }
 
             holder.locationDate.setText(chat.getCreatedAt());
-        } else {
+            holder.mapLayout.setVisibility(View.VISIBLE);
+        } /*else {
             holder.mapLayout.setVisibility(View.GONE);
-        }
+        }*/
 
-        if (chat.getType().equalsIgnoreCase("track")) {
+        else if (chat.getType().equalsIgnoreCase("track")) {
             holder.trackLocationLayout.setVisibility(View.VISIBLE);
             holder.trackLocationText.setText(chat.getMessage());
             holder.trackLocationText.setOnClickListener(new View.OnClickListener() {
@@ -238,8 +245,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                 }
             });
         }
-
-        if (chat.getType().equalsIgnoreCase("add-money")) {
+        else if (chat.getType().equalsIgnoreCase("add-money")) {
             holder.addWalletLayout.setVisibility(View.VISIBLE);
             holder.addWalletMsgText.setText(chat.getMessage());
             holder.addwalletDate.setText(chat.getCreatedAt());
@@ -254,14 +260,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                             .putExtra("value", "1"));
                 }
             });
-        }
-        if (chat.getType().equalsIgnoreCase("recharge")) {
+        }else if (chat.getType().equalsIgnoreCase("recharge")) {
             holder.rechargeLayout.setVisibility(View.VISIBLE);
             holder.rechargeMsgText.setText(chat.getMessage());
             holder.rechargeDateText.setText(chat.getCreatedAt());
-        }
-
-        if (chat.getType().equalsIgnoreCase("payment")) {
+        }else if (chat.getType().equalsIgnoreCase("payment")) {
             holder.paymentLayout.setVisibility(View.VISIBLE);
             holder.paymentDate.setText(chat.getCreatedAt());
             holder.paymentBtn.setOnClickListener(new View.OnClickListener() {
@@ -274,9 +277,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                             .putExtra("chat_id", chat_id));
                 }
             });
-        }
-
-        if (chat.getType().equalsIgnoreCase("order_confirmed")) {
+        }else if (chat.getType().equalsIgnoreCase("order_confirmed")) {
             holder.orderConfirmLayout.setVisibility(View.VISIBLE);
             holder.orderConfirmMessage.setText(chat.getMessage());
             holder.orderConfirmDate.setText(chat.getCreatedAt());
@@ -290,7 +291,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                 }
             });
         }
-
         /*Todo:- Visibility Concept*/
         if (chat.getStatus().equalsIgnoreCase("accepted")) {
             holder.greenLayout.setVisibility(View.VISIBLE);
@@ -301,14 +301,14 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             holder.ratingLayout.setEnabled(false);
             holder.ratingBar.setIsIndicator(true);
 
-        }
+        }else
         if (chat.getStatus().equalsIgnoreCase("rejected")) {
             holder.closeRedLayout.setVisibility(View.VISIBLE);
             holder.greenLayout.setVisibility(View.GONE);
             holder.acceptText.setVisibility(View.GONE);
             holder.rejectText.setVisibility(View.GONE);
             holder.cancelText.setVisibility(View.GONE);
-        }
+        }else
         if (chat.getStatus().equalsIgnoreCase("cancelled")) {
             holder.closeRedLayout.setVisibility(View.VISIBLE);
             holder.greenLayout.setVisibility(View.GONE);

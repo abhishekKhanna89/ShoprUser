@@ -18,6 +18,7 @@
             app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="5dp"
+            android:visibility="gone"
             app:cmv_arrowPosition="left"
             android:layout_gravity="end">
             <LinearLayout
@@ -58,6 +59,7 @@
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:layout_margin="5dp"
+            android:visibility="gone"
             app:cmv_arrowPosition="left"
             android:layout_gravity="end">
         <LinearLayout
@@ -96,6 +98,7 @@
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:layout_margin="5dp"
+            android:visibility="gone"
             app:cmv_arrowPosition="left"
             android:layout_gravity="end">
         <LinearLayout
@@ -247,6 +250,7 @@
             app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
+            android:visibility="gone"
             android:layout_margin="5dp"
             app:cmv_arrowPosition="left"
             android:layout_gravity="end">
@@ -300,6 +304,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             app:enableVisualizer="true"
+            android:visibility="gone"
             app:playPauseBackgroundColor="#ff7700"
             app:playPauseCornerRadius="100"
             app:playProgressbarColor="#ff7700"
@@ -325,6 +330,7 @@
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:layout_margin="5dp"
+            android:visibility="gone"
             app:cmv_arrowPosition="left"
             android:layout_gravity="end">
         <LinearLayout
@@ -388,6 +394,7 @@
             app:cmv_backgroundColor="@color/call_type"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
+            android:visibility="gone"
             android:layout_margin="5dp"
             app:cmv_arrowPosition="left"
             android:layout_gravity="end">
