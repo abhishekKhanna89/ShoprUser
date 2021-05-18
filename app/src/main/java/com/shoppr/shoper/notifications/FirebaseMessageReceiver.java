@@ -13,6 +13,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -44,6 +45,11 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     @Override
     public void
     onMessageReceived(RemoteMessage remoteMessage) {
+        // Logic to turn on the screen
+        /* getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);*/
         sessonManager = new SessonManager(this);
         if (SendBirdCall.handleFirebaseMessageData(remoteMessage.getData())) {
             Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());
@@ -126,8 +132,8 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                         1000, 1000})
                 .setOnlyAlertOnce(true)
                 .setSound(notification)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setContentIntent(pendingIntent);
-
 
 
 
@@ -153,7 +159,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(
                     notificationChannel);
         }
-
+        builder.setOngoing(true);
         notificationManager.notify(0, builder.build());
 
 

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.multidex.MultiDexApplication;
@@ -41,6 +42,8 @@ public class BaseApplication extends MultiDexApplication { // multidex
         super.onCreate();
         Log.i(BaseApplication.TAG, "[BaseApplication] onCreate()");
         initSendBirdCall(PrefUtils.getAppId(getApplicationContext()));
+
+
     }
 
     public boolean initSendBirdCall(String appId) {
@@ -96,4 +99,7 @@ public class BaseApplication extends MultiDexApplication { // multidex
         }
         return false;
     }
+
+
+
 }

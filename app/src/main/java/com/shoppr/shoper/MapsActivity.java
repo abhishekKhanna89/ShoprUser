@@ -440,8 +440,13 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                         startActivity(new Intent(MapsActivity.this, RegisterMerchantActivity.class));
                         break;
                     case R.id.action_help:
-                        startActivity(new Intent(MapsActivity.this, HelpActivity.class)
-                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        String number="+919315957968";
+                        String url = "https://api.whatsapp.com/send?phone="+number;
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                        /*startActivity(new Intent(MapsActivity.this, HelpActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
                         break;
                     /*case R.id.action_feedback:
 

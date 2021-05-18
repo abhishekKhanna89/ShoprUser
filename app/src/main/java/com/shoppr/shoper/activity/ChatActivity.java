@@ -834,8 +834,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void help(View view) {
-        startActivity(new Intent(ChatActivity.this,HelpActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        String number="+919315957968";
+        String url = "https://api.whatsapp.com/send?phone="+number;
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+      /*  startActivity(new Intent(ChatActivity.this,HelpActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
     }
 
     public void MyCart(View view) {
