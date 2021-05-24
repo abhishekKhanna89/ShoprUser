@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shoppr.shoper.LoginActivity;
-import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.R;

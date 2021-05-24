@@ -7,12 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -26,35 +21,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devlomi.record_view.OnBasketAnimationEnd;
-import com.devlomi.record_view.OnRecordClickListener;
 import com.devlomi.record_view.OnRecordListener;
 import com.devlomi.record_view.RecordButton;
 import com.devlomi.record_view.RecordView;
@@ -66,10 +51,9 @@ import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.ChatModel;
 import com.shoppr.shoper.Model.InitiateVideoCall.InitiateVideoCallModel;
-import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.Send.SendModel;
 import com.shoppr.shoper.R;
-import com.shoppr.shoper.SendBird.call.CallService;
+import com.shoppr.shoper.SendBird.utils.ActivityUtils;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.SendBird.utils.ToastUtils;
@@ -80,7 +64,6 @@ import com.shoppr.shoper.adapter.ChatMessageAdapter;
 import com.shoppr.shoper.requestdata.TextTypeRequest;
 import com.shoppr.shoper.util.ApiFactory;
 import com.shoppr.shoper.util.CommonUtils;
-import com.shoppr.shoper.util.Helper;
 import com.shoppr.shoper.util.SessonManager;
 
 import com.squareup.picasso.Picasso;
@@ -90,7 +73,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,7 +83,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import id.zelory.compressor.Compressor;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -110,7 +91,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.media.MediaRecorder.VideoSource.CAMERA;
 import static java.lang.Integer.parseInt;
 
 public class ChatActivity extends AppCompatActivity {
@@ -879,8 +859,10 @@ public class ChatActivity extends AppCompatActivity {
 
                             if (initiateVideoCallModel.getData()!=null){
                                 String savedUserId=initiateVideoCallModel.getData().getUser_id();
+                                //PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
+                                //CallService.dial(ChatActivity.this, savedUserId, true);
+                                ActivityUtils.startCallActivityAsCaller(ChatActivity.this, savedUserId, true);
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
-                                CallService.dial(ChatActivity.this, savedUserId, true);
 
                                 bottomSheetDialog.dismiss();
                             }
@@ -913,8 +895,12 @@ public class ChatActivity extends AppCompatActivity {
 
                             if (initiateVideoCallModel.getData()!=null){
                                 String savedUserId=initiateVideoCallModel.getData().getUser_id();
+                               // PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
+
+                                ActivityUtils.startCallActivityAsCaller(ChatActivity.this, savedUserId, false);
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
-                                CallService.dial(ChatActivity.this, savedUserId, false);
+                               // CallService.dial(ChatActivity.this, savedUserId, false);
+                               // SendBirdCall.Options.
 
                                 bottomSheetDialog.dismiss();
                             }

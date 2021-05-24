@@ -1,7 +1,5 @@
 package com.shoppr.shoper.activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -26,41 +24,30 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.webkit.PermissionRequest;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.shoppr.shoper.LoginActivity;
-import com.shoppr.shoper.MapsActivity;
-import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
-import com.shoppr.shoper.Model.StoreListDetails.Image;
-import com.shoppr.shoper.Model.UpdateProfileModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.Service.ApiService;
-import com.shoppr.shoper.requestdata.UpdateProfileRequest;
 import com.shoppr.shoper.util.ApiFactory;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.Helper;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;

@@ -4,18 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
 import com.shoppr.shoper.Model.WalletHistory.WalletTransaction;
 import com.shoppr.shoper.R;
 
-import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.adapter.RecyclerAdapter;
 import com.shoppr.shoper.util.CommonUtils;

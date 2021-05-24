@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
-import com.shoppr.shoper.activity.ChatActivity;
 import com.shoppr.shoper.util.SessonManager;
 
 
@@ -71,7 +69,7 @@ public class SplashActivity extends AppCompatActivity {
             if (data != null) {
                 String scheme = data.getScheme();
                 if (scheme != null && scheme.equals("sendbird")) {
-                    Log.i(BaseApplication.TAG, "[SplashActivity] deep link: " + data.toString());
+                 /*   Log.i(BaseApplication.TAG, "[SplashActivity] deep link: " + data.toString());*/
                     mEncodedAuthInfo = data.getHost();
                     if (!TextUtils.isEmpty(mEncodedAuthInfo)) {
                         result = true;

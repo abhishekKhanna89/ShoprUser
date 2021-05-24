@@ -52,9 +52,9 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);*/
         sessonManager = new SessonManager(this);
         if (SendBirdCall.handleFirebaseMessageData(remoteMessage.getData())) {
-            Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());
+           /* Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());*/
         }else {
-            Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());
+          /*  Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());*/
             showNotification(
                     remoteMessage.getNotification().getTitle(),
                     remoteMessage.getNotification().getBody(),

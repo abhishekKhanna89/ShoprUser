@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,22 +16,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.shoppr.shoper.LoginActivity;
-import com.shoppr.shoper.MapsActivity;
-import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.StoreListDetails.Image;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
-import com.shoppr.shoper.adapter.SliderAdapter;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -2,7 +2,6 @@ package com.shoppr.shoper;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -27,7 +26,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -38,21 +36,17 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.gson.Gson;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.requestdata.LoginRequest;
-import com.shoppr.shoper.util.ApiFactory;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

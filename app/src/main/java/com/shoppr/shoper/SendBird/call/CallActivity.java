@@ -1,13 +1,11 @@
 package com.shoppr.shoper.SendBird.call;
 
 import android.annotation.TargetApi;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.sendbird.calls.AudioDevice;
@@ -24,506 +23,489 @@ import com.sendbird.calls.DirectCallUser;
 import com.sendbird.calls.SendBirdCall;
 import com.sendbird.calls.handler.DirectCallListener;
 import com.shoppr.shoper.R;
-import com.shoppr.shoper.SendBird.BaseApplication;
+import com.shoppr.shoper.SendBird.utils.ActivityUtils;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
-import com.shoppr.shoper.SendBird.utils.BroadcastUtils;
-import com.shoppr.shoper.SendBird.utils.EndResultUtils;
 import com.shoppr.shoper.SendBird.utils.UserInfoUtils;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public abstract class CallActivity extends AppCompatActivity {
-        static final int ENDING_TIME_MS = 1000;
 
-        public enum STATE {
-            STATE_ACCEPTING,
-            STATE_OUTGOING,
-            STATE_CONNECTED,
-            STATE_ENDING,
-            STATE_ENDED
+    public static boolean sIsRunning;
+
+    private static final String TAG = "CallActivity";
+
+    static final int ENDING_TIME_MS = 1000;
+    static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+
+    enum STATE {
+        STATE_INCOMING,
+        STATE_ACCEPTING,
+        STATE_OUTGOING,
+        STATE_CONNECTED,
+        STATE_ENDING,
+        STATE_ENDED
+    }
+
+    Context mContext;
+    private String mIncomingCallId;
+    private Timer mEndingTimer;
+
+    STATE mState;
+    String mCalleeId;
+    boolean mIsVideoCall;
+    DirectCall mDirectCall;
+    boolean mIsAudioEnabled = true;
+
+    //+ Views
+    LinearLayout mLinearLayoutInfo;
+    ImageView mImageViewProfile;
+    TextView mTextViewUserId;
+    TextView mTextViewStatus;
+
+    LinearLayout mLinearLayoutRemoteMute;
+    TextView mTextViewRemoteMute;
+
+    RelativeLayout mRelativeLayoutRingingButtons;
+    ImageView mImageViewDecline;
+    ImageView mImageViewAccept;
+
+    LinearLayout mLinearLayoutConnectingButtons;
+    ImageView mImageViewAudioOff;
+    ImageView mImageViewBluetooth;
+    ImageView mImageViewEnd;
+    //- Views
+
+    //+ abstract methods
+    protected abstract int getLayoutResourceId();
+    protected abstract String[] getMandatoryPermissions();
+    protected abstract void audioDeviceChanged(DirectCall call, AudioDevice currentAudioDevice, Set<AudioDevice> availableAudioDevices);
+    protected abstract void startCall(boolean amICallee);
+    //- abstract methods
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate()");
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
+        setContentView(getLayoutResourceId());
+
+        mContext = this;
+        sIsRunning = true;
+
+        initViews();
+        setViews();
+
+        mIncomingCallId = getIntent().getStringExtra(ActivityUtils.EXTRA_INCOMING_CALL_ID);
+        if (mIncomingCallId != null) {  // as callee
+            mDirectCall = SendBirdCall.getCall(mIncomingCallId);
+            mCalleeId = mDirectCall.getCallee().getUserId();
+            mIsVideoCall = mDirectCall.isVideoCall();
+
+            setListener(mDirectCall);
+        } else {    // as caller
+            mCalleeId = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_ID);
+            mIsVideoCall = getIntent().getBooleanExtra(ActivityUtils.EXTRA_IS_VIDEO_CALL, false);
         }
 
-        Context mContext;
+        if (setInitialState()) {
+            checkAuthenticate();
+        }
+    }
 
-        STATE mState;
-        private String mCallId;
-        boolean mIsVideoCall;
-        String mCalleeIdToDial;
-        private boolean mDoDial;
-        private boolean mDoAccept;
-        protected boolean mDoLocalVideoStart;
+    protected void initViews() {
+        mLinearLayoutInfo = findViewById(R.id.linear_layout_info);
+        mImageViewProfile = findViewById(R.id.image_view_profile);
+        mTextViewUserId = findViewById(R.id.text_view_user_id);
+        mTextViewStatus = findViewById(R.id.text_view_status);
 
-        private boolean mDoEnd;
+        mLinearLayoutRemoteMute = findViewById(R.id.linear_layout_remote_mute);
+        mTextViewRemoteMute = findViewById(R.id.text_view_remote_mute);
 
-        DirectCall mDirectCall;
-        boolean mIsAudioEnabled;
-        private Timer mEndingTimer;
+        mRelativeLayoutRingingButtons = findViewById(R.id.relative_layout_ringing_buttons);
+        mImageViewDecline = findViewById(R.id.image_view_decline);
+        mImageViewAccept = findViewById(R.id.image_view_accept);
 
-        //+ Views
-        LinearLayout mLinearLayoutInfo;
-        ImageView mImageViewProfile;
-        TextView mTextViewUserId;
-        TextView mTextViewStatus;
+        mLinearLayoutConnectingButtons = findViewById(R.id.linear_layout_connecting_buttons);
+        mImageViewAudioOff = findViewById(R.id.image_view_audio_off);
+        mImageViewBluetooth = findViewById(R.id.image_view_bluetooth);
+        mImageViewEnd = findViewById(R.id.image_view_end);
+    }
 
-        LinearLayout mLinearLayoutRemoteMute;
-        TextView mTextViewRemoteMute;
+    protected void setViews() {
+        mImageViewDecline.setOnClickListener(view -> {
+            if (mDirectCall != null) {
+                end(mDirectCall);
+            }
+        });
 
-        RelativeLayout mRelativeLayoutRingingButtons;
-        ImageView mImageViewDecline;
-
-        LinearLayout mLinearLayoutConnectingButtons;
-        ImageView mImageViewAudioOff;
-        ImageView mImageViewBluetooth;
-        ImageView mImageViewEnd;
-        //- Views
-
-        //+ abstract methods
-        protected abstract int getLayoutResourceId();
-        protected abstract void setAudioDevice(AudioDevice currentAudioDevice, Set<AudioDevice> availableAudioDevices);
-        protected abstract void startCall(boolean amICallee);
-        //- abstract methods
-
-        //+ CallService
-        private CallService mCallService;
-        private boolean mBound = false;
-        //- CallService
-
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            Log.i(BaseApplication.TAG, "[CallActivity] onCreate()");
-
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                    | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-            getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
-            setContentView(getLayoutResourceId());
-
-            mContext = this;
-
-            bindCallService();
-
-            init();
-            initViews();
-            setViews();
-            setAudioDevice();
-            setCurrentState();
-
-            if (mDoEnd) {
-                Log.i(BaseApplication.TAG, "[CallActivity] init() => (mDoEnd == true)");
-                end();
+        mImageViewAccept.setOnClickListener(view -> {
+            if (SendBirdCall.getCurrentUser() == null) {
+                Log.d(TAG, "mImageViewAccept clicked => (SendBirdCall.getCurrentUser() == null)");
                 return;
             }
 
-            checkAuthentication();
-        }
-
-        private void init() {
-            Intent intent = getIntent();
-
-            mState = (STATE) intent.getSerializableExtra(CallService.EXTRA_CALL_STATE);
-            mCallId = intent.getStringExtra(CallService.EXTRA_CALL_ID);
-            mIsVideoCall = intent.getBooleanExtra(CallService.EXTRA_IS_VIDEO_CALL, false);
-            mCalleeIdToDial = intent.getStringExtra(CallService.EXTRA_CALLEE_ID_TO_DIAL);
-            mDoDial = intent.getBooleanExtra(CallService.EXTRA_DO_DIAL, false);
-            mDoAccept = intent.getBooleanExtra(CallService.EXTRA_DO_ACCEPT, false);
-            mDoLocalVideoStart = intent.getBooleanExtra(CallService.EXTRA_DO_LOCAL_VIDEO_START, false);
-
-            mDoEnd = intent.getBooleanExtra(CallService.EXTRA_DO_END, false);
-
-            Log.i(BaseApplication.TAG, "[CallActivity] init() => (mState: " + mState + ", mCallId: " + mCallId + ", mIsVideoCall: " + mIsVideoCall
-                    + ", mCalleeIdToDial: " + mCalleeIdToDial + ", mDoDial: " + mDoDial + ", mDoAccept: " + mDoAccept + ", mDoLocalVideoStart: " + mDoLocalVideoStart
-                    + ", mDoEnd: " + mDoEnd + ")");
-
-            if (mCallId != null) {
-                mDirectCall = SendBirdCall.getCall(mCallId);
-                setListener(mDirectCall);
+            if (mState == STATE.STATE_ENDING) {
+                Log.d(TAG, "mImageViewAccept clicked => Already ending call.");
+                return;
             }
-        }
 
-        @Override
-        protected void onNewIntent(Intent intent) {
-            super.onNewIntent(intent);
-            Log.i(BaseApplication.TAG, "[CallActivity] onNewIntent()");
-
-            mDoEnd = intent.getBooleanExtra(CallService.EXTRA_DO_END, false);
-            if (mDoEnd) {
-                Log.i(BaseApplication.TAG, "[CallActivity] onNewIntent() => (mDoEnd == true)");
-                end();
+            if (mState == STATE.STATE_ACCEPTING) {
+                Log.d(TAG, "mImageViewAccept clicked => Already accepting call.");
+                return;
             }
+
+            setState(STATE.STATE_ACCEPTING, mDirectCall);
+            startCall(true);
+        });
+
+        if (mIsAudioEnabled) {
+            mImageViewAudioOff.setSelected(false);
+        } else {
+            mImageViewAudioOff.setSelected(true);
         }
-
-        protected void initViews() {
-            mLinearLayoutInfo = findViewById(R.id.linear_layout_info);
-            mImageViewProfile = findViewById(R.id.image_view_profile);
-            mTextViewUserId = findViewById(R.id.text_view_user_id);
-            mTextViewStatus = findViewById(R.id.text_view_status);
-
-            mLinearLayoutRemoteMute = findViewById(R.id.linear_layout_remote_mute);
-            mTextViewRemoteMute = findViewById(R.id.text_view_remote_mute);
-
-            mRelativeLayoutRingingButtons = findViewById(R.id.relative_layout_ringing_buttons);
-            mImageViewDecline = findViewById(R.id.image_view_decline);
-
-            mLinearLayoutConnectingButtons = findViewById(R.id.linear_layout_connecting_buttons);
-            mImageViewAudioOff = findViewById(R.id.image_view_audio_off);
-            mImageViewBluetooth = findViewById(R.id.image_view_bluetooth);
-            mImageViewEnd = findViewById(R.id.image_view_end);
-        }
-
-        protected void setViews() {
-            mImageViewDecline.setOnClickListener(view -> {
-                end();
-            });
-
+        mImageViewAudioOff.setOnClickListener(view -> {
             if (mDirectCall != null) {
-                mIsAudioEnabled = mDirectCall.isLocalAudioEnabled();
-            } else {
-                mIsAudioEnabled = true;
-            }
-            if (mIsAudioEnabled) {
-                mImageViewAudioOff.setSelected(false);
-            } else {
-                mImageViewAudioOff.setSelected(true);
-            }
-            mImageViewAudioOff.setOnClickListener(view -> {
-                if (mDirectCall != null) {
-                    if (mIsAudioEnabled) {
-                        Log.i(BaseApplication.TAG, "[CallActivity] mute()");
-                        mDirectCall.muteMicrophone();
-                        mIsAudioEnabled = false;
-                        mImageViewAudioOff.setSelected(true);
-                    } else {
-                        Log.i(BaseApplication.TAG, "[CallActivity] unmute()");
-                        mDirectCall.unmuteMicrophone();
-                        mIsAudioEnabled = true;
-                        mImageViewAudioOff.setSelected(false);
-                    }
+                if (mIsAudioEnabled) {
+                    Log.d(TAG, "mute()");
+                    mDirectCall.muteMicrophone();
+                    mIsAudioEnabled = false;
+                    mImageViewAudioOff.setSelected(true);
+                } else {
+                    Log.d(TAG, "unmute()");
+                    mDirectCall.unmuteMicrophone();
+                    mIsAudioEnabled = true;
+                    mImageViewAudioOff.setSelected(false);
                 }
-            });
+            }
+        });
 
-            mImageViewEnd.setOnClickListener(view -> {
-                end();
-            });
-        }
-
-        private void setAudioDevice() {
+        mImageViewEnd.setOnClickListener(view -> {
             if (mDirectCall != null) {
-                setAudioDevice(mDirectCall.getCurrentAudioDevice(), mDirectCall.getAvailableAudioDevices());
+                end(mDirectCall);
             }
-        }
+        });
+    }
 
-        private void setCurrentState() {
-            setState(mState, mDirectCall);
-        }
+    protected void setListener(DirectCall call) {
+        Log.d(TAG, "setListener()");
 
-        protected void setListener(DirectCall call) {
-            Log.i(BaseApplication.TAG, "[CallActivity] setListener()");
-
-            if (call != null) {
-                call.setListener(new DirectCallListener() {
-                    @Override
-                    public void onConnected(DirectCall call) {
-                        Log.i(BaseApplication.TAG, "[CallActivity] onConnected()");
-                        setState(STATE.STATE_CONNECTED, call);
-                    }
-
-                    @Override
-                    public void onEnded(DirectCall call) {
-                        Log.i(BaseApplication.TAG, "[CallActivity] onEnded()");
-                        setState(STATE.STATE_ENDED, call);
-
-                        BroadcastUtils.sendCallLogBroadcast(mContext, call.getCallLog());
-                    }
-
-                    @Override
-                    public void onRemoteVideoSettingsChanged(DirectCall call) {
-                        Log.i(BaseApplication.TAG, "[CallActivity] onRemoteVideoSettingsChanged()");
-                    }
-
-                    @Override
-                    public void onLocalVideoSettingsChanged(DirectCall call) {
-                        Log.i(BaseApplication.TAG, "[CallActivity] onLocalVideoSettingsChanged()");
-                        if (CallActivity.this instanceof VideoCallActivity) {
-                            ((VideoCallActivity) CallActivity.this).setLocalVideoSettings(call);
-                        }
-                    }
-
-                    @Override
-                    public void onRemoteAudioSettingsChanged(DirectCall call) {
-                        Log.i(BaseApplication.TAG, "[CallActivity] onRemoteAudioSettingsChanged()");
-                        setRemoteMuteInfo(call);
-                    }
-
-                    @Override
-                    public void onAudioDeviceChanged(DirectCall call, AudioDevice currentAudioDevice, Set<AudioDevice> availableAudioDevices) {
-                        Log.i(BaseApplication.TAG, "[CallActivity] onAudioDeviceChanged(currentAudioDevice: " + currentAudioDevice + ", availableAudioDevices: " + availableAudioDevices + ")");
-                        setAudioDevice(currentAudioDevice, availableAudioDevices);
-                    }
-                });
-            }
-        }
-
-        @TargetApi(19)
-        private static int getSystemUiVisibility() {
-            int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                flags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            }
-            return flags;
-        }
-
-        private void checkAuthentication() {
-            if (SendBirdCall.getCurrentUser() == null)  {
-                AuthenticationUtils.autoAuthenticate(mContext, userId -> {
-                    if (userId == null) {
-                        finishWithEnding("autoAuthenticate() failed.");
-                        return;
-                    }
-                    ready();
-                });
-            } else {
-                ready();
-            }
-        }
-
-        private void ready() {
-            if (mDoDial) {
-                mDoDial = false;
-                startCall(false);
-            } else if (mDoAccept) {
-                mDoAccept = false;
-                startCall(true);
-            }
-        }
-
-        protected boolean setState(STATE state, DirectCall call) {
-            mState = state;
-            updateCallService();
-
-            switch (state) {
-                case STATE_ACCEPTING: {
-                    mLinearLayoutInfo.setVisibility(View.VISIBLE);
-                    mLinearLayoutRemoteMute.setVisibility(View.GONE);
-                    mRelativeLayoutRingingButtons.setVisibility(View.VISIBLE);
-                    mLinearLayoutConnectingButtons.setVisibility(View.GONE);
-
-                    if (mIsVideoCall) {
-                        setInfo(call, getString(R.string.calls_incoming_video_call));
-                    } else {
-                        setInfo(call, getString(R.string.calls_incoming_voice_call));
-                    }
-
-                    mImageViewDecline.setBackgroundResource(R.drawable.btn_call_decline);
-
-                    setInfo(call, getString(R.string.calls_connecting_call));
-                    break;
-                }
-
-                case STATE_OUTGOING: {
-                    mLinearLayoutInfo.setVisibility(View.VISIBLE);
-                    mImageViewProfile.setVisibility(View.GONE);
-                    mLinearLayoutRemoteMute.setVisibility(View.GONE);
-                    mRelativeLayoutRingingButtons.setVisibility(View.GONE);
-                    mLinearLayoutConnectingButtons.setVisibility(View.VISIBLE);
-
-                    if (mIsVideoCall) {
-                        setInfo(call, getString(R.string.calls_video_calling));
-                    } else {
-                        setInfo(call, getString(R.string.calls_calling));
-                    }
-                    break;
-                }
-
-                case STATE_CONNECTED: {
-                    mImageViewProfile.setVisibility(View.VISIBLE);
-                    mLinearLayoutRemoteMute.setVisibility(View.VISIBLE);
-                    mRelativeLayoutRingingButtons.setVisibility(View.GONE);
-                    mLinearLayoutConnectingButtons.setVisibility(View.VISIBLE);
-
-                    setRemoteMuteInfo(call);
-                    break;
-                }
-
-                case STATE_ENDING: {
-                    mLinearLayoutInfo.setVisibility(View.VISIBLE);
-                    mImageViewProfile.setVisibility(View.VISIBLE);
-                    mLinearLayoutRemoteMute.setVisibility(View.GONE);
-                    mRelativeLayoutRingingButtons.setVisibility(View.GONE);
-                    mLinearLayoutConnectingButtons.setVisibility(View.GONE);
-
-                    if (mIsVideoCall) {
-                        setInfo(call, getString(R.string.calls_ending_video_call));
-                    } else {
-                        setInfo(call, getString(R.string.calls_ending_voice_call));
-                    }
-                    break;
-                }
-
-                case STATE_ENDED: {
-                    mLinearLayoutInfo.setVisibility(View.VISIBLE);
-                    mImageViewProfile.setVisibility(View.VISIBLE);
-                    mLinearLayoutRemoteMute.setVisibility(View.GONE);
-                    mRelativeLayoutRingingButtons.setVisibility(View.GONE);
-                    mLinearLayoutConnectingButtons.setVisibility(View.GONE);
-
-                    String status = "";
-                    if (call != null) {
-                        status = EndResultUtils.getEndResultString(mContext, call.getEndResult());
-                    }
-                    setInfo(call, status);
-                    finishWithEnding(status);
-                    break;
-                }
-            }
-            return true;
-        }
-
-        protected void setInfo(DirectCall call, String status) {
-            DirectCallUser remoteUser = (call != null ? call.getRemoteUser() : null);
-            if (remoteUser != null) {
-                UserInfoUtils.setProfileImage(mContext, remoteUser, mImageViewProfile);
+        call.setListener(new DirectCallListener() {
+            @Override
+            public void onConnected(DirectCall call) {
+                Log.d(TAG, "onConnected()");
+                setState(STATE.STATE_CONNECTED, call);
             }
 
-            mTextViewUserId.setText(getRemoteNicknameOrUserId(call));
-            mTextViewStatus.setVisibility(View.VISIBLE);
-            if (status != null) {
-                mTextViewStatus.setText(status);
+            @Override
+            public void onEnded(DirectCall call) {
+                Log.d(TAG, "onEnded()");
+                setState(STATE.STATE_ENDED, call);
             }
-        }
 
-        private String getRemoteNicknameOrUserId(DirectCall call) {
-            String remoteNicknameOrUserId = mCalleeIdToDial;
-            if (call != null) {
-                remoteNicknameOrUserId = UserInfoUtils.getNicknameOrUserId(call.getRemoteUser());
+            @Override
+            public void onRemoteVideoSettingsChanged(DirectCall call) {
+                Log.d(TAG, "onRemoteVideoSettingsChanged()");
             }
-            return remoteNicknameOrUserId;
-        }
 
-        private void setRemoteMuteInfo(DirectCall call) {
-            if (call != null && !call.isRemoteAudioEnabled() && call.getRemoteUser() != null) {
-                mTextViewRemoteMute.setText(getString(R.string.calls_muted_this_call, UserInfoUtils.getNicknameOrUserId(call.getRemoteUser())));
-                mLinearLayoutRemoteMute.setVisibility(View.VISIBLE);
-            } else {
-                mLinearLayoutRemoteMute.setVisibility(View.GONE);
+            @Override
+            public void onRemoteAudioSettingsChanged(DirectCall call) {
+                Log.d(TAG, "onRemoteAudioSettingsChanged()");
+                setRemoteMuteInfo(call);
             }
+
+            @Override
+            public void onAudioDeviceChanged(DirectCall call, AudioDevice currentAudioDevice, Set<AudioDevice> availableAudioDevices) {
+                Log.d(TAG, "onAudioDeviceChanged(currentAudioDevice: " + currentAudioDevice + ", availableAudioDevices: " + availableAudioDevices + ")");
+                audioDeviceChanged(call, currentAudioDevice, availableAudioDevices);
+            }
+        });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "onNewIntent()");
+
+        String incomingCallId = intent.getStringExtra(ActivityUtils.EXTRA_INCOMING_CALL_ID);
+        if (incomingCallId != null) {
+            DirectCall call = SendBirdCall.getCall(incomingCallId);
+            call.end();
         }
+    }
 
-        @Override
-        public void onBackPressed() {
+    @TargetApi(19)
+    private static int getSystemUiVisibility() {
+        int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            flags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
+        return flags;
+    }
 
-        private void end() {
-            if (mDirectCall != null) {
-                Log.i(BaseApplication.TAG, "[CallActivity] end()");
+    private boolean setInitialState() {
+        if (mIncomingCallId != null) {
+            Log.d(TAG, "setInitialState() => (mIncomingCallId != null)");
 
-                if (mState == STATE.STATE_ENDING || mState == STATE.STATE_ENDED) {
-                    Log.i(BaseApplication.TAG, "[CallActivity] Already ending call.");
+            if (mDirectCall.isEnded()) {
+                Log.d(TAG, "setInitialState() => (mDirectCall.isEnded() == true)");
+                setState(STATE.STATE_ENDED, mDirectCall);
+                return false;
+            }
+
+            setState(STATE.STATE_INCOMING, mDirectCall);
+        } else {
+            setState(STATE.STATE_OUTGOING, mDirectCall);
+        }
+        return true;
+    }
+
+    private void checkAuthenticate() {
+        if (SendBirdCall.getCurrentUser() == null)  {
+            AuthenticationUtils.autoAuthenticate(mContext, userId -> {
+                if (userId == null) {
+                    finishWithEnding("autoAuthenticate() failed.");
                     return;
                 }
-
-                if (mDirectCall.isEnded()) {
-                    setState(STATE.STATE_ENDED, mDirectCall);
-                } else {
-                    setState(STATE.STATE_ENDING, mDirectCall);
-                    mDirectCall.end();
-                }
-            } else {
-                Log.i(BaseApplication.TAG, "[CallActivity] end() => (mDirectCall == null)");
-                finishWithEnding("(mDirectCall == null)");
-            }
+                checkPermissions();
+            });
+        } else {
+            checkPermissions();
         }
-
-        protected void finishWithEnding(String log) {
-            Log.i(BaseApplication.TAG, "[CallActivity] finishWithEnding(" + log + ")");
-
-            if (mEndingTimer == null) {
-                mEndingTimer = new Timer();
-                mEndingTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(() -> {
-                            Log.i(BaseApplication.TAG, "[CallActivity] finish()");
-                            finish();
-
-                            unbindCallService();
-                            stopCallService();
-                        });
-                    }
-                }, ENDING_TIME_MS);
-            }
-        }
-
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            Log.i(BaseApplication.TAG, "[CallActivity] onDestroy()");
-
-            unbindCallService();
-        }
-
-        //+ CallService
-        private ServiceConnection mCallServiceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                Log.i(BaseApplication.TAG, "[CallActivity] onServiceConnected()");
-
-                CallService.CallBinder callBinder = (CallService.CallBinder) iBinder;
-                mCallService = callBinder.getService();
-                mBound = true;
-
-                updateCallService();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                Log.i(BaseApplication.TAG, "[CallActivity] onServiceDisconnected()");
-
-                mBound = false;
-            }
-        };
-
-        private void bindCallService() {
-            Log.i(BaseApplication.TAG, "[CallActivity] bindCallService()");
-
-            bindService(new Intent(this, CallService.class), mCallServiceConnection, Context.BIND_AUTO_CREATE);
-        }
-
-        private void unbindCallService() {
-            Log.i(BaseApplication.TAG, "[CallActivity] unbindCallService()");
-
-            if (mBound) {
-                unbindService(mCallServiceConnection);
-                mBound = false;
-            }
-        }
-
-        private void stopCallService() {
-            Log.i(BaseApplication.TAG, "[CallActivity] stopCallService()");
-
-            CallService.stopService(mContext);
-        }
-
-        protected void updateCallService() {
-            if (mCallService != null) {
-                Log.i(BaseApplication.TAG, "[CallActivity] updateCallService()");
-
-                CallService.ServiceData serviceData = new CallService.ServiceData();
-                serviceData.isHeadsUpNotification = false;
-                serviceData.remoteNicknameOrUserId = getRemoteNicknameOrUserId(mDirectCall);
-                serviceData.callState = mState;
-                serviceData.callId = (mDirectCall != null ? mDirectCall.getCallId() : mCallId);
-                serviceData.isVideoCall = mIsVideoCall;
-                serviceData.calleeIdToDial = mCalleeIdToDial;
-                serviceData.doDial = mDoDial;
-                serviceData.doAccept = mDoAccept;
-                serviceData.doLocalVideoStart = mDoLocalVideoStart;
-
-                mCallService.updateNotification(serviceData);
-            }
-        }
-        //- CallService
     }
+
+    private void checkPermissions() {
+        ArrayList<String> deniedPermissions = new ArrayList<>();
+        for (String permission : getMandatoryPermissions()) {
+            if (checkCallingOrSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                deniedPermissions.add(permission);
+            }
+        }
+
+        if (deniedPermissions.size() > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(deniedPermissions.toArray(new String[0]), REQUEST_PERMISSIONS_REQUEST_CODE);
+            } else {
+                finishWithEnding("Permission denied.");
+            }
+        } else {
+            ready();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            boolean allowed = true;
+
+            for (int result : grantResults) {
+                allowed = allowed && (result == PackageManager.PERMISSION_GRANTED);
+            }
+
+            if (allowed) {
+                ready();
+            } else {
+                finishWithEnding("Permission denied.");
+            }
+        }
+    }
+
+    private void ready() {
+        if (mState == STATE.STATE_OUTGOING) {
+            startCall(false);
+        }
+    }
+
+    protected boolean setState(STATE state, DirectCall call) {
+        if (isFinishing()) {
+            Log.d(TAG, "setState() => isFinishing()");
+            return false;
+        }
+
+        mState = state;
+        switch (state) {
+            case STATE_INCOMING: {
+                mLinearLayoutInfo.setVisibility(View.VISIBLE);
+                mLinearLayoutRemoteMute.setVisibility(View.GONE);
+                mRelativeLayoutRingingButtons.setVisibility(View.VISIBLE);
+                mLinearLayoutConnectingButtons.setVisibility(View.GONE);
+
+                if (mIsVideoCall) {
+                    setInfo(call, getString(R.string.calls_incoming_video_call));
+                } else {
+                    setInfo(call, getString(R.string.calls_incoming_voice_call));
+                }
+
+                mImageViewDecline.setBackgroundResource(R.drawable.btn_call_decline);
+                break;
+            }
+
+            case STATE_ACCEPTING: {
+                setInfo(call, getString(R.string.calls_connecting_call));
+                break;
+            }
+
+            case STATE_OUTGOING: {
+                mLinearLayoutInfo.setVisibility(View.VISIBLE);
+                mImageViewProfile.setVisibility(View.GONE);
+                mLinearLayoutRemoteMute.setVisibility(View.GONE);
+                mRelativeLayoutRingingButtons.setVisibility(View.GONE);
+                mLinearLayoutConnectingButtons.setVisibility(View.VISIBLE);
+
+                if (mIsVideoCall) {
+                    setInfo(call, getString(R.string.calls_video_calling));
+                } else {
+                    setInfo(call, getString(R.string.calls_calling));
+                }
+                break;
+            }
+
+            case STATE_CONNECTED: {
+                mImageViewProfile.setVisibility(View.VISIBLE);
+                mLinearLayoutRemoteMute.setVisibility(View.VISIBLE);
+                mRelativeLayoutRingingButtons.setVisibility(View.GONE);
+                mLinearLayoutConnectingButtons.setVisibility(View.VISIBLE);
+
+                setRemoteMuteInfo(call);
+                break;
+            }
+
+            case STATE_ENDING: {
+                if (mIsVideoCall) {
+                    setInfo(call, getString(R.string.calls_ending_video_call));
+                } else {
+                    setInfo(call, getString(R.string.calls_ending_voice_call));
+                }
+                break;
+            }
+
+            case STATE_ENDED: {
+                mLinearLayoutInfo.setVisibility(View.VISIBLE);
+                mImageViewProfile.setVisibility(View.VISIBLE);
+                mLinearLayoutRemoteMute.setVisibility(View.GONE);
+                mRelativeLayoutRingingButtons.setVisibility(View.GONE);
+                mLinearLayoutConnectingButtons.setVisibility(View.GONE);
+
+                String status = getEndResultString(call);
+                setInfo(call, status);
+                finishWithEnding(status);
+                break;
+            }
+        }
+        return true;
+    }
+
+    protected void setInfo(DirectCall call, String status) {
+        DirectCallUser remoteUser = (call != null ? call.getRemoteUser() : null);
+        if (remoteUser != null) {
+            UserInfoUtils.setProfileImage(mContext, remoteUser, mImageViewProfile);
+            UserInfoUtils.setUserId(remoteUser, mTextViewUserId);
+        } else {
+            mTextViewUserId.setText(mCalleeId);
+        }
+
+        mTextViewStatus.setVisibility(View.VISIBLE);
+        if (status != null) {
+            mTextViewStatus.setText(status);
+        }
+    }
+
+    private void setRemoteMuteInfo(DirectCall call) {
+        if (call != null && !call.isRemoteAudioEnabled() && call.getRemoteUser() != null) {
+            String remoteUserId = call.getRemoteUser().getUserId();
+            mTextViewRemoteMute.setText(getString(R.string.calls_muted_this_call, remoteUserId));
+            mLinearLayoutRemoteMute.setVisibility(View.VISIBLE);
+        } else {
+            mLinearLayoutRemoteMute.setVisibility(View.GONE);
+        }
+    }
+
+    private String getEndResultString(DirectCall call) {
+        String endResultString = "";
+        if (call != null) {
+            switch (call.getEndResult()) {
+                case NONE:
+                    break;
+                case NO_ANSWER:
+                    endResultString = getString(R.string.calls_end_result_no_answer);
+                    break;
+                case CANCELED:
+                    endResultString = getString(R.string.calls_end_result_canceled);
+                    break;
+                case DECLINED:
+                    endResultString = getString(R.string.calls_end_result_declined);
+                    break;
+                case COMPLETED:
+                    endResultString = getString(R.string.calls_end_result_completed);
+                    break;
+                case TIMED_OUT:
+                    endResultString = getString(R.string.calls_end_result_timed_out);
+                    break;
+                case CONNECTION_LOST:
+                    endResultString = getString(R.string.calls_end_result_connection_lost);
+                    break;
+                case UNKNOWN:
+                    endResultString = getString(R.string.calls_end_result_unknown);
+                    break;
+                case DIAL_FAILED:
+                    endResultString = getString(R.string.calls_end_result_dial_failed);
+                    break;
+                case ACCEPT_FAILED:
+                    endResultString = getString(R.string.calls_end_result_accept_failed);
+                    break;
+                case OTHER_DEVICE_ACCEPTED:
+                    endResultString = getString(R.string.calls_end_result_other_device_accepted);
+                    break;
+            }
+        }
+        return endResultString;
+    }
+
+    @Override
+    public void onBackPressed() {
+    }
+
+    protected void end(DirectCall call) {
+        if (call != null) {
+            Log.d(TAG, "end(callId: " + call.getCallId() + ")");
+
+            if (mState == STATE.STATE_ENDING) {
+                Log.d(TAG, "Already ending call.");
+                return;
+            }
+
+            setState(STATE.STATE_ENDING, call);
+            call.end();
+        }
+    }
+
+    protected void finishWithEnding(String log) {
+        Log.d(TAG, "finishWithEnding(" + log + ")");
+
+        if (mEndingTimer == null) {
+            mEndingTimer = new Timer();
+            mEndingTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                runOnUiThread(() -> {
+                    Log.d(TAG, "finish()");
+                    finish();
+                });
+                }
+            }, ENDING_TIME_MS);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sIsRunning = false;
+    }
+}

@@ -1,5 +1,6 @@
 package com.shoppr.shoper.SendBird.call;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.util.Log;
@@ -13,16 +14,21 @@ import com.sendbird.calls.DialParams;
 import com.sendbird.calls.DirectCall;
 import com.sendbird.calls.SendBirdCall;
 import com.shoppr.shoper.R;
-import com.shoppr.shoper.SendBird.BaseApplication;
-import com.shoppr.shoper.SendBird.utils.TimeUtils;
 import com.shoppr.shoper.SendBird.utils.ToastUtils;
 
 
+import java.util.Locale;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class VoiceCallActivity extends CallActivity {
+
+    private static final String TAG = "VoiceCallActivity";
+
+    private static final String[] MANDATORY_PERMISSIONS = {
+        Manifest.permission.RECORD_AUDIO
+    };
 
     private Timer mCallDurationTimer;
 
@@ -36,9 +42,14 @@ public class VoiceCallActivity extends CallActivity {
     }
 
     @Override
+    protected String[] getMandatoryPermissions() {
+        return MANDATORY_PERMISSIONS;
+    }
+
+    @Override
     protected void initViews() {
         super.initViews();
-        Log.i(BaseApplication.TAG, "[VoiceCallActivity] initViews()");
+        Log.d(TAG, "initViews()");
 
         mImageViewSpeakerphone = findViewById(R.id.image_view_speakerphone);
     }
@@ -88,7 +99,7 @@ public class VoiceCallActivity extends CallActivity {
     }
 
     @Override
-    protected void setAudioDevice(AudioDevice currentAudioDevice, Set<AudioDevice> availableAudioDevices) {
+    protected void audioDeviceChanged(DirectCall call, AudioDevice currentAudioDevice, Set<AudioDevice> availableAudioDevices) {
         if (currentAudioDevice == AudioDevice.SPEAKERPHONE) {
             mImageViewSpeakerphone.setSelected(true);
             mImageViewBluetooth.setSelected(false);
@@ -118,15 +129,15 @@ public class VoiceCallActivity extends CallActivity {
         callOptions.setAudioEnabled(mIsAudioEnabled);
 
         if (amICallee) {
-            Log.i(BaseApplication.TAG, "[VoiceCallActivity] accept()");
+            Log.d(TAG, "accept()");
             if (mDirectCall != null) {
                 mDirectCall.accept(new AcceptParams().setCallOptions(callOptions));
             }
         } else {
-            Log.i(BaseApplication.TAG, "[VoiceCallActivity] dial()");
-            mDirectCall = SendBirdCall.dial(new DialParams(mCalleeIdToDial).setVideoCall(mIsVideoCall).setCallOptions(callOptions), (call, e) -> {
+            Log.d(TAG, "dial()");
+            mDirectCall = SendBirdCall.dial(new DialParams(mCalleeId).setVideoCall(mIsVideoCall).setCallOptions(callOptions), (call, e) -> {
                 if (e != null) {
-                    Log.i(BaseApplication.TAG, "[VoiceCallActivity] dial() => e: " + e.getMessage());
+                    Log.d(TAG, "dial() => e: " + e.getMessage());
                     if (e.getMessage() != null) {
                         ToastUtils.showToast(mContext, e.getMessage());
                     }
@@ -134,11 +145,12 @@ public class VoiceCallActivity extends CallActivity {
                     finishWithEnding(e.getMessage());
                     return;
                 }
-
-                Log.i(BaseApplication.TAG, "[VoiceCallActivity] dial() => OK");
-                updateCallService();
+                Log.d(TAG, "dial() => OK");
             });
-            setListener(mDirectCall);
+
+            if (mDirectCall != null) {
+                setListener(mDirectCall);
+            }
         }
     }
 
@@ -151,10 +163,6 @@ public class VoiceCallActivity extends CallActivity {
         }
 
         switch (mState) {
-            case STATE_ACCEPTING:
-                cancelCallDurationTimer();
-                break;
-
             case STATE_CONNECTED: {
                 setInfo(call, "");
                 mLinearLayoutInfo.setVisibility(View.VISIBLE);
@@ -178,12 +186,35 @@ public class VoiceCallActivity extends CallActivity {
                 @Override
                 public void run() {
                     runOnUiThread(() -> {
-                        String callDuration = TimeUtils.getTimeString(call.getDuration());
+                        String callDuration = getTimeString(call.getDuration());
                         mTextViewStatus.setText(callDuration);
                     });
                 }
             }, 0, 1000);
         }
+    }
+
+    private String getTimeString(long periodMs) {
+        final String result;
+        int totalSec = (int)(periodMs / 1000);
+        int hour = 0, min, sec;
+
+        if (totalSec >= 3600) {
+            hour = totalSec / 3600;
+            totalSec = totalSec % 3600;
+        }
+
+        min = totalSec / 60;
+        sec = totalSec % 60;
+
+        if (hour > 0) {
+            result = String.format(Locale.getDefault(), "%d:%02d:%02d", hour, min, sec);
+        } else if (min > 0) {
+            result = String.format(Locale.getDefault(), "%d:%02d", min, sec);
+        } else {
+            result = String.format(Locale.getDefault(), "0:%02d", sec);
+        }
+        return result;
     }
 
     private void cancelCallDurationTimer() {
@@ -196,7 +227,7 @@ public class VoiceCallActivity extends CallActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(BaseApplication.TAG, "[VoiceCallActivity] onDestroy()");
+        Log.d(TAG, "onDestroy()");
         cancelCallDurationTimer();
     }
 }

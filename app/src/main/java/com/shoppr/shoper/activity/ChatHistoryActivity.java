@@ -18,10 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shoppr.shoper.LoginActivity;
-import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.ChatList.ChatListModel;
 import com.shoppr.shoper.Model.ChatList.Userchat;
-import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;

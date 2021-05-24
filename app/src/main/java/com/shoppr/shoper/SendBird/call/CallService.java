@@ -23,8 +23,6 @@ import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.SendBird.utils.ToastUtils;
 import com.shoppr.shoper.SendBird.utils.UserInfoUtils;
-import com.shoppr.shoper.SplashActivity;
-import com.shoppr.shoper.activity.InitilizingActivity;
 
 
 public class CallService extends Service {
@@ -84,14 +82,14 @@ public class CallService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i(BaseApplication.TAG, "[CallService] onBind()");
+        //Log.i(BaseApplication.TAG, "[CallService] onBind()");
         return mBinder;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(BaseApplication.TAG, "[CallService] onCreate()");
+       // Log.i(BaseApplication.TAG, "[CallService] onCreate()");
 
         mContext = this;
     }
@@ -99,12 +97,12 @@ public class CallService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(BaseApplication.TAG, "[CallService] onDestroy()");
+        //Log.i(BaseApplication.TAG, "[CallService] onDestroy()");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(BaseApplication.TAG, "[CallService] onStartCommand()");
+       // Log.i(BaseApplication.TAG, "[CallService] onStartCommand()");
 
         mServiceData.isHeadsUpNotification = intent.getBooleanExtra(EXTRA_IS_HEADS_UP_NOTIFICATION, false);
         mServiceData.remoteNicknameOrUserId = intent.getStringExtra(EXTRA_REMOTE_NICKNAME_OR_USER_ID);
@@ -123,7 +121,7 @@ public class CallService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        Log.i(BaseApplication.TAG, "[CallService] onTaskRemoved()");
+       // Log.i(BaseApplication.TAG, "[CallService] onTaskRemoved()");
 
         mServiceData.isHeadsUpNotification = true;
         updateNotification(mServiceData);
@@ -207,11 +205,11 @@ public class CallService extends Service {
 
             if (SendBirdCall.getOngoingCallCount() > 0) {
                 ToastUtils.showToast(context, "Ringing.");
-                Log.i(BaseApplication.TAG, "[CallService] dial() => SendBirdCall.getOngoingCallCount(): " + SendBirdCall.getOngoingCallCount());
+               // Log.i(BaseApplication.TAG, "[CallService] dial() => SendBirdCall.getOngoingCallCount(): " + SendBirdCall.getOngoingCallCount());
                 return;
             }
 
-            Log.i(BaseApplication.TAG, "[CallService] dial()");
+           // Log.i(BaseApplication.TAG, "[CallService] dial()");
             ServiceData serviceData = new ServiceData();
             serviceData.isHeadsUpNotification = false;
             serviceData.remoteNicknameOrUserId = doDialWithCalleeId;
@@ -230,12 +228,12 @@ public class CallService extends Service {
     }
 
     public static void onRinging(Context context, @NonNull DirectCall call) {
-        Log.i(BaseApplication.TAG, "[CallService] onRinging()");
+      //  Log.i(BaseApplication.TAG, "[CallService] onRinging()");
 
         ServiceData serviceData = new ServiceData();
         serviceData.isHeadsUpNotification = true;
         serviceData.remoteNicknameOrUserId = UserInfoUtils.getNicknameOrUserId(call.getRemoteUser());
-        serviceData.callState =CallActivity.STATE.STATE_ACCEPTING;
+        serviceData.callState = CallActivity.STATE.STATE_ACCEPTING;
         serviceData.callId = call.getCallId();
         serviceData.isVideoCall = call.isVideoCall();
         serviceData.calleeIdToDial = null;
@@ -247,7 +245,7 @@ public class CallService extends Service {
     }
 
     private static void startService(Context context, ServiceData serviceData) {
-        Log.i(BaseApplication.TAG, "[CallService] startService()");
+     //   Log.i(BaseApplication.TAG, "[CallService] startService()");
 
         if (context != null) {
             Intent intent = new Intent(context, CallService.class);
@@ -271,7 +269,7 @@ public class CallService extends Service {
     }
 
     public static void stopService(Context context) {
-        Log.i(BaseApplication.TAG, "[CallService] stopService()");
+        //Log.i(BaseApplication.TAG, "[CallService] stopService()");
 
         if (context != null) {
             Intent intent = new Intent(context, CallService.class);
@@ -280,10 +278,10 @@ public class CallService extends Service {
     }
 
     public void updateNotification(@NonNull ServiceData serviceData) {
-        Log.i(BaseApplication.TAG, "[CallService] updateNotification(isHeadsUpNotification: " + serviceData.isHeadsUpNotification + ", remoteNicknameOrUserId: " + serviceData.remoteNicknameOrUserId
+      /*  Log.i(BaseApplication.TAG, "[CallService] updateNotification(isHeadsUpNotification: " + serviceData.isHeadsUpNotification + ", remoteNicknameOrUserId: " + serviceData.remoteNicknameOrUserId
                 + ", callState: " + serviceData.callState + ", callId: " + serviceData.callId + ", isVideoCall: " + serviceData.isVideoCall
                 + ", calleeIdToDial: " + serviceData.calleeIdToDial + ", doDial: " + serviceData.doDial + ", doAccept: " + serviceData.doAccept + ", doLocalVideoStart: " + serviceData.doLocalVideoStart + ")");
-
+*/
         mServiceData.set(serviceData);
         startForeground(NOTIFICATION_ID, getNotification(mServiceData));
     }

@@ -2,23 +2,15 @@ package com.shoppr.shoper.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,11 +19,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.developer.kalert.KAlertDialog;
 import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.AutoAssign.AutoAssignModel;
-import com.shoppr.shoper.Model.CheckLocation.CheckLocationModel;
 import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.StartChat.StartChatModel;
 import com.shoppr.shoper.R;
@@ -45,8 +35,6 @@ import com.skyfishjy.library.RippleBackground;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;

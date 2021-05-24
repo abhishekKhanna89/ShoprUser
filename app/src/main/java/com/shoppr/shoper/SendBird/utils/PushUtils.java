@@ -7,23 +7,23 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sendbird.calls.SendBirdCall;
 import com.sendbird.calls.SendBirdException;
-import com.shoppr.shoper.SendBird.BaseApplication;
-
 
 public class PushUtils {
+
+    private static final String TAG = "PushUtils";
 
     public interface GetPushTokenHandler {
         void onResult(String token, SendBirdException e);
     }
 
     public static void getPushToken(Context context, final GetPushTokenHandler handler) {
-        Log.i(BaseApplication.TAG, "[PushUtils] getPushToken()");
+        Log.d(TAG, "getPushToken()");
 
         String savedToken = PrefUtils.getPushToken(context);
         if (TextUtils.isEmpty(savedToken)) {
             FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
                 if (!task.isSuccessful()) {
-                    Log.i(BaseApplication.TAG, "[PushUtils] getPushToken() => getInstanceId failed", task.getException());
+                    Log.d(TAG, "getPushToken() => getInstanceId failed", task.getException());
                     if (handler != null) {
                         handler.onResult(null, new SendBirdException((task.getException() != null ? task.getException().getMessage() : "")));
                     }
@@ -31,13 +31,13 @@ public class PushUtils {
                 }
 
                 String pushToken = (task.getResult() != null ? task.getResult().getToken() : "");
-                Log.i(BaseApplication.TAG, "[PushUtils] getPushToken() => pushToken: " + pushToken);
+                Log.d(TAG, "getPushToken() => pushToken: " + pushToken);
                 if (handler != null) {
                     handler.onResult(pushToken, null);
                 }
             });
         } else {
-            Log.i(BaseApplication.TAG, "[PushUtils] savedToken: " + savedToken);
+            Log.d(TAG, "savedToken: " + savedToken);
             if (handler != null) {
                 handler.onResult(savedToken, null);
             }
@@ -49,11 +49,11 @@ public class PushUtils {
     }
 
     public static void registerPushToken(Context context, String pushToken, PushTokenHandler handler) {
-        Log.i(BaseApplication.TAG, "[PushUtils] registerPushToken(pushToken: " + pushToken + ")");
+        Log.d(TAG, "registerPushToken(pushToken: " + pushToken + ")");
 
         SendBirdCall.registerPushToken(pushToken, false, e -> {
             if (e != null) {
-                Log.i(BaseApplication.TAG, "[PushUtils] registerPushToken() => e: " + e.getMessage());
+                Log.d(TAG, "registerPushToken() => e: " + e.getMessage());
                 PrefUtils.setPushToken(context, pushToken);
 
                 if (handler != null) {
@@ -62,7 +62,7 @@ public class PushUtils {
                 return;
             }
 
-            Log.i(BaseApplication.TAG, "[PushUtils] registerPushToken() => OK");
+            Log.d(TAG, "registerPushToken() => OK");
             PrefUtils.setPushToken(context, pushToken);
 
             if (handler != null) {
