@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+            android:id="@+id/voicePlayerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="5dp"
+            app:enableVisualizer="true"
+            android:visibility="visible"
+            app:playPauseBackgroundColor="#ff7700"
+            app:playPauseCornerRadius="100"
+            app:playProgressbarColor="#ff7700"
+            app:progressTimeColor="#000"
+            app:seekBarProgressColor="#000"
+            app:seekBarThumbColor="#FFC107"
+            app:shareCornerRadius="100"
+            app:showShareButton="false"
+            app:showTiming="true"
+            app:timingBackgroundColor="#6AFF7700"
+            app:viewBackground="#C6C4CF"
+            app:viewCornerRadius="100"
+            app:visualizationNotPlayedColor="#727171"
+            app:visualizationPlayedColor="#ff7700" />
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="11:00 AM"
+            android:textColor="#ff7700"
+            android:textSize="10sp" />
+
+
+    </LinearLayout>
+</LinearLayout>

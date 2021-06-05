@@ -8,10 +8,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,21 +27,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.payumoney.core.PayUmoneyConfig;
+import com.payumoney.core.PayUmoneyConstants;
+import com.payumoney.core.PayUmoneySdkInitializer;
+import com.payumoney.core.entity.TransactionResponse;
+import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
+import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
 import com.shoppr.shoper.LoginActivity;
+import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.CartCancel.CartCancelModel;
 import com.shoppr.shoper.Model.CartView.CartViewModel;
 import com.shoppr.shoper.Model.CartView.Item;
 import com.shoppr.shoper.Model.Initiat.InitiatOrderModel;
 import com.shoppr.shoper.Model.InitiatPayment.InitiatPaymentModel;
 import com.shoppr.shoper.Model.PaymentSuccess.PaymentSuccessModel;
+import com.shoppr.shoper.OtpActivity;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
@@ -45,15 +64,28 @@ import com.shoppr.shoper.util.Progressbar;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViewCartActivity extends AppCompatActivity implements PaymentResultWithDataListener {
+public class ViewCartActivity extends AppCompatActivity {
     SessonManager sessonManager;
     Progressbar progressbar;
     RecyclerView RvMyCart;
@@ -67,19 +99,35 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
     CartViewModel cartViewModel;
     CardView cardOrderSummary,walletCardView;
     CheckBox checkbox;
-    int value,total;
-    String razorpay_order_id;
+    int value;
+    String total;
+    String order_id;
     String valueId;
     String chat_id;
+    String hashkey;
+    String phonenumber;
+    String email;
+     String name;
+    String refid;
+    String product;
+    String  total1;
+    private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
+    private AppPreference mAppPreference;
+    private boolean isDisableExitConfirmation = false;
+    //BaseApplicationpay BaseApplicationpay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_cart);
+
+        // BaseApplicationpay=new BaseApplicationpay();
         sessonManager=new SessonManager(this);
         progressbar = new Progressbar();
         getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "My Cart" + "</font>")));
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_arrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mAppPreference = new AppPreference();
 
         btn_payNow = (Button) findViewById(R.id.btn_payNow);
         btn_continue = (Button) findViewById(R.id.btn_continue_shoping);
@@ -213,20 +261,59 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
             InitiatePaymentRequest initiatePaymentRequest=new InitiatePaymentRequest();
             initiatePaymentRequest.setType(type);
             initiatePaymentRequest.setUse_balance(value);
+         /*   Call<JsonObject> call = ApiExecutor.getApiService(this).apiInitiatePayment("Bearer "+sessonManager.getToken(),orderId,type);;
+            call.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    Log.d("res", response.body().toString());
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.d("error",t.getMessage());
+                }
+            });*/
+
+
+            // Log.d("lakshmi====","")
+
+
             Call<InitiatPaymentModel>call= ApiExecutor.getApiService(this).apiInitiatePayment("Bearer "+sessonManager.getToken(),orderId,initiatePaymentRequest);
             call.enqueue(new Callback<InitiatPaymentModel>() {
                 @Override
                 public void onResponse(Call<InitiatPaymentModel> call, Response<InitiatPaymentModel> response) {
+
+                    Log.d("responsebody===",response.toString());
                     progressbar.hideProgress();
                     if (response.body()!=null) {
                         InitiatPaymentModel initiatPaymentModel=response.body();
+                        Log.d("intiateresponse===",new Gson().toJson(response.body()));
+
+
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
 
                             if (initiatPaymentModel.getData().getPaymentDone().equalsIgnoreCase("No")){
-                                razorpay_order_id=initiatPaymentModel.getData().getRazorpayOrderId();
+                                order_id=initiatPaymentModel.getData().getRazorpayOrderId();
                                 total=initiatPaymentModel.getData().getTotal();
-                                startPayment(total);
+
+                                hashkey=initiatPaymentModel.getData().getHash();
+                                phonenumber=initiatPaymentModel.getData().getMobile();
+                                name=initiatPaymentModel.getData().getName();
+
+                                 refid=initiatPaymentModel.getData().getRefid();
+                                 product=initiatPaymentModel.getData().getProduct();
+                                 email=initiatPaymentModel.getData().getEmail();
+
+                                 total1= String.valueOf(initiatPaymentModel.getData().getTotal());
+
+
+
+                               // lk changes here
+                                launchPayUMoneyFlow();
+
+
                             }else {
+
                                 startActivity(new Intent(ViewCartActivity.this,OrderConfirmActivity.class)
                                 .putExtra("refid",initiatPaymentModel.getData().getRefid())
                                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -318,37 +405,353 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
             CommonUtils.showToastInCenter(ViewCartActivity.this, getString(R.string.please_check_network));
         }
     }
-    /*Todo:- RazorPay*/
-    private void startPayment(int amount) {
-        final Activity activity = this;
-        final Checkout co = new Checkout();
+
+    /*Todo:- PayU  integration */
+  //  ------------------------------------------
+
+    private PayUmoneySdkInitializer.PaymentParam calculateServerSideHashAndInitiatePayment1(final PayUmoneySdkInitializer.PaymentParam paymentParam) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        HashMap<String, String> params = paymentParam.getParams();
+        stringBuilder.append(params.get(PayUmoneyConstants.KEY) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.TXNID) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.AMOUNT) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.PRODUCT_INFO) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.FIRSTNAME) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.EMAIL) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.UDF1) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.UDF2) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.UDF3) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.UDF4) + "|");
+        stringBuilder.append(params.get(PayUmoneyConstants.UDF5) + "||||||");
+
+       // AppEnvironment appEnvironment = ((BaseApplicationpay) getApplication()).getAppEnvironment();
+        AppEnvironment appEnvironment = AppEnvironment.SANDBOX;
+
+      // stringBuilder.append(appEnvironment.salt());
+
+        String hash = hashCal(hashkey);
+        paymentParam.setMerchantHash(hash);
+
+        return paymentParam;
+    }
+
+
+    public static String hashCal(String str) {
+        byte[] hashseq = str.getBytes();
+        StringBuilder hexString = new StringBuilder();
         try {
-            JSONObject options = new JSONObject();
-            options.put("name", "Shoppr");
-            options.put("description", "App Payment");
-            //You can omit the image option to fetch the image from dashboard
-            options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
-            options.put("currency", "INR");
-            options.put("order_id", razorpay_order_id);
-            String payment = String.valueOf(amount);
-            // amount is in paise so please multiple it by 100
-            //Payment failed Invalid amount (should be passed in integer paise. Minimum value is 100 paise, i.e. ₹ 1)
-            double total = Double.parseDouble(payment);
-            total = total * 100;
-            options.put("amount", total);
-            JSONObject preFill = new JSONObject();
-            preFill.put("email", "");
-            preFill.put("contact", "");
-            options.put("prefill", preFill);
-            co.open(activity, options);
+            MessageDigest algorithm = MessageDigest.getInstance("SHA-512");
+            algorithm.reset();
+            algorithm.update(hashseq);
+            byte messageDigest[] = algorithm.digest();
+            for (byte aMessageDigest : messageDigest) {
+                String hex = Integer.toHexString(0xFF & aMessageDigest);
+                if (hex.length() == 1) {
+                    hexString.append("0");
+                }
+                hexString.append(hex);
+            }
+        } catch (NoSuchAlgorithmException ignored) {
+        }
+        return hexString.toString();
+    }
+
+
+    private void launchPayUMoneyFlow()
+
+    {
+
+        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
+
+        //Use this to set your custom text on result screen button
+     //   payUmoneyConfig.setDoneButtonText(((EditText) findViewById(R.id.status_page_et)).getText().toString());
+
+        //Use this to set your custom title for the activity
+      //  payUmoneyConfig.setPayUmoneyActivityTitle(((EditText) findViewById(R.id.activity_title_et)).getText().toString());
+
+       // payUmoneyConfig.setDoneButtonText("Done");
+
+
+        payUmoneyConfig.disableExitConfirmation(isDisableExitConfirmation);
+
+        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
+
+        String amount="";
+        //try {
+            amount = total;
+
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        String txnId = refid;
+        //String txnId = "TXNID720431525261327973";
+        String phone = phonenumber;
+        String productName = product;
+        String firstName = name;
+        String email = this.email;
+        String udf1 = "";
+        String udf2 = "";
+        String udf3 = "";
+        String udf4 = "";
+        String udf5 = "";
+        String udf6 = "";
+        String udf7 = "";
+        String udf8 = "";
+        String udf9 = "";
+        String udf10 = "";
+
+
+       // BaseApplicationpay BaseApplicationpay=new BaseApplicationpay();
+        AppEnvironment appEnvironment = AppEnvironment.SANDBOX;
+
+        Log.d("checkout_data", txnId+"-->"+phone+"-->"+productName+"-->"+firstName+"-->"+email+"-->"+appEnvironment.surl()+"-->"+appEnvironment.furl()+"-->"+amount);
+
+
+        builder.setAmount(amount)
+                .setTxnId(txnId)
+                .setPhone(phone)
+                .setProductName(productName)
+                .setFirstName(firstName)
+                .setEmail(email)
+                .setsUrl(appEnvironment.surl())
+                .setfUrl(appEnvironment.furl())
+                .setUdf1(udf1)
+                .setUdf2(udf2)
+                .setUdf3(udf3)
+                .setUdf4(udf4)
+                .setUdf5(udf5)
+                .setUdf6(udf6)
+                .setUdf7(udf7)
+                .setUdf8(udf8)
+                .setUdf9(udf9)
+                .setUdf10(udf10)
+                .setIsDebug(false)
+                .setKey("Cf8wcQiQ")
+                .setMerchantId("7406162");
+
+        try {
+            mPaymentParams = builder.build();
+
+            /*
+             * Hash should always be generated from your server side.
+             * */
+            //    generateHashFromServer(mPaymentParams);
+
+            /*            *//**
+             * Do not use below code when going live
+             * Below code is provided to generate hash from sdk.
+             * It is recommended to generate hash from server side only.
+             * */
+
+            //
+            mPaymentParams.setMerchantHash(hashkey);
+
+            Log.d("mPaymentParams", String.valueOf(hashkey));
+
+           // mPaymentParams = calculateServerSideHashAndInitiatePayment1(mPaymentParams);
+
+            if (AppPreference.selectedTheme != -1) {
+                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams,ViewCartActivity.this, AppPreference.selectedTheme,true);
+            } else {
+                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams,ViewCartActivity.this, R.style.AppTheme_default, true);
+            }
+
         } catch (Exception e) {
-            Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            // some exception occurred
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+          //  payNowButton.setEnabled(true);
         }
     }
 
 
-    @Override
+
+
+
+
+
+
+
+    /**
+     * This method generates hash from server.
+     *
+   //  * @param paymentParam payments params used for hash generation
+     */
+/*
+    public void generateHashFromServer(PayUmoneySdkInitializer.PaymentParam paymentParam) {
+        //nextButton.setEnabled(false); // lets not allow the user to click the button again and again.
+
+        HashMap<String, String> params = paymentParam.getParams();
+
+        // lets create the post params
+        StringBuffer postParamsBuffer = new StringBuffer();
+        postParamsBuffer.append(concatParams(PayUmoneyConstants.KEY, params.get(PayUmoneyConstants.KEY)));
+        postParamsBuffer.append(concatParams(PayUmoneyConstants.AMOUNT, params.get(PayUmoneyConstants.AMOUNT)));
+        postParamsBuffer.append(concatParams(PayUmoneyConstants.TXNID, params.get(PayUmoneyConstants.TXNID)));
+        postParamsBuffer.append(concatParams(PayUmoneyConstants.EMAIL, params.get(PayUmoneyConstants.EMAIL)));
+        postParamsBuffer.append(concatParams("productinfo", params.get(PayUmoneyConstants.PRODUCT_INFO)));
+        postParamsBuffer.append(concatParams("firstname", params.get(PayUmoneyConstants.FIRSTNAME)));
+        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF1, params.get(PayUmoneyConstants.UDF1)));
+        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF2, params.get(PayUmoneyConstants.UDF2)));
+        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF3, params.get(PayUmoneyConstants.UDF3)));
+        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF4, params.get(PayUmoneyConstants.UDF4)));
+        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF5, params.get(PayUmoneyConstants.UDF5)));
+
+        String postParams = postParamsBuffer.charAt(postParamsBuffer.length() - 1) == '&' ? postParamsBuffer.substring(0, postParamsBuffer.length() - 1).toString() : postParamsBuffer.toString();
+
+        // lets make an api call
+        GetHashesFromServerTask getHashesFromServerTask = new GetHashesFromServerTask();
+        getHashesFromServerTask.execute(postParams);
+    }
+*/
+
+
+    protected String concatParams(String key, String value) {
+        return key + "=" + value + "&";
+    }
+
+    /**
+     * This AsyncTask generates hash from server.
+     */
+    private class GetHashesFromServerTask extends AsyncTask<String, String, String> {
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(ViewCartActivity.this);
+            progressDialog.setMessage("Please wait...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... postParams) {
+
+            String merchantHash = "";
+            try {
+                //TODO Below url is just for testing purpose, merchant needs to replace this with their server side hash generation url
+                URL url = new URL("https://payu.herokuapp.com/get_hash");
+
+                String postParam = postParams[0];
+
+                byte[] postParamsByte = postParam.getBytes("UTF-8");
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestProperty("Content-Length", String.valueOf(postParamsByte.length));
+                conn.setDoOutput(true);
+                conn.getOutputStream().write(postParamsByte);
+
+                InputStream responseInputStream = conn.getInputStream();
+                StringBuffer responseStringBuffer = new StringBuffer();
+                byte[] byteContainer = new byte[1024];
+                for (int i; (i = responseInputStream.read(byteContainer)) != -1; ) {
+                    responseStringBuffer.append(new String(byteContainer, 0, i));
+                }
+
+                JSONObject response = new JSONObject(responseStringBuffer.toString());
+
+                Iterator<String> payuHashIterator = response.keys();
+                while (payuHashIterator.hasNext()) {
+                    String key = payuHashIterator.next();
+                    switch (key) {
+                        /**
+                         * This hash is mandatory and needs to be generated from merchant's server side
+                         *
+                         */
+                        case "payment_hash":
+                            merchantHash = response.getString(key);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return merchantHash;
+        }
+
+        @Override
+        protected void onPostExecute(String merchantHash) {
+            super.onPostExecute(merchantHash);
+
+            progressDialog.dismiss();
+          //  payNowButton.setEnabled(true);
+
+            if (merchantHash.isEmpty() || merchantHash.equals("")) {
+                Toast.makeText(ViewCartActivity.this, "Could not generate hash", Toast.LENGTH_SHORT).show();
+            } else {
+                mPaymentParams.setMerchantHash(merchantHash);
+
+            }
+        }
+    }
+
+
+    public class DecimalDigitsInputFilter implements InputFilter {
+
+        Pattern mPattern;
+
+        public DecimalDigitsInputFilter(int digitsBeforeZero, int digitsAfterZero) {
+            mPattern = Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?");
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            Matcher matcher = mPattern.matcher(dest);
+            if (!matcher.matches())
+                return "";
+            return null;
+        }
+
+    }
+
+
+
+
+
+
+    /*Todo:- RazorPay*/
+//    private void startPayment(int amount) {
+//        final Activity activity = this;
+//        final Checkout co = new Checkout();
+//        try {
+//            JSONObject options = new JSONObject();
+//            options.put("name", "Shoppr");
+//            options.put("description", "App Payment");
+//            //You can omit the image option to fetch the image from dashboard
+//            options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
+//            options.put("currency", "INR");
+//            options.put("order_id", order_id);
+//            String payment = String.valueOf(amount);
+//            // amount is in paise so please multiple it by 100
+//            //Payment failed Invalid amount (should be passed in integer paise. Minimum value is 100 paise, i.e. ₹ 1)
+//            double total = Double.parseDouble(payment);
+//            total = total * 100;
+//            options.put("amount", total);
+//            JSONObject preFill = new JSONObject();
+//            preFill.put("email", "");
+//            preFill.put("contact", "");
+//            options.put("prefill", preFill);
+//            co.open(activity, options);
+//        } catch (Exception e) {
+//            Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//            e.printStackTrace();
+//        }
+//    }
+
+
+  /*  @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
         String orderId=paymentData.getOrderId();
         String paymentId=paymentData.getPaymentId();
@@ -396,7 +799,7 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
         } catch (Exception e) {
             Log.e("OnPaymentError", "Exception in onPaymentError", e);
         }
-    }
+    }*/
 
     public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder> {
         Context context;
@@ -507,6 +910,63 @@ public class ViewCartActivity extends AppCompatActivity implements PaymentResult
         }
         return super.onOptionsItemSelected(item);
     }
+
+   @Override
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result Code is -1 send from Payumoney activity
+        Log.d("MainActivity", "request code " + requestCode + " resultcode " + resultCode);
+        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data !=
+                null) {
+            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager
+                    .INTENT_EXTRA_TRANSACTION_RESPONSE);
+
+            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
+
+            // Check which object is non-null
+            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
+                    //Success Transaction
+                    new AlertDialog.Builder(this)
+                            .setCancelable(false)
+                            .setMessage("Payment Sucessfully Done!!!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                    dialog.dismiss();
+
+                                    Intent intent = new Intent(ViewCartActivity.this, ChatActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    finish();
+
+                                }
+                            }).show();
+
+
+                } else {
+                    //Failure Transaction
+                }
+
+                // Response from Payumoney
+                String payuResponse = transactionResponse.getPayuResponse();
+
+                // Response from SURl and FURL
+                String merchantResponse = transactionResponse.getTransactionDetails();
+
+
+
+
+            } else if (resultModel != null && resultModel.getError() != null) {
+                Log.d("shopr", "Error response : " + resultModel.getError().getTransactionResponse());
+            } else {
+                Log.d("shopr", "Both objects are null!");
+            }
+        }
+    }
+
 
     /*@Override
     protected void onDestroy() {

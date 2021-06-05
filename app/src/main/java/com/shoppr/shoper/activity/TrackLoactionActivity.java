@@ -8,6 +8,9 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -25,6 +28,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -75,6 +79,11 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
     private FusedLocationProviderClient mFusedLocationProviderClient;
     CountDownTimer countDownTimer;
     String location_address;
+    Marker drivermarker;
+
+    public int checkforroutes;
+    private Polyline lastPolyline;
+    public int checkforzoommarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +95,46 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
         messageId=getIntent().getStringExtra("chatId");
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        checkforroutes=2;
+        checkforzoommarker=2;
+
 
         viewTrackLoaction();
 
+    }
+
+ /*   @Override
+    public void onLocationChanged(Location location) {
+
+        if(now != null){
+            now.remove();
+
+        }
+
+      //  TextView tvLocation = (TextView) findViewById(R.id.tv_location);
+
+        // Getting latitude of the current location
+        double latitude = location.getLatitude();
+
+        // Getting longitude of the current location
+        double longitude = location.getLongitude();
+
+        // Creating a LatLng object for the current location
+        LatLng latLng = new LatLng(latitude, longitude);
+        now = mMap.addMarker(new MarkerOptions().position(latLng)));
+        // Showing the current location in Google Map
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Zoom in the Google Map
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
     }
+*/
+
+
+
+
+
     private void viewTrackLoaction() {
         if (CommonUtils.isOnline(TrackLoactionActivity.this)) {
             Call<TrackLoactionModel>call= ApiExecutor.getApiService(this)
@@ -103,63 +147,81 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                             //Toast.makeText(TrackLoactionActivity.this, response.body().getStatus(), Toast.LENGTH_SHORT).show();
 
-                            if (trackLoactionModel.getData().getShoppr()!=null){
+                            if (trackLoactionModel.getData().getShoppr()!=null) {
                                 /*Todo:- Customer Lat Lang*/
-                                 lat=trackLoactionModel.getData().getCustomer().getLat();
-                                 lang=trackLoactionModel.getData().getCustomer().getLang();
-                                 Log.d("CustomerLaaLANG",lat+"::"+lang);
-                                 customer=new LatLng(lat,lang);
-                                Geocoder geocoder = new Geocoder(TrackLoactionActivity.this);
-                                List<Address> list = null;
-                                try {
-                                    list = geocoder.getFromLocation(lat,lang, 1);
+                                lat = trackLoactionModel.getData().getCustomer().getLat();
+                                lang = trackLoactionModel.getData().getCustomer().getLang();
+                                Log.d("CustomerLaaLANG", lat + "::" + lang);
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                customer = new LatLng(lat, lang);
+
+                                lat_driver = trackLoactionModel.getData().getShoppr().getLat();
+                                lang_driver = trackLoactionModel.getData().getShoppr().getLang();
+                                //  Log.d("DriverLaaLANG", lat_driver + "::" + lang_driver);
+                                driver = new LatLng(lat_driver, lang_driver);
+
+                                if (checkforzoommarker == 2) {
+                                    checkforzoommarker=3;
+                                    Geocoder geocoder = new Geocoder(TrackLoactionActivity.this);
+                                    List<Address> list = null;
+                                    try {
+                                        list = geocoder.getFromLocation(lat, lang, 1);
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    for (int i = 0; i < list.size(); i++) {
+                                        Address address = list.get(i);
+                                        String localitys = address.getLocality();
+                                        location_address = address.getAddressLine(0);
+                                    }
+                                    int heightC = 120;
+                                    int widthC = 80;
+                                    BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.pin_logo);
+                                    Bitmap b = bitmapdraw.getBitmap();
+                                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, widthC, heightC, false);
+                                    mMap.addMarker(new MarkerOptions().position(customer).title(location_address))
+                                            .setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(customer, 15));
+
+
+                                    Log.d("DriverLaaLANG", lat_driver + "::" + lang_driver);
+                                    //  driver = new LatLng(lat_driver, lang_driver);
+                                    Geocoder geocoderD = new Geocoder(TrackLoactionActivity.this);
+                                    List<Address> listD = null;
+                                    try {
+                                        listD = geocoderD.getFromLocation(lat_driver, lang_driver, 1);
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    Address addressD = listD.get(0);
+                                    String location_addressD = addressD.getAddressLine(0);
+                                    int heightD = 120;
+                                    int widthD = 80;
+                                    BitmapDrawable bitmapdrawD = (BitmapDrawable) getResources().getDrawable(R.drawable.rider_icon);
+                                    Bitmap bD = bitmapdrawD.getBitmap();
+                                    Bitmap smallMarkerD = Bitmap.createScaledBitmap(bD, widthD, heightD, false);
+
+
+
+
+                                    drivermarker = mMap.addMarker(new MarkerOptions().position(driver).title(location_addressD));
+
+                                   // drivermarker.setPosition(driver);
+                                    drivermarker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarkerD));
+
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(driver, 15));
+
                                 }
-                                for (int i=0;i<list.size();i++){
-                                    Address address = list.get(i);
-                                    String localitys = address.getLocality();
-                                    location_address = address.getAddressLine(0);
-                                }
-                                int heightC =120;
-                                int widthC = 80;
-                                BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.pin_logo);
-                                Bitmap b = bitmapdraw.getBitmap();
-                                Bitmap smallMarker = Bitmap.createScaledBitmap(b, widthC, heightC, false);
-                                mMap.addMarker(new MarkerOptions().position(customer).title(location_address))
-                                        .setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(customer, 15));
-                                /*Todo:- Driver Lat Lang*/
-                                lat_driver=trackLoactionModel.getData().getShoppr().getLat();
-                                lang_driver=trackLoactionModel.getData().getShoppr().getLang();
-                                Log.d("DriverLaaLANG",lat_driver+"::"+lang_driver);
-                                driver=new LatLng(lat_driver,lang_driver);
-                                Geocoder geocoderD = new Geocoder(TrackLoactionActivity.this);
-                                List<Address> listD = null;
-                                try {
-                                    listD = geocoderD.getFromLocation(lat_driver,lang_driver, 1);
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                                Address addressD = listD.get(0);
-                                String location_addressD = addressD.getAddressLine(0);
-                                 int heightD =120;
-                                 int widthD = 80;
-                                 BitmapDrawable bitmapdrawD = (BitmapDrawable)getResources().getDrawable(R.drawable.rider_icon);
-                                 Bitmap bD = bitmapdrawD.getBitmap();
-                                 Bitmap smallMarkerD = Bitmap.createScaledBitmap(bD, widthD, heightD, false);
-                                 mMap.addMarker(new MarkerOptions().position(driver).title(location_addressD))
-                                        .setIcon(BitmapDescriptorFactory.fromBitmap(smallMarkerD));
-                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(driver, 15));
-
-                                if (customer!=null||driver!=null){
-                                    getRequestUrl(customer,driver);
-                                    getDeviceLocation(customer,driver);
+                                if (customer != null || driver != null) {
+                                    getRequestUrl(customer, driver);
+                                    getDeviceLocation(customer, driver);
                                     //viewTrackLoaction();
                                 }
+
 
                             }
                         }else
@@ -188,7 +250,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
 
         viewTrackLoaction();
 
-        countDownTimer =  new CountDownTimer(20000, 1000) {
+        countDownTimer =  new CountDownTimer(1000, 100) {
             public void onTick(long millisUntilFinished) {
                 //viewTrackLoaction();
             }
@@ -202,8 +264,10 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
         // Add a marker in Sydney and move the camera
 
 
-
     }
+
+
+
     /*AIzaSyBq0kgTo_fwzmQpo-z901CFaXfKVqZXma8*/
     private String getRequestUrl(LatLng customer, LatLng driver) {
         if (customer !=null||driver!=null){
@@ -323,13 +387,23 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                 polylineOptions.geodesic(true);
             }
 
-            if (polylineOptions!=null) {
+           // mMap.clear();
+            //setMarkersPolyLines();
+            if (lastPolyline != null) {
+                lastPolyline.remove();
+                //lastPolyline.clear();
+
+                Log.d("removed","polyline");
+            }
+            lastPolyline=   mMap.addPolyline(polylineOptions);
+
+          /*  if (polylineOptions!=null) {
                 mMap.addPolyline(polylineOptions);
             } else {
                 mMap.clear();
                 Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
             }
-
+*/
         }
     }
     public void getDeviceLocation(LatLng customer, LatLng driver) {
@@ -343,15 +417,79 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                         if (task.isSuccessful()) {
                             // Log.d(TAG, "onComplete: found location!");
 
+                            Log.d("pointsize==", String.valueOf(listPoints.size()));
+
                             listPoints.add(customer);
                             listPoints.add(driver);
 
-                            if (listPoints.size() == 2) {
-                                //Create the URL to get request from first marker to second marker
-                                String url = getRequestUrl(listPoints.get(0), listPoints.get(1));
-                                TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                                taskRequestDirections.execute(url);
+                            Log.d("pointsize==", String.valueOf(listPoints.size()));
+
+
+                           // if(checkforroutes==2)
+
+                            {
+
+                                if (listPoints.size() == 2) {
+                                   // checkforroutes=3;
+
+                                    //Create the URL to get request from first marker to second marker
+                                    String url = getRequestUrl(listPoints.get(0), listPoints.get(1));
+                                    TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                                    taskRequestDirections.execute(url);
+
+
+                                    drivermarker.setPosition(driver);
+
+                                   /* for(int i=0;i<listPoints.size();i++)
+                                    {
+                                        listPoints.remove(i);
+                                    }*/
+
+
+
+                                    //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(driver, 15));
+
+
+
+
+                                }
                             }
+                         //   else{
+
+                              /*  Log.d("DriverLaaLANG", lat_driver + "::" + lang_driver);
+                                //  driver = new LatLng(lat_driver, lang_driver);
+                                Geocoder geocoderD = new Geocoder(TrackLoactionActivity.this);
+                                List<Address> listD = null;
+                                try {
+                                    listD = geocoderD.getFromLocation(lat_driver, lang_driver, 1);
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Address addressD = listD.get(0);
+                                String location_addressD = addressD.getAddressLine(0);
+                                int heightD = 120;
+                                int widthD = 80;
+                                BitmapDrawable bitmapdrawD = (BitmapDrawable) getResources().getDrawable(R.drawable.rider_icon);
+                                Bitmap bD = bitmapdrawD.getBitmap();
+                                Bitmap smallMarkerD = Bitmap.createScaledBitmap(bD, widthD, heightD, false);
+
+
+                                if (drivermarker != null) {
+                                    drivermarker.remove();
+                                }
+
+
+                                drivermarker = mMap.addMarker(new MarkerOptions().position(driver).title(location_addressD));
+
+                                drivermarker.setPosition(driver);
+                                drivermarker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarkerD));
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(driver, 15));
+*/
+
+
+                           // }
 
 
                         } else {

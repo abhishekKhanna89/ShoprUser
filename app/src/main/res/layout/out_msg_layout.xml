@@ -479,7 +479,7 @@
             app:cmv_backgroundColor="#fff"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
-            android:visibility="gone">
+            android:visibility="visible">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

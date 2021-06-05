@@ -9,8 +9,8 @@ android {
         applicationId "com.shoppr.shoper"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 14
-        versionName "2.4"
+        versionCode 19
+        versionName "2.7"
         multiDexEnabled true
 
         Properties properties = new Properties()
@@ -109,6 +109,8 @@ dependencies {
     implementation 'com.devlomi.record-view:record-view:2.0.1'
 
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.payumoney.sdkui:plug-n-play:1.6.1'
+
 
 }
 apply plugin: 'com.google.gms.google-services'

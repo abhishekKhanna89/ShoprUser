@@ -330,7 +330,7 @@
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:layout_margin="5dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:cmv_arrowPosition="left"
             android:layout_gravity="end">
         <LinearLayout

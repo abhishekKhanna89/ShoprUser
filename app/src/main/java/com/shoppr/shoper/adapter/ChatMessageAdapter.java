@@ -58,16 +58,57 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 import static android.os.FileUtils.copy;
 
-public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
+public class
+ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
     private static final int IO_BUFFER_SIZE = 1;
     List<Chat> chatList;
     Context context;
-    private int SELF = 1;
+   // private int SELF = 1;
     View itemView;
     SessonManager sessonManager;
     BroadcastReceiver mMessageReceiver;
     String title, body;
     String ratingValue;
+
+    private int SELF_DIRECTION=1;
+    private int SELF_TEXT_IN = 1;
+    private int SELF_IMAGE_IN = 3;
+    private int SELF_TEXT_OUT = 2;
+    private int SELF_IMAGE_OUT = 4;
+    private int  SELF_PRODUCT_IN=5;
+    private int  SELF_PRODUCT_OUT=6;
+    private int  SELF_RATING_IN=7;
+    private int  SELF_RATING_OUT=8;
+
+    private int  SELF_AUDIO_IN=9;
+    private int  SELF_AUDIO_OUT=10;
+
+    private int  SELF_ADDMONEY_IN=11;
+    private int  SELF_ADDMONEY_OUT=12;
+
+    private int  SELF_RECHARGE_IN=13;
+    private int  SELF_RECHARGE_OUT=14;
+
+    private int  SELF_PAID_IN=15;
+    private int  SELF_PAID_OUT=16;
+
+    private int  SELF_ADDRESS_IN=17;
+    private int  SELF_ADDRESS_OUT=18;
+
+    private int  SELF_STORE_IN=19;
+    private int  SELF_STORE_OUT=20;
+
+    private int  SELF_ORDERCONFIRMED_IN=21;
+    private int  SELF_ORDERCONFIRMED_OUT= 22;
+    private int  SELF_ADDRESSTYPE_IN=23;
+    private int  SELF_ADDRESSTYPE_OUT=24;
+
+    private int  SELF_TRACK_IN=26;
+    private int  SELF_TRACK_OUT=27;
+   // private int  SELF_ADDMONEY_IN=24;
+
+
+   // addmoney
 
     public ChatMessageAdapter(Context context, List<Chat> chatList) {
         this.context = context;
@@ -77,7 +118,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //if view type is self
+     /*   //if view type is self
         if (viewType == SELF) {
             //Inflating the layout self
             itemView = LayoutInflater.from(parent.getContext())
@@ -86,7 +127,179 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             //else inflating the layout others
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_layout, parent, false);
+        }*/
+
+        if (viewType == SELF_TEXT_IN) {
+            //Inflating the layout self
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_text_layout, parent, false);
+        }else if(viewType == SELF_TEXT_OUT){
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_text_layout, parent, false);
         }
+        // lk changes here
+        else if(viewType == SELF_PRODUCT_IN){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_product_layout, parent, false);
+        }
+        else if(viewType == SELF_PRODUCT_OUT){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_product_layout, parent, false);
+        }
+        else if(viewType == SELF_RATING_IN){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_rating_layout, parent, false);
+        }
+        else if(viewType == SELF_RATING_OUT){
+            //Log.d("outrating==", String.valueOf(SELF_RATING_OUT));
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_rating_layout, parent, false);
+        }
+        else if(viewType == SELF_AUDIO_IN){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_audio_layout, parent, false);
+        }
+        else if(viewType == SELF_AUDIO_OUT){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_audio_layout, parent, false);
+        }
+        else if(viewType == SELF_ADDMONEY_IN){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_addwallet_layout, parent, false);
+        }
+        else if(viewType == SELF_ADDMONEY_OUT){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_addwallet_layout, parent, false);
+        }
+        else if(viewType == SELF_RECHARGE_IN){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_recharge_layout, parent, false);
+        }
+        else if(viewType == SELF_RECHARGE_OUT){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_recharge_layout, parent, false);
+        }
+
+        else if(viewType == SELF_PAID_IN){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_payment_layout, parent, false);
+        }
+        else if(viewType == SELF_PAID_OUT){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_payment_layout, parent, false);
+        }
+
+        else if(viewType == SELF_ADDRESS_IN){
+
+           // Log.d("outratingaddin==", String.valueOf(SELF_RATING_IN));
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_location_layout, parent, false);
+        }
+        else if(viewType == SELF_ADDRESS_OUT){
+
+            Log.d("outratingaddout==", String.valueOf(SELF_RATING_IN));
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_location_layout, parent, false);
+        }
+        else if(viewType == SELF_STORE_IN){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_store_layout, parent, false);
+        }
+        else if(viewType == SELF_STORE_OUT){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_store_layout, parent, false);
+        }
+        else if(viewType == SELF_ORDERCONFIRMED_IN){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_orderconfirmed_layout, parent, false);
+        }
+        else if(viewType == SELF_ORDERCONFIRMED_OUT){
+
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_oredercofirm_layout, parent, false);
+        }
+
+        else  if (viewType == SELF_IMAGE_IN) {
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_image_layout, parent, false);
+        }
+        else  if (viewType == SELF_IMAGE_OUT)
+        {
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_image_layout, parent, false);
+        }
+
+        else  if (viewType == SELF_ADDRESSTYPE_IN)
+        {
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_locationtype_layout, parent, false);
+        }
+        else  if (viewType == SELF_ADDRESSTYPE_OUT)
+        {
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_locationtype_layout, parent, false);
+        }
+        else  if (viewType ==SELF_TRACK_IN )
+        {
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_track_layout, parent, false);
+        }
+        else  if (viewType ==SELF_TRACK_OUT )
+        {
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_track_layout, parent, false);
+        }
+        else
+        {
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_blank_layout, parent, false);
+        }
+//
+//
+
+
+
+
+
+
         //returing the view
         return new Holder(itemView);
     }
@@ -109,7 +322,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                     //holder.message_body.setText(title+"\t"+body);
                     // Toast.makeText(context, "Title:- "+title+" Body:- "+body, Toast.LENGTH_SHORT).show();
                 } else {
-                    holder.textLayout.setVisibility(View.GONE);
+                  //  holder.textLayout.setVisibility(View.GONE);
                 }
             }
         };
@@ -124,6 +337,23 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             holder.imageText.setText(chat.getMessage());
             holder.dateImage.setText(chat.getCreatedAt());
             holder.imageLayout.setVisibility(View.VISIBLE);
+            holder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.image_layout
+                            , null));
+                    dialog.setCancelable(false);
+                    dialog.setCanceledOnTouchOutside(true);
+                    ImageView imageFirst = (ImageView) dialog.findViewById(R.id.imageView);
+                    Picasso.get().load(chat.getFilePath()).into(imageFirst);
+                    PhotoViewAttacher pAttacher;
+                    pAttacher = new PhotoViewAttacher(imageFirst);
+                    pAttacher.update();
+                    dialog.show();
+                }
+            });
 
         }/* else {
             holder.imageLayout.setVisibility(View.GONE);
@@ -147,6 +377,182 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             holder.productMessage.setText(chat.getMessage());
             holder.dateProduct.setText(chat.getCreatedAt());
             holder.pqText.setText(chat.getQuantity() + " for " + "₹" + chat.getPrice());
+
+            if (chat.getStatus().equalsIgnoreCase("accepted")) {
+                holder.greenLayout.setVisibility(View.VISIBLE);
+                holder.closeRedLayout.setVisibility(View.GONE);
+                holder.rejectText.setVisibility(View.GONE);
+                holder.cancelText.setVisibility(View.VISIBLE);
+                holder.acceptText.setVisibility(View.GONE);
+             //   holder.ratingLayout.setEnabled(false);
+              //  holder.ratingBar.setIsIndicator(true);
+
+            }else
+            if (chat.getStatus().equalsIgnoreCase("rejected")) {
+                holder.closeRedLayout.setVisibility(View.VISIBLE);
+                holder.greenLayout.setVisibility(View.GONE);
+                holder.acceptText.setVisibility(View.GONE);
+                holder.rejectText.setVisibility(View.GONE);
+                holder.cancelText.setVisibility(View.GONE);
+            }else
+            if (chat.getStatus().equalsIgnoreCase("cancelled")) {
+                holder.closeRedLayout.setVisibility(View.VISIBLE);
+                holder.greenLayout.setVisibility(View.GONE);
+                holder.acceptText.setVisibility(View.GONE);
+                holder.rejectText.setVisibility(View.GONE);
+                holder.cancelText.setVisibility(View.GONE);
+            }
+
+
+            holder.acceptText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (CommonUtils.isOnline(context)) {
+                        //sessonManager.showProgress(context);
+                        Call<AcceptModel> call = ApiExecutor.getApiService(context)
+                                .apiAccept("Bearer " + sessonManager.getToken(), chat.getId());
+                        call.enqueue(new Callback<AcceptModel>() {
+                            @Override
+                            public void onResponse(Call<AcceptModel> call, Response<AcceptModel> response) {
+                                //sessonManager.hideProgress();
+                                if (response.body() != null) {
+                                    AcceptModel acceptModel = response.body();
+                                    if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+
+                                        if (acceptModel.getStatus().equalsIgnoreCase("success")) {
+                                            holder.greenLayout.setVisibility(View.VISIBLE);
+                                            holder.closeRedLayout.setVisibility(View.GONE);
+                                            holder.rejectText.setVisibility(View.GONE);
+                                            holder.cancelText.setVisibility(View.VISIBLE);
+                                            holder.acceptText.setVisibility(View.GONE);
+                                            if (context instanceof ChatActivity) {
+                                                ((ChatActivity)context).yourDesiredMethod();
+                                            }
+                              /*              context.startActivity(new Intent(context, ChatActivity.class)
+                                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
+                                        }
+                                        Toast.makeText(context, "" + acceptModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<AcceptModel> call, Throwable t) {
+                                //sessonManager.hideProgress();
+                            }
+                        });
+                    } else {
+                        CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
+                    }
+
+                }
+            });
+
+            holder.rejectText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (CommonUtils.isOnline(context)) {
+                        //sessonManager.showProgress(context);
+                        Call<RejectedModel> call = ApiExecutor.getApiService(context)
+                                .apiRejected("Bearer " + sessonManager.getToken(), chat.getId());
+                        call.enqueue(new Callback<RejectedModel>() {
+                            @Override
+                            public void onResponse(Call<RejectedModel> call, Response<RejectedModel> response) {
+                                //sessonManager.hideProgress();
+                                if (response.body() != null) {
+                                    RejectedModel rejectedModel = response.body();
+                                    if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                        if (rejectedModel.getStatus().equalsIgnoreCase("success")) {
+                                            holder.closeRedLayout.setVisibility(View.VISIBLE);
+                                            holder.greenLayout.setVisibility(View.GONE);
+                                            holder.acceptText.setVisibility(View.GONE);
+                                            holder.rejectText.setVisibility(View.GONE);
+                                            holder.cancelText.setVisibility(View.GONE);
+                                            if (context instanceof ChatActivity) {
+                                                ((ChatActivity)context).yourDesiredMethod();
+                                            }
+                                        }
+                                        Toast.makeText(context, "" + rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "" +rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<RejectedModel> call, Throwable t) {
+                                //sessonManager.hideProgress();
+                            }
+                        });
+                    } else {
+                        CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
+                    }
+
+                }
+            });
+            holder.cancelText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (CommonUtils.isOnline(context)) {
+                        //sessonManager.showProgress(context);
+                        Call<CancelModel> call = ApiExecutor.getApiService(context)
+                                .apiCancel("Bearer " + sessonManager.getToken(), chat.getId());
+                        call.enqueue(new Callback<CancelModel>() {
+                            @Override
+                            public void onResponse(Call<CancelModel> call, Response<CancelModel> response) {
+                                //sessonManager.hideProgress();
+                                if (response.body() != null) {
+                                    CancelModel cancelModel = response.body();
+                                    if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+
+                                        if (cancelModel.getStatus().equalsIgnoreCase("success")) {
+                                            holder.closeRedLayout.setVisibility(View.VISIBLE);
+                                            holder.greenLayout.setVisibility(View.GONE);
+                                            holder.acceptText.setVisibility(View.GONE);
+                                            holder.rejectText.setVisibility(View.GONE);
+                                            holder.cancelText.setVisibility(View.GONE);
+                                            if (context instanceof ChatActivity) {
+                                                ((ChatActivity)context).yourDesiredMethod();
+                                            }
+                                        }
+                                        Toast.makeText(context, "" + cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "" +cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CancelModel> call, Throwable t) {
+                                //sessonManager.hideProgress();
+                            }
+                        });
+                    } else {
+                        CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
+                    }
+                }
+            });
+            holder.productImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.image_layout
+                            , null));
+                    dialog.setCancelable(false);
+                    dialog.setCanceledOnTouchOutside(true);
+                    ImageView imageFirst = (ImageView) dialog.findViewById(R.id.imageView);
+                    Picasso.get().load(chat.getFilePath()).into(imageFirst);
+                    PhotoViewAttacher pAttacher;
+                    pAttacher = new PhotoViewAttacher(imageFirst);
+                    pAttacher.update();
+                    dialog.show();
+                }
+            });
+
+
+
+
             //
         }/* else {
             holder.productLayout.setVisibility(View.GONE);
@@ -156,20 +562,116 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             holder.dateRating.setText(chat.getCreatedAt());
             holder.ratingBar.setRating(Float.parseFloat(chat.getQuantity()));
             holder.ratingLayout.setVisibility(View.VISIBLE);
+
+
+
+            holder.ratingLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.layout_rating_dialog
+                            , null));
+                    dialog.setCancelable(false);
+                    dialog.setCanceledOnTouchOutside(true);
+
+                    ImageView backPress = dialog.findViewById(R.id.backPress);
+                    backPress.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AppCompatRatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+                    ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                        @Override
+                        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                            float a = rating;
+                            int b;
+                            b = (int) a;
+                            ratingValue = String.valueOf(b);
+
+                        }
+                    });
+                    EditText messageEt = dialog.findViewById(R.id.messageEt);
+                    Button submitRatingBtn = dialog.findViewById(R.id.submitRatingBtn);
+                    submitRatingBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (CommonUtils.isOnline(context)) {
+                                //sessonManager.showProgress(context);
+                                RatingsRequest ratingsRequest = new RatingsRequest();
+                                ratingsRequest.setRatings(ratingValue);
+                                ratingsRequest.setComment(messageEt.getText().toString());
+
+                                Call<RatingsModel> call = ApiExecutor.getApiService(context)
+                                        .apiRatings("Bearer " + sessonManager.getToken(), chat.getId(), ratingsRequest);
+                                call.enqueue(new Callback<RatingsModel>() {
+                                    @Override
+                                    public void onResponse(Call<RatingsModel> call, Response<RatingsModel> response) {
+                                        //sessonManager.hideProgress();
+                                        //Log.d("response",response.body().getStatus());
+                                        if (response.body() != null) {
+                                            RatingsModel ratingsModel=response.body();
+                                            if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                                Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                dialog.dismiss();
+                                                if (context instanceof ChatActivity) {
+                                                    ((ChatActivity)context).yourDesiredMethod();
+                                                }
+                                            } else {
+                                                Toast.makeText(context, "" + ratingsModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<RatingsModel> call, Throwable t) {
+                                        //sessonManager.hideProgress();
+                                    }
+                                });
+                            } else {
+                                CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
+                            }
+                        }
+                    });
+
+                    dialog.show();
+                }
+            });
+
+
+
+
+
         } /*else {
             holder.ratingLayout.setVisibility(View.GONE);
         }*/
         else if (chat.getType().equalsIgnoreCase("audio")) {
             holder.voicePlayerView.setAudio(chat.getFilePath());
             holder.voicePlayerView.setVisibility(View.VISIBLE);
+            holder.dateText.setText(chat.getCreatedAt());
         } /*else {
             holder.voicePlayerView.setVisibility(View.GONE);
         }*/
+
 
         else if (chat.getType().equalsIgnoreCase("address-request")) {
             holder.addressText.setText(chat.getMessage());
             holder.addressDate.setText(chat.getCreatedAt());
             holder.addressLayout.setVisibility(View.VISIBLE);
+
+            holder.addressLinkText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int chatId=chat.getChatId();
+                    //Log.d("chat_id",""+chatId);
+                    context.startActivity(new Intent(context, ShareLocationActivity.class)
+                            .putExtra("chatId", chatId)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                }
+            });
         } /*else {
             holder.addressLayout.setVisibility(View.GONE);
         }*/
@@ -194,8 +696,22 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                 e.printStackTrace();
             }
 
+
+
             holder.locationDate.setText(chat.getCreatedAt());
             holder.mapLayout.setVisibility(View.VISIBLE);
+            holder.locationImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + chat.getLat() + "," + chat.getLang());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    context.startActivity(mapIntent);
+                }
+            });
+
+
+
         } /*else {
             holder.mapLayout.setVisibility(View.GONE);
         }*/
@@ -214,7 +730,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             });
         }
         else if (chat.getType().equalsIgnoreCase("add-money")) {
-            holder.addWalletLayout.setVisibility(View.VISIBLE);
+            //holder.addWalletLayout.setVisibility(View.VISIBLE);
             holder.addWalletMsgText.setText(chat.getMessage());
             holder.addwalletDate.setText(chat.getCreatedAt());
             /*Todo:-Add Wallet Listener*/
@@ -260,7 +776,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             });
         }
         /*Todo:- Visibility Concept*/
-        if (chat.getStatus().equalsIgnoreCase("accepted")) {
+     /*   if (chat.getStatus().equalsIgnoreCase("accepted")) {
             holder.greenLayout.setVisibility(View.VISIBLE);
             holder.closeRedLayout.setVisibility(View.GONE);
             holder.rejectText.setVisibility(View.GONE);
@@ -310,8 +826,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                                         if (context instanceof ChatActivity) {
                                             ((ChatActivity)context).yourDesiredMethod();
                                         }
-                                       /* context.startActivity(new Intent(context, ChatActivity.class)
-                                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
+                                        context.startActivity(new Intent(context, ChatActivity.class)
+                                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                     }
                                     Toast.makeText(context, "" + acceptModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
@@ -413,10 +929,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                     CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
                 }
             }
-        });
+        });*/
 
-
-        holder.addressLinkText.setOnClickListener(new View.OnClickListener() {
+// lk commented here for future reference
+       /* holder.addressLinkText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int chatId=chat.getChatId();
@@ -426,11 +942,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
-
+*/
 
 
         /*Todo:-   Zoom Image*/
-        holder.locationImage.setOnClickListener(new View.OnClickListener() {
+     /*   holder.locationImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + chat.getLat() + "," + chat.getLang());
@@ -438,9 +954,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                 mapIntent.setPackage("com.google.android.apps.maps");
                 context.startActivity(mapIntent);
             }
-        });
+        });*/
 
-        holder.productImage.setOnClickListener(new View.OnClickListener() {
+      /*  holder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
@@ -456,8 +972,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                 pAttacher.update();
                 dialog.show();
             }
-        });
-        holder.image.setOnClickListener(new View.OnClickListener() {
+        });*/
+       /* holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
@@ -473,9 +989,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                 pAttacher.update();
                 dialog.show();
             }
-        });
+        });*/
 
-        holder.ratingLayout.setOnClickListener(new View.OnClickListener() {
+       /* holder.ratingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
@@ -549,7 +1065,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
                 dialog.show();
             }
-        });
+        });*/
 
         holder.setIsRecyclable(false);
 
@@ -570,12 +1086,135 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         Chat message = chatList.get(position);
 
         //If its owner  id is  equals to the logged in user id
-        if (message.getDirection() == 1) {
+     /*   if (message.getDirection() == 1) {
             //Returning self
             return SELF;
-        }
+        }*/
         //else returning position
-        return position;
+        if (message.getDirection()==1) {
+            //Returning self
+
+            if(message.getType().equalsIgnoreCase("text"))
+            {
+                return SELF_TEXT_IN;
+            }
+            else if(message.getType().equalsIgnoreCase("image"))
+            {
+                return SELF_IMAGE_IN;
+            }
+            else if (message.getType().equalsIgnoreCase("product"))
+            {
+                return SELF_PRODUCT_IN;
+            }
+            else if (message.getType().equalsIgnoreCase("rating"))
+            {
+                Log.d("messagetype===",message.getType());
+
+                return SELF_RATING_IN;
+            }
+            else if (message.getType().equalsIgnoreCase("audio"))
+            {
+                return SELF_AUDIO_IN;
+            }
+            else if (message.getType().equalsIgnoreCase("add-money"))
+            {
+                return SELF_ADDMONEY_IN;
+            }
+            else if (message.getType().equalsIgnoreCase("recharge"))
+            {
+                return SELF_RECHARGE_IN;
+            }
+            else if (message.getType().equalsIgnoreCase("payment"))
+            {
+                return SELF_PAID_IN;
+            }
+            else if (message.getType().equalsIgnoreCase("address-request"))
+            {
+                return SELF_ADDRESS_IN;
+            }
+            else if (message. getType().equalsIgnoreCase("store"))
+            {
+                return SELF_STORE_IN;
+            }
+            else if (message.getType().equalsIgnoreCase("order_confirmed"))
+            {
+                return SELF_ORDERCONFIRMED_IN;
+            }
+           else if (message.getType().equalsIgnoreCase("address"))
+            {
+                return SELF_ADDRESSTYPE_IN;
+            }
+            else if (message.getType().equalsIgnoreCase("track"))
+            {
+                return SELF_TRACK_IN;
+            }
+
+
+            //return SELF_TEXT;
+        }
+        else
+        {
+            if(message.getType().equalsIgnoreCase("text"))
+            {
+                return SELF_TEXT_OUT;
+            }
+            else if(message.getType().equalsIgnoreCase("image"))
+            {
+                return SELF_IMAGE_OUT;
+            }
+
+            else if (message.getType().equalsIgnoreCase("product"))
+            {
+                return SELF_PRODUCT_OUT;
+            }
+
+            else if (message.getType().equalsIgnoreCase("rating"))
+            {
+                Log.d("messagetype===",message.getType());
+                return SELF_RATING_OUT;
+            }
+            else if (message.getType().equalsIgnoreCase("audio"))
+            {
+                return SELF_AUDIO_OUT;
+            }
+            else if (message.getType().equalsIgnoreCase("add-money"))
+            {
+                return SELF_ADDMONEY_OUT;
+            }
+            else if (message.getType().equalsIgnoreCase("recharge"))
+            {
+                return SELF_RECHARGE_OUT;
+            }
+            else if (message.getType().equalsIgnoreCase("payment"))
+            {
+                return SELF_PAID_OUT;
+            }
+            else if (message.getType().equalsIgnoreCase("address-request"))
+            {
+
+                return SELF_ADDRESS_OUT;
+            }
+            else if (message. getType().equalsIgnoreCase("store"))
+            {
+                return SELF_STORE_OUT;
+            }
+            else if (message.getType().equalsIgnoreCase("order_confirmed"))
+            {
+                return SELF_ORDERCONFIRMED_OUT;
+            }
+            else if (message.getType().equalsIgnoreCase("address"))
+            {
+                return SELF_ADDRESSTYPE_OUT;
+            }
+            else if (message.getType().equalsIgnoreCase("track"))
+            {
+                return SELF_TRACK_OUT;
+            }
+
+        }
+
+
+        return 0;
     }
 
 
@@ -664,9 +1303,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             ratingsMessage = itemView.findViewById(R.id.ratingsMessage);
             dateRating = itemView.findViewById(R.id.dateRating);
             ratingBar = itemView.findViewById(R.id.ratingBar);
-            ratingBar.setFocusableInTouchMode(true);
+          /*  ratingBar.setFocusableInTouchMode(true);
             ratingBar.setFocusable(true);
-            ratingBar.setIsIndicator(true);
+            ratingBar.setIsIndicator(true);*/
             /*Todo:- Audio*/
             voicePlayerView = itemView.findViewById(R.id.voicePlayerView);
             /*Todo:- Address*/

@@ -591,14 +591,14 @@ public class ChatDetailsActivity extends AppCompatActivity {
 
             // Log.d("ress",""+imagePathList);
             bitmap = MediaStore.Images.Media.getBitmap(ChatDetailsActivity.this.getContentResolver(), photoUri);
-            bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
 
             if (Build.VERSION.SDK_INT > 23) {
                 bitmap = handleSamplingAndRotationBitmap(getApplicationContext(), photoUri);
 
             } else {
                 bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), photoUri);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
 
             }
             //ProfileUpdateAPI();
@@ -690,7 +690,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                         } else {
                             // Log.d("inelse", "inelse");
                             bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mImageUri);
-                            bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
+                            bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
 
                         }
 
@@ -724,7 +724,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                     } else {
                         //Log.d("inelse", "inelse");
                         bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mImageUri);
-                        bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
+                        bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
 
                     }
 

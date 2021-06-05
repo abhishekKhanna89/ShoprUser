@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
+
+
     package="com.shoppr.shoper">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,7 +26,6 @@
 
     <application
         android:name=".SendBird.BaseApplication"
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -33,177 +35,182 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shoper"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="n">
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${mapsApiKey}" />
 
 
-        <activity
-            android:name=".SendBird.call.VideoCallActivity"
-            android:configChanges="orientation|smallestScreenSize|screenSize|screenLayout"
-            android:theme="@style/CallTheme"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".SendBird.call.VoiceCallActivity"
-            android:configChanges="orientation|smallestScreenSize|screenSize|screenLayout"
-            android:theme="@style/CallTheme"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+     tools:targetApi="n">
+
+     <meta-data
+         android:name="com.google.android.geo.API_KEY"
+         android:value="${mapsApiKey}" />
+
+     <meta-data
+         android:name="io.fabric.ApiKey"
+         android:value="fabaabc4273e4e67d52a5410e9b2fa7a59088976" />
 
 
-
-        <activity
-            android:name=".activity.InitilizingActivity"
-            android:label="@string/title_activity_initilizing"
-            android:theme="@style/Theme.Shoper.NoActionBar"/>
-        <activity
-            android:name=".activity.CallingServiceActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/CallTheme" />
-        <activity
-            android:name=".activity.ImageZoomActivity"
-            android:label="Gallery"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.HelpActivity"
-            android:label="Help"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.FindingShopprActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FindingTheme" />
-        <activity
-            android:name=".activity.RegisterMerchantActivity"
-            android:label="Register as a Merchant"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.NotificationListActivity"
-            android:label="Notification"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.EditLocationActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-        <activity
-            android:name=".activity.OrderDetailsActivity"
-            android:label="Order Details"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.MyOrderActivity"
-            android:label="Order"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.OrderConfirmActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ChatDetailsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ChatTheme" />
-        <activity
-            android:name=".activity.ChatHistoryActivity"
-            android:label="Chat History"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.TrackLoactionActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ShareLocationActivity"
-            android:label="Share Location"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ViewCartActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ChatActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ChatTheme">
-            <intent-filter>
-                <action android:name="chat_screen" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activity.UpdateProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.AddMoneyActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.WalletActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.MyAccount"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.SotoreDetailsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".OtpActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/loginTheme" />
-        <activity
-            android:name=".RegisterActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/loginTheme" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${mapsApiKey}" />
-
-        <meta-data
-            android:name="com.razorpay.ApiKey"
-            android:value="rzp_test_UOxHxOruy0x9uP" />
-
-        <activity
-            android:name=".MapsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".StorelistingActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/loginTheme" />
-        <activity
-            android:name=".SplashActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+     <activity
+         android:name=".SendBird.call.VideoCallActivity"
+         android:configChanges="orientation|smallestScreenSize|screenSize|screenLayout"
+         android:theme="@style/CallTheme"
+         android:screenOrientation="portrait"
+         tools:ignore="LockedOrientationActivity" />
+     <activity
+         android:name=".SendBird.call.VoiceCallActivity"
+         android:configChanges="orientation|smallestScreenSize|screenSize|screenLayout"
+         android:theme="@style/CallTheme"
+         android:screenOrientation="portrait"
+         tools:ignore="LockedOrientationActivity" />
 
 
 
+     <activity
+         android:name=".activity.InitilizingActivity"
+         android:label="@string/title_activity_initilizing"
+         android:theme="@style/Theme.Shoper.NoActionBar"/>
+     <activity
+         android:name=".activity.CallingServiceActivity"
+         android:screenOrientation="portrait"
+         android:theme="@style/CallTheme" />
+     <activity
+         android:name=".activity.ImageZoomActivity"
+         android:label="Gallery"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.HelpActivity"
+         android:label="Help"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.FindingShopprActivity"
+         android:screenOrientation="portrait"
+         android:theme="@style/FindingTheme" />
+     <activity
+         android:name=".activity.RegisterMerchantActivity"
+         android:label="Register as a Merchant"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.NotificationListActivity"
+         android:label="Notification"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.EditLocationActivity"
+         android:screenOrientation="portrait"
+         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+     <activity
+         android:name=".activity.OrderDetailsActivity"
+         android:label="Order Details"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.MyOrderActivity"
+         android:label="Order"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.OrderConfirmActivity"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.ChatDetailsActivity"
+         android:screenOrientation="portrait"
+         android:theme="@style/ChatTheme" />
+     <activity
+         android:name=".activity.ChatHistoryActivity"
+         android:label="Chat History"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.TrackLoactionActivity"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.ShareLocationActivity"
+         android:label="Share Location"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.ViewCartActivity"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.ChatActivity"
+         android:screenOrientation="portrait"
+         android:theme="@style/ChatTheme">
+         <intent-filter>
+             <action android:name="chat_screen" />
+
+             <category android:name="android.intent.category.DEFAULT" />
+         </intent-filter>
+     </activity>
+     <activity
+         android:name=".activity.UpdateProfileActivity"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.AddMoneyActivity"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.WalletActivity"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.MyAccount"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".activity.SotoreDetailsActivity"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".OtpActivity"
+         android:screenOrientation="portrait"
+         android:theme="@style/loginTheme" />
+     <activity
+         android:name=".RegisterActivity"
+         android:screenOrientation="portrait"
+         android:theme="@style/loginTheme" />
+
+     <meta-data
+         android:name="com.google.android.geo.API_KEY"
+         android:value="${mapsApiKey}" />
+
+     <meta-data
+         android:name="com.razorpay.ApiKey"
+         android:value="rzp_test_UOxHxOruy0x9uP" />
+
+     <activity
+         android:name=".MapsActivity"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".StorelistingActivity"
+         android:screenOrientation="portrait" />
+     <activity
+         android:name=".LoginActivity"
+         android:screenOrientation="portrait"
+         android:theme="@style/loginTheme" />
+     <activity
+         android:name=".SplashActivity"
+         android:screenOrientation="portrait">
+         <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+
+             <category android:name="android.intent.category.LAUNCHER" />
+         </intent-filter>
+     </activity>
 
 
 
-        <service android:name=".notifications.FirebaseMessageReceiver"
-            android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
 
-        <!--        <service-->
+
+     <service android:name=".notifications.FirebaseMessageReceiver"
+         android:enabled="true"
+         android:exported="true"
+         android:stopWithTask="false">
+         <intent-filter>
+             <action android:name="com.google.firebase.MESSAGING_EVENT" />
+         </intent-filter>
+     </service>
+
+     <provider
+         android:name="androidx.core.content.FileProvider"
+         android:authorities="${applicationId}.provider"
+         android:exported="false"
+         android:grantUriPermissions="true">
+         <meta-data
+             android:name="android.support.FILE_PROVIDER_PATHS"
+             android:resource="@xml/file_paths" />
+     </provider>
+
+     <!--        <service-->
 <!--            android:name=".SendBird.fcm.MyFirebaseMessagingService"-->
 <!--            android:enabled="true"-->
 <!--            android:exported="true">-->

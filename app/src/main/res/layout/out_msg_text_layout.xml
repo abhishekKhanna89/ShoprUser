@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+    <me.himanshusoni.chatmessageview.ChatMessageView
+        android:id="@+id/textLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="5dp"
+        android:visibility="visible"
+        app:cmv_arrowPosition="right"
+        app:cmv_backgroundColor="#fff"
+        app:cmv_backgroundColorPressed="#FFBABABA"
+        app:cmv_cornerRadius="3dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/message_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:elevation="2dp"
+                android:textColor="#000"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/dateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="11:00 AM"
+                android:textColor="#000000"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </me.himanshusoni.chatmessageview.ChatMessageView>
+
+    </LinearLayout>
+</LinearLayout>

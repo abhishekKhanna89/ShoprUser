@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/orderConfirmLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="5dp"
+            android:visibility="visible"
+            app:cmv_arrowPosition="left"
+            app:cmv_backgroundColor="#1d6867"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/orderConfirmMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:elevation="2dp"
+                    android:fontFamily="sans-serif"
+                    android:text="Please make a payment"
+                    android:textColor="#fff"
+                    android:textSize="18dp" />
+                <Button
+                    android:id="@+id/detailsBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Details"
+                    android:fontFamily="sans-serif"
+                    android:backgroundTint="@color/green"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="5dp"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/orderConfirmDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="11:00 AM"
+                        android:textColor="#fff"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -50,6 +50,7 @@
             android:id="@+id/deleteImage"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:visibility="gone"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_delete"/>
         <TextView

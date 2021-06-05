@@ -29,6 +29,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -142,6 +143,7 @@ public class ChatActivity extends AppCompatActivity {
     File destination;
     String userChoosenTask;
     byte[] byteArray;
+    public final static int PERM_REQUEST_CODE_DRAW_OVERLAYS = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +154,7 @@ public class ChatActivity extends AppCompatActivity {
 
        //askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
         checkPermissions1();
+        permissionToDrawOverlays();
         chatRecyclerView = findViewById(R.id.chatRecyclerView);
         chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
         //chatRecyclerView.setHasFixedSize(false);
@@ -552,6 +555,17 @@ public class ChatActivity extends AppCompatActivity {
             else if (requestCode == REQUEST_CAMERA)
                 onCaptureImageResult(data);
         }
+
+        if (requestCode == PERM_REQUEST_CODE_DRAW_OVERLAYS) {
+            if (android.os.Build.VERSION.SDK_INT >= 23) {   //Android M Or Over
+                if (!Settings.canDrawOverlays(this)) {
+                    // ADD UI FOR USER TO KNOW THAT UI for SYSTEM_ALERT_WINDOW permission was not granted earlier...
+                } else {
+                    Log.d("lakshmi", "granted");
+
+                }
+            }
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -950,4 +964,14 @@ public class ChatActivity extends AppCompatActivity {
     public void yourDesiredMethod() {
         chatMessageList(chat_id);
     }
+
+    public void permissionToDrawOverlays() {
+        if (android.os.Build.VERSION.SDK_INT >= 23) {   //Android M Or Over
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, PERM_REQUEST_CODE_DRAW_OVERLAYS);
+            }
+        }
+    }
+
 }

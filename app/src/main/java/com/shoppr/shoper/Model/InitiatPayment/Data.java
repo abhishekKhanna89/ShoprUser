@@ -13,29 +13,57 @@ public class Data {
     @Expose
     private String refid;
 
-    @SerializedName("razorpay_order_id")
+    @SerializedName("order_id")
     @Expose
-    private String razorpayOrderId;
+    private String OrderId;
+
     @SerializedName("total")
     @Expose
-    private Integer total;
+    private String total;
+
     @SerializedName("email")
     @Expose
     private String email;
+
     @SerializedName("mobile")
     @Expose
     private String mobile;
-    @SerializedName("description")
-    @Expose
-    private String description;
+
+//    @SerializedName("description")
+//    @Expose
+//    private String description;
+
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("currency")
+
+//    @SerializedName("currency")
+//    @Expose
+//    private String currency;
+
+    @SerializedName("hashdata")
     @Expose
-    private String currency;
+    private String hash;
 
+    @SerializedName("product")
+    @Expose
+    private String product;
 
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
 
 
     public String getPaymentDone() {
@@ -57,18 +85,18 @@ public class Data {
     }
 
     public String getRazorpayOrderId() {
-        return razorpayOrderId;
+        return OrderId;
     }
 
-    public void setRazorpayOrderId(String razorpayOrderId) {
-        this.razorpayOrderId = razorpayOrderId;
+    public void setRazorpayOrderId(String OrderId) {
+        this.OrderId = OrderId;
     }
 
-    public Integer getTotal() {
+    public String getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(String total) {
         this.total = total;
     }
 
@@ -88,13 +116,13 @@ public class Data {
         this.mobile = mobile;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+//    public String getDescription() {
+//        return description;
+//    }
+//
+//    public void setDescription(String description) {
+//        this.description = description;
+//    }
 
     public String getName() {
         return name;
@@ -104,13 +132,13 @@ public class Data {
         this.name = name;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
+//    public String getCurrency() {
+//        return currency;
+//    }
+//
+//    public void setCurrency(String currency) {
+//        this.currency = currency;
+//    }
 
 }
 

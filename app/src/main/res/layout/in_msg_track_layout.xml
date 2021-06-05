@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/trackLocationLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cmv_backgroundColor="@color/call_type"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp"
+            android:visibility="gone"
+            android:layout_margin="5dp"
+            app:cmv_arrowPosition="left"
+            android:layout_gravity="end">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:orientation="vertical">
+
+                <!--android:gravity="top|left"
+                    android:lines="3"
+                    android:padding="10dp"-->
+                <Button
+                    android:id="@+id/trackLocationText"
+                    android:layout_width="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/teal_200"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
+
+
+
+    </LinearLayout>
+</LinearLayout>

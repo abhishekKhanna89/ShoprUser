@@ -204,7 +204,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull Holder holder, int position) {
-            Picasso.get().load(detailList.get(position).getFilePath()).into(holder.productImage);
+
+            if (detailList.get(position).getFilePath() != null && !detailList.get(position).getFilePath().isEmpty() && !detailList.get(position).getFilePath().equals("null")) {
+
+                Picasso.get().load(detailList.get(position).getFilePath()).into(holder.productImage);
+            }
+
+
             holder.nameProductText.setText(detailList.get(position).getMessage());
             holder.priceProductText.setText("\u20B9 "+detailList.get(position).getPrice());
             holder.quantityProductText.setText(detailList.get(position).getQuantity());

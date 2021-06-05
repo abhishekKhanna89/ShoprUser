@@ -221,7 +221,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/green"
             android:gravity="center"
-            android:text="COD"
+            android:text="CASH ON DELIVERY"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
