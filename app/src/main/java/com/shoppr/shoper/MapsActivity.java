@@ -6,10 +6,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -22,6 +25,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,9 +94,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     /*Todo:- Location Manager*/
     private Location location;
     private GoogleApiClient googleApiClient;
-   // private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    // private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private LocationRequest locationRequest;
-   // private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
+    // private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
     // lists for permissions
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -110,16 +114,17 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     LinearLayout mainPage;
     Button updateLocation;
     Progressbar progressbar;
-    private boolean firstLocation=true;
+    private boolean firstLocation = true;
 
     /*Todo:- Version Check*/
-    String VERSION_URL = ApiExecutor.baseUrl+"app-version";
+    String VERSION_URL = ApiExecutor.baseUrl + "app-version";
     String sCurrentVersion;
     int hoursmilllisecond = 86400000;
     int value = 0, savedMillistime;
 
     String cityName;
     String urlString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,7 +144,87 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         secondPage = findViewById(R.id.secondPage);
         updateLocation = findViewById(R.id.updateLocation);
 
+        Log.d("notifiallowed=", String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()));
 
+        NotificationManager manager = (NotificationManager) MapsActivity.this.getSystemService(MapsActivity.this.NOTIFICATION_SERVICE);
+        int importance = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            importance = manager.getImportance();
+        }
+        boolean soundAllowed = importance < 0 || importance >= NotificationManager.IMPORTANCE_DEFAULT;
+
+        Log.d("soundAllowed=", String.valueOf(soundAllowed));
+
+
+
+
+
+        //if()
+        if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false") ) {
+
+            AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
+            //alertDialog.setTitle("Alert");
+            alertDialog.setMessage("Please update sound,notification  lockscreen,floating notification setting to be better use");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                            Intent intent = new Intent();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                                intent.putExtra(Settings.EXTRA_APP_PACKAGE, MapsActivity.this.getPackageName());
+                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+                                intent.putExtra("app_package", MapsActivity.this.getPackageName());
+                                intent.putExtra("app_uid", MapsActivity.this.getApplicationInfo().uid);
+                            } else {
+                                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                                intent.setData(Uri.parse("package:" + MapsActivity.this.getPackageName()));
+                            }
+                            MapsActivity.this.startActivity(intent);
+
+
+                            dialog.dismiss();
+                        }
+                    });
+
+            alertDialog.show();
+
+        }
+
+
+
+
+
+
+
+
+      /*  AlertDialog alertDialog = new AlertDialog.Builder(this)
+                   //set icon
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                    //set title
+                .setTitle("Please Update notification setting to better use")
+                     //set message
+               // .setMessage("Exiting will call finish() method")
+                     //set positive button
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //set what would happen when positive button is clicked
+                        finish();
+                    }
+                })
+                          //set negative button
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //set what should happen when negative button is clicked
+                        Toast.makeText(getApplicationContext(), "Nothing Happened", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .show();*/
 
 
         updateLocation.setOnClickListener(new View.OnClickListener() {
@@ -236,13 +321,13 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(cir_man_hair_cut);
                             }
                         } else {
-                            Toast.makeText(MapsActivity.this, ""+myProfileModel.getMessage(), Toast.LENGTH_SHORT).show();
-                            if (response.body().getStatus().equalsIgnoreCase("failed")){
-                                if (response.body().getMessage().equalsIgnoreCase("logout")){
+                            Toast.makeText(MapsActivity.this, "" + myProfileModel.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.body().getStatus().equalsIgnoreCase("failed")) {
+                                if (response.body().getMessage().equalsIgnoreCase("logout")) {
                                     AuthenticationUtils.deauthenticate(MapsActivity.this, isSuccess -> {
                                         if (getApplication() != null) {
                                             sessonManager.setToken("");
-                                            PrefUtils.setAppId(MapsActivity.this,"");
+                                            PrefUtils.setAppId(MapsActivity.this, "");
                                             Toast.makeText(MapsActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(MapsActivity.this, LoginActivity.class));
                                             finishAffinity();
@@ -274,7 +359,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             //urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
             //Log.d("addressEEEE",key);
 
-            urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+sessonManager.getLat()+","+sessonManager.getLon()+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+            urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + sessonManager.getLat() + "," + sessonManager.getLon() + "&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
 
             StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                 @Override
@@ -283,11 +368,11 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         JSONArray jsonArray = jsonObject.getJSONArray("results");
-                        JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                        JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
+                        JSONObject jsonObject1 = jsonArray.getJSONObject(0);
+                        JSONArray jsonArray1 = jsonObject1.getJSONArray("address_components");
                         String location = jsonArray1.toString();
-                        Log.d("arrListLocation",""+location+"cityName"+cityName);
-                        Call<ShoprListModel> call = ApiExecutor.getApiService(MapsActivity.this).apiShoprList("Bearer " + sessonManager.getToken(),location,cityName);
+                        Log.d("arrListLocation", "" + location + "cityName" + cityName);
+                        Call<ShoprListModel> call = ApiExecutor.getApiService(MapsActivity.this).apiShoprList("Bearer " + sessonManager.getToken(), location, cityName);
                         call.enqueue(new Callback<ShoprListModel>() {
                             @SuppressLint("SetTextI18n")
                             @Override
@@ -300,8 +385,8 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
                                         if (shoprListModel.getData() != null) {
                                             for (int i = 0; i < shoprListModel.getData().getShopper().size(); i++) {
-                                                String res=new Gson().toJson(shoprListModel.getData().getShopper().get(i).getShopprCount());
-                                                Log.d("resShopo",res);
+                                                String res = new Gson().toJson(shoprListModel.getData().getShopper().get(i).getShopprCount());
+                                                Log.d("resShopo", res);
                                                 shoprListText.setText("Active Shoppers : " + shoprListModel.getData().getShopper().get(i).getShopprCount());
                                                 if (shoprListModel.getData().getNotifications().equalsIgnoreCase("0")) {
                                                     countText.setVisibility(View.GONE);
@@ -313,25 +398,25 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                             }
                                         }
                                     } else {
-                                        Toast.makeText(MapsActivity.this, ""+shoprListModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                        if (response.body().getStatus().equalsIgnoreCase("failed")){
-                                            if (response.body().getMessage().equalsIgnoreCase("logout")){
-                                                Call<LogoutModel>call1=ApiExecutor.getApiService(MapsActivity.this)
-                                                        .apiLogoutStatus("Bearer "+sessonManager.getToken());
+                                        Toast.makeText(MapsActivity.this, "" + shoprListModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                        if (response.body().getStatus().equalsIgnoreCase("failed")) {
+                                            if (response.body().getMessage().equalsIgnoreCase("logout")) {
+                                                Call<LogoutModel> call1 = ApiExecutor.getApiService(MapsActivity.this)
+                                                        .apiLogoutStatus("Bearer " + sessonManager.getToken());
                                                 call1.enqueue(new Callback<LogoutModel>() {
                                                     @Override
                                                     public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
-                                                        if (response.body()!=null) {
+                                                        if (response.body() != null) {
                                                             if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                                                 AuthenticationUtils.deauthenticate(MapsActivity.this, isSuccess -> {
                                                                     if (getApplication() != null) {
                                                                         sessonManager.setToken("");
-                                                                        PrefUtils.setAppId(MapsActivity.this,"");
+                                                                        PrefUtils.setAppId(MapsActivity.this, "");
                                                                         Toast.makeText(MapsActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
                                                                         startActivity(new Intent(MapsActivity.this, LoginActivity.class));
                                                                         finishAffinity();
 
-                                                                    }else {
+                                                                    } else {
 
                                                                     }
                                                                 });
@@ -377,7 +462,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     public void chats(View view) {
         startActivity(new Intent(MapsActivity.this, FindingShopprActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("address", addressText.getText().toString())
-        .putExtra("city",cityName));
+                .putExtra("city", cityName));
     }
 
     public void menu(View view) {
@@ -411,8 +496,8 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                         startActivity(new Intent(MapsActivity.this, RegisterMerchantActivity.class));
                         break;
                     case R.id.action_help:
-                        String number="+919315957968";
-                        String url = "https://api.whatsapp.com/send?phone="+number;
+                        String number = "+919315957968";
+                        String url = "https://api.whatsapp.com/send?phone=" + number;
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
@@ -447,6 +532,47 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        Log.d("lakshmi===", "lakshmi");
+
+      Log.d("lakshmi",String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled())) ;
+
+        if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false"))
+        {
+            AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
+            //alertDialog.setTitle("Alert");
+            alertDialog.setMessage("Please update sound,notification  lockscreen,floating notification setting to be better use");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false") ) {
+
+                                Intent intent = new Intent();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, MapsActivity.this.getPackageName());
+                                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+                                    intent.putExtra("app_package", MapsActivity.this.getPackageName());
+                                    intent.putExtra("app_uid", MapsActivity.this.getApplicationInfo().uid);
+                                } else {
+                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                                    intent.setData(Uri.parse("package:" + MapsActivity.this.getPackageName()));
+                                }
+                                MapsActivity.this.startActivity(intent);
+                            }
+
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+
+
+        }
+
+
         myProfile();
         viewListShopr();
     }
@@ -458,7 +584,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     public void store_list(View view) {
         startActivity(new Intent(MapsActivity.this, StorelistingActivity.class)
                 .putExtra("address", addressText.getText().toString())
-                .putExtra("city",cityName));
+                .putExtra("city", cityName));
     }
 
     public void my_account(View view) {
@@ -600,47 +726,52 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Address address = list.get(0);
+
+            //lk changes here for this comment
+          /*  Address address = list.get(0);
             cityName = address.getLocality();
             String location_address = address.getAddressLine(0);
-            Log.d("mycordinates", ""+address.getLatitude()+", "+address.getLongitude());
-            Log.d("resLocation",location_address);
-            String addressLocationValue=getIntent().getStringExtra("addressLocationValue");
-            if (addressLocationValue!=null&&addressLocationValue.equalsIgnoreCase("0")){
-               String addressLocation=getIntent().getStringExtra("location_address");
-               String latitude=getIntent().getStringExtra("latitude");
-               String longitude=getIntent().getStringExtra("longitude");
-               String city_name=getIntent().getStringExtra("localitys");
-                Log.d("resLocation",latitude+longitude);
-               sessonManager.setLat(latitude);
-               sessonManager.setLon(longitude);
-               cityName=city_name;
 
-               //Log.d("resCity",city_name);
+
+
+
+            Log.d("mycordinates", ""+address.getLatitude()+", "+address.getLongitude());
+            Log.d("resLocation",location_address);*/
+            String addressLocationValue = getIntent().getStringExtra("addressLocationValue");
+            if (addressLocationValue != null && addressLocationValue.equalsIgnoreCase("0")) {
+                String addressLocation = getIntent().getStringExtra("location_address");
+                String latitude = getIntent().getStringExtra("latitude");
+                String longitude = getIntent().getStringExtra("longitude");
+                String city_name = getIntent().getStringExtra("localitys");
+                Log.d("resLocation", latitude + longitude);
+                sessonManager.setLat(latitude);
+                sessonManager.setLon(longitude);
+                cityName = city_name;
+
+                //Log.d("resCity",city_name);
                 key = addressLocation;
                 //String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
 
-                String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+                String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
 
 
-
-                StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("resJSon",response);
+                        Log.d("resJSon", response);
 
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            String complete=jsonObject.toString();
+                            String complete = jsonObject.toString();
                             //Log.d("resJsonAll",""+jsonObject);
                             JSONArray jsonArray = jsonObject.getJSONArray("results");
-                            Log.d("resJsonAll",""+jsonArray);
-                            JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                            JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
+                            Log.d("resJsonAll", "" + jsonArray);
+                            JSONObject jsonObject1 = jsonArray.getJSONObject(0);
+                            JSONArray jsonArray1 = jsonObject1.getJSONArray("address_components");
                             String location = jsonArray1.toString();
-                            Log.d("loactionTTTTT",location+"hhh  "+city_name);
+                            Log.d("loactionTTTTT", location + "hhh  " + city_name);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName);
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location, cityName);
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, Response<CheckLocationModel> response) {
@@ -675,13 +806,23 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 }, new com.android.volley.Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MapsActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapsActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-                RequestQueue requestQueue=Volley.newRequestQueue(this);
+                RequestQueue requestQueue = Volley.newRequestQueue(this);
                 requestQueue.add(stringRequest);
-            }else
-                {
+            } else {
+
+
+                Address address = list.get(0);
+                cityName = address.getLocality();
+                String location_address = address.getAddressLine(0);
+
+
+                Log.d("mycordinates", "" + address.getLatitude() + ", " + address.getLongitude());
+                Log.d("resLocation", location_address);
+
+
                 key = location_address;
                 latitude = String.valueOf(address.getLatitude());
                 longitude = String.valueOf(address.getLongitude());
@@ -689,30 +830,30 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 sessonManager.setLon(longitude);
                 //Log.d("sss",latitude+longitude);
 //                String urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + key + "&" + "key=AIzaSyA38xR5NkHe1OsEAcC1aELO47qNOE3BL-k";
-                String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+address.getLatitude()+","+address.getLongitude()+"&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
+                String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + address.getLatitude() + "," + address.getLongitude() + "&key=AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk";
 
-                StringRequest stringRequest=new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, urlString, new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            String complete=jsonObject.toString();
-                            Log.d("resJsonAll",""+jsonObject);
+                            String complete = jsonObject.toString();
+                            Log.d("resJsonAll", "" + jsonObject);
                             JSONArray jsonArray = jsonObject.getJSONArray("results");
-                            JSONObject jsonObject1=jsonArray.getJSONObject(0);
-                            JSONArray jsonArray1=jsonObject1.getJSONArray("address_components");
+                            JSONObject jsonObject1 = jsonArray.getJSONObject(0);
+                            JSONArray jsonArray1 = jsonObject1.getJSONArray("address_components");
                             String location = jsonArray1.toString();
-                            Log.d("jnxdjhxj",location);
+                            Log.d("jnxdjhxj", location);
                             Call<CheckLocationModel> call = ApiExecutor.getApiService(MapsActivity.this)
-                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location,cityName);
+                                    .apiCheckLocation("Bearer " + sessonManager.getToken(), location, cityName);
                             call.enqueue(new Callback<CheckLocationModel>() {
                                 @Override
                                 public void onResponse(Call<CheckLocationModel> call, Response<CheckLocationModel> response) {
-                                    Log.d("apiexecution","Started");
+                                    Log.d("apiexecution", "Started");
                                     //CheckLocationModel checkLocationModel=response.body();
                                     if (response.body() != null) {
-                                        Log.d("apiexecution","body received");
+                                        Log.d("apiexecution", "body received");
                                         if (response.body().getStatus() != null && response.body().getStatus().equalsIgnoreCase("success")) {
                                             // progressbar.hideProgress();
                                             addressText.setText(key);
@@ -735,7 +876,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                 @Override
                                 public void onFailure(Call<CheckLocationModel> call, Throwable t) {
                                     // progressbar.hideProgress();
-                                    Log.d("apiexecution","body failed");
+                                    Log.d("apiexecution", "body failed");
 
                                 }
                             });
@@ -749,7 +890,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
                     }
                 });
-                RequestQueue requestQueue=Volley.newRequestQueue(this);
+                RequestQueue requestQueue = Volley.newRequestQueue(this);
                 requestQueue.add(stringRequest);
 
             }
@@ -768,11 +909,11 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     public void onLocationChanged(Location location) {
         if (firstLocation) {
-            Bundle bundle=new Bundle();
+            Bundle bundle = new Bundle();
             onConnected(bundle);
             firstLocation = false;
         }
-        Log.d("ressssssssLoa",""+location);
+        Log.d("ressssssssLoa", "" + location);
         if (location != null) {
             Geocoder geocoder = new Geocoder(MapsActivity.this);
             List<Address> list = null;
@@ -783,13 +924,13 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 e.printStackTrace();
             }
             Address address = list.get(0);
-            cityName=address.getLocality();
+            cityName = address.getLocality();
             String location_address = address.getAddressLine(0);
-            String addressLocationValue=getIntent().getStringExtra("addressLocationValue");
-            if (addressLocationValue!=null&&addressLocationValue.equalsIgnoreCase("0")){
-                String addressLocation=getIntent().getStringExtra("location_address");
-                String city_name=getIntent().getStringExtra("localitys");
-                cityName=city_name;
+            String addressLocationValue = getIntent().getStringExtra("addressLocationValue");
+            if (addressLocationValue != null && addressLocationValue.equalsIgnoreCase("0")) {
+                String addressLocation = getIntent().getStringExtra("location_address");
+                String city_name = getIntent().getStringExtra("localitys");
+                cityName = city_name;
                 key = addressLocation;
                 addressText.setText(key);
             } else {
@@ -798,6 +939,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             }
         }
     }
+
     /*Todo:- update version*/
     private void appCheckVersionApi() {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, VERSION_URL, new com.android.volley.Response.Listener<String>() {
@@ -847,8 +989,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Upgrade App")
                 .setMessage(getResources().getString(R.string.force_update_app_message))
-                .setPositiveButton("Update App", new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton("Update App", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         openPlayStore();
@@ -872,6 +1013,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 })
                 .show();
     }
+
     private void openPlayStore() {
         if (getApplication() == null) {
             return;
@@ -883,5 +1025,19 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("lifecycle", "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("lifecycle", "onDestroy");
+    }
+
 
 }

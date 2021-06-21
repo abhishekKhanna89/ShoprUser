@@ -1,10 +1,6 @@
 package com.shoppr.shoper.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -33,17 +29,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneyConstants;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
-import com.razorpay.Checkout;
-import com.razorpay.PaymentData;
-import com.razorpay.PaymentResultWithDataListener;
 import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.CartCancel.CartCancelModel;
@@ -85,6 +84,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
+
 public class ViewCartActivity extends AppCompatActivity {
     SessonManager sessonManager;
     Progressbar progressbar;
@@ -93,7 +96,7 @@ public class ViewCartActivity extends AppCompatActivity {
     Button btn_payNow,btn_continue,btn_cod;
     ImageView imgCart;
     LinearLayout linrBottomOrder;
-    TextView totalAmountText,serviceChargeText,groundTotalText;
+    TextView totalAmountText,serviceChargeText,groundTotalText,tv_discount_charge;
     Integer productId;
     int chatId;
     CartViewModel cartViewModel;
@@ -135,6 +138,7 @@ public class ViewCartActivity extends AppCompatActivity {
         btn_cod =findViewById(R.id.btn_cod);
         totalAmountText = findViewById(R.id.totalAmountText);
         serviceChargeText = findViewById(R.id.serviceChargeText);
+        tv_discount_charge = findViewById(R.id.tv_discount_charge);
         groundTotalText = findViewById(R.id.groundTotalText);
         imgCart = (ImageView) findViewById(R.id.imge_cart_img);
         cardOrderSummary=findViewById(R.id.cardOrderSummary);
@@ -179,7 +183,7 @@ public class ViewCartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (CommonUtils.isOnline(ViewCartActivity.this)) {
                     progressbar.showProgress(ViewCartActivity.this);
-                    Call<InitiatOrderModel>call=ApiExecutor.getApiService(ViewCartActivity.this)
+                    Call<InitiatOrderModel> call=ApiExecutor.getApiService(ViewCartActivity.this)
                             .apiInitiateOrder("Bearer "+sessonManager.getToken(),chatId);
                     call.enqueue(new Callback<InitiatOrderModel>() {
                         @Override
@@ -336,13 +340,21 @@ public class ViewCartActivity extends AppCompatActivity {
     }
 
     public void hitCartDetailsApi(int chatId){
+
+        Log.d("cartactivity=", String.valueOf(chatId));
+        Log.d("bearerToken= ",sessonManager.getToken());
         if (CommonUtils.isOnline(ViewCartActivity.this)) {
+
+            Log.d("hello","hello");
             progressbar.showProgress(ViewCartActivity.this);
             Call<CartViewModel>call= ApiExecutor.getApiService(this).apiCartView("Bearer "+sessonManager.getToken(),chatId);
             call.enqueue(new Callback<CartViewModel>() {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onResponse(Call<CartViewModel> call, Response<CartViewModel> response) {
+
+                    Log.d("cartresponse=", String.valueOf(response));
+
                     progressbar.hideProgress();
                     if (response.body()!=null) {
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
@@ -351,22 +363,35 @@ public class ViewCartActivity extends AppCompatActivity {
                                 totalAmountText.setText("₹ " +cartViewModel.getData().getTotal());
                                 serviceChargeText.setText("₹ " +cartViewModel.getData().getServiceCharge());
                                 groundTotalText.setText("₹ " +cartViewModel.getData().getGrandTotal());
+                                tv_discount_charge.setText("₹ " +cartViewModel.getData().getDiscount());
                                 if (cartViewModel.getData().getWallet_balance()>0){
-                                    walletCardView.setVisibility(View.VISIBLE);
+                                    walletCardView.setVisibility(VISIBLE);
                                     checkbox.setText("₹ " +cartViewModel.getData().getWallet_balance());
                                 }else if(cartViewModel.getData().getWallet_balance()==0){
-                                    walletCardView.setVisibility(View.GONE);
+                                    walletCardView.setVisibility(GONE);
                                 }
+
+                                if(cartViewModel.getData().getGrandTotal()>700)
+                                {
+                                    btn_cod.setVisibility(GONE);
+
+                                }
+                                else
+                                {
+                                    btn_cod.setVisibility(VISIBLE);
+                                }
+
+
                                 arrCartItemList = (ArrayList<Item>) cartViewModel.getData().getItems();
                                 if (arrCartItemList.isEmpty()){
-                                    btn_continue.setVisibility(View.VISIBLE);
-                                    imgCart.setVisibility(View.VISIBLE);
-                                    cardOrderSummary.setVisibility(View.GONE);
-                                    walletCardView.setVisibility(View.GONE);
+                                    btn_continue.setVisibility(VISIBLE);
+                                    imgCart.setVisibility(VISIBLE);
+                                    cardOrderSummary.setVisibility(GONE);
+                                    walletCardView.setVisibility(GONE);
                                 }else {
-                                    cardOrderSummary.setVisibility(View.VISIBLE);
-                                    linrBottomOrder.setVisibility(View.VISIBLE);
-                                    walletCardView.setVisibility(View.VISIBLE);
+                                    cardOrderSummary.setVisibility(VISIBLE);
+                                    linrBottomOrder.setVisibility(VISIBLE);
+                                    walletCardView.setVisibility(VISIBLE);
                                 }
                                 MyCartAdapter myCartAdapter = new MyCartAdapter(ViewCartActivity.this, arrCartItemList);
                                 RvMyCart.setAdapter(myCartAdapter);
@@ -838,7 +863,7 @@ public class ViewCartActivity extends AppCompatActivity {
         public class ViewHolder extends RecyclerView.ViewHolder {
             ImageView productImage,deleteImage;
             TextView nameProductText,priceProductText,quantityProductText;
-            public ViewHolder(@NonNull View itemView) {
+            public ViewHolder( View itemView) {
                 super(itemView);
                 productImage =  itemView.findViewById(R.id.productImage);
                 deleteImage = itemView.findViewById(R.id.deleteImage);
@@ -884,10 +909,10 @@ public class ViewCartActivity extends AppCompatActivity {
                             hitCartDetailsApi(chatId);
                         } else {
                             Toast.makeText(ViewCartActivity.this, "" + cartCancelModel.getMessage(), Toast.LENGTH_SHORT).show();
-                            btn_continue.setVisibility(View.VISIBLE);
-                            imgCart.setVisibility(View.VISIBLE);
-                            cardOrderSummary.setVisibility(View.GONE);
-                            walletCardView.setVisibility(View.GONE);
+                            btn_continue.setVisibility(VISIBLE);
+                            imgCart.setVisibility(VISIBLE);
+                            cardOrderSummary.setVisibility(GONE);
+                            walletCardView.setVisibility(GONE);
                         }
                     }
                 }

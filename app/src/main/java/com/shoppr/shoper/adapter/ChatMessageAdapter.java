@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -47,8 +48,10 @@ import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
 
+import java.io.IOException;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.himanshusoni.chatmessageview.ChatMessageView;
 import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
 import retrofit2.Call;
@@ -79,36 +82,31 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
     private int  SELF_PRODUCT_OUT=6;
     private int  SELF_RATING_IN=7;
     private int  SELF_RATING_OUT=8;
-
     private int  SELF_AUDIO_IN=9;
     private int  SELF_AUDIO_OUT=10;
-
     private int  SELF_ADDMONEY_IN=11;
     private int  SELF_ADDMONEY_OUT=12;
-
     private int  SELF_RECHARGE_IN=13;
     private int  SELF_RECHARGE_OUT=14;
-
     private int  SELF_PAID_IN=15;
     private int  SELF_PAID_OUT=16;
-
     private int  SELF_ADDRESS_IN=17;
     private int  SELF_ADDRESS_OUT=18;
-
     private int  SELF_STORE_IN=19;
     private int  SELF_STORE_OUT=20;
-
     private int  SELF_ORDERCONFIRMED_IN=21;
     private int  SELF_ORDERCONFIRMED_OUT= 22;
     private int  SELF_ADDRESSTYPE_IN=23;
     private int  SELF_ADDRESSTYPE_OUT=24;
-
     private int  SELF_TRACK_IN=26;
     private int  SELF_TRACK_OUT=27;
    // private int  SELF_ADDMONEY_IN=24;
+    private int  SELF_DISCOUNT_IN=30;
+    private int  SELF_DISCOUNT_OUT=31;
+    boolean isPLAYING = false;
+     private int   countforplay=0;
 
-
-   // addmoney
+    // addmoney
 
     public ChatMessageAdapter(Context context, List<Chat> chatList) {
         this.context = context;
@@ -138,6 +136,16 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_text_layout, parent, false);
         }
+        else if (viewType == SELF_DISCOUNT_IN) {
+            //Inflating the layout self
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.in_msg_discount_layout, parent, false);
+        } else if (viewType == SELF_DISCOUNT_OUT) {
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.out_msg_discount_layout, parent, false);
+        }
+
         // lk changes here
         else if(viewType == SELF_PRODUCT_IN){
 
@@ -167,13 +175,13 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
 
 
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.in_msg_audio_layout, parent, false);
+                    .inflate(R.layout.out_msg_audio_layout_two, parent, false);
         }
         else if(viewType == SELF_AUDIO_OUT){
 
 
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.out_msg_audio_layout, parent, false);
+                    .inflate(R.layout.out_msg_audio_layout_two, parent, false);
         }
         else if(viewType == SELF_ADDMONEY_IN){
 
@@ -363,7 +371,18 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             holder.message_body.setText(chat.getMessage());
             holder.dateText.setText(chat.getCreatedAt());
             holder.textLayout.setVisibility(View.VISIBLE);
-        }/* else {
+        }
+
+        else if (chat.getType().equalsIgnoreCase("discount")) {
+            holder.message_body.setText(chat.getMessage());
+            holder.dateText.setText(chat.getCreatedAt());
+            //holder.textLayout.setVisibility(View.VISIBLE);
+        }
+
+
+
+
+        /* else {
             holder.textLayout.setVisibility(View.GONE);
         }*/
         else if (chat.getType().equalsIgnoreCase("product")) {
@@ -649,9 +668,89 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             holder.ratingLayout.setVisibility(View.GONE);
         }*/
         else if (chat.getType().equalsIgnoreCase("audio")) {
-            holder.voicePlayerView.setAudio(chat.getFilePath());
-            holder.voicePlayerView.setVisibility(View.VISIBLE);
-            holder.dateText.setText(chat.getCreatedAt());
+
+
+            holder.dateText11.setText(chat.getCreatedAt());
+
+            holder.img_play.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    countforplay++;
+                    MediaPlayer mp = new MediaPlayer();
+                    if(countforplay%2==1) {
+                        holder.img_play.setBackgroundResource(R.drawable.ic_pause_button);
+
+                        if (!isPLAYING) {
+                            isPLAYING = true;
+
+                            try {
+                                mp.setDataSource(chat.getFilePath());
+                                // mp.getDuration();
+
+                                // Log.d("milisecond=", String.valueOf(mp.getDuration()));
+                                mp.prepare();
+                                mp.start();
+                                Log.d("milisecond=", String.valueOf(mp.getDuration()));
+
+                                holder.tv_audio_length.setText("00:00:00/" + convertSecondsToHMmSs(mp.getDuration() / 1000));
+
+                            } catch (IOException e) {
+                                Log.e("", "prepare() failed");
+                            }
+                        } else {
+                            //isPLAYING = false;
+                            // stopPlaying();
+                        }
+
+                    }
+                    else
+                    {
+
+                        holder.img_play.setBackgroundResource(R.drawable.ic_baseline_play_circle_24);
+                        isPLAYING = false;
+
+                        mp.release();
+                        mp = null;
+
+
+                    }
+
+
+
+                /*    onCallforvoice(chat.getFilePath());
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(context,Uri.parse(chat.getFilePath()));
+                    String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    int millSecond = Integer.parseInt(duration);
+
+                    Log.d("milisecond=", String.valueOf(millSecond));*/
+
+                    // holder.img_play.setVisibility(View.GONE);
+                    //  holder.img_play.setBackgroundResource(R.drawable.ic_pause_button);
+                }
+            });
+
+            holder.tv_audio_length.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("Audio_lenght", "Audio lenght");
+                }
+            });
+
+            holder.dateText11.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("msg_time", "msg_time");
+                }
+            });
+
+
+
+
+
+
+
         } /*else {
             holder.voicePlayerView.setVisibility(View.GONE);
         }*/
@@ -1098,6 +1197,9 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             {
                 return SELF_TEXT_IN;
             }
+            else if (message.getType().equalsIgnoreCase("discount")) {
+                return SELF_DISCOUNT_IN;
+            }
             else if(message.getType().equalsIgnoreCase("image"))
             {
                 return SELF_IMAGE_IN;
@@ -1157,6 +1259,9 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             if(message.getType().equalsIgnoreCase("text"))
             {
                 return SELF_TEXT_OUT;
+            }
+           else if (message.getType().equalsIgnoreCase("discount")) {
+                return SELF_DISCOUNT_OUT;
             }
             else if(message.getType().equalsIgnoreCase("image"))
             {
@@ -1242,6 +1347,8 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
         AppCompatRatingBar ratingBar;
         /*Todo:- Audio*/
         VoicePlayerView voicePlayerView;
+        CircleImageView img_play;
+        TextView tv_audio_length, dateText11;
 
         /*Todo:- Address*/
         ChatMessageView addressLayout;
@@ -1308,6 +1415,10 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             ratingBar.setIsIndicator(true);*/
             /*Todo:- Audio*/
             voicePlayerView = itemView.findViewById(R.id.voicePlayerView);
+
+            img_play = itemView.findViewById(R.id.img_play);
+            tv_audio_length = itemView.findViewById(R.id.tv_audio_length);
+            dateText11 = itemView.findViewById(R.id.dateText11);
             /*Todo:- Address*/
             addressLayout = itemView.findViewById(R.id.addressLayout);
             addressText = itemView.findViewById(R.id.addressText);
@@ -1337,6 +1448,12 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             orderConfirmDate = itemView.findViewById(R.id.orderConfirmDate);
             detailsBtn = itemView.findViewById(R.id.detailsBtn);
         }
+    }
+    public  String convertSecondsToHMmSs(long seconds) {
+        long s = seconds % 60;
+        long m = (seconds / 60) % 60;
+        long h = (seconds / (60 * 60)) % 24;
+        return String.format("%02d:%02d:%02d", h,m,s);
     }
 
     public void recycle() {

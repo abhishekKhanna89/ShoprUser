@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_gravity="start"
+        android:layout_margin="5dp"
+        android:layout_weight="3"
+        android:background="@drawable/out_msg_audio_background_with_round_corner"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_play"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_baseline_play_circle_24"
+                app:tint="#ff7700" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_audio_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/time_background"
+                android:paddingLeft="10dp"
+                android:paddingTop="2dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="2dp"
+                android:text="00:00:00/00:00:00"
+                android:textColor="@color/black"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/dateText11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:gravity="bottom"
+            android:text="11:00 AM"
+            android:textColor="#ff7700"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+
+    <!--
+            <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+                android:id="@+id/voicePlayerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginBottom="5dp"
+                android:visibility="visible"
+                app:enableVisualizer="true"
+                app:playPauseBackgroundColor="#ff7700"
+                app:playPauseCornerRadius="100"
+                app:playProgressbarColor="#ff7700"
+                app:progressTimeColor="#000"
+                app:seekBarProgressColor="#000"
+                app:seekBarThumbColor="#FFC107"
+                app:shareCornerRadius="100"
+                app:showShareButton="false"
+                app:showTiming="true"
+                app:timingBackgroundColor="#6AFF7700"
+                app:viewBackground="#C6C4CF"
+                app:viewCornerRadius="100"
+                app:visualizationNotPlayedColor="#727171"
+                app:visualizationPlayedColor="#ff7700" />-->
+
+
+</LinearLayout>

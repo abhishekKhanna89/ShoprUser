@@ -139,7 +139,10 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
 
     void checkFieldsForEmptyValues(){
         String s1 = house_detailsEt.getText().toString();
+
+
         String s2 = landMarkEt.getText().toString();
+
 
         if(s1.equals("")|| s2.equals("")){
             addBTN.setEnabled(false);
@@ -180,6 +183,15 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
         second=findViewById(R.id.second);
         textView=findViewById(R.id.textView);
         // run once to disable if empty
+
+
+
+        Log.d("dhgvjhxcv",sessonManager.getLandMarkEt());
+        Log.d("jsdgfdbfcbcvb",sessonManager.getHouse_detailsEt());
+        landMarkEt.setText(sessonManager.getLandMarkEt());
+        house_detailsEt.setText(sessonManager.getHouse_detailsEt());
+
+
         checkFieldsForEmptyValues();
 
 
@@ -192,6 +204,16 @@ public class ShareLocationActivity extends AppCompatActivity implements OnMapRea
 
                 location_address= autoCompleteTextViewLoaction.getText().toString();
                 Log.d("locality",location_address+":"+"latitude"+latitude+":"+"longitude"+longitude);
+
+
+                sessonManager.setHouse_detailsEt(house_detailsEt.getText().toString());
+                Log.d("jkfcdszfvdv",house_detailsEt.getText().toString());
+                Log.d("jsdgfdbfcbcvb",sessonManager.getHouse_detailsEt());
+
+                sessonManager.setLandMarkEt(landMarkEt.getText().toString());
+                Log.d("dhgvjhxcv",sessonManager.getLandMarkEt());
+
+
                 if (CommonUtils.isOnline(ShareLocationActivity.this)) {
                     //sessonManager.showProgress(ChatActivity.this);
                     ShareLocationRequest shareLocationRequest=new ShareLocationRequest();

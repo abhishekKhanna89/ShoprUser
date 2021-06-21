@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
@@ -36,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddMoneyActivity extends AppCompatActivity implements  PaymentResultWithDataListener {
+public abstract class AddMoneyActivity extends AppCompatActivity implements PaymentResultWithDataListener {
     private static final String TAG ="" ;
     TextView customerBalance,selectedBalance;
     TextView TvOneThousnads, TvTwoThousnads, TvThreeThousnads;

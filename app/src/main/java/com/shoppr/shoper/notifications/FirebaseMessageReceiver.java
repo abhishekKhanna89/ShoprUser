@@ -52,7 +52,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);*/
         sessonManager = new SessonManager(this);
         if (SendBirdCall.handleFirebaseMessageData(remoteMessage.getData())) {
-           /* Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());*/
+            Log.d( "MyFirebaseMessaging " , remoteMessage.getData().toString());
         }else {
           /*  Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());*/
             showNotification(
@@ -133,7 +133,8 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                 .setOnlyAlertOnce(true)
                 .setSound(notification)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 
 

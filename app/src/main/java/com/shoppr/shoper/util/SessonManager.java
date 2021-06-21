@@ -18,6 +18,8 @@ public class SessonManager {
     private final SharedPreferences.Editor editor;
     public static final String NAME = "MY_PREFERENCES";
     public static final String Token = "token";
+    public static final String house_detailsEt = "house_detailsEt";
+    public static final String landMarkEt = "landMarkEt";
 
     public static final String filterList = "FilterList";
     public static final  String lat="lat";
@@ -89,19 +91,56 @@ public class SessonManager {
         return sharedPreference.getString(mobileNo,"");
     }
 
-    public void setToken(String token) {
-     //   Log.d("sssss", token);
-        editor.putString(Token, token);
-        editor.commit();
-    }
+
+
+
+
+
 
     public String getToken() {
         return sharedPreference.getString(Token, "");
     }
+
+    public void setToken(String token) {
+        //   Log.d("sssss", token);
+        editor.putString(Token, token);
+        editor.commit();
+    }
+
+
+
+
+    public String getHouse_detailsEt() {
+        return sharedPreference.getString(house_detailsEt, "");
+    }
+    public void setHouse_detailsEt(String house_details) {
+        //   Log.d("sssss", token);
+        editor.putString(house_detailsEt, house_details);
+        editor.commit();
+    }
+
+
+
+    public String getLandMarkEt() {
+        return sharedPreference.getString(landMarkEt, "");
+    }
+    public void setLandMarkEt(String landMark) {
+        //   Log.d("sssss", token);
+        editor.putString(landMarkEt, landMark);
+        editor.commit();
+    }
+
+
+
+
+
+
+
     public void setNotificationToken(String notificationToken){
         editor.putString(NOTIFICATION_TOKEN,notificationToken);
         editor.apply();
     }
+
     public String getNotificationToken(){
         return sharedPreference.getString(NOTIFICATION_TOKEN,"");
     }

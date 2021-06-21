@@ -29,6 +29,7 @@ public class BaseApplication extends Application {
     // Refer to "https://github.com/sendbird/quickstart-calls-android".
     public static final String APP_ID = "A7EF97E9-E7B5-4E23-A6C9-B85E4B84C549";
 
+
     @Override
     public void onCreate() {
         super.onCreate();

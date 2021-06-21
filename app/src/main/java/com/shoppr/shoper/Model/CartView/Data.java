@@ -22,6 +22,17 @@ public class Data {
     @Expose
     private Integer wallet_balance;
 
+    @SerializedName("discount_amount")
+    @Expose
+    private Integer discountamount;
+    public Integer getDiscount() {
+        return discountamount;
+    }
+
+    public void setDiscount(Integer discountamount) {
+        this.discountamount = discountamount;
+    }
+
     public List<Item> getItems() {
         return items;
     }

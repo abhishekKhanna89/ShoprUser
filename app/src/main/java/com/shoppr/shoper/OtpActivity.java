@@ -21,6 +21,7 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 import com.shoppr.shoper.Model.OtpVerifyModel;
 import com.shoppr.shoper.Model.ResendOtp.ResendOtpModel;
 import com.shoppr.shoper.SendBird.BaseApplication;
@@ -112,6 +113,9 @@ public class OtpActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<OtpVerifyModel> call, Response<OtpVerifyModel> response) {
                     progressbar.hideProgress();
+
+                    Log.d("lsdkjfksdgf",new Gson().toJson(response.body()));
+
                     if (response.body()!=null){
                         OtpVerifyModel otpVerifyModel=response.body();
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
@@ -122,10 +126,12 @@ public class OtpActivity extends AppCompatActivity {
                             String  savedAppId=BaseApplication.APP_ID;
                             //String savedAppId = PrefUtils.getAppId(OtpActivity.this);
                             if((!editusername.getText().toString().isEmpty())){
+                                Log.d("dszhfjdsvv",editusername.getText().toString());
                                 sessonManager.setToken(response.body().getToken());
                                 if (((BaseApplication)getApplication()).initSendBirdCall(savedAppId)) {
                                     AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
                                                 if (isSuccess) {
+                                                    Log.d("djjjgkdfbnjb","goToNextActivity");
                                                     setResult(RESULT_OK, null);
                                                     Toast.makeText(OtpActivity.this, otpVerifyModel.getMessage(), Toast.LENGTH_SHORT).show();
                                                     Intent intent = new Intent(OtpActivity.this, MapsActivity.class);

@@ -9,8 +9,8 @@ android {
         applicationId "com.shoppr.shoper"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 19
-        versionName "2.7"
+        versionCode 15
+        versionName "3"
         multiDexEnabled true
 
         Properties properties = new Properties()
