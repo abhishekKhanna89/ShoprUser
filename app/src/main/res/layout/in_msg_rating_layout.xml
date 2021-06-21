@@ -30,6 +30,14 @@
                 android:layout_gravity="end"
                 android:orientation="vertical">
 
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rate The Service"
+                    android:gravity="center_horizontal"
+                    android:textColor="#fff" />
+
                 <TextView
                     android:id="@+id/ratingsMessage"
                     android:layout_width="match_parent"

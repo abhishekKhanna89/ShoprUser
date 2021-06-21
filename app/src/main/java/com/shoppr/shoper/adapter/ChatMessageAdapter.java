@@ -175,7 +175,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
 
 
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.out_msg_audio_layout_two, parent, false);
+                    .inflate(R.layout.in_msg_audio_layout_two, parent, false);
         }
         else if(viewType == SELF_AUDIO_OUT){
 
@@ -401,7 +401,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                 holder.greenLayout.setVisibility(View.VISIBLE);
                 holder.closeRedLayout.setVisibility(View.GONE);
                 holder.rejectText.setVisibility(View.GONE);
-                holder.cancelText.setVisibility(View.VISIBLE);
+                holder.cancelText.setVisibility(View.GONE);
                 holder.acceptText.setVisibility(View.GONE);
              //   holder.ratingLayout.setEnabled(false);
               //  holder.ratingBar.setIsIndicator(true);
@@ -577,6 +577,8 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             holder.productLayout.setVisibility(View.GONE);
         }*/
         else if (chat.getType().equalsIgnoreCase("rating")) {
+            holder.ratingLayout.setEnabled(true);
+            holder.ratingBar.setIsIndicator(true);
             holder.ratingsMessage.setText(chat.getMessage());
             holder.dateRating.setText(chat.getCreatedAt());
             holder.ratingBar.setRating(Float.parseFloat(chat.getQuantity()));
@@ -671,6 +673,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
 
 
             holder.dateText11.setText(chat.getCreatedAt());
+            holder.tv_audio_length.setVisibility(View.GONE);
 
             holder.img_play.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -692,8 +695,8 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                                 mp.prepare();
                                 mp.start();
                                 Log.d("milisecond=", String.valueOf(mp.getDuration()));
-
-                                holder.tv_audio_length.setText("00:00:00/" + convertSecondsToHMmSs(mp.getDuration() / 1000));
+                                holder.tv_audio_length.setVisibility(View.VISIBLE);
+                                holder.tv_audio_length.setText( convertSecondsToHMmSs(mp.getDuration() / 1000));
 
                             } catch (IOException e) {
                                 Log.e("", "prepare() failed");
@@ -789,8 +792,10 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             try {
                 String a=parts[0];
                 String b=parts[1];
-                holder.location2Text.setText(b);
-                holder.locationText.setText(a);
+                holder.location2Text.setVisibility(View.GONE);
+                holder.locationText.setVisibility(View.GONE);
+                //holder.location2Text.setText(b);
+               /// holder.locationText.setText(a);
             }catch (Exception e){
                 e.printStackTrace();
             }
