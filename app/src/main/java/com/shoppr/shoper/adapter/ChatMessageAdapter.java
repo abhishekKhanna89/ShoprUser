@@ -792,8 +792,12 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             try {
                 String a=parts[0];
                 String b=parts[1];
+
+                //Log.d("value1==", (String) holder.location2Text.getText());
+              //  Log.d("value1===",(String) holder.locationText.getText());
+                holder.locationText.setText(a);
                 holder.location2Text.setVisibility(View.GONE);
-                holder.locationText.setVisibility(View.GONE);
+                holder.locationText.setVisibility(View.VISIBLE);
                 //holder.location2Text.setText(b);
                /// holder.locationText.setText(a);
             }catch (Exception e){

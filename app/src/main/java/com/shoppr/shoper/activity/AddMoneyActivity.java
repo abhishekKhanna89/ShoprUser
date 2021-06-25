@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public abstract class AddMoneyActivity extends AppCompatActivity implements PaymentResultWithDataListener {
+public  class AddMoneyActivity extends AppCompatActivity implements PaymentResultWithDataListener {
     private static final String TAG ="" ;
     TextView customerBalance,selectedBalance;
     TextView TvOneThousnads, TvTwoThousnads, TvThreeThousnads;
@@ -47,6 +47,8 @@ public abstract class AddMoneyActivity extends AppCompatActivity implements Paym
     String chat_id,value;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Log.d("lakshmi","lakshmi");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_money);
         getSupportActionBar().setTitle("Add Money");
