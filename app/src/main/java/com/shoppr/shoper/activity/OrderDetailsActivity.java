@@ -55,6 +55,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     String refId;
     String invoice_link;
     TextView invoiceDownload;
+    TextView discounttext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +83,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         walletAmountText=findViewById(R.id.walletAmountText);
         totalPaidText=findViewById(R.id.totalPaidText);
         payment_text=findViewById(R.id.payment_text);
+        discounttext=findViewById(R.id.discounttext);
 
 
 
@@ -129,6 +131,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                 orderIdText.setText(ordersDetailsModel.getData().getOrder().getRefid());
                                 totalAmountText.setText("₹ " +ordersDetailsModel.getData().getOrder().getTotal());
                                 serviceChargeText.setText("₹ " +ordersDetailsModel.getData().getOrder().getServiceCharge());
+                                discounttext.setText("₹ " +ordersDetailsModel.getData().getOrder().getDiscount());
                                 double num1 = Double.parseDouble(ordersDetailsModel.getData().getOrder().getTotal());
                                 double num2 = Double.parseDouble(ordersDetailsModel.getData().getOrder().getServiceCharge());
                                 // add both number and store it to sum
@@ -139,8 +142,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
                                 double grandPrice=Double.parseDouble(String.valueOf(sum));
                                 double walletPrice=Double.parseDouble(ordersDetailsModel.getData().getOrder().getBalanceUsed());
+                                double discount=Double.parseDouble(ordersDetailsModel.getData().getOrder().getDiscount());
                                 if (grandPrice>walletPrice){
-                                    total_paid=grandPrice-walletPrice;
+                                    total_paid=grandPrice-walletPrice-discount;
                                 }else if (grandPrice<walletPrice){
                                     total_paid=0;
                                 }
@@ -148,13 +152,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
                                 arrCartItemList = (ArrayList<Detail>) ordersDetailsModel.getData().getOrder().getDetails();
 
-                                /*if (arrCartItemList.isEmpty()){
-                                    cardOrderSummary.setVisibility(View.GONE);
-                                    emptyDeatils.setVisibility(View.VISIBLE);
-                                }else {
-                                    cardOrderSummary.setVisibility(View.VISIBLE);
-                                    emptyDeatils.setVisibility(View.GONE);
-                                }*/
                                 OrderDetailsAdapter orderDetailsAdapter=new OrderDetailsAdapter(OrderDetailsActivity.this,
                                         arrCartItemList);
                                 rv_order_details.setAdapter(orderDetailsAdapter);

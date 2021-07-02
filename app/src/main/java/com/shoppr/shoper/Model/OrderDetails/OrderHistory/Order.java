@@ -6,6 +6,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Order {
 
+    @SerializedName("discount")
+    @Expose
+    private String discount;
+
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -29,7 +33,19 @@ public class Order {
     private String balanceUsed;
     @SerializedName("details")
     @Expose
+
+
     private List<Detail> details = null;
+
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
+
 
     public Integer getId() {
         return id;
