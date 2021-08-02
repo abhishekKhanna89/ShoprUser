@@ -9,8 +9,8 @@ android {
         applicationId "com.shoppr.shoper"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 15
-        versionName "3"
+        versionCode 16
+        versionName "4"
         multiDexEnabled true
 
         Properties properties = new Properties()
@@ -32,6 +32,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        customDebugType {
+            debuggable true
         }
     }
     compileOptions {

@@ -87,4 +87,7 @@
 
     <!--Todo:- Google Api Key-->
     <string name="google_apis_key">AIzaSyA9weSsdSDj-mOYVOc1swqsew5J2QOYCGk</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

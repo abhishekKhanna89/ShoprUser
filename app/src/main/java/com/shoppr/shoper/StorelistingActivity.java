@@ -99,8 +99,6 @@ public class StorelistingActivity extends AppCompatActivity {
         sessonManager.setCityName(cityName);
 
 
-
-
         storerecyclerview = findViewById(R.id.storerecyclerview);
         storerecyclerview.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(StorelistingActivity.this, 1);

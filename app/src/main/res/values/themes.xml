@@ -15,7 +15,6 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowIsTranslucent">true</item>
 
-
     </style>
 
     <style name="CallTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">

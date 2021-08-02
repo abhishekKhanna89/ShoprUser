@@ -69,12 +69,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         sessonManager = new SessonManager(LoginActivity.this);
         btnsubmit=findViewById(R.id.btnsubmit);
         editusername=findViewById(R.id.editusername);
-
-
         textregister=findViewById(R.id.textregister);
-
-
-
         textregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

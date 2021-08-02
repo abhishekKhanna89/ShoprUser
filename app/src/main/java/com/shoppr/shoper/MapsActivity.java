@@ -1,14 +1,6 @@
 
 package com.shoppr.shoper;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -20,8 +12,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-
-
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,12 +24,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.shoppr.shoper.Model.CheckLocation.CheckLocationModel;
 import com.shoppr.shoper.Model.Logout.LogoutModel;
@@ -48,15 +60,25 @@ import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
+import com.shoppr.shoper.activity.AddMoneyActivity;
+import com.shoppr.shoper.activity.ChatActivity;
+import com.shoppr.shoper.activity.ChatHistoryActivity;
 import com.shoppr.shoper.activity.EditLocationActivity;
 import com.shoppr.shoper.activity.FindingShopprActivity;
 import com.shoppr.shoper.activity.MyAccount;
+import com.shoppr.shoper.activity.MyOrderActivity;
 import com.shoppr.shoper.activity.NotificationListActivity;
 import com.shoppr.shoper.activity.RegisterMerchantActivity;
+import com.shoppr.shoper.activity.WalletActivity;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.Progressbar;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -73,24 +95,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
     SessonManager sessonManager;
     //double lat,lon;
-    TextView shoprListText, addressText, countText;
-    CircleImageView cir_man_hair_cut;
-
+    TextView shoprListText, addressText, txtUserName, txtUserMobile, noti_badge;
+    CircleImageView cir_man_hair_cut, userProfilePic;
+    LinearLayout llWallet, llChat, llMyOrders, llHelp, llShareApp, llLogout;
+    BottomNavigationView navView;
+    Button btnMerchantRegister;
     /*Todo:- Location Manager*/
     private Location location;
     private GoogleApiClient googleApiClient;
@@ -101,20 +114,22 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
+    private ArrayList<String> bannerList;
     // integer for permissions results request
     private static final int ALL_PERMISSIONS_RESULT = 1011;
 
-
     String key, latitude, longitude;
     //ArrayList<String> arrListLocation = new ArrayList<>();
-
 
     /*Todo:- Layout Screen*/
     ConstraintLayout secondPage;
     LinearLayout mainPage;
     Button updateLocation;
     Progressbar progressbar;
+    private ViewPager viewPager;
     private boolean firstLocation = true;
+    DrawerLayout drawer_layout;
+    NavigationView navigationView;
 
     /*Todo:- Version Check*/
     String VERSION_URL = ApiExecutor.baseUrl + "app-version";
@@ -128,7 +143,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_main);
+
+        //git---->abhishek.khanna89@gmail.com<------->shopr@123
 
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -138,11 +155,34 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         shoprListText = findViewById(R.id.shoprListText);
         addressText = findViewById(R.id.addressText);
         cir_man_hair_cut = findViewById(R.id.cir_man_hair_cut);
-        countText = findViewById(R.id.countText);
+        //countText = findViewById(R.id.countText);
         /*Todo:- ConstraintLayout Screen Layout*/
         mainPage = findViewById(R.id.mainPage);
         secondPage = findViewById(R.id.secondPage);
+        noti_badge=findViewById(R.id.noti_badge);
         updateLocation = findViewById(R.id.updateLocation);
+        navView = findViewById(R.id.navView);
+        drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer_layout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer_layout.addDrawerListener(toggle);
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        txtUserName = navigationView.findViewById(R.id.tv_user_name);
+        txtUserMobile = navigationView.findViewById(R.id.tv_mobile);
+        userProfilePic = navigationView.findViewById(R.id.userProfilePic);
+
+        llWallet = navigationView.findViewById(R.id.llWallet);
+        llChat = navigationView.findViewById(R.id.llCHat);
+        llMyOrders = navigationView.findViewById(R.id.llMyOrders);
+        llHelp = navigationView.findViewById(R.id.llHelp);
+        llShareApp = navigationView.findViewById(R.id.llShare);
+        llLogout = navigationView.findViewById(R.id.llLogout);
+
+        btnMerchantRegister = findViewById(R.id.btnMerchantRegister);
 
         Log.d("notifiallowed=", String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()));
 
@@ -155,12 +195,11 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         Log.d("soundAllowed=", String.valueOf(soundAllowed));
 
-
-
-
+        bannerList = new ArrayList<>();
+        bannerList.add("");
 
         //if()
-        if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false") ) {
+        if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false")) {
 
             AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
             //alertDialog.setTitle("Alert");
@@ -168,7 +207,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-
 
                             Intent intent = new Intent();
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -191,11 +229,34 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                     });
 
             alertDialog.show();
-
         }
 
+        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
 
-
+                switch (item.getItemId()) {
+                    case R.id.navigation_chat:
+                        startActivity(new Intent(MapsActivity.this, ChatHistoryActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        break;
+                    case R.id.navigation_noti:
+                        startActivity(new Intent(MapsActivity.this, NotificationListActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        break;
+                    case R.id.navigation_local_shop:
+                        startActivity(new Intent(MapsActivity.this, StorelistingActivity.class).putExtra("address", sessonManager.getEditaddress())
+                                .putExtra("city", sessonManager.getCityName())
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        break;
+                    case R.id.navigation_account:
+                        startActivity(new Intent(MapsActivity.this, MyAccount.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        break;
+                }
+                return true;
+            }
+        });
 
 
 
@@ -292,14 +353,128 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         cir_man_hair_cut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MapsActivity.this, MyAccount.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                drawer_layout.openDrawer(GravityCompat.START);
             }
         });
         myProfile();
 
+        btnMerchantRegister.setOnClickListener(this);
+        llWallet.setOnClickListener(this);
+        llChat.setOnClickListener(this);
+        llMyOrders.setOnClickListener(this);
+        llHelp.setOnClickListener(this);
+        llShareApp.setOnClickListener(this);
+        llLogout.setOnClickListener(this);
 
         //Log.d("newToken", getActivity().getPreferences(Context.MODE_PRIVATE).getString("fb", "empty :("));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.llWallet:
+                Intent intent=new Intent(MapsActivity.this, WalletActivity.class);
+                startActivity(intent);
+            break;
+
+            case R.id.llCHat:
+                Intent intent1=new Intent(MapsActivity.this, ChatActivity.class);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent1);
+            break;
+
+            case R.id.llMyOrders:
+                startActivity(new Intent(MapsActivity.this, MyOrderActivity.class).addFlags(
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+                ));
+                break;
+
+            case R.id.llHelp:
+                String number = "+919315957968";
+                String url = "https://api.whatsapp.com/send?phone=" + number;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+                break;
+
+            case R.id.llShare:
+                try {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name));
+                    String shareMessage = "Let me recommend you this application\n\n";
+                    shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID;
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+                    startActivity(Intent.createChooser(shareIntent, "choose one"));
+                } catch (Exception e) {
+                    //e.toString();
+                }
+                break;
+
+            case R.id.llLogout:
+                callLogout();
+                break;
+
+            case R.id.btnMerchantRegister:
+                startActivity(new Intent(MapsActivity.this, RegisterMerchantActivity.class));
+                break;
+
+        }
+
+    }
+
+    private void callLogout() {
+
+        new androidx.appcompat.app.AlertDialog.Builder(MapsActivity.this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Call<LogoutModel>call=ApiExecutor.getApiService(MapsActivity.this)
+                                .apiLogoutStatus("Bearer "+sessonManager.getToken());
+                        call.enqueue(new Callback<LogoutModel>() {
+                            @Override
+                            public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                                if (response.body()!=null) {
+                                    if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
+                                        AuthenticationUtils.deauthenticate(MapsActivity.this, isSuccess -> {
+                                            if (getApplication() != null) {
+                                                sessonManager.setToken("");
+                                                PrefUtils.setAppId(MapsActivity.this,"");
+                                                Toast.makeText(MapsActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                                startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                                                finishAffinity();
+
+                                            }
+                                        });
+                                    }else {
+                                        AuthenticationUtils.deauthenticate(MapsActivity.this, isSuccess -> {
+                                            if (getApplication() != null) {
+                                                sessonManager.setToken("");
+                                                PrefUtils.setAppId(MapsActivity.this,"");
+                                                Toast.makeText(MapsActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                                startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                                                finishAffinity();
+
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<LogoutModel> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
 
@@ -319,6 +494,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                             if (myProfileModel.getData() != null) {
                                 //sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(cir_man_hair_cut);
+                                Picasso.get().load(myProfileModel.getData().getImage()).into(userProfilePic);
+                                txtUserName.setText(myProfileModel.getData().getName());
+                                txtUserMobile.setText(myProfileModel.getData().getMobile());
                             }
                         } else {
                             Toast.makeText(MapsActivity.this, "" + myProfileModel.getMessage(), Toast.LENGTH_SHORT).show();
@@ -331,7 +509,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                             Toast.makeText(MapsActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(MapsActivity.this, LoginActivity.class));
                                             finishAffinity();
-
                                         }
                                     });
                                 }
@@ -388,11 +565,12 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                                 String res = new Gson().toJson(shoprListModel.getData().getShopper().get(i).getShopprCount());
                                                 Log.d("resShopo", res);
                                                 shoprListText.setText("Active Shoppers : " + shoprListModel.getData().getShopper().get(i).getShopprCount());
+
                                                 if (shoprListModel.getData().getNotifications().equalsIgnoreCase("0")) {
-                                                    countText.setVisibility(View.GONE);
+                                                    noti_badge.setVisibility(View.VISIBLE);
                                                 } else {
-                                                    countText.setVisibility(View.VISIBLE);
-                                                    countText.setText(shoprListModel.getData().getNotifications());
+                                                    noti_badge.setVisibility(View.VISIBLE);
+                                                    noti_badge.setText(shoprListModel.getData().getNotifications());
                                                 }
 
                                             }
@@ -535,10 +713,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         Log.d("lakshmi===", "lakshmi");
 
-      Log.d("lakshmi",String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled())) ;
+        Log.d("lakshmi", String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()));
 
-        if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false"))
-        {
+        if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false")) {
             AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
             //alertDialog.setTitle("Alert");
             alertDialog.setMessage("Please update sound,notification  lockscreen,floating notification setting to be better use");
@@ -546,7 +723,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
-                            if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false") ) {
+                            if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false")) {
 
                                 Intent intent = new Intent();
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -575,20 +752,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         myProfile();
         viewListShopr();
-    }
-
-    public void notification(View view) {
-        startActivity(new Intent(MapsActivity.this, NotificationListActivity.class));
-    }
-
-    public void store_list(View view) {
-        startActivity(new Intent(MapsActivity.this, StorelistingActivity.class)
-                .putExtra("address", addressText.getText().toString())
-                .putExtra("city", cityName));
-    }
-
-    public void my_account(View view) {
-        startActivity(new Intent(MapsActivity.this, MyAccount.class));
     }
 
     /*Todo:- Location Change*/
@@ -1038,6 +1201,5 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         super.onDestroy();
         Log.d("lifecycle", "onDestroy");
     }
-
 
 }
