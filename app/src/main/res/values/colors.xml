@@ -65,6 +65,7 @@
 
     <color name="colo_home_bg">#1d6867</color>
     <color name="colo_home_light">#32b3b1</color>
+    <color name="dark_color">#003535</color>
 
 
     <color name="call_type">#178277</color>

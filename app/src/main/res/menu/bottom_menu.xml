@@ -6,17 +6,13 @@
         android:title="Chat" />
 
     <item
-        android:id="@+id/navigation_noti"
-        android:icon="@drawable/notification"
-        android:title="Notification" />
+        android:id="@+id/navigation_pickdel"
+        android:icon="@drawable/pick_deliver"
+        android:title="Pick &amp; Drop" />
 
     <item
         android:id="@+id/navigation_local_shop"
         android:icon="@drawable/store_list"
         android:title="Local Shops" />
 
-    <item
-        android:id="@+id/navigation_account"
-        android:icon="@drawable/my_account"
-        android:title="My Account" />
 </menu>

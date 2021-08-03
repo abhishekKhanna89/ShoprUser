@@ -3,6 +3,5 @@
 
     <item android:drawable="@drawable/tab_selected_dot"
         android:state_selected="true"/>
-
     <item android:drawable="@drawable/default_tab_dot"/>
 </selector>
