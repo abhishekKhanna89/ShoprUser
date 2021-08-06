@@ -296,30 +296,10 @@
         </me.himanshusoni.chatmessageview.ChatMessageView>
         <!--Todo:- Audio -->
 
-        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
-            android:id="@+id/voicePlayerView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            app:enableVisualizer="true"
-            android:visibility="gone"
-            app:playPauseBackgroundColor="#ff7700"
-            app:playPauseCornerRadius="100"
-            app:playProgressbarColor="#ff7700"
-            app:progressTimeColor="#fff"
-            app:seekBarProgressColor="#fff"
-            app:seekBarThumbColor="#FFC107"
-            app:shareCornerRadius="100"
-            app:showShareButton="false"
-            app:showTiming="true"
-            app:timingBackgroundColor="#003535"
-            app:viewBackground="@color/call_type"
-            app:viewCornerRadius="100"
-            app:visualizationNotPlayedColor="#727171"
-            app:visualizationPlayedColor="#ff7700" />
-
+        <com.rygelouv.audiosensei.player.AudioSenseiPlayerView
+            android:id="@+id/audio_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <!--Todo:- Map Type-->
         <me.himanshusoni.chatmessageview.ChatMessageView

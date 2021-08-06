@@ -14,27 +14,28 @@
         android:text="Chat History Empty"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="20sp"
-        android:visibility="gone"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/SwipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerChatHistory"
             android:layout_width="match_parent"
-
             android:layout_height="match_parent"
-            android:divider="#fff"/>
+            android:background="@color/cb_grey"
+            tools:listitem="@layout/layout_chats_list"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 

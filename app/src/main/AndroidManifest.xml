@@ -6,8 +6,9 @@
 
     package="com.shoppr.shoper">
 
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -18,8 +19,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -37,7 +36,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shoper"
-
 
      tools:targetApi="n">
 
@@ -103,7 +101,7 @@
          android:screenOrientation="portrait" />
      <activity
          android:name=".activity.MyOrderActivity"
-         android:label="Order"
+
          android:screenOrientation="portrait" />
      <activity
          android:name=".activity.OrderConfirmActivity"
@@ -170,7 +168,8 @@
 
      <activity
          android:name=".MapsActivity"
-         android:screenOrientation="portrait" />
+         android:screenOrientation="portrait"
+         android:theme="@style/FindingTheme"/>
      <activity
          android:name=".StorelistingActivity"
          android:screenOrientation="portrait" />
@@ -187,11 +186,6 @@
              <category android:name="android.intent.category.LAUNCHER" />
          </intent-filter>
      </activity>
-
-
-
-
-
 
      <service android:name=".notifications.FirebaseMessageReceiver"
          android:enabled="true"

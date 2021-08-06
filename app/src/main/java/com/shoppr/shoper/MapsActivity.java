@@ -5,13 +5,17 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,20 +25,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.AuthFailureError;
@@ -46,9 +52,11 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -71,7 +79,10 @@ import com.shoppr.shoper.activity.RegisterMerchantActivity;
 import com.shoppr.shoper.activity.WalletActivity;
 import com.shoppr.shoper.adapter.BannerAdapter;
 import com.shoppr.shoper.util.CommonUtils;
+import com.shoppr.shoper.util.ConstantValue;
+import com.shoppr.shoper.util.MyPreferences;
 import com.shoppr.shoper.util.Progressbar;
+import com.shoppr.shoper.util.RuntimePermission;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
@@ -97,29 +108,34 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
+public class MapsActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
     SessonManager sessonManager;
     //double lat,lon;
-    TextView shoprListText, addressText, txtUserName, txtUserMobile, noti_badge;
-    CircleImageView cir_man_hair_cut, userProfilePic;
-    LinearLayout llWallet, llChat, llMyOrders, llHelp, llShareApp, llLogout;
+    TextView shoprListText, addressText, txtUserName, txtUserMobile, noti_badge, txtChangeLocation;
+    CircleImageView userProfilePic;
+    LinearLayout llMyAccount, llWallet, llChat, llMyOrders, llHelp, llShareApp, llLogout;
     FrameLayout frameLayoutNoti;
     BottomNavigationView navView;
+    ImageView navMenu, imgClose;
+    public FusedLocationProviderClient fusedLocationClient;
     Button btnMerchantRegister;
-    /*Todo:- Location Manager*/
-    private Location location;
     private GoogleApiClient googleApiClient;
-    // private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private LocationRequest locationRequest;
-    // private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
-    // lists for permissions
-    private ArrayList<String> permissionsToRequest;
-    private ArrayList<String> permissionsRejected = new ArrayList<>();
-    private ArrayList<String> permissions = new ArrayList<>();
+    private final ArrayList<String> permissionsRejected = new ArrayList<>();
+    private final ArrayList<String> permissions = new ArrayList<>();
     private ArrayList<Integer> bannerList;
     // integer for permissions results request
     private static final int ALL_PERMISSIONS_RESULT = 1011;
+
+    private Location mLocation;
+    private LocationManager mLocationManager;
+    private LocationRequest mLocationRequest;
+    private com.google.android.gms.location.LocationListener listener;
+    private long UPDATE_INTERVAL = 2 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 2000; /* 2 sec */
+    private LocationManager locationManager;
+    private GoogleApiClient mGoogleApiClient;
+    BroadcastReceiver mMessageReceiver;
 
     String key, latitude, longitude;
     //ArrayList<String> arrListLocation = new ArrayList<>();
@@ -144,6 +160,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     String cityName;
     String urlString;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,12 +170,15 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        permissionsToRequest = permissionsToRequest(permissions);
+        // private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
+        // lists for permissions
+        ArrayList<String> permissionsToRequest = permissionsToRequest(permissions);
         sessonManager = new SessonManager(this);
         progressbar = new Progressbar();
         shoprListText = findViewById(R.id.shoprListText);
         addressText = findViewById(R.id.addressText);
-        cir_man_hair_cut = findViewById(R.id.cir_man_hair_cut);
+        txtChangeLocation = findViewById(R.id.txtChangeLocation);
+        navMenu = findViewById(R.id.navMenu);
         //countText = findViewById(R.id.countText);
         /*Todo:- ConstraintLayout Screen Layout*/
         mainPage = findViewById(R.id.mainPage);
@@ -179,19 +199,22 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         txtUserMobile = navigationView.findViewById(R.id.tv_mobile);
         userProfilePic = navigationView.findViewById(R.id.userProfilePic);
 
+        llMyAccount = navigationView.findViewById(R.id.llMyAccount);
         llWallet = navigationView.findViewById(R.id.llWallet);
         llChat = navigationView.findViewById(R.id.llCHat);
         llMyOrders = navigationView.findViewById(R.id.llMyOrders);
         llHelp = navigationView.findViewById(R.id.llHelp);
         llShareApp = navigationView.findViewById(R.id.llShare);
         llLogout = navigationView.findViewById(R.id.llLogout);
+        imgClose = navigationView.findViewById(R.id.imgClose);
+
 
         btnMerchantRegister = findViewById(R.id.btnMerchantRegister);
         frameLayoutNoti = findViewById(R.id.frameLayoutNoti);
 
         Log.d("notifiallowed=", String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()));
 
-        NotificationManager manager = (NotificationManager) MapsActivity.this.getSystemService(MapsActivity.this.NOTIFICATION_SERVICE);
+        NotificationManager manager = (NotificationManager) MapsActivity.this.getSystemService(NOTIFICATION_SERVICE);
         int importance = 0;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             importance = manager.getImportance();
@@ -206,7 +229,10 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         bannerList.add(R.drawable.interior_design3);
         bannerList.add(R.drawable.interior_design4);
 
-        //if()
+        if (RuntimePermission.checkRunTimePermission(this)) {
+            proceedAfterPermission();
+        }
+
         if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false")) {
 
             AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
@@ -239,21 +265,34 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             alertDialog.show();
         }
 
+        navView.getMenu().getItem(0).setCheckable(false);
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
 
                 switch (item.getItemId()) {
                     case R.id.navigation_chat:
-                        startActivity(new Intent(MapsActivity.this, ChatHistoryActivity.class)
-                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        item.setCheckable(true);
+                        int chatId = MyPreferences.getInt(MapsActivity.this, ConstantValue.KEY_CHAT_ID);
+                        boolean isChatProgress = MyPreferences.getBoolean(MapsActivity.this, ConstantValue.KEY_IS_CHAT_PROGRESS);
+                        if (isChatProgress) {
+                            startActivity(new Intent(MapsActivity.this, ChatActivity.class)
+                                    .putExtra("chat_status", "2").putExtra("findingchatid", chatId).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        } else {
+                            Intent intent1 = new Intent(MapsActivity.this, ChatHistoryActivity.class);
+                            intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent1);
+                        }
                         break;
 
                     case R.id.navigation_pickdel:
+                        item.setCheckable(true);
                         Toast.makeText(MapsActivity.this, "In Progress", Toast.LENGTH_SHORT).show();
                         break;
 
                     case R.id.navigation_local_shop:
+                        item.setCheckable(true);
                         startActivity(new Intent(MapsActivity.this, StorelistingActivity.class).putExtra("address", sessonManager.getEditaddress())
                                 .putExtra("city", sessonManager.getCityName())
                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -263,52 +302,21 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             }
         });
 
-
         setUpBanner();
-
-
-
-      /*  AlertDialog alertDialog = new AlertDialog.Builder(this)
-                   //set icon
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                    //set title
-                .setTitle("Please Update notification setting to better use")
-                     //set message
-               // .setMessage("Exiting will call finish() method")
-                     //set positive button
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //set what would happen when positive button is clicked
-                        finish();
-                    }
-                })
-                          //set negative button
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //set what should happen when negative button is clicked
-                        Toast.makeText(getApplicationContext(), "Nothing Happened", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .show();*/
-
 
         updateLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MapsActivity.this, EditLocationActivity.class));
+                if (RuntimePermission.checkRunTimePermission(MapsActivity.this)) {
+                    if (isLocationEnabled())
+                        startActivity(new Intent(MapsActivity.this, EditLocationActivity.class));
+                    else
+                        showGPSDisabledAlertToUser();
+                }
             }
         });
         Log.d("Token", sessonManager.getToken());
 
-        /*Todo:- Get the location manager*/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (permissionsToRequest.size() > 0) {
-                requestPermissions(permissionsToRequest.toArray(
-                        new String[0]), ALL_PERMISSIONS_RESULT);
-            }
-        }
         /*Todo:- Version Check*/
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -348,15 +356,19 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 addConnectionCallbacks(this).
                 addOnConnectionFailedListener(this).build();
 
-
-        addressText.setOnClickListener(new View.OnClickListener() {
+        txtChangeLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MapsActivity.this, EditLocationActivity.class));
+                if (RuntimePermission.checkRunTimePermission(MapsActivity.this)) {
+                    if (isLocationEnabled())
+                        startActivity(new Intent(MapsActivity.this, EditLocationActivity.class));
+                    else
+                        showGPSDisabledAlertToUser();
+                }
             }
         });
 
-        cir_man_hair_cut.setOnClickListener(new View.OnClickListener() {
+        navMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawer_layout.openDrawer(GravityCompat.START);
@@ -365,6 +377,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         myProfile();
 
         btnMerchantRegister.setOnClickListener(this);
+        llMyAccount.setOnClickListener(this);
         llWallet.setOnClickListener(this);
         llChat.setOnClickListener(this);
         llMyOrders.setOnClickListener(this);
@@ -372,8 +385,37 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         llShareApp.setOnClickListener(this);
         llLogout.setOnClickListener(this);
         frameLayoutNoti.setOnClickListener(this);
+        imgClose.setOnClickListener(this);
 
         //Log.d("newToken", getActivity().getPreferences(Context.MODE_PRIVATE).getString("fb", "empty :("));
+    }
+
+    private void proceedAfterPermission() {
+        if (!isLocationEnabled()) {
+            showGPSDisabledAlertToUser();
+        }
+    }
+
+    private boolean isLocationEnabled() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+
+            proceedAfterPermission();
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Please given all Permission", Toast.LENGTH_LONG).show();
+            RuntimePermission.checkRunTimePermission(this);
+        }
     }
 
     private void setUpBanner() {
@@ -388,7 +430,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 viewPager.post(new Runnable() {
                     @Override
                     public void run() {
-
                         if (bannerList.size() > 0) {
                             viewPager.setCurrentItem((viewPager.getCurrentItem() + 1) % bannerList.size());
                         }
@@ -407,23 +448,34 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             case R.id.llMyAccount:
                 Intent intent2 = new Intent(MapsActivity.this, MyAccount.class);
                 startActivity(intent2);
+                drawer_layout.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.llWallet:
                 Intent intent = new Intent(MapsActivity.this, WalletActivity.class);
                 startActivity(intent);
+                drawer_layout.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.llCHat:
-                Intent intent1 = new Intent(MapsActivity.this, ChatActivity.class);
+                /*int chatId = MyPreferences.getInt(MapsActivity.this, ConstantValue.KEY_CHAT_ID);
+                boolean isChatProgress = MyPreferences.getBoolean(MapsActivity.this, ConstantValue.KEY_IS_CHAT_PROGRESS);
+                if (isChatProgress) {
+                    startActivity(new Intent(MapsActivity.this, ChatActivity.class)
+                            .putExtra("chat_status", "2").putExtra("findingchatid", chatId).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                } else {*/
+                Intent intent1 = new Intent(MapsActivity.this, ChatHistoryActivity.class);
                 intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent1);
+                // }
+                drawer_layout.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.llMyOrders:
                 startActivity(new Intent(MapsActivity.this, MyOrderActivity.class).addFlags(
                         Intent.FLAG_ACTIVITY_CLEAR_TOP
                 ));
+                drawer_layout.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.llHelp:
@@ -432,6 +484,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
+                drawer_layout.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.llShare:
@@ -443,26 +496,32 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                     shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID;
                     shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
                     startActivity(Intent.createChooser(shareIntent, "choose one"));
+                    drawer_layout.closeDrawer(GravityCompat.START);
                 } catch (Exception e) {
                     //e.toString();
+                    drawer_layout.closeDrawer(GravityCompat.START);
                 }
                 break;
 
             case R.id.llLogout:
                 callLogout();
+                drawer_layout.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.btnMerchantRegister:
                 startActivity(new Intent(MapsActivity.this, RegisterMerchantActivity.class));
+                drawer_layout.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.frameLayoutNoti:
                 startActivity(new Intent(MapsActivity.this, NotificationListActivity.class));
+                drawer_layout.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.imgClose:
+                drawer_layout.closeDrawer(GravityCompat.START);
                 break;
 
-
         }
-
     }
 
     private void callLogout() {
@@ -533,7 +592,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
                             if (myProfileModel.getData() != null) {
                                 //sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
-                                Picasso.get().load(myProfileModel.getData().getImage()).into(cir_man_hair_cut);
+
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(userProfilePic);
                                 txtUserName.setText(myProfileModel.getData().getName());
                                 txtUserMobile.setText(myProfileModel.getData().getMobile());
@@ -677,9 +736,16 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
 
     public void chats(View view) {
-        startActivity(new Intent(MapsActivity.this, FindingShopprActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("address", addressText.getText().toString())
-                .putExtra("city", cityName));
+        int chatId = MyPreferences.getInt(MapsActivity.this, ConstantValue.KEY_CHAT_ID);
+        boolean isChatProgress = MyPreferences.getBoolean(MapsActivity.this, ConstantValue.KEY_IS_CHAT_PROGRESS);
+        if (isChatProgress) {
+            startActivity(new Intent(MapsActivity.this, ChatActivity.class)
+                    .putExtra("chat_status", "2").putExtra("findingchatid", chatId).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        } else {
+            startActivity(new Intent(MapsActivity.this, FindingShopprActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("address", addressText.getText().toString())
+                    .putExtra("city", cityName));
+        }
     }
 
     public void menu(View view) {
@@ -850,6 +916,38 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         if (!checkPlayServices()) {
             //locationTv.setText("You need to install Google Play Services to use the App properly");
         }
+
+        navView.getMenu().getItem(0).setCheckable(false);
+        navView.getMenu().getItem(1).setCheckable(false);
+        navView.getMenu().getItem(2).setCheckable(false);
+
+        //MyPreferences.saveBoolean(MapsActivity.this, ConstantValue.KEY_IS_CHAT_PROGRESS, false);
+        boolean isChatProgress = MyPreferences.getBoolean(MapsActivity.this, ConstantValue.KEY_IS_CHAT_PROGRESS);
+        BadgeDrawable badge = null;
+        if (isChatProgress) {
+            badge = navView.getOrCreateBadge(R.id.navigation_chat);
+            badge.setVisible(true);
+            badge.setNumber(1);
+        }
+
+        registerBroadcast(badge);
+
+    }
+
+    private void registerBroadcast(BadgeDrawable badge) {
+        mMessageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (badge != null) {
+                    badge.setVisible(false);
+                }
+            }
+        };
+        IntentFilter i = new IntentFilter();
+        i.addAction("message_subject_intent");
+
+        registerReceiver(mMessageReceiver, i);
+
     }
 
     @Override
@@ -860,6 +958,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
             googleApiClient.disconnect();
         }
+        unregisterReceiver(mMessageReceiver);
     }
 
     private boolean checkPlayServices() {
@@ -872,10 +971,8 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             } else {
                 finish();
             }
-
             return false;
         }
-
         return true;
     }
 
@@ -891,19 +988,20 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         }
 
         // Permissions ok, we get last location
-        location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        /*Todo:- Location Manager*/
+        @SuppressLint("MissingPermission") Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
 
         if (location != null) {
             serviceMap(location);
-        } else {
-            showGPSDisabledAlertToUser();
         }
-
         startLocationUpdates();
     }
 
+    @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
-        locationRequest = new LocationRequest();
+        // private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+        LocationRequest locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(0);
         locationRequest.setFastestInterval(0);
@@ -912,6 +1010,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
 
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
@@ -940,7 +1039,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 setAddress(latitude, longitude);
 
             } else {
-
                 Address address = list.get(0);
                 cityName = address.getLocality();
                 String location_address = address.getAddressLine(0);
@@ -952,7 +1050,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 latitude = String.valueOf(address.getLatitude());
                 longitude = String.valueOf(address.getLongitude());
                 setAddress(latitude, longitude);
-
             }
 
         }
@@ -1029,6 +1126,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnectionSuspended(int i) {
+        googleApiClient.connect();
     }
 
     @Override

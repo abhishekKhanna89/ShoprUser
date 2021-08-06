@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_margin="5dp"
         android:orientation="vertical">
-    <me.himanshusoni.chatmessageview.ChatMessageView
-        android:id="@+id/imageLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        app:cmv_arrowPosition="right"
-        app:cmv_backgroundColor="#fff"
-        android:visibility="visible"
-        app:cmv_backgroundColorPressed="#FFBABABA"
-        app:cmv_cornerRadius="3dp">
 
-        <LinearLayout
+        <me.himanshusoni.chatmessageview.ChatMessageView
+            android:id="@+id/imageLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="vertical">
+            android:layout_gravity="end"
+            android:visibility="visible"
+            android:layout_margin="5dp"
+            app:cmv_arrowPosition="right"
+            app:cmv_backgroundColor="@color/my_chat_color"
+            app:cmv_backgroundColorPressed="#FFBABABA"
+            app:cmv_cornerRadius="3dp">
 
-            <ImageView
-                android:id="@+id/Image"
-                android:layout_width="200dp"
-                android:layout_height="150dp"
-                android:scaleType="fitXY" />
-
-            <TextView
-                android:id="@+id/Text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Location"
-                android:textColor="#000000" />
-
-            <TextView
-                android:id="@+id/dateImage"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:text="11:00 AM"
-                android:textColor="#000000"
-                android:textSize="10sp" />
-        </LinearLayout>
-    </me.himanshusoni.chatmessageview.ChatMessageView>
+                android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/Image"
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"
+                    android:scaleType="fitXY" />
 
+                <TextView
+                    android:id="@+id/Text"
+                    style="@style/userTextMsg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Location" />
 
+                <TextView
+                    android:id="@+id/dateImage"
+                    style="@style/userTextTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:text="11:00 AM" />
+
+            </LinearLayout>
+        </me.himanshusoni.chatmessageview.ChatMessageView>
 
 
     </LinearLayout>

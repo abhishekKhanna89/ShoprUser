@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,11 +16,11 @@
         android:id="@+id/textLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
+        android:layout_gravity="end"
         android:layout_margin="5dp"
         android:visibility="visible"
         app:cmv_arrowPosition="right"
-        app:cmv_backgroundColor="#fff"
+        app:cmv_backgroundColor="@color/my_chat_color"
         app:cmv_backgroundColorPressed="#FFBABABA"
         app:cmv_cornerRadius="3dp">
 
@@ -35,8 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:elevation="2dp"
-                android:textColor="#000"
-                android:textSize="18dp" />
+                style="@style/userTextMsg"
+                tools:text="This is my message" />
 
             <TextView
                 android:id="@+id/dateText"
@@ -44,8 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:text="11:00 AM"
-                android:textColor="#000000"
-                android:textSize="10sp" />
+                style="@style/userTextTime" />
         </LinearLayout>
     </me.himanshusoni.chatmessageview.ChatMessageView>
 

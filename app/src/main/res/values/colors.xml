@@ -67,6 +67,15 @@
     <color name="colo_home_light">#32b3b1</color>
     <color name="dark_color">#003535</color>
 
-
     <color name="call_type">#178277</color>
+    <color name="color_yellow">#a5c838</color>
+    <color name="color_red">#4fa0a1</color>
+    <color name="nav_def">#9b9b9b</color>
+    <color name="nav_select">#78bc1c</color>
+    <color name="my_chat_color">#a5c838</color>
+    <color name="menu_bg">#252932</color>
+    <color name="menu_text_color">#8b8f98</color>
+
+
+
 </resources>

@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -15,20 +16,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatRatingBar;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.rygelouv.audiosensei.player.AudioSenseiPlayerView;
+import com.rygelouv.audiosensei.player.OnPlayerViewClickListener;
 import com.shoppr.shoper.Model.AcceptModel;
 import com.shoppr.shoper.Model.CancelModel;
 import com.shoppr.shoper.Model.ChatMessage.Chat;
@@ -47,64 +52,62 @@ import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
-
 import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.himanshusoni.chatmessageview.ChatMessageView;
-import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-import static android.os.FileUtils.copy;
-
 public class
-ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
+ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
     private static final int IO_BUFFER_SIZE = 1;
     List<Chat> chatList;
     Context context;
-   // private int SELF = 1;
+    // private int SELF = 1;
     View itemView;
     SessonManager sessonManager;
     BroadcastReceiver mMessageReceiver;
     String title, body;
     String ratingValue;
 
-    private int SELF_DIRECTION=1;
+    private int SELF_DIRECTION = 1;
     private int SELF_TEXT_IN = 1;
     private int SELF_IMAGE_IN = 3;
     private int SELF_TEXT_OUT = 2;
     private int SELF_IMAGE_OUT = 4;
-    private int  SELF_PRODUCT_IN=5;
-    private int  SELF_PRODUCT_OUT=6;
-    private int  SELF_RATING_IN=7;
-    private int  SELF_RATING_OUT=8;
-    private int  SELF_AUDIO_IN=9;
-    private int  SELF_AUDIO_OUT=10;
-    private int  SELF_ADDMONEY_IN=11;
-    private int  SELF_ADDMONEY_OUT=12;
-    private int  SELF_RECHARGE_IN=13;
-    private int  SELF_RECHARGE_OUT=14;
-    private int  SELF_PAID_IN=15;
-    private int  SELF_PAID_OUT=16;
-    private int  SELF_ADDRESS_IN=17;
-    private int  SELF_ADDRESS_OUT=18;
-    private int  SELF_STORE_IN=19;
-    private int  SELF_STORE_OUT=20;
-    private int  SELF_ORDERCONFIRMED_IN=21;
-    private int  SELF_ORDERCONFIRMED_OUT= 22;
-    private int  SELF_ADDRESSTYPE_IN=23;
-    private int  SELF_ADDRESSTYPE_OUT=24;
-    private int  SELF_TRACK_IN=26;
-    private int  SELF_TRACK_OUT=27;
-   // private int  SELF_ADDMONEY_IN=24;
-    private int  SELF_DISCOUNT_IN=30;
-    private int  SELF_DISCOUNT_OUT=31;
+    private int SELF_PRODUCT_IN = 5;
+    private int SELF_PRODUCT_OUT = 6;
+    private int SELF_RATING_IN = 7;
+    private int SELF_RATING_OUT = 8;
+    private int SELF_AUDIO_IN = 9;
+    private int SELF_AUDIO_OUT = 10;
+    private int SELF_ADDMONEY_IN = 11;
+    private int SELF_ADDMONEY_OUT = 12;
+    private int SELF_RECHARGE_IN = 13;
+    private int SELF_RECHARGE_OUT = 14;
+    private int SELF_PAID_IN = 15;
+    private int SELF_PAID_OUT = 16;
+    private int SELF_ADDRESS_IN = 17;
+    private int SELF_ADDRESS_OUT = 18;
+    private int SELF_STORE_IN = 19;
+    private int SELF_STORE_OUT = 20;
+    private int SELF_ORDERCONFIRMED_IN = 21;
+    private int SELF_ORDERCONFIRMED_OUT = 22;
+    private int SELF_ADDRESSTYPE_IN = 23;
+    private int SELF_ADDRESSTYPE_OUT = 24;
+    private int SELF_TRACK_IN = 26;
+    private int SELF_TRACK_OUT = 27;
+    // private int  SELF_ADDMONEY_IN=24;
+    private int SELF_DISCOUNT_IN = 30;
+    private int SELF_DISCOUNT_OUT = 31;
     boolean isPLAYING = false;
-     private int   countforplay=0;
+    private int countforplay = 0;
+
 
     // addmoney
 
@@ -131,12 +134,11 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             //Inflating the layout self
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_text_layout, parent, false);
-        }else if(viewType == SELF_TEXT_OUT){
+        } else if (viewType == SELF_TEXT_OUT) {
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_text_layout, parent, false);
-        }
-        else if (viewType == SELF_DISCOUNT_IN) {
+        } else if (viewType == SELF_DISCOUNT_IN) {
             //Inflating the layout self
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_discount_layout, parent, false);
@@ -147,165 +149,127 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
         }
 
         // lk changes here
-        else if(viewType == SELF_PRODUCT_IN){
+        else if (viewType == SELF_PRODUCT_IN) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_product_layout, parent, false);
-        }
-        else if(viewType == SELF_PRODUCT_OUT){
+        } else if (viewType == SELF_PRODUCT_OUT) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_product_layout, parent, false);
-        }
-        else if(viewType == SELF_RATING_IN){
+        } else if (viewType == SELF_RATING_IN) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_rating_layout, parent, false);
-        }
-        else if(viewType == SELF_RATING_OUT){
+        } else if (viewType == SELF_RATING_OUT) {
             //Log.d("outrating==", String.valueOf(SELF_RATING_OUT));
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_rating_layout, parent, false);
-        }
-        else if(viewType == SELF_AUDIO_IN){
+        } else if (viewType == SELF_AUDIO_IN) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_audio_layout_two, parent, false);
-        }
-        else if(viewType == SELF_AUDIO_OUT){
+        } else if (viewType == SELF_AUDIO_OUT) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_audio_layout_two, parent, false);
-        }
-        else if(viewType == SELF_ADDMONEY_IN){
+        } else if (viewType == SELF_ADDMONEY_IN) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_addwallet_layout, parent, false);
-        }
-        else if(viewType == SELF_ADDMONEY_OUT){
+        } else if (viewType == SELF_ADDMONEY_OUT) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_addwallet_layout, parent, false);
-        }
-        else if(viewType == SELF_RECHARGE_IN){
+        } else if (viewType == SELF_RECHARGE_IN) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_recharge_layout, parent, false);
-        }
-        else if(viewType == SELF_RECHARGE_OUT){
+        } else if (viewType == SELF_RECHARGE_OUT) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_recharge_layout, parent, false);
-        }
-
-        else if(viewType == SELF_PAID_IN){
+        } else if (viewType == SELF_PAID_IN) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_payment_layout, parent, false);
-        }
-        else if(viewType == SELF_PAID_OUT){
+        } else if (viewType == SELF_PAID_OUT) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_payment_layout, parent, false);
-        }
+        } else if (viewType == SELF_ADDRESS_IN) {
 
-        else if(viewType == SELF_ADDRESS_IN){
-
-           // Log.d("outratingaddin==", String.valueOf(SELF_RATING_IN));
+            // Log.d("outratingaddin==", String.valueOf(SELF_RATING_IN));
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_location_layout, parent, false);
-        }
-        else if(viewType == SELF_ADDRESS_OUT){
+        } else if (viewType == SELF_ADDRESS_OUT) {
 
             Log.d("outratingaddout==", String.valueOf(SELF_RATING_IN));
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_location_layout, parent, false);
-        }
-        else if(viewType == SELF_STORE_IN){
+        } else if (viewType == SELF_STORE_IN) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_store_layout, parent, false);
-        }
-        else if(viewType == SELF_STORE_OUT){
+        } else if (viewType == SELF_STORE_OUT) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_store_layout, parent, false);
-        }
-        else if(viewType == SELF_ORDERCONFIRMED_IN){
+        } else if (viewType == SELF_ORDERCONFIRMED_IN) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_orderconfirmed_layout, parent, false);
-        }
-        else if(viewType == SELF_ORDERCONFIRMED_OUT){
+        } else if (viewType == SELF_ORDERCONFIRMED_OUT) {
 
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_oredercofirm_layout, parent, false);
-        }
-
-        else  if (viewType == SELF_IMAGE_IN) {
+        } else if (viewType == SELF_IMAGE_IN) {
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_image_layout, parent, false);
-        }
-        else  if (viewType == SELF_IMAGE_OUT)
-        {
+        } else if (viewType == SELF_IMAGE_OUT) {
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_image_layout, parent, false);
-        }
-
-        else  if (viewType == SELF_ADDRESSTYPE_IN)
-        {
+        } else if (viewType == SELF_ADDRESSTYPE_IN) {
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_locationtype_layout, parent, false);
-        }
-        else  if (viewType == SELF_ADDRESSTYPE_OUT)
-        {
+        } else if (viewType == SELF_ADDRESSTYPE_OUT) {
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_locationtype_layout, parent, false);
-        }
-        else  if (viewType ==SELF_TRACK_IN )
-        {
+        } else if (viewType == SELF_TRACK_IN) {
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_track_layout, parent, false);
-        }
-        else  if (viewType ==SELF_TRACK_OUT )
-        {
+        } else if (viewType == SELF_TRACK_OUT) {
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_track_layout, parent, false);
-        }
-        else
-        {
+        } else {
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_blank_layout, parent, false);
         }
 //
 //
-
-
-
-
 
 
         //returing the view
@@ -330,13 +294,13 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                     //holder.message_body.setText(title+"\t"+body);
                     // Toast.makeText(context, "Title:- "+title+" Body:- "+body, Toast.LENGTH_SHORT).show();
                 } else {
-                  //  holder.textLayout.setVisibility(View.GONE);
+                    //  holder.textLayout.setVisibility(View.GONE);
                 }
             }
         };
         IntentFilter i = new IntentFilter();
         i.addAction("message_subject_intent");
-        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver, new IntentFilter(i));
+        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver, i);
 
 
         if (chat.getType().equalsIgnoreCase("image")) {
@@ -366,14 +330,11 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
         }/* else {
             holder.imageLayout.setVisibility(View.GONE);
 
-        }*/
-        else if (chat.getType().equalsIgnoreCase("text")) {
+        }*/ else if (chat.getType().equalsIgnoreCase("text")) {
             holder.message_body.setText(chat.getMessage());
             holder.dateText.setText(chat.getCreatedAt());
             holder.textLayout.setVisibility(View.VISIBLE);
-        }
-
-        else if (chat.getType().equalsIgnoreCase("discount")) {
+        } else if (chat.getType().equalsIgnoreCase("discount")) {
             holder.message_body.setText(chat.getMessage());
             holder.dateText.setText(chat.getCreatedAt());
             //holder.textLayout.setVisibility(View.VISIBLE);
@@ -403,18 +364,16 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                 holder.rejectText.setVisibility(View.GONE);
                 holder.cancelText.setVisibility(View.GONE);
                 holder.acceptText.setVisibility(View.GONE);
-             //   holder.ratingLayout.setEnabled(false);
-              //  holder.ratingBar.setIsIndicator(true);
+                //   holder.ratingLayout.setEnabled(false);
+                //  holder.ratingBar.setIsIndicator(true);
 
-            }else
-            if (chat.getStatus().equalsIgnoreCase("rejected")) {
+            } else if (chat.getStatus().equalsIgnoreCase("rejected")) {
                 holder.closeRedLayout.setVisibility(View.VISIBLE);
                 holder.greenLayout.setVisibility(View.GONE);
                 holder.acceptText.setVisibility(View.GONE);
                 holder.rejectText.setVisibility(View.GONE);
                 holder.cancelText.setVisibility(View.GONE);
-            }else
-            if (chat.getStatus().equalsIgnoreCase("cancelled")) {
+            } else if (chat.getStatus().equalsIgnoreCase("cancelled")) {
                 holder.closeRedLayout.setVisibility(View.VISIBLE);
                 holder.greenLayout.setVisibility(View.GONE);
                 holder.acceptText.setVisibility(View.GONE);
@@ -445,7 +404,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                                             holder.cancelText.setVisibility(View.VISIBLE);
                                             holder.acceptText.setVisibility(View.GONE);
                                             if (context instanceof ChatActivity) {
-                                                ((ChatActivity)context).yourDesiredMethod();
+                                                ((ChatActivity) context).yourDesiredMethod();
                                             }
                               /*              context.startActivity(new Intent(context, ChatActivity.class)
                                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
@@ -488,12 +447,12 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                                             holder.rejectText.setVisibility(View.GONE);
                                             holder.cancelText.setVisibility(View.GONE);
                                             if (context instanceof ChatActivity) {
-                                                ((ChatActivity)context).yourDesiredMethod();
+                                                ((ChatActivity) context).yourDesiredMethod();
                                             }
                                         }
                                         Toast.makeText(context, "" + rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(context, "" +rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "" + rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -531,12 +490,12 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                                             holder.rejectText.setVisibility(View.GONE);
                                             holder.cancelText.setVisibility(View.GONE);
                                             if (context instanceof ChatActivity) {
-                                                ((ChatActivity)context).yourDesiredMethod();
+                                                ((ChatActivity) context).yourDesiredMethod();
                                             }
                                         }
                                         Toast.makeText(context, "" + cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(context, "" +cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "" + cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -570,20 +529,16 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             });
 
 
-
-
             //
         }/* else {
             holder.productLayout.setVisibility(View.GONE);
-        }*/
-        else if (chat.getType().equalsIgnoreCase("rating")) {
+        }*/ else if (chat.getType().equalsIgnoreCase("rating")) {
             holder.ratingLayout.setEnabled(true);
             holder.ratingBar.setIsIndicator(true);
             holder.ratingsMessage.setText(chat.getMessage());
             holder.dateRating.setText(chat.getCreatedAt());
             holder.ratingBar.setRating(Float.parseFloat(chat.getQuantity()));
             holder.ratingLayout.setVisibility(View.VISIBLE);
-
 
 
             holder.ratingLayout.setOnClickListener(new View.OnClickListener() {
@@ -616,7 +571,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                         }
                     });
                     EditText messageEt = dialog.findViewById(R.id.messageEt);
-                    Button submitRatingBtn = dialog.findViewById(R.id.submitRatingBtn);
+                    AppCompatButton submitRatingBtn = dialog.findViewById(R.id.submitRatingBtn);
                     submitRatingBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -634,12 +589,12 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                                         //sessonManager.hideProgress();
                                         //Log.d("response",response.body().getStatus());
                                         if (response.body() != null) {
-                                            RatingsModel ratingsModel=response.body();
+                                            RatingsModel ratingsModel = response.body();
                                             if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                                 Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                                 dialog.dismiss();
                                                 if (context instanceof ChatActivity) {
-                                                    ((ChatActivity)context).yourDesiredMethod();
+                                                    ((ChatActivity) context).yourDesiredMethod();
                                                 }
                                             } else {
                                                 Toast.makeText(context, "" + ratingsModel.getMessage(), Toast.LENGTH_SHORT).show();
@@ -663,83 +618,12 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             });
 
 
-
-
-
         } /*else {
             holder.ratingLayout.setVisibility(View.GONE);
-        }*/
-        else if (chat.getType().equalsIgnoreCase("audio")) {
-
+        }*/ else if (chat.getType().equalsIgnoreCase("audio")) {
 
             holder.dateText11.setText(chat.getCreatedAt());
-            holder.tv_audio_length.setVisibility(View.GONE);
-
-            holder.img_play.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    countforplay++;
-                    MediaPlayer mp = new MediaPlayer();
-                    if(countforplay%2==1) {
-                        holder.img_play.setBackgroundResource(R.drawable.ic_pause_button);
-
-                        if (!isPLAYING) {
-                            isPLAYING = true;
-
-                            try {
-                                mp.setDataSource(chat.getFilePath());
-                                // mp.getDuration();
-
-                                // Log.d("milisecond=", String.valueOf(mp.getDuration()));
-                                mp.prepare();
-                                mp.start();
-                                Log.d("milisecond=", String.valueOf(mp.getDuration()));
-                                holder.tv_audio_length.setVisibility(View.VISIBLE);
-                                holder.tv_audio_length.setText( convertSecondsToHMmSs(mp.getDuration() / 1000));
-
-                            } catch (IOException e) {
-                                Log.e("", "prepare() failed");
-                            }
-                        } else {
-                            //isPLAYING = false;
-                            // stopPlaying();
-                        }
-
-                    }
-                    else
-                    {
-
-                        holder.img_play.setBackgroundResource(R.drawable.ic_baseline_play_circle_24);
-                        isPLAYING = false;
-
-                        mp.release();
-                        mp = null;
-
-
-                    }
-
-
-
-                /*    onCallforvoice(chat.getFilePath());
-                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                    retriever.setDataSource(context,Uri.parse(chat.getFilePath()));
-                    String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                    int millSecond = Integer.parseInt(duration);
-
-                    Log.d("milisecond=", String.valueOf(millSecond));*/
-
-                    // holder.img_play.setVisibility(View.GONE);
-                    //  holder.img_play.setBackgroundResource(R.drawable.ic_pause_button);
-                }
-            });
-
-            holder.tv_audio_length.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("Audio_lenght", "Audio lenght");
-                }
-            });
+            holder.audio_player.setAudioTarget(chat.getFilePath());
 
             holder.dateText11.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -747,19 +631,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                     Log.d("msg_time", "msg_time");
                 }
             });
-
-
-
-
-
-
-
-        } /*else {
-            holder.voicePlayerView.setVisibility(View.GONE);
-        }*/
-
-
-        else if (chat.getType().equalsIgnoreCase("address-request")) {
+        } else if (chat.getType().equalsIgnoreCase("address-request")) {
             holder.addressText.setText(chat.getMessage());
             holder.addressDate.setText(chat.getCreatedAt());
             holder.addressLayout.setVisibility(View.VISIBLE);
@@ -767,7 +639,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             holder.addressLinkText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int chatId=chat.getChatId();
+                    int chatId = chat.getChatId();
                     //Log.d("chat_id",""+chatId);
                     context.startActivity(new Intent(context, ShareLocationActivity.class)
                             .putExtra("chatId", chatId)
@@ -776,8 +648,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             });
         } /*else {
             holder.addressLayout.setVisibility(View.GONE);
-        }*/
-        else if (chat.getType().equalsIgnoreCase("address")) {
+        }*/ else if (chat.getType().equalsIgnoreCase("address")) {
             String lat = chat.getLat();
             String lon = chat.getLang();
             String url = "https://maps.googleapis.com/maps/api/staticmap?";
@@ -790,20 +661,19 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             String currentString = chat.getMessage();
             String[] parts = currentString.split("#");
             try {
-                String a=parts[0];
-                String b=parts[1];
+                String a = parts[0];
+                String b = parts[1];
 
                 //Log.d("value1==", (String) holder.location2Text.getText());
-              //  Log.d("value1===",(String) holder.locationText.getText());
+                //  Log.d("value1===",(String) holder.locationText.getText());
                 holder.locationText.setText(a);
                 holder.location2Text.setVisibility(View.GONE);
                 holder.locationText.setVisibility(View.VISIBLE);
                 //holder.location2Text.setText(b);
-               /// holder.locationText.setText(a);
-            }catch (Exception e){
+                /// holder.locationText.setText(a);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
 
             holder.locationDate.setText(chat.getCreatedAt());
@@ -819,12 +689,9 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             });
 
 
-
         } /*else {
             holder.mapLayout.setVisibility(View.GONE);
-        }*/
-
-        else if (chat.getType().equalsIgnoreCase("track")) {
+        }*/ else if (chat.getType().equalsIgnoreCase("track")) {
             holder.trackLocationLayout.setVisibility(View.VISIBLE);
             holder.trackLocationText.setText(chat.getMessage());
             holder.trackLocationText.setOnClickListener(new View.OnClickListener() {
@@ -836,8 +703,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                             .putExtra("chatId", chat_id));
                 }
             });
-        }
-        else if (chat.getType().equalsIgnoreCase("add-money")) {
+        } else if (chat.getType().equalsIgnoreCase("add-money")) {
             //holder.addWalletLayout.setVisibility(View.VISIBLE);
             holder.addWalletMsgText.setText(chat.getMessage());
             holder.addwalletDate.setText(chat.getCreatedAt());
@@ -852,11 +718,11 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                             .putExtra("value", "1"));
                 }
             });
-        }else if (chat.getType().equalsIgnoreCase("recharge")) {
+        } else if (chat.getType().equalsIgnoreCase("recharge")) {
             holder.rechargeLayout.setVisibility(View.VISIBLE);
             holder.rechargeMsgText.setText(chat.getMessage());
             holder.rechargeDateText.setText(chat.getCreatedAt());
-        }else if (chat.getType().equalsIgnoreCase("payment")) {
+        } else if (chat.getType().equalsIgnoreCase("payment")) {
             holder.paymentLayout.setVisibility(View.VISIBLE);
             holder.paymentDate.setText(chat.getCreatedAt());
             holder.paymentBtn.setOnClickListener(new View.OnClickListener() {
@@ -869,7 +735,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                             .putExtra("chat_id", chat_id));
                 }
             });
-        }else if (chat.getType().equalsIgnoreCase("order_confirmed")) {
+        } else if (chat.getType().equalsIgnoreCase("order_confirmed")) {
             holder.orderConfirmLayout.setVisibility(View.VISIBLE);
             holder.orderConfirmMessage.setText(chat.getMessage());
             holder.orderConfirmDate.setText(chat.getCreatedAt());
@@ -883,303 +749,10 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
                 }
             });
         }
-        /*Todo:- Visibility Concept*/
-     /*   if (chat.getStatus().equalsIgnoreCase("accepted")) {
-            holder.greenLayout.setVisibility(View.VISIBLE);
-            holder.closeRedLayout.setVisibility(View.GONE);
-            holder.rejectText.setVisibility(View.GONE);
-            holder.cancelText.setVisibility(View.VISIBLE);
-            holder.acceptText.setVisibility(View.GONE);
-            holder.ratingLayout.setEnabled(false);
-            holder.ratingBar.setIsIndicator(true);
-
-        }else
-        if (chat.getStatus().equalsIgnoreCase("rejected")) {
-            holder.closeRedLayout.setVisibility(View.VISIBLE);
-            holder.greenLayout.setVisibility(View.GONE);
-            holder.acceptText.setVisibility(View.GONE);
-            holder.rejectText.setVisibility(View.GONE);
-            holder.cancelText.setVisibility(View.GONE);
-        }else
-        if (chat.getStatus().equalsIgnoreCase("cancelled")) {
-            holder.closeRedLayout.setVisibility(View.VISIBLE);
-            holder.greenLayout.setVisibility(View.GONE);
-            holder.acceptText.setVisibility(View.GONE);
-            holder.rejectText.setVisibility(View.GONE);
-            holder.cancelText.setVisibility(View.GONE);
-        }
-
-
-        holder.acceptText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (CommonUtils.isOnline(context)) {
-                    //sessonManager.showProgress(context);
-                    Call<AcceptModel> call = ApiExecutor.getApiService(context)
-                            .apiAccept("Bearer " + sessonManager.getToken(), chat.getId());
-                    call.enqueue(new Callback<AcceptModel>() {
-                        @Override
-                        public void onResponse(Call<AcceptModel> call, Response<AcceptModel> response) {
-                            //sessonManager.hideProgress();
-                            if (response.body() != null) {
-                                AcceptModel acceptModel = response.body();
-                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-
-                                    if (acceptModel.getStatus().equalsIgnoreCase("success")) {
-                                        holder.greenLayout.setVisibility(View.VISIBLE);
-                                        holder.closeRedLayout.setVisibility(View.GONE);
-                                        holder.rejectText.setVisibility(View.GONE);
-                                        holder.cancelText.setVisibility(View.VISIBLE);
-                                        holder.acceptText.setVisibility(View.GONE);
-                                        if (context instanceof ChatActivity) {
-                                            ((ChatActivity)context).yourDesiredMethod();
-                                        }
-                                        context.startActivity(new Intent(context, ChatActivity.class)
-                                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                    }
-                                    Toast.makeText(context, "" + acceptModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<AcceptModel> call, Throwable t) {
-                            //sessonManager.hideProgress();
-                        }
-                    });
-                } else {
-                    CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
-                }
-
-            }
-        });
-
-        holder.rejectText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (CommonUtils.isOnline(context)) {
-                    //sessonManager.showProgress(context);
-                    Call<RejectedModel> call = ApiExecutor.getApiService(context)
-                            .apiRejected("Bearer " + sessonManager.getToken(), chat.getId());
-                    call.enqueue(new Callback<RejectedModel>() {
-                        @Override
-                        public void onResponse(Call<RejectedModel> call, Response<RejectedModel> response) {
-                            //sessonManager.hideProgress();
-                            if (response.body() != null) {
-                                RejectedModel rejectedModel = response.body();
-                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                    if (rejectedModel.getStatus().equalsIgnoreCase("success")) {
-                                        holder.closeRedLayout.setVisibility(View.VISIBLE);
-                                        holder.greenLayout.setVisibility(View.GONE);
-                                        holder.acceptText.setVisibility(View.GONE);
-                                        holder.rejectText.setVisibility(View.GONE);
-                                        holder.cancelText.setVisibility(View.GONE);
-                                        if (context instanceof ChatActivity) {
-                                            ((ChatActivity)context).yourDesiredMethod();
-                                        }
-                                    }
-                                    Toast.makeText(context, "" + rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(context, "" +rejectedModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<RejectedModel> call, Throwable t) {
-                            //sessonManager.hideProgress();
-                        }
-                    });
-                } else {
-                    CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
-                }
-
-            }
-        });
-        holder.cancelText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (CommonUtils.isOnline(context)) {
-                    //sessonManager.showProgress(context);
-                    Call<CancelModel> call = ApiExecutor.getApiService(context)
-                            .apiCancel("Bearer " + sessonManager.getToken(), chat.getId());
-                    call.enqueue(new Callback<CancelModel>() {
-                        @Override
-                        public void onResponse(Call<CancelModel> call, Response<CancelModel> response) {
-                            //sessonManager.hideProgress();
-                            if (response.body() != null) {
-                                CancelModel cancelModel = response.body();
-                                if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-
-                                    if (cancelModel.getStatus().equalsIgnoreCase("success")) {
-                                        holder.closeRedLayout.setVisibility(View.VISIBLE);
-                                        holder.greenLayout.setVisibility(View.GONE);
-                                        holder.acceptText.setVisibility(View.GONE);
-                                        holder.rejectText.setVisibility(View.GONE);
-                                        holder.cancelText.setVisibility(View.GONE);
-                                        if (context instanceof ChatActivity) {
-                                            ((ChatActivity)context).yourDesiredMethod();
-                                        }
-                                    }
-                                    Toast.makeText(context, "" + cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(context, "" +cancelModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<CancelModel> call, Throwable t) {
-                            //sessonManager.hideProgress();
-                        }
-                    });
-                } else {
-                    CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
-                }
-            }
-        });*/
-
-// lk commented here for future reference
-       /* holder.addressLinkText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int chatId=chat.getChatId();
-                //Log.d("chat_id",""+chatId);
-                context.startActivity(new Intent(context, ShareLocationActivity.class)
-                        .putExtra("chatId", chatId)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-            }
-        });
-*/
-
-
-        /*Todo:-   Zoom Image*/
-     /*   holder.locationImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + chat.getLat() + "," + chat.getLang());
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                context.startActivity(mapIntent);
-            }
-        });*/
-
-      /*  holder.productImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.image_layout
-                        , null));
-                dialog.setCancelable(false);
-                dialog.setCanceledOnTouchOutside(true);
-                ImageView imageFirst = (ImageView) dialog.findViewById(R.id.imageView);
-                Picasso.get().load(chat.getFilePath()).into(imageFirst);
-                PhotoViewAttacher pAttacher;
-                pAttacher = new PhotoViewAttacher(imageFirst);
-                pAttacher.update();
-                dialog.show();
-            }
-        });*/
-       /* holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.image_layout
-                        , null));
-                dialog.setCancelable(false);
-                dialog.setCanceledOnTouchOutside(true);
-                ImageView imageFirst = (ImageView) dialog.findViewById(R.id.imageView);
-                Picasso.get().load(chat.getFilePath()).into(imageFirst);
-                PhotoViewAttacher pAttacher;
-                pAttacher = new PhotoViewAttacher(imageFirst);
-                pAttacher.update();
-                dialog.show();
-            }
-        });*/
-
-       /* holder.ratingLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.layout_rating_dialog
-                        , null));
-                dialog.setCancelable(false);
-                dialog.setCanceledOnTouchOutside(true);
-
-                ImageView backPress = dialog.findViewById(R.id.backPress);
-                backPress.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                AppCompatRatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
-                ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        float a = rating;
-                        int b;
-                        b = (int) a;
-                        ratingValue = String.valueOf(b);
-
-                    }
-                });
-                EditText messageEt = dialog.findViewById(R.id.messageEt);
-                Button submitRatingBtn = dialog.findViewById(R.id.submitRatingBtn);
-                submitRatingBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (CommonUtils.isOnline(context)) {
-                            //sessonManager.showProgress(context);
-                            RatingsRequest ratingsRequest = new RatingsRequest();
-                            ratingsRequest.setRatings(ratingValue);
-                            ratingsRequest.setComment(messageEt.getText().toString());
-
-                            Call<RatingsModel> call = ApiExecutor.getApiService(context)
-                                    .apiRatings("Bearer " + sessonManager.getToken(), chat.getId(), ratingsRequest);
-                            call.enqueue(new Callback<RatingsModel>() {
-                                @Override
-                                public void onResponse(Call<RatingsModel> call, Response<RatingsModel> response) {
-                                    //sessonManager.hideProgress();
-                                    //Log.d("response",response.body().getStatus());
-                                    if (response.body() != null) {
-                                        RatingsModel ratingsModel=response.body();
-                                        if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-                                            Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
-                                            if (context instanceof ChatActivity) {
-                                                ((ChatActivity)context).yourDesiredMethod();
-                                            }
-                                        } else {
-                                            Toast.makeText(context, "" + ratingsModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<RatingsModel> call, Throwable t) {
-                                    //sessonManager.hideProgress();
-                                }
-                            });
-                        } else {
-                            CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
-                        }
-                    }
-                });
-
-                dialog.show();
-            }
-        });*/
 
         holder.setIsRecyclable(false);
 
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -1199,129 +772,73 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             return SELF;
         }*/
         //else returning position
-        if (message.getDirection()==1) {
+        if (message.getDirection() == 1) {
             //Returning self
 
-            if(message.getType().equalsIgnoreCase("text"))
-            {
+            if (message.getType().equalsIgnoreCase("text")) {
                 return SELF_TEXT_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("discount")) {
+            } else if (message.getType().equalsIgnoreCase("discount")) {
                 return SELF_DISCOUNT_IN;
-            }
-            else if(message.getType().equalsIgnoreCase("image"))
-            {
+            } else if (message.getType().equalsIgnoreCase("image")) {
                 return SELF_IMAGE_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("product"))
-            {
+            } else if (message.getType().equalsIgnoreCase("product")) {
                 return SELF_PRODUCT_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("rating"))
-            {
-                Log.d("messagetype===",message.getType());
+            } else if (message.getType().equalsIgnoreCase("rating")) {
+                Log.d("messagetype===", message.getType());
 
                 return SELF_RATING_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("audio"))
-            {
+            } else if (message.getType().equalsIgnoreCase("audio")) {
                 return SELF_AUDIO_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("add-money"))
-            {
+            } else if (message.getType().equalsIgnoreCase("add-money")) {
                 return SELF_ADDMONEY_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("recharge"))
-            {
+            } else if (message.getType().equalsIgnoreCase("recharge")) {
                 return SELF_RECHARGE_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("payment"))
-            {
+            } else if (message.getType().equalsIgnoreCase("payment")) {
                 return SELF_PAID_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("address-request"))
-            {
+            } else if (message.getType().equalsIgnoreCase("address-request")) {
                 return SELF_ADDRESS_IN;
-            }
-            else if (message. getType().equalsIgnoreCase("store"))
-            {
+            } else if (message.getType().equalsIgnoreCase("store")) {
                 return SELF_STORE_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("order_confirmed"))
-            {
+            } else if (message.getType().equalsIgnoreCase("order_confirmed")) {
                 return SELF_ORDERCONFIRMED_IN;
-            }
-           else if (message.getType().equalsIgnoreCase("address"))
-            {
+            } else if (message.getType().equalsIgnoreCase("address")) {
                 return SELF_ADDRESSTYPE_IN;
-            }
-            else if (message.getType().equalsIgnoreCase("track"))
-            {
+            } else if (message.getType().equalsIgnoreCase("track")) {
                 return SELF_TRACK_IN;
             }
 
 
             //return SELF_TEXT;
-        }
-        else
-        {
-            if(message.getType().equalsIgnoreCase("text"))
-            {
+        } else {
+            if (message.getType().equalsIgnoreCase("text")) {
                 return SELF_TEXT_OUT;
-            }
-           else if (message.getType().equalsIgnoreCase("discount")) {
+            } else if (message.getType().equalsIgnoreCase("discount")) {
                 return SELF_DISCOUNT_OUT;
-            }
-            else if(message.getType().equalsIgnoreCase("image"))
-            {
+            } else if (message.getType().equalsIgnoreCase("image")) {
                 return SELF_IMAGE_OUT;
-            }
-
-            else if (message.getType().equalsIgnoreCase("product"))
-            {
+            } else if (message.getType().equalsIgnoreCase("product")) {
                 return SELF_PRODUCT_OUT;
-            }
-
-            else if (message.getType().equalsIgnoreCase("rating"))
-            {
-                Log.d("messagetype===",message.getType());
+            } else if (message.getType().equalsIgnoreCase("rating")) {
+                Log.d("messagetype===", message.getType());
                 return SELF_RATING_OUT;
-            }
-            else if (message.getType().equalsIgnoreCase("audio"))
-            {
+            } else if (message.getType().equalsIgnoreCase("audio")) {
                 return SELF_AUDIO_OUT;
-            }
-            else if (message.getType().equalsIgnoreCase("add-money"))
-            {
+            } else if (message.getType().equalsIgnoreCase("add-money")) {
                 return SELF_ADDMONEY_OUT;
-            }
-            else if (message.getType().equalsIgnoreCase("recharge"))
-            {
+            } else if (message.getType().equalsIgnoreCase("recharge")) {
                 return SELF_RECHARGE_OUT;
-            }
-            else if (message.getType().equalsIgnoreCase("payment"))
-            {
+            } else if (message.getType().equalsIgnoreCase("payment")) {
                 return SELF_PAID_OUT;
-            }
-            else if (message.getType().equalsIgnoreCase("address-request"))
-            {
+            } else if (message.getType().equalsIgnoreCase("address-request")) {
 
                 return SELF_ADDRESS_OUT;
-            }
-            else if (message. getType().equalsIgnoreCase("store"))
-            {
+            } else if (message.getType().equalsIgnoreCase("store")) {
                 return SELF_STORE_OUT;
-            }
-            else if (message.getType().equalsIgnoreCase("order_confirmed"))
-            {
+            } else if (message.getType().equalsIgnoreCase("order_confirmed")) {
                 return SELF_ORDERCONFIRMED_OUT;
-            }
-            else if (message.getType().equalsIgnoreCase("address"))
-            {
+            } else if (message.getType().equalsIgnoreCase("address")) {
                 return SELF_ADDRESSTYPE_OUT;
-            }
-            else if (message.getType().equalsIgnoreCase("track"))
-            {
+            } else if (message.getType().equalsIgnoreCase("track")) {
                 return SELF_TRACK_OUT;
             }
 
@@ -1335,7 +852,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
     public class Holder extends RecyclerView.ViewHolder {
         /*Todo:- Location*/
         ImageView locationImage;
-        TextView locationText, locationDate,location2Text;
+        TextView locationText, locationDate, location2Text;
         ChatMessageView mapLayout;
         /*Todo:- Text*/
         TextView message_body, dateText;
@@ -1343,7 +860,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
         /*Todo:- Product*/
         ImageView productImage;
         TextView pqText, dateProduct, productMessage;
-        Button acceptText, rejectText, cancelText;
+        AppCompatButton acceptText, rejectText, cancelText;
         LinearLayout greenLayout, closeRedLayout;
         ChatMessageView productLayout;
         /*Todo:- Image*/
@@ -1355,9 +872,10 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
         TextView ratingsMessage, dateRating;
         AppCompatRatingBar ratingBar;
         /*Todo:- Audio*/
-        VoicePlayerView voicePlayerView;
+        AudioSenseiPlayerView audio_player;
+
         CircleImageView img_play;
-        TextView tv_audio_length, dateText11;
+        TextView dateText11;
 
         /*Todo:- Address*/
         ChatMessageView addressLayout;
@@ -1365,12 +883,12 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
 
         /*Todo:- Track Location*/
         ChatMessageView trackLocationLayout;
-        Button trackLocationText;
+        AppCompatButton trackLocationText;
 
         /*Todo:- Add Wallet*/
         ChatMessageView addWalletLayout;
         TextView addWalletMsgText, addwalletDate;
-        Button addWalletBtn;
+        AppCompatButton addWalletBtn;
 
         /*Todo:- Recharge*/
         ChatMessageView rechargeLayout;
@@ -1378,13 +896,13 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
 
         /*Todo:- Payment*/
         ChatMessageView paymentLayout;
-        Button paymentBtn;
+        AppCompatButton paymentBtn;
         TextView paymentDate;
 
         /*Todo:- Confirm Details*/
         ChatMessageView orderConfirmLayout;
         TextView orderConfirmMessage, orderConfirmDate;
-        Button detailsBtn;
+        AppCompatButton detailsBtn;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -1393,7 +911,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             locationText = itemView.findViewById(R.id.locationText);
             locationDate = itemView.findViewById(R.id.locationDate);
             mapLayout = itemView.findViewById(R.id.mapLayout);
-            location2Text=itemView.findViewById(R.id.location2Text);
+            location2Text = itemView.findViewById(R.id.location2Text);
             /*Todo:- Text*/
             message_body = itemView.findViewById(R.id.message_body);
             dateText = itemView.findViewById(R.id.dateText);
@@ -1423,10 +941,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             ratingBar.setFocusable(true);
             ratingBar.setIsIndicator(true);*/
             /*Todo:- Audio*/
-            voicePlayerView = itemView.findViewById(R.id.voicePlayerView);
-
-            img_play = itemView.findViewById(R.id.img_play);
-            tv_audio_length = itemView.findViewById(R.id.tv_audio_length);
+            audio_player = itemView.findViewById(R.id.audio_player);
             dateText11 = itemView.findViewById(R.id.dateText11);
             /*Todo:- Address*/
             addressLayout = itemView.findViewById(R.id.addressLayout);
@@ -1458,11 +973,18 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
             detailsBtn = itemView.findViewById(R.id.detailsBtn);
         }
     }
-    public  String convertSecondsToHMmSs(long seconds) {
+
+    public String convertSecondsToHMmSs(long seconds) {
         long s = seconds % 60;
         long m = (seconds / 60) % 60;
         long h = (seconds / (60 * 60)) % 24;
-        return String.format("%02d:%02d:%02d", h,m,s);
+        String value = "";
+        if (seconds >= 216000000)
+            value = String.format("%02d:%02d:%02d", h, m, s);
+        else
+            value = String.format("%02d:%02d", m, s);
+
+        return value;
     }
 
     public void recycle() {

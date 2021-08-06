@@ -16,79 +16,74 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/textMapS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:fontFamily="sans-serif"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
-            android:textColor="@color/textColor"
             android:layout_marginTop="100dp"
+            android:fontFamily="sans-serif"
             android:gravity="center"
-            android:textStyle="bold"
-            android:text="Connecting with a \n' Shopper '"/>
+            android:text="Connecting with a \n' Shopper '"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textR"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
             android:layout_below="@+id/textMapS"
-            android:fontFamily="sans-serif"
-            android:visibility="gone"
             android:layout_centerInParent="true"
-            android:textColor="@color/textColor"
+            android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="Rider"/>
+            android:text="Rider"
+            android:textColor="@color/textColor"
+            android:textSize="25sp"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:visibility="gone"
             android:layout_below="@+id/textR"
-            android:fontFamily="sans-serif"
             android:layout_centerInParent="true"
-            android:textColor="@color/textColor"
+            android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="wait for while..."/>
+            android:text="wait for while..."
+            android:textColor="@color/textColor"
+            android:textSize="20sp"
+            android:visibility="gone" />
+
         <com.skyfishjy.library.RippleBackground
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/content"
             app:rb_color="@color/colorDarkBlue"
             app:rb_radius="32dp"
             app:rb_rippleAmount="4"
             app:rb_scale="6">
+
             <ImageView
+                android:id="@+id/centerImage"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_centerInParent="true"
-                android:id="@+id/centerImage"
-                android:src="@drawable/pin_logo"/>
+                android:src="@drawable/pin_logo" />
         </com.skyfishjy.library.RippleBackground>
-        <!--<ProgressBar
-            android:id="@+id/progressbar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="350dip"
-            android:layout_height="350dip"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:indeterminate="false"
-            android:max="60"
-            android:progress="0" />
 
         <TextView
             android:id="@+id/tvTimeCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="00:00"
-            android:textColor="#000"
-            android:textSize="60dip" />-->
+            android:layout_marginBottom="@dimen/dimen_50dp"
+            android:gravity="center"
+            android:textColor="@color/colo_home_bg"
+            android:textSize="@dimen/dimen_20dp"
+            tools:text="Connecting you with a shopper in \n00:00 seconds." />
 
     </RelativeLayout>
 
@@ -97,11 +92,11 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:fontFamily="@font/monster"
         android:text="Finding Shopper"
         android:textColor="#000"
         android:textSize="30dip"
         android:visibility="gone"
-        android:fontFamily="@font/monster"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

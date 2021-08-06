@@ -1,119 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:background="@color/cb_grey"
     android:clipToPadding="false"
-    android:background="@drawable/chat_background"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
     tools:context=".activity.ChatActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:background="@drawable/gradient_bg">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:onClick="back"
-                android:visibility="gone"
-                android:src="@drawable/back_arrow"/>
+                android:src="@drawable/back_arrow"
+                android:visibility="gone" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/userDp"
                 android:layout_width="50dp"
-                android:layout_alignParentLeft="true"
                 android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
                 android:layout_toRightOf="@+id/back" />
+
             <TextView
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/userDp"
+                android:layout_centerInParent="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/helpRelative"
-                android:textSize="16dp"
-                android:layout_centerInParent="true"
-                android:textColor="@color/white"
+                android:layout_toRightOf="@id/userDp"
                 android:fontFamily="@font/monster"
+                android:textColor="@color/white"
+                android:textSize="16dp"
                 android:textStyle="bold" />
 
             <RelativeLayout
                 android:id="@+id/helpRelative"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:onClick="help"
                 android:layout_centerInParent="true"
-                android:layout_toLeftOf="@+id/audioCall"
                 android:layout_margin="10dp"
-                android:background="@drawable/shape_help">
+                android:layout_toLeftOf="@+id/audioCall"
+                android:background="@drawable/shape_help"
+                android:onClick="help">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Help"
-                    android:textColor="@color/white"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
                     android:fontFamily="@font/monster"
                     android:gravity="center"
-                    android:textStyle="bold"
+                    android:text="Help"
+                    android:textColor="@color/white"
                     android:textSize="10sp"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center"/>
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <ImageView
                 android:id="@+id/audioCall"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:onClick="calling"
-                android:layout_marginRight="10dp"
+                android:layout_width="@dimen/dimen_30dp"
+                android:layout_height="@dimen/dimen_30dp"
                 android:layout_centerInParent="true"
                 android:layout_toLeftOf="@+id/cardViewLayout"
-                android:src="@drawable/ic_add_call"/>
-        <RelativeLayout
-            android:id="@+id/cardViewLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:onClick="MyCart"
-            android:layout_centerInParent="true"
-            android:layout_alignParentRight="true">
-            <FrameLayout
-                style="?attr/actionButtonStyle"
+                android:onClick="calling"
+                android:src="@drawable/call" />
+
+            <RelativeLayout
+                android:id="@+id/cardViewLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:focusable="true">
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="10dp"
+                android:onClick="MyCart">
 
-                <ImageView
-                    android:id="@+id/cartView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_shopping_white"/>
-                <TextView
-                    android:id="@+id/cart_badge"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="right|end|top"
-                    android:layout_marginEnd="-5dp"
-                    android:layout_marginRight="-5dp"
-                    android:layout_marginTop="3dp"
-                    android:visibility="gone"
-                    android:background="@drawable/text_circle"
-                    android:gravity="center"
-                    android:padding="3dp"
-                    android:textColor="@android:color/white"
-                    android:text="0"
-                    android:textSize="10sp"/>
-            </FrameLayout>
-        </RelativeLayout>
+                <FrameLayout
+                    style="?attr/actionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/cartView"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/shopping_cart" />
+
+                    <TextView
+                        android:id="@+id/cart_badge"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="right|end|top"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="-5dp"
+                        android:layout_marginRight="-5dp"
+                        android:background="@drawable/text_circle"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="0"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </RelativeLayout>
             <!--<RelativeLayout
                 android:id="@+id/cardViewLayout"
                 android:layout_width="wrap_content"
@@ -131,160 +138,136 @@
                     android:src="@drawable/ic_shoppingcart"/>
             </RelativeLayout>-->
 
-           <!-- <ImageView
-                android:id="@+id/audioCall"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:onClick="initializationVoice"
-                android:layout_marginRight="10dp"
-                android:layout_centerInParent="true"
-                android:layout_toLeftOf="@+id/videoCall"
-                android:src="@drawable/btn_call_voice"/>
+            <!-- <ImageView
+                 android:id="@+id/audioCall"
+                 android:layout_width="40dp"
+                 android:layout_height="40dp"
+                 android:onClick="initializationVoice"
+                 android:layout_marginRight="10dp"
+                 android:layout_centerInParent="true"
+                 android:layout_toLeftOf="@+id/videoCall"
+                 android:src="@drawable/btn_call_voice"/>
 
-            <ImageView
-                android:id="@+id/videoCall"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                android:onClick="initializationVideo"
-                android:layout_marginRight="10dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/btn_call_video"/>-->
+             <ImageView
+                 android:id="@+id/videoCall"
+                 android:layout_width="40dp"
+                 android:layout_height="40dp"
+                 android:layout_centerInParent="true"
+                 android:onClick="initializationVideo"
+                 android:layout_marginRight="10dp"
+                 android:layout_alignParentRight="true"
+                 android:src="@drawable/btn_call_video"/>-->
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="2">
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:id="@+id/chatRecyclerView"
-        app:fastScrollEnabled="true"
-        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
-        app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
-        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
-        app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
-        android:layout_height="match_parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:fastScrollEnabled="true"
+            app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+            app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
+            app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+            app:fastScrollVerticalTrackDrawable="@drawable/line_drawable" />
     </RelativeLayout>
+
     <Chronometer
         android:id="@+id/record_timer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:fontFamily="@font/open_sans_light"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:visibility="gone"
-        android:textColor="@color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
         <com.devlomi.record_view.RecordView
             android:id="@+id/record_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@id/record_button"
+            android:visibility="gone"
+            app:counter_time_color="#ff0000"
             app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
             app:slide_to_cancel_arrow_color="#000000"
             app:slide_to_cancel_bounds="10dp"
-            android:visibility="gone"
             app:slide_to_cancel_margin_right="10dp"
-            app:slide_to_cancel_text="Slide To Cancel"
-            app:counter_time_color="#ff0000"
-            />
+            app:slide_to_cancel_text="Slide To Cancel" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
             android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
             android:background="@android:color/transparent"
             android:orientation="horizontal">
+
             <ImageButton
                 android:id="@+id/chooseImage"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:scaleType="fitCenter"
+                android:background="@drawable/ic_camera"
                 android:backgroundTint="@color/dark_grey"
-                android:background="@drawable/ic_camera"/>
+                android:scaleType="fitCenter" />
 
             <EditText
                 android:id="@+id/editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:ems="10"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:padding="10dp"
-                android:imeOptions="actionDone"
+                android:layout_weight="2"
                 android:background="@drawable/rounded_edit"
+                android:ems="10"
                 android:hint="Write a message"
-                android:textColorHint="@color/black"
+                android:imeOptions="actionDone"
                 android:inputType="textCapSentences|textMultiLine"
+                android:padding="10dp"
+                android:paddingHorizontal="10dp"
                 android:textColor="@color/black"
-                android:paddingHorizontal="10dp" />
+                android:textColorHint="@color/dark_grey" />
 
-        <com.devlomi.record_view.RecordButton
-            android:id="@+id/record_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="@drawable/recv_bg_mic"
-            android:scaleType="centerInside"
-            app:mic_icon="@drawable/recv_ic_mic_white" />
-            <ImageButton
-                android:id="@+id/sendMsgBtn"
-                android:layout_width="50dp"
+            <com.devlomi.record_view.RecordButton
+                android:id="@+id/record_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:visibility="visible"
+                android:background="@drawable/recv_bg_mic"
+                android:scaleType="centerInside"
+                app:mic_icon="@drawable/recv_ic_mic_white" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llSend"
+                android:layout_width="@dimen/dimen_50dp"
+                android:layout_height="@dimen/dimen_50dp"
                 android:visibility="gone"
-                android:layout_height="50dp"
-                />
+                android:background="@drawable/rounded_gradient_reverse">
+
+                <ImageView
+                    android:id="@+id/sendMsgBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/dimen_10dp"
+                    android:tint="@color/white"
+                    android:src="@drawable/send_white"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
         </LinearLayout>
     </LinearLayout>
-
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@android:color/transparent"
-        android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/chooseImage"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            android:backgroundTint="@color/dark_grey"
-            android:background="@drawable/ic_camera"/>
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:ems="10"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:padding="10dp"
-            android:imeOptions="actionDone"
-            android:background="@drawable/rounded_edit"
-            android:hint="Write a message"
-            android:textColorHint="@color/black"
-            android:inputType="textCapSentences|textMultiLine"
-            android:textColor="@color/black"
-            android:paddingHorizontal="10dp" />
-        <ImageButton
-            android:id="@+id/sendMsgBtn"
-            android:background="@drawable/mic_mute"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-           />
-    </LinearLayout>-->
 </LinearLayout>

@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -63,15 +64,10 @@ import static android.media.MediaRecorder.VideoSource.CAMERA;
 
 public class UpdateProfileActivity extends AppCompatActivity {
     SessonManager sessonManager;
-    /*Todo:- CircleImageView*/
     CircleImageView circleImage;
-    /*Todo:- ImageView*/
-    ImageView choseImage;
-    /*Todo:- EditText*/
+    ImageView choseImage, imgZoomed;
     EditText editName, editEmail, editMobile;
-    /*Todo:- Button*/
     Button updateBtn;
-    /*Todo:- Image Choose*/
     int PICK_IMAGE_MULTIPLE = 1;
     File photoFile;
     Uri photoUri;
@@ -82,25 +78,27 @@ public class UpdateProfileActivity extends AppCompatActivity {
     String imageEncoded;
     private static String baseUrl =ApiExecutor.baseUrl;
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.gradient_bg));
+        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         askForPermissioncamera(Manifest.permission.CAMERA, CAMERA);
         sessonManager = new SessonManager(this);
         String mobile = sessonManager.getMobileNo();
-        /*Todo:- CircleImageView find id*/
         circleImage = findViewById(R.id.circleImage);
-        /*Todo:- ImageView find id*/
         choseImage = findViewById(R.id.choseImage);
-        /*Todo:- EditText find id*/
         editName = findViewById(R.id.editName);
         editEmail = findViewById(R.id.editEmail);
         editMobile = findViewById(R.id.editMobile);
-        /*Todo:- Mobile No. set*/
         editMobile.setText(mobile);
-        /*Todo:- Button find id*/
         updateBtn = findViewById(R.id.updateBtn);
+        imgZoomed = findViewById(R.id.imgZoomed);
+
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,6 +139,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                             if (myProfileModel.getData() != null) {
                                 //sessonManager.setWalletAmount(String.valueOf(myProfileModel.getData().getBalance()));
                                 Picasso.get().load(myProfileModel.getData().getImage()).into(circleImage);
+                                Picasso.get().load(myProfileModel.getData().getImage()).into(imgZoomed);
                                 editName.setText(String.valueOf(myProfileModel.getData().getName()));
                                 editEmail.setText(myProfileModel.getData().getEmail());
                                 //sessonManager.setMobileNo(myProfileModel.getData().getMobile());
@@ -345,6 +344,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             }
 
             circleImage.setImageBitmap(bitmap);
+            imgZoomed.setImageBitmap(bitmap);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -392,8 +392,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         cursor1.close();
 
                         circleImage.setImageBitmap(bitmap);
-
-
+                        imgZoomed.setImageBitmap(bitmap);
                     }
                 } else {
                     Uri mImageUri = data.getData();
@@ -425,10 +424,9 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
                     cursor1.close();
                     circleImage.setImageBitmap(bitmap);
-
+                    imgZoomed.setImageBitmap(bitmap);
 
                 }
-
 
             } catch (Exception e) {
 
@@ -548,7 +546,10 @@ public class UpdateProfileActivity extends AppCompatActivity {
         } else {
 //            Toast.makeText(this, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
         }
-
-
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

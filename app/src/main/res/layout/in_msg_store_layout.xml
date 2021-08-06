@@ -4,8 +4,6 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
- 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,13 +14,13 @@
             android:id="@+id/storeLocationLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cmv_backgroundColor="#1d6867"
+            app:cmv_backgroundColor="@color/white"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:visibility="visible"
             app:cmv_arrowPosition="left"
             android:layout_margin="5dp"
-            android:layout_gravity="end">
+            android:layout_gravity="start">
             <LinearLayout
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
@@ -36,6 +34,7 @@
                     android:layout_gravity="end"
                     android:elevation="2dp"
                     android:lines="2"
+                    android:fontFamily="@font/open_sans"
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="16sp" />
 
@@ -46,8 +45,7 @@
                     android:layout_gravity="end"
                     android:padding="1dp"
                     android:text="11:00 AM"
-                    android:textColor="#fff"
-                    android:textSize="10sp" />
+                    style="@style/riderTextTime"/>
             </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>
 

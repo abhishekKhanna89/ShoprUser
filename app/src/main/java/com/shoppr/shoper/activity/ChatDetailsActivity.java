@@ -205,7 +205,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
         };
         IntentFilter i = new IntentFilter();
         i.addAction("message_subject_intent");
-        LocalBroadcastManager.getInstance(ChatDetailsActivity.this).registerReceiver(mMessageReceiver, new IntentFilter(i));
+        LocalBroadcastManager.getInstance(ChatDetailsActivity.this).registerReceiver(mMessageReceiver, i);
 
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.Q)

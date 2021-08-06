@@ -46,15 +46,17 @@ public class ChatHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_history);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.gradient_bg));
+        getSupportActionBar().setTitle("Chat History");
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         sessonManager=new SessonManager(this);
         recyclerChatHistory=findViewById(R.id.recyclerChatHistory);
         swipeRefreshLayout=findViewById(R.id.SwipeRefresh);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerChatHistory.setLayoutManager(linearLayoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerChatHistory.getContext(),
-                linearLayoutManager.getOrientation());
-        recyclerChatHistory.addItemDecoration(dividerItemDecoration);
+        recyclerChatHistory.addItemDecoration(new DividerItemDecoration(this, 0));
         recyclerChatHistory.setNestedScrollingEnabled(true);
         historyEmptyText=findViewById(R.id.historyEmptyText);
 

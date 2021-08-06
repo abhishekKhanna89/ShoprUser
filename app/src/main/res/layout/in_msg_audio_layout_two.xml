@@ -1,82 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/round_my_chat_white">
 
+        <com.rygelouv.audiosensei.player.AudioSenseiPlayerView
+            android:id="@+id/audio_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_gravity="start"
-        android:layout_margin="5dp"
-        android:layout_weight="3"
-        android:background="@drawable/out_msg_audio_background_with_round_corner_two"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:layout_weight="1"
-            android:gravity="bottom"
-            android:orientation="vertical">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/img_play"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_baseline_play_circle_24"
-                app:tint="#ff7700" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="3"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_audio_length"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/time_background_out"
-                android:paddingLeft="10dp"
-                android:paddingTop="2dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="2dp"
-                android:text="00:00:00/00:00:00"
-                android:textColor="@color/white"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-
-    </LinearLayout>
     </LinearLayout>
 
     <TextView
@@ -86,8 +26,7 @@
         android:layout_gravity="end|bottom"
         android:gravity="bottom"
         android:text="11:00 AM"
-        android:textColor="#ff7700"
-        android:textSize="10sp" />
+        style="@style/riderTextTime"/>
 
     </LinearLayout>
 

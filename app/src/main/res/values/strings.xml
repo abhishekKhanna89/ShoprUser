@@ -90,4 +90,9 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="copyright_text">&#169; 2021 Shopr All rights reserved</string>
+    <string name="enter_phone">Enter Phone Number</string>
+    <string name="enter_phone1">Please enter your number, we will send you OTP to verify later</string>
+    <string name="enter_phone2">Please enter your number and name, we will send you OTP to verify later</string>
+    <string name="enter_otp">Enter OTP Code</string>
 </resources>

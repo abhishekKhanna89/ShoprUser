@@ -6,9 +6,9 @@
     <gradient
         android:angle="45"
         android:centerX="35%"
-        android:centerColor="#C6C4CF"
-        android:startColor="#C6C4CF"
-        android:endColor="#C6C4CF"
+        android:centerColor="@color/my_chat_color"
+        android:startColor="@color/my_chat_color"
+        android:endColor="@color/my_chat_color"
         />
     <padding
         android:left="0dp"

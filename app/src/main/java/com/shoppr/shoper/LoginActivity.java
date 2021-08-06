@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login1);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager = new SessonManager(LoginActivity.this);
         btnsubmit=findViewById(R.id.btnsubmit);

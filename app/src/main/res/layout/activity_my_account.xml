@@ -4,256 +4,315 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cb_grey"
     android:orientation="vertical"
     tools:context="com.shoppr.shoper.activity.MyAccount">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="170dp"
             android:background="@color/textColor">
+
+            <ImageView
+                android:id="@+id/imgZoomed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha=".15"
+                android:scaleType="centerCrop"
+                android:src="@drawable/shopr" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center">
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp">
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/image_order"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_centerVertical="true"
                     android:paddingLeft="5dp"
-                    android:layout_width="70sp"
-                    android:layout_height="70sp"
-                    app:civ_border_width="2dp"
                     android:src="@drawable/shopr"
-                    app:civ_border_color="@color/white"/>
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="2dp" />
+
                 <TextView
                     android:id="@+id/nameText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
+                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:layout_toEndOf="@+id/image_order"
                     android:layout_weight="1"
-                    android:layout_marginLeft="85dp"/>
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_16dp"
+                    android:textStyle="bold"
+                    tools:text="User Name" />
+
                 <TextView
                     android:id="@+id/textEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/nameText"
-                    android:layout_marginLeft="85dp"
+                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:layout_toEndOf="@+id/image_order"
                     android:layout_weight="1"
-                    android:textColor="@color/white"/>
-                <Button
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_16dp"
+                    tools:text="User Mobile" />
+
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnedit"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Edit"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:backgroundTint="@color/white"
-                    android:textColor="@color/colorPrimary"
-                    android:layout_below="@+id/nameText" />
+                    android:layout_height="@dimen/dimen_35dp"
+                    android:layout_below="@+id/textEmail"
+                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_toEndOf="@+id/image_order"
+                    android:background="@drawable/rounded_gradient_button"
+                    android:paddingStart="@dimen/dimen_20dp"
+                    android:paddingEnd="@dimen/dimen_20dp"
+                    android:text="Edit Profile"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_12dp" />
+
             </RelativeLayout>
-        </LinearLayout>
+        </RelativeLayout>
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="130dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:layout_marginRight="10dp"
-            app:cardCornerRadius="15dp"
-            app:cardBackgroundColor="@color/white">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            app:cardCornerRadius="15dp">
+
             <LinearLayout
                 android:id="@+id/linarwallet"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:background="@color/lightgreen"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_bg_angle"
                 android:orientation="horizontal">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
                     android:layout_gravity="center"
+                    android:layout_weight=".3"
+                    android:gravity="center"
                     android:orientation="vertical">
-                    <RelativeLayout
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:paddingStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/roundcircleimg"
-                        tools:ignore="RtlCompat">
-                      <ImageView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_centerInParent="true"
-                          android:src="@drawable/ic_wallet"/>
 
-                    </RelativeLayout>
+                    <ImageView
+                        android:layout_width="@dimen/dimen_70dp"
+                        android:layout_height="@dimen/dimen_70dp"
+                        android:src="@drawable/my_wallet"
+                        android:tint="@color/white" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:gravity="center"
                     android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Wallet"
-                            android:textSize="17sp"
-                            android:textColor="@color/black"
-                            android:layout_marginLeft="35dp"
-                            android:layout_centerInParent="true"
-                            android:textAllCaps="true"/>
                     <TextView
-                        android:id="@+id/walletAmountText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/open_sans"
+                        android:text="Wallet"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
                         android:textSize="17sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:layout_marginLeft="35dp"
-                        android:layout_centerInParent="true"
-                        android:textAllCaps="true"/>
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="@dimen/dimen_20dp"
+                            android:layout_height="@dimen/dimen_20dp"
+                            android:src="@drawable/ruppe" />
+
+                        <TextView
+                            android:id="@+id/walletAmountText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_5dp"
+                            android:fontFamily="@font/open_sans"
+                            tools:text="500"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </LinearLayout>
 
-
-            </LinearLayout>
-                <TextView
-                    android:id="@+id/textaddmoney"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Add Money"
-                    android:textColor="#50d1b2"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:textSize="17sp"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:textAllCaps="true"
-                    android:layout_marginTop="15dp"/>
+                    android:layout_weight=".3"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnAddMoney"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_35dp"
+                        android:layout_marginTop="@dimen/dimen_15dp"
+                        android:background="@drawable/rounded_gradient_button"
+                        android:paddingStart="@dimen/dimen_20dp"
+                        android:paddingEnd="@dimen/dimen_20dp"
+                        android:text="Add Money"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dimen_12dp" />
+                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My Account"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/black"
-            android:paddingStart="10dp"
-            tools:ignore="RtlCompat"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="@dimen/dimen_10dp"
                 android:onClick="chatHistory"
                 android:orientation="horizontal">
-                <RelativeLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:background="@drawable/graycolor"
-                    tools:ignore="RtlCompat">
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/ic_message"/>
 
-                </RelativeLayout>
+                <ImageView
+                    android:layout_width="@dimen/dimen_24sp"
+                    android:layout_height="@dimen/dimen_24sp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/chat_color" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/open_sans"
                     android:text="Chat History"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"/>
+                    android:textAllCaps="true"
+                    android:textColor="@color/colo_home_bg"
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/graycolor"/>
+                android:background="@color/color_yellow" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:onClick="MyOrder"
+                android:layout_marginLeft="@dimen/dimen_10dp"
                 android:orientation="horizontal">
-                <RelativeLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:background="@drawable/graycolor"
-                    tools:ignore="RtlCompat">
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/ic_shopping_cart"/>
 
-                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_24sp"
+                    android:layout_height="@dimen/dimen_24sp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/my_order" />
+
+
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/open_sans"
                     android:text="My Orders"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"/>
+                    android:textAllCaps="true"
+                    android:textColor="@color/colo_home_bg"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/graycolor"/>
+                android:background="@color/color_yellow" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:onClick="MyOrder"
+                android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_24sp"
+                        android:layout_height="@dimen/dimen_24sp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/help_color" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/open_sans"
+                    android:text="Help"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colo_home_bg"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/color_yellow" />
+
             <LinearLayout
                 android:id="@+id/logoutLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="@dimen/dimen_10dp"
                 android:orientation="horizontal">
-                <RelativeLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:background="@drawable/graycolor"
-                    tools:ignore="RtlCompat">
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_centerInParent="true"
-                        android:backgroundTint="@color/white"
-                        android:background="@drawable/logout"/>
 
-                </RelativeLayout>
+                    <ImageView
+                        android:layout_width="@dimen/dimen_24sp"
+                        android:layout_height="@dimen/dimen_24sp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/logout_color" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/open_sans"
                     android:text="Logout"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"/>
+                    android:textAllCaps="true"
+                    android:textColor="@color/colo_home_bg"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

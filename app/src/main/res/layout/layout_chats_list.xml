@@ -1,51 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/laaa"
-    android:padding="2dp"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="10dp"
-        android:layout_centerVertical="true"
-        android:id="@+id/image_view_customer_head_shot" />
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="3dp"
+    app:cardUseCompatPadding="true"
+    android:layout_marginStart="@dimen/dimen_5dp"
+    android:layout_marginEnd="@dimen/dimen_5dp">
 
     <LinearLayout
-        android:id="@+id/linear_layout_customer_name"
-        android:layout_width="0dp"
-        android:layout_weight="3"
-        android:layout_margin="5dp"
-        android:paddingTop="5dp"
-
-        android:layout_gravity="center"
+        android:id="@+id/laaa"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:padding="2dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_view_customer_head_shot"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:src="@drawable/pin_logo" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_customer_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:paddingTop="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_view_customer_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/text_view_date"
+                    android:fontFamily="@font/open_sans"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="Rider NAme" />
+
+                <TextView
+                    android:id="@+id/text_view_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="@font/open_sans"
+                    android:textSize="12sp"
+                    tools:text="25/07/2021 5:40 PM" />
+            </RelativeLayout>
+
             <TextView
-                android:id="@+id/text_view_customer_name"
-                android:layout_width="wrap_content"
+                android:id="@+id/text_view_customer_chat"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:layout_toLeftOf="@id/text_view_date"
-                android:textStyle="bold"
-                android:layout_alignParentLeft="true"
-                android:textColor="@color/black"/>
-            <TextView
-                android:id="@+id/text_view_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:textSize="12sp"
-                android:layout_alignParentRight="true"/>
-        </RelativeLayout>
-        <TextView
-            android:id="@+id/text_view_customer_chat"
-            android:layout_width="match_parent"
-            android:layout_marginTop="5dp"
-            android:singleLine="true"
-            android:layout_height="wrap_content"  />
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/open_sans"
+                android:singleLine="true"
+                tools:text="Last chat message" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</androidx.cardview.widget.CardView>
+

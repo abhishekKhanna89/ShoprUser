@@ -12,6 +12,19 @@
         android:layout_height="200dp"
         android:background="@color/textColor">
 
+        <ImageView
+            android:id="@+id/imgZoomed"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha=".15"
+            android:scaleType="centerCrop"
+            android:src="@drawable/shopr"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/circleImage"
             android:layout_width="120dp"
@@ -34,44 +47,164 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:orientation="vertical">
-        <EditText
-            android:id="@+id/editName"
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Name"
-            android:inputType="textPersonName|textCapSentences"
-            android:padding="10dp"
-            android:background="@drawable/borderchange"/>
-        <EditText
-            android:id="@+id/editEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Email"
-            android:inputType="textEmailAddress"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:background="@drawable/borderchange"/>
-        <EditText
-            android:id="@+id/editMobile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Mobile"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:editable="false"
-            android:background="@drawable/borderchange"/>
-        <Button
-            android:id="@+id/updateBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:background="@drawable/roundfull_react_grey">
+
+                    <EditText
+                        android:id="@+id/editName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/dimen_40dp"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:background="@null"
+                        android:fontFamily="@font/open_sans"
+                        android:hint="Name"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:paddingStart="@dimen/dimen_5dp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_50dp"
+                    android:layout_height="@dimen/dimen_50dp"
+                    android:src="@drawable/user_icon" />
+
+            </FrameLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:background="@drawable/roundfull_react_grey">
+
+                    <EditText
+                        android:id="@+id/editEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/dimen_40dp"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:background="@null"
+                        android:fontFamily="@font/open_sans"
+                        android:hint="Email"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:paddingStart="@dimen/dimen_5dp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_50dp"
+                    android:layout_height="@dimen/dimen_50dp"
+                    android:src="@drawable/email_icon" />
+
+            </FrameLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:background="@drawable/roundfull_react_grey">
+
+                    <EditText
+                        android:id="@+id/editMobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/dimen_40dp"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:background="@null"
+                        android:fontFamily="@font/open_sans"
+                        android:hint="Mobile number"
+                        android:enabled="false"
+                        android:textColor="@drawable/enable_disable_editetext_color"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:paddingStart="@dimen/dimen_5dp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_50dp"
+                    android:layout_height="@dimen/dimen_50dp"
+                    android:src="@drawable/phone_icon_1" />
+
+            </FrameLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/updateBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:background="@drawable/rounded_gradient_button"
             android:text="Update Profile"
-            android:layout_marginBottom="10dp"/>
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15dp" />
+
     </LinearLayout>
 </LinearLayout>

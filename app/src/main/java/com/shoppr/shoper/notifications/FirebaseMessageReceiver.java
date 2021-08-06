@@ -5,18 +5,13 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.IBinder;
-import android.os.PowerManager;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -25,10 +20,9 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.sendbird.calls.SendBirdCall;
 import com.shoppr.shoper.R;
-import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.activity.ChatActivity;
-import com.shoppr.shoper.activity.ChatDetailsActivity;
-import com.shoppr.shoper.activity.FindingShopprActivity;
+import com.shoppr.shoper.util.ConstantValue;
+import com.shoppr.shoper.util.MyPreferences;
 import com.shoppr.shoper.util.SessonManager;
 
 import org.json.JSONException;
@@ -52,30 +46,32 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);*/
         sessonManager = new SessonManager(this);
         if (SendBirdCall.handleFirebaseMessageData(remoteMessage.getData())) {
-            Log.d( "MyFirebaseMessaging " , remoteMessage.getData().toString());
-        }else {
-          /*  Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());*/
+            Log.d("MyFirebaseMessaging ", remoteMessage.getData().toString());
+        } else {
+            /*  Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());*/
             showNotification(
                     remoteMessage.getNotification().getTitle(),
                     remoteMessage.getNotification().getBody(),
                     remoteMessage);
-
             Intent intent = new Intent("message_subject_intent");
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
 
+            if (remoteMessage.getNotification().getBody().contains("with the shopper has been terminated")){
+                MyPreferences.saveBoolean(getApplicationContext(), ConstantValue.KEY_IS_CHAT_PROGRESS,false);
+            }
+        }
     }
 
-    // Method to get the custom Design for the display of
+    // Method to get the custom Design for the display of5
     // notification.
     private RemoteViews getCustomDesign(String title, String message, RemoteMessage remoteMessage) {
         RemoteViews remoteViews = new RemoteViews(
                 getApplicationContext().getPackageName(),
                 R.layout.notification_layout);
-        JSONObject jsonObject=new JSONObject(remoteMessage.getData());
+        JSONObject jsonObject = new JSONObject(remoteMessage.getData());
         try {
-            title=jsonObject.getString("title");
-            message=jsonObject.getString("message");
+            title = jsonObject.getString("title");
+            message = jsonObject.getString("message");
             remoteViews.setTextViewText(R.id.title, title);
             remoteViews.setTextViewText(R.id.messages, message);
         } catch (JSONException e) {
@@ -98,8 +94,8 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
             e.printStackTrace();
         }
         intent = new Intent(FirebaseMessageReceiver.this, ChatActivity.class);
-        intent.putExtra("findingchatid",chat_id);
-        intent.putExtra("chat_status","1");
+        intent.putExtra("findingchatid", chat_id);
+        intent.putExtra("chat_status", "1");
         intent.setAction(Intent.ACTION_MAIN);
 
         String channel_id = "notification_channel";
@@ -121,7 +117,6 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         }
 
 
-
         @SuppressLint("WrongConstant") NotificationCompat.Builder builder
                 = new NotificationCompat
                 .Builder(getApplicationContext(),
@@ -137,13 +132,11 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 
-
-
         // A customized design for the notification can be
         // set only for Android versions 4.1 and above. Thus
         // condition for the same is checked here.
         builder = builder.setContent(
-                getCustomDesign(title, message,remoteMessage));
+                getCustomDesign(title, message, remoteMessage));
         // Create an object of NotificationManager class to
         // notify the
         // user of events that happen in the background.

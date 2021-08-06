@@ -9,7 +9,7 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/activity_maps1"
+        layout="@layout/activity_maps"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/white"
+        android:background="@color/menu_bg"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:itemIconPadding="@dimen/dimen_20dp"

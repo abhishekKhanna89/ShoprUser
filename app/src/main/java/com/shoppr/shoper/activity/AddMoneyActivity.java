@@ -51,7 +51,9 @@ public  class AddMoneyActivity extends AppCompatActivity implements PaymentResul
         Log.d("lakshmi","lakshmi");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_money);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.gradient_bg));
         getSupportActionBar().setTitle("Add Money");
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager=new SessonManager(this);
         chat_id=getIntent().getStringExtra("chat_id");
@@ -85,13 +87,13 @@ public  class AddMoneyActivity extends AppCompatActivity implements PaymentResul
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-                TvTwoThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
-                TvThreeThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
-                TvOneThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.one_thansouns));
+                TvTwoThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.rounded_border_yellow));
+                TvThreeThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.rounded_border_yellow));
+                TvOneThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.rounded_gradient_reverse_full));
                 TvOneThousnads.setTextColor(getResources().getColor(R.color.white));
-                TvTwoThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
-                TvThreeThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
-                selectedBalance.setText("₹ 300");
+                TvTwoThousnads.setTextColor(getResources().getColor(R.color.black));
+                TvThreeThousnads.setTextColor(getResources().getColor(R.color.black));
+                selectedBalance.setText(" 300");
                 amount = "300";
                 // Log.d("aaaaAmountAaa1",amount);
 
@@ -102,13 +104,13 @@ public  class AddMoneyActivity extends AppCompatActivity implements PaymentResul
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-                TvOneThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
-                TvThreeThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
-                TvTwoThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.one_thansouns));
+                TvOneThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.rounded_border_yellow));
+                TvThreeThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.rounded_border_yellow));
+                TvTwoThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.rounded_gradient_reverse_full));
                 TvTwoThousnads.setTextColor(getResources().getColor(R.color.white));
-                TvOneThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
-                TvThreeThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
-                selectedBalance.setText("₹ 500");
+                TvOneThousnads.setTextColor(getResources().getColor(R.color.black));
+                TvThreeThousnads.setTextColor(getResources().getColor(R.color.black));
+                selectedBalance.setText(" 500");
                 amount = "500";
                 //   Log.d("aaaaAmountAaa2",amount);
             }
@@ -118,13 +120,13 @@ public  class AddMoneyActivity extends AppCompatActivity implements PaymentResul
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-                TvOneThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
-                TvTwoThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.shape_add_money));
-                TvThreeThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.one_thansouns));
+                TvOneThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.rounded_border_yellow));
+                TvTwoThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.rounded_border_yellow));
+                TvThreeThousnads.setBackground(AddMoneyActivity.this.getDrawable(R.drawable.rounded_gradient_reverse_full));
                 TvThreeThousnads.setTextColor(getResources().getColor(R.color.white));
-                TvOneThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
-                TvTwoThousnads.setTextColor(getResources().getColor(R.color.colorPrimary));
-                selectedBalance.setText("₹ 1000");
+                TvOneThousnads.setTextColor(getResources().getColor(R.color.black));
+                TvTwoThousnads.setTextColor(getResources().getColor(R.color.black));
+                selectedBalance.setText(" 1000");
                 amount = "1000";
                 //Log.d("aaaaAmountAaa3",amount);
             }
@@ -337,5 +339,10 @@ public  class AddMoneyActivity extends AppCompatActivity implements PaymentResul
         } catch (Exception e) {
             Log.e("OnPaymentError", "Exception in onPaymentError", e);
         }
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

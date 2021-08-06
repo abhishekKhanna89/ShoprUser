@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -37,6 +38,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -108,12 +110,12 @@ public class ChatActivity extends AppCompatActivity {
     SessonManager sessonManager;
     List<Chat> chatList;
     EditText editText;
-    ImageButton chooseImage,sendMsgBtn;
+    ImageButton chooseImage;
+    LinearLayoutCompat llSend;
     /*Todo:- BroadCast Receiver*/
     BroadcastReceiver mMessageReceiver;
     String body;
     List<ChatModel> msgDtoList;
-    ChatAppMsgAdapter chatAppMsgAdapter;
 
     private static String baseUrl=ApiExecutor.baseUrl;
 
@@ -292,7 +294,7 @@ public class ChatActivity extends AppCompatActivity {
         userName=findViewById(R.id.userName);
 
         editText = findViewById(R.id.editText);
-        sendMsgBtn = findViewById(R.id.sendMsgBtn);
+        llSend = findViewById(R.id.llSend);
         chooseImage=findViewById(R.id.chooseImage);
 
 
@@ -319,7 +321,7 @@ public class ChatActivity extends AppCompatActivity {
         };
         IntentFilter i = new IntentFilter();
         i.addAction("message_subject_intent");
-        LocalBroadcastManager.getInstance(ChatActivity.this).registerReceiver(mMessageReceiver,new IntentFilter(i));
+        LocalBroadcastManager.getInstance(ChatActivity.this).registerReceiver(mMessageReceiver,i);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -332,15 +334,14 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 0) {
-                    sendMsgBtn.setVisibility(View.GONE);
+                    llSend.setVisibility(View.GONE);
                     recordButton.setVisibility(View.VISIBLE);
 
                 } else {
-                    sendMsgBtn.setVisibility(View.VISIBLE);
+                    llSend.setVisibility(View.VISIBLE);
                     recordButton.setVisibility(View.GONE);
                     recordView.setVisibility(View.GONE);
-                    sendMsgBtn.setBackground(getResources().getDrawable(R.drawable.send));
-                    sendMsgBtn.setOnClickListener(new View.OnClickListener() {
+                    llSend.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String msgContent = editText.getText().toString();
@@ -439,7 +440,7 @@ public class ChatActivity extends AppCompatActivity {
                     //sessonManager.hideProgress();
                     if (response.body()!=null) {
                         ChatMessageModel chatMessageModel=response.body();
-                        Log.d("chatResponse",new Gson().toJson(chatMessageModel));
+                        //Log.d("chatResponse",new Gson().toJson(chatMessageModel));
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
 
                             if (chatMessageModel.getData()!=null){

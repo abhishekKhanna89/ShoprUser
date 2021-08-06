@@ -14,9 +14,9 @@
             android:id="@+id/paymentLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:layout_gravity="end"
             app:cmv_arrowPosition="right"
-            app:cmv_backgroundColor="#fff"
+            app:cmv_backgroundColor="@color/my_chat_color"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
             android:visibility="visible">
@@ -30,33 +30,33 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:elevation="2dp"
-                    android:fontFamily="sans-serif"
                     android:text="Please make a payment"
-                    android:textColor="#000"
-                    android:textSize="18dp" />
-                <Button
+                    style="@style/userTextMsg" />
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/paymentBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Pay"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:fontFamily="sans-serif"
-                    android:backgroundTint="@color/green"/>
+                    android:background="@drawable/rounded_gradient_button"/>
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginRight="5dp"
-                    android:gravity="end"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:gravity="start"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/paymentDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
+                        style="@style/userTextTime"
                         android:text="11:00 AM"
-                        android:textColor="#000000"
-                        android:textSize="10sp" />
+                        />
                 </LinearLayout>
             </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>

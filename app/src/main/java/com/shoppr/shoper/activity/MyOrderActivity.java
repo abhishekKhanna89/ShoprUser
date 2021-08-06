@@ -50,6 +50,9 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_order);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.gradient_bg));
+        getSupportActionBar().setTitle("My Order");
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sessonManager=new SessonManager(this);
@@ -59,9 +62,7 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
         orderEmptyText=findViewById(R.id.orderEmptyText);
         linearLayoutManager = new LinearLayoutManager(this);
         myOrderRecycler.setLayoutManager(linearLayoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(myOrderRecycler.getContext(),
-                linearLayoutManager.getOrientation());
-        myOrderRecycler.addItemDecoration(dividerItemDecoration);
+        myOrderRecycler.addItemDecoration(new DividerItemDecoration(this, 0));
         myOrderRecycler.setNestedScrollingEnabled(true);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
@@ -146,9 +147,7 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
                     }else {
                         Picasso.get().load(datumList.get(position).getDetails().get(i).getFilePath()).into(holder.itemImage);
                     }
-
                 }
-
             }
 
             holder.rfIdText.setText("Order Id :"+order.getRefid());
@@ -202,7 +201,6 @@ public class MyOrderActivity extends AppCompatActivity implements SwipeRefreshLa
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onRefresh() {
