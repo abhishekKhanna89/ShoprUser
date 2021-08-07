@@ -127,8 +127,9 @@ public class ViewCartActivity extends AppCompatActivity {
         // BaseApplicationpay=new BaseApplicationpay();
         sessonManager=new SessonManager(this);
         progressbar = new Progressbar();
-        getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "My Cart" + "</font>")));
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_arrow);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.gradient_bg));
+        getSupportActionBar().setTitle("My Cart");
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mAppPreference = new AppPreference();
 

@@ -228,7 +228,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="10sp"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:layout_marginRight="5dp"
                             android:backgroundTint="#C9A1A1A1"/>
                     </LinearLayout>

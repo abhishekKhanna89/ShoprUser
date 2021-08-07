@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/call_gradient_bg">
 
     <LinearLayout
         android:id="@+id/linear_layout_info"
@@ -15,8 +17,8 @@
 
         <ImageView
             android:id="@+id/image_view_profile"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/icon_avatar" />
 
@@ -24,8 +26,9 @@
             android:id="@+id/text_view_user_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/open_sans"
             android:textSize="24sp"
+            tools:text="User Name"
             android:textColor="#e1ffffff"
             android:gravity="center_horizontal"
             android:layout_marginBottom="8dp" />
@@ -35,6 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
+            android:fontFamily="@font/open_sans"
+            tools:text="status"
             android:textColor="#e1ffffff"
             android:lineSpacingExtra="6sp"
             android:gravity="center_horizontal" />
@@ -78,15 +83,15 @@
 
         <ImageView
             android:id="@+id/image_view_decline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dimen_50dp"
+            android:layout_height="@dimen/dimen_50dp"
             android:background="@drawable/btn_call_end"
             android:layout_alignParentLeft="true" />
 
         <ImageView
             android:id="@+id/image_view_accept"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dimen_50dp"
+            android:layout_height="@dimen/dimen_50dp"
             android:background="@drawable/btn_call_voice_accept"
             android:layout_alignParentRight="true" />
 
@@ -109,35 +114,36 @@
 
             <ImageView
                 android:id="@+id/image_view_audio_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="@dimen/dimen_45dp"
                 android:background="@drawable/selector_audio_image_view"
                 android:layout_alignParentLeft="true" />
 
             <ImageView
                 android:id="@+id/image_view_speakerphone"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:background="@drawable/selector_speakerphone_image_view"
                 android:layout_centerHorizontal="true" />
 
             <ImageView
                 android:id="@+id/image_view_bluetooth"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:background="@drawable/selector_bluetooth_image_view"
                 android:layout_alignParentRight="true" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
             <ImageView
                 android:id="@+id/image_view_end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dimen_50dp"
+                android:layout_height="@dimen/dimen_50dp"
                 android:background="@drawable/btn_call_end"
                 android:layout_centerHorizontal="true" />
 

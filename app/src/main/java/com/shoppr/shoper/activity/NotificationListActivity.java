@@ -52,6 +52,9 @@ public class NotificationListActivity extends AppCompatActivity implements Swipe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_list);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.gradient_bg));
+        getSupportActionBar().setTitle("Notifications");
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager=new SessonManager(this);
         Log.d("token",sessonManager.getToken());

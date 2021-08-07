@@ -748,69 +748,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    public void menu(View view) {
-        PopupMenu popup = new PopupMenu(this, view);
-        /*  The below code in try catch is responsible to display icons*/
-        try {
-            Field[] fields = popup.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                if ("mPopup".equals(field.getName())) {
-                    field.setAccessible(true);
-                    Object menuPopupHelper = field.get(popup);
-                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
-                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
-                    setForceIcons.invoke(menuPopupHelper, true);
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //Inflating the Popup using xml file
-        popup.getMenuInflater()
-                .inflate(R.menu.menu_main, popup.getMenu());
-        //registering popup with OnMenuItemClickListener
-        //implement click events
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.action_registerMerchant:
-                        startActivity(new Intent(MapsActivity.this, RegisterMerchantActivity.class));
-                        break;
-                    case R.id.action_help:
-                        String number = "+919315957968";
-                        String url = "https://api.whatsapp.com/send?phone=" + number;
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
-                        /*startActivity(new Intent(MapsActivity.this, HelpActivity.class)
-                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
-                        break;
-                    /*case R.id.action_feedback:
-
-                        break;*/
-                    case R.id.action_shareApp:
-                        try {
-                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                            shareIntent.setType("text/plain");
-                            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name));
-                            String shareMessage = "Let me recommend you this application\n\n";
-                            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID;
-                            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                            startActivity(Intent.createChooser(shareIntent, "choose one"));
-                        } catch (Exception e) {
-                            //e.toString();
-                        }
-                        break;
-                }
-                return true;
-            }
-        });
-
-        popup.show(); //showing popup menu
-
-    }
 
     @Override
     protected void onRestart() {
@@ -991,6 +928,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         /*Todo:- Location Manager*/
         @SuppressLint("MissingPermission") Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
+        location.setLatitude(28.566338);
+        location.setLongitude(77.238676);
 
         if (location != null) {
             serviceMap(location);
@@ -1140,6 +1079,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
             onConnected(bundle);
             firstLocation = false;
         }
+        location.setLatitude(28.566338);
+        location.setLongitude(77.238676);
         Log.d("ressssssssLoa", "" + location);
         if (location != null) {
             Geocoder geocoder = new Geocoder(MapsActivity.this);

@@ -354,7 +354,7 @@ public abstract class CallActivity extends AppCompatActivity {
 
             case STATE_OUTGOING: {
                 mLinearLayoutInfo.setVisibility(View.VISIBLE);
-                mImageViewProfile.setVisibility(View.GONE);
+                mImageViewProfile.setVisibility(View.VISIBLE);
                 mLinearLayoutRemoteMute.setVisibility(View.GONE);
                 mRelativeLayoutRingingButtons.setVisibility(View.GONE);
                 mLinearLayoutConnectingButtons.setVisibility(View.VISIBLE);

@@ -75,6 +75,8 @@
     <color name="my_chat_color">#a5c838</color>
     <color name="menu_bg">#252932</color>
     <color name="menu_text_color">#8b8f98</color>
+    <color name="call_light_color">#25a7db</color>
+    <color name="call_dark_color">#1c567d</color>
 
 
 

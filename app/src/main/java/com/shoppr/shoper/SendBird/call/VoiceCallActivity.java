@@ -141,7 +141,6 @@ public class VoiceCallActivity extends CallActivity {
                     if (e.getMessage() != null) {
                         ToastUtils.showToast(mContext, e.getMessage());
                     }
-
                     finishWithEnding(e.getMessage());
                     return;
                 }

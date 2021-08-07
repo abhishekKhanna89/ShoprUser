@@ -8,8 +8,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="70dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="6dp"
                 app:cardMaxElevation="4dp">
@@ -48,7 +47,8 @@
                         android:layout_height="wrap_content"
                         android:text="Order Summery"
                         android:textColor="@color/black"
-                        android:textSize="18dp"
+                        android:fontFamily="@font/open_sans"
+                        android:textSize="@dimen/dimen_15dp"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -62,7 +62,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1.9"
                             android:text="Total"
-                            android:textSize="16dp" />
+                            android:fontFamily="@font/open_sans"
+                            android:textSize="14dp" />
 
                         <TextView
                             android:id="@+id/totalAmountText"
@@ -70,7 +71,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
                             android:text="Total"
-                            android:textSize="16dp" />
+                            android:fontFamily="@font/open_sans"
+                            android:textSize="14dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -83,7 +85,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1.9"
                             android:text="Service Charge"
-                            android:textSize="16dp" />
+                            android:fontFamily="@font/open_sans"
+                            android:textSize="14dp"  />
 
                         <TextView
                             android:id="@+id/serviceChargeText"
@@ -91,9 +94,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
                             android:text="Total"
-                            android:textSize="16dp" />
+                            android:fontFamily="@font/open_sans"
+                            android:textSize="14dp" />
                     </LinearLayout>
-
 
 
                     <LinearLayout
@@ -107,7 +110,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1.9"
                             android:text="Discount"
-                            android:textSize="16dp" />
+                            android:fontFamily="@font/open_sans"
+                            android:textSize="14dp"  />
 
                         <TextView
                             android:id="@+id/tv_discount_charge"
@@ -115,7 +119,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
                             android:text="12.20"
-                            android:textSize="16dp" />
+                            android:fontFamily="@font/open_sans"
+                            android:textSize="14dp"  />
                     </LinearLayout>
 
                     <View
@@ -136,7 +141,8 @@
                             android:layout_weight="1.9"
                             android:text="Grand Total"
                             android:textColor="@color/textColor"
-                            android:textSize="16dp" />
+                            android:fontFamily="@font/open_sans"
+                            android:textSize="14dp"  />
 
                         <TextView
                             android:id="@+id/groundTotalText"
@@ -145,9 +151,9 @@
                             android:layout_weight="0.1"
                             android:text="Total"
                             android:textColor="@color/textColor"
-                            android:textSize="16dp" />
+                            android:fontFamily="@font/open_sans"
+                            android:textSize="14dp"  />
                     </LinearLayout>
-
 
 
                 </LinearLayout>
@@ -158,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="6dp"
                 app:cardMaxElevation="4dp">
@@ -167,44 +173,42 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/useWT"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerInParent="true"
-                            android:text="Use Wallet "
-                            android:textColor="@color/black"
-                            android:textSize="18dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:layout_toRightOf="@+id/useWT"
-                            android:text="(For Quick payment)"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-                    </RelativeLayout>
+                    android:orientation="horizontal">
 
                     <CheckBox
                         android:id="@+id/checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:fontFamily="sans-serif-light"
-                        android:paddingLeft="10dp"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/useWT"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/open_sans"
+                        android:layout_gravity="center"
+                        android:textSize="@dimen/dimen_15dp"
+                        android:text="Use Wallet "
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_toRightOf="@+id/useWT"
+                        android:text="(For Quick payment)"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/open_sans"
+                        android:textSize="@dimen/dimen_12dp"
+                        android:textColor="@color/black" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
@@ -233,35 +237,33 @@
     <LinearLayout
         android:id="@+id/liner_order"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+
+        android:layout_marginBottom="@dimen/dimen_10dp"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
-        <LinearLayout
-            android:layout_width="1sp"
-            android:layout_height="match_parent"
-            android:background="@color/gray_light" />
-
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_cod"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="4dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/green"
-            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:fontFamily="@font/open_sans"
+            android:layout_weight=".5"
+            android:background="@drawable/rounded_gradient_button"
             android:text="CASH ON DELIVERY"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_payNow"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="4dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:layout_weight=".5"
+            android:fontFamily="@font/open_sans"
+            android:background="@drawable/rounded_gradient_button"
             android:gravity="center"
             android:text="Pay Online"
             android:textColor="@color/white"

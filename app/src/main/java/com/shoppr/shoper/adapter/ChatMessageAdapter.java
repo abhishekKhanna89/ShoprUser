@@ -206,7 +206,6 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                     .inflate(R.layout.out_msg_payment_layout, parent, false);
         } else if (viewType == SELF_PAID_OUT) {
 
-
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_payment_layout, parent, false);
         } else if (viewType == SELF_ADDRESS_IN) {
@@ -221,21 +220,17 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                     .inflate(R.layout.out_msg_location_layout, parent, false);
         } else if (viewType == SELF_STORE_IN) {
 
-
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_store_layout, parent, false);
         } else if (viewType == SELF_STORE_OUT) {
-
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_store_layout, parent, false);
         } else if (viewType == SELF_ORDERCONFIRMED_IN) {
 
-
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.in_msg_orderconfirmed_layout, parent, false);
         } else if (viewType == SELF_ORDERCONFIRMED_OUT) {
-
 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.out_msg_oredercofirm_layout, parent, false);
@@ -401,7 +396,8 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                                             holder.greenLayout.setVisibility(View.VISIBLE);
                                             holder.closeRedLayout.setVisibility(View.GONE);
                                             holder.rejectText.setVisibility(View.GONE);
-                                            holder.cancelText.setVisibility(View.VISIBLE);
+                                            //make canceltext disable if product is accepted
+                                            holder.cancelText.setVisibility(View.GONE);
                                             holder.acceptText.setVisibility(View.GONE);
                                             if (context instanceof ChatActivity) {
                                                 ((ChatActivity) context).yourDesiredMethod();

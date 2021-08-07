@@ -58,7 +58,6 @@
                         android:id="@+id/imagedashbord"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:onClick="menu"
                         android:src="@drawable/notification"
                         android:tint="@color/white"
                         app:tint="@color/white" />

@@ -39,9 +39,9 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/detailsBtn"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:text="Details"
-                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:textColor="@color/white"
                     android:background="@drawable/rounded_gradient_button"
                     android:fontFamily="@font/open_sans" />
