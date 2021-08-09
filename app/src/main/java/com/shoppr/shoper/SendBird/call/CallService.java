@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +19,6 @@ import androidx.core.app.NotificationCompat;
 import com.sendbird.calls.DirectCall;
 import com.sendbird.calls.SendBirdCall;
 import com.shoppr.shoper.R;
-import com.shoppr.shoper.SendBird.BaseApplication;
 import com.shoppr.shoper.SendBird.utils.ToastUtils;
 import com.shoppr.shoper.SendBird.utils.UserInfoUtils;
 
@@ -29,17 +27,17 @@ public class CallService extends Service {
 
     private static final int NOTIFICATION_ID = 1;
 
-    public static final String EXTRA_IS_HEADS_UP_NOTIFICATION   = "is_heads_up_notification";
+    public static final String EXTRA_IS_HEADS_UP_NOTIFICATION = "is_heads_up_notification";
     public static final String EXTRA_REMOTE_NICKNAME_OR_USER_ID = "remote_nickname_or_user_id";
-    public static final String EXTRA_CALL_STATE                 = "call_state";
-    public static final String EXTRA_CALL_ID                    = "call_id";
-    public static final String EXTRA_IS_VIDEO_CALL              = "is_video_call";
-    public static final String EXTRA_CALLEE_ID_TO_DIAL          = "callee_id_to_dial";
-    public static final String EXTRA_DO_DIAL                    = "do_dial";
-    public static final String EXTRA_DO_ACCEPT                  = "do_accept";
-    public static final String EXTRA_DO_LOCAL_VIDEO_START       = "do_local_video_start";
+    public static final String EXTRA_CALL_STATE = "call_state";
+    public static final String EXTRA_CALL_ID = "call_id";
+    public static final String EXTRA_IS_VIDEO_CALL = "is_video_call";
+    public static final String EXTRA_CALLEE_ID_TO_DIAL = "callee_id_to_dial";
+    public static final String EXTRA_DO_DIAL = "do_dial";
+    public static final String EXTRA_DO_ACCEPT = "do_accept";
+    public static final String EXTRA_DO_LOCAL_VIDEO_START = "do_local_video_start";
 
-    public static final String EXTRA_DO_END                     = "do_end";
+    public static final String EXTRA_DO_END = "do_end";
 
 
     private Context mContext;
@@ -47,7 +45,7 @@ public class CallService extends Service {
     private final ServiceData mServiceData = new ServiceData();
 
     class CallBinder extends Binder {
-       CallService getService() {
+        CallService getService() {
             return CallService.this;
         }
     }
@@ -89,7 +87,7 @@ public class CallService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-       // Log.i(BaseApplication.TAG, "[CallService] onCreate()");
+        // Log.i(BaseApplication.TAG, "[CallService] onCreate()");
 
         mContext = this;
     }
@@ -102,7 +100,7 @@ public class CallService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-       // Log.i(BaseApplication.TAG, "[CallService] onStartCommand()");
+        // Log.i(BaseApplication.TAG, "[CallService] onStartCommand()");
 
         mServiceData.isHeadsUpNotification = intent.getBooleanExtra(EXTRA_IS_HEADS_UP_NOTIFICATION, false);
         mServiceData.remoteNicknameOrUserId = intent.getStringExtra(EXTRA_REMOTE_NICKNAME_OR_USER_ID);
@@ -121,7 +119,7 @@ public class CallService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-       // Log.i(BaseApplication.TAG, "[CallService] onTaskRemoved()");
+        // Log.i(BaseApplication.TAG, "[CallService] onTaskRemoved()");
 
         mServiceData.isHeadsUpNotification = true;
         updateNotification(mServiceData);
@@ -203,32 +201,32 @@ public class CallService extends Service {
 //           context.startActivity(new Intent(context, InitilizingActivity.class));
 //        } else {
 
-            if (SendBirdCall.getOngoingCallCount() > 0) {
-                ToastUtils.showToast(context, "Ringing.");
-               // Log.i(BaseApplication.TAG, "[CallService] dial() => SendBirdCall.getOngoingCallCount(): " + SendBirdCall.getOngoingCallCount());
-                return;
-            }
+        if (SendBirdCall.getOngoingCallCount() > 0) {
+            ToastUtils.showToast(context, "Ringing.");
+            // Log.i(BaseApplication.TAG, "[CallService] dial() => SendBirdCall.getOngoingCallCount(): " + SendBirdCall.getOngoingCallCount());
+            return;
+        }
 
-           // Log.i(BaseApplication.TAG, "[CallService] dial()");
-            ServiceData serviceData = new ServiceData();
-            serviceData.isHeadsUpNotification = false;
-            serviceData.remoteNicknameOrUserId = doDialWithCalleeId;
-            serviceData.callState = CallActivity.STATE.STATE_OUTGOING;
-            serviceData.callId = null;
-            serviceData.isVideoCall = isVideoCall;
-            serviceData.calleeIdToDial = doDialWithCalleeId;
-            serviceData.doDial = true;
-            serviceData.doAccept = false;
-            serviceData.doLocalVideoStart = false;
+        // Log.i(BaseApplication.TAG, "[CallService] dial()");
+        ServiceData serviceData = new ServiceData();
+        serviceData.isHeadsUpNotification = false;
+        serviceData.remoteNicknameOrUserId = doDialWithCalleeId;
+        serviceData.callState = CallActivity.STATE.STATE_OUTGOING;
+        serviceData.callId = null;
+        serviceData.isVideoCall = isVideoCall;
+        serviceData.calleeIdToDial = doDialWithCalleeId;
+        serviceData.doDial = true;
+        serviceData.doAccept = false;
+        serviceData.doLocalVideoStart = false;
 
-            startService(context, serviceData);
+        startService(context, serviceData);
 
-            context.startActivity(getCallActivityIntent(context, serviceData, false));
+        context.startActivity(getCallActivityIntent(context, serviceData, false));
         //}
     }
 
     public static void onRinging(Context context, @NonNull DirectCall call) {
-      //  Log.i(BaseApplication.TAG, "[CallService] onRinging()");
+        //  Log.i(BaseApplication.TAG, "[CallService] onRinging()");
 
         ServiceData serviceData = new ServiceData();
         serviceData.isHeadsUpNotification = true;
@@ -245,7 +243,7 @@ public class CallService extends Service {
     }
 
     private static void startService(Context context, ServiceData serviceData) {
-     //   Log.i(BaseApplication.TAG, "[CallService] startService()");
+        //   Log.i(BaseApplication.TAG, "[CallService] startService()");
 
         if (context != null) {
             Intent intent = new Intent(context, CallService.class);

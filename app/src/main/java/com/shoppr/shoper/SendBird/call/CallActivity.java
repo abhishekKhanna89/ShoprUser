@@ -26,11 +26,14 @@ import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.utils.ActivityUtils;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
 import com.shoppr.shoper.SendBird.utils.UserInfoUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public abstract class CallActivity extends AppCompatActivity {
 
@@ -55,14 +58,14 @@ public abstract class CallActivity extends AppCompatActivity {
     private Timer mEndingTimer;
 
     STATE mState;
-    String mCalleeId;
+    String mCalleeId, calleeName="", callerPic="";
     boolean mIsVideoCall;
     DirectCall mDirectCall;
     boolean mIsAudioEnabled = true;
 
     //+ Views
     LinearLayout mLinearLayoutInfo;
-    ImageView mImageViewProfile;
+    CircleImageView mImageViewProfile;
     TextView mTextViewUserId;
     TextView mTextViewStatus;
 
@@ -108,10 +111,11 @@ public abstract class CallActivity extends AppCompatActivity {
             mDirectCall = SendBirdCall.getCall(mIncomingCallId);
             mCalleeId = mDirectCall.getCallee().getUserId();
             mIsVideoCall = mDirectCall.isVideoCall();
-
             setListener(mDirectCall);
         } else {    // as caller
             mCalleeId = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_ID);
+            calleeName = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_NAME);
+            callerPic = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_PIC);
             mIsVideoCall = getIntent().getBooleanExtra(ActivityUtils.EXTRA_IS_VIDEO_CALL, false);
         }
 
@@ -403,13 +407,14 @@ public abstract class CallActivity extends AppCompatActivity {
     }
 
     protected void setInfo(DirectCall call, String status) {
-        DirectCallUser remoteUser = (call != null ? call.getRemoteUser() : null);
+        /*DirectCallUser remoteUser = (call != null ? call.getRemoteUser() : null);
         if (remoteUser != null) {
             UserInfoUtils.setProfileImage(mContext, remoteUser, mImageViewProfile);
-            UserInfoUtils.setUserId(remoteUser, mTextViewUserId);
         } else {
-            mTextViewUserId.setText(mCalleeId);
-        }
+            Picasso.get().load(callerPic).into(mImageViewProfile);
+        }*/
+        mTextViewUserId.setText(calleeName);
+        Picasso.get().load(callerPic).into(mImageViewProfile);
 
         mTextViewStatus.setVisibility(View.VISIBLE);
         if (status != null) {

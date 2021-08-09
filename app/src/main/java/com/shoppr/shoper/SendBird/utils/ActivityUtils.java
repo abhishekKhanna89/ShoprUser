@@ -18,6 +18,8 @@ public class ActivityUtils {
 
     public static final String EXTRA_INCOMING_CALL_ID = "incoming_call_id";
     public static final String EXTRA_CALLEE_ID =        "callee_id";
+    public static final String EXTRA_CALLEE_NAME =        "callee_name";
+    public static final String EXTRA_CALLEE_PIC =        "callee_pic";
     public static final String EXTRA_IS_VIDEO_CALL =    "is_video_call";
 
     public static final int START_SIGN_IN_MANUALLY_ACTIVITY_REQUEST_CODE = 1;
@@ -52,7 +54,7 @@ public class ActivityUtils {
         activity.startActivity(intent);*/
     }
 
-    public static void startCallActivityAsCaller(Context context, String calleeId, boolean isVideoCall) {
+    public static void startCallActivityAsCaller(Context context, String calleeId,String shopperName, String shopperPic, boolean isVideoCall) {
         Log.d(TAG, "startCallActivityAsCaller()");
         final Intent intent;
         if (isVideoCall) {
@@ -61,6 +63,8 @@ public class ActivityUtils {
             intent = new Intent(context, VoiceCallActivity.class);
         }
         intent.putExtra(EXTRA_CALLEE_ID, calleeId);
+        intent.putExtra(EXTRA_CALLEE_NAME, shopperName);
+        intent.putExtra(EXTRA_CALLEE_PIC, shopperPic);
         intent.putExtra(EXTRA_IS_VIDEO_CALL, isVideoCall);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(intent);

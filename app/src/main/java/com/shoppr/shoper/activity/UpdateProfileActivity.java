@@ -283,14 +283,11 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 rotateImage();
             } catch (Exception e) {
                 e.printStackTrace();
-
             }
-
 
         } else if ((requestCode == 786)) {
             selectFromGallery(data);
         }
-
     }
 
     private void takeCameraImg() throws IOException {
@@ -308,7 +305,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(takePictureIntent, 1);
         }
-
     }
 
     private File createFile() throws IOException {
@@ -342,13 +338,11 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
 
             }
-
             circleImage.setImageBitmap(bitmap);
             imgZoomed.setImageBitmap(bitmap);
 
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 

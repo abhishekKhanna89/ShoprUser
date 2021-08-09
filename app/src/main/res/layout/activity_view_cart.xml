@@ -224,22 +224,24 @@
         android:visibility="gone" />
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_continue_shoping"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_5dp"
+        android:fontFamily="@font/open_sans"
+        android:background="@drawable/rounded_gradient_button"
+        android:text="BACK"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        android:text="back"
         android:textColor="@color/white"
-        android:visibility="gone" />
+        android:textSize="15sp" />
 
     <LinearLayout
         android:id="@+id/liner_order"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-
         android:layout_marginBottom="@dimen/dimen_10dp"
         android:orientation="horizontal"
         android:visibility="visible">

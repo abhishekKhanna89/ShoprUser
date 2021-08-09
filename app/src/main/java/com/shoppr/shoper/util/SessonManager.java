@@ -26,6 +26,7 @@ public class SessonManager {
     public static final String lon="lon";
     public static final String walletAmount="walletAmount";
     public static final String mobileNo="mobile";
+    public static final String profilePic="profilepic";
     public static final String chanelId="CHANEL_ID";
     public static final String NOTIFICATION_TOKEN="notification_token";
     
@@ -90,12 +91,6 @@ public class SessonManager {
     public String getMobileNo(){
         return sharedPreference.getString(mobileNo,"");
     }
-
-
-
-
-
-
 
     public String getToken() {
         return sharedPreference.getString(Token, "");
@@ -245,5 +240,13 @@ public class SessonManager {
             mDialog.show();
         }
 
+    }
+
+    public void setProfilePic(String image) {
+        editor.putString(profilePic,image);
+        editor.apply();
+    }
+    public String getProfilePic() {
+    return sharedPreference.getString(profilePic,"");
     }
 }

@@ -85,7 +85,7 @@
                         android:background="@null"
                         android:fontFamily="@font/open_sans"
                         android:hint="Name"
-                        android:inputType="phone"
+                        android:inputType="textPersonName"
                         android:maxLength="10"
                         android:paddingStart="@dimen/dimen_5dp" />
 
@@ -131,7 +131,7 @@
                         android:background="@null"
                         android:fontFamily="@font/open_sans"
                         android:hint="Email"
-                        android:inputType="phone"
+                        android:inputType="textEmailAddress"
                         android:maxLength="10"
                         android:paddingStart="@dimen/dimen_5dp" />
 

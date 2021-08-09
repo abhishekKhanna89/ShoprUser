@@ -15,6 +15,7 @@
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/drawable-xxxhdpi/round_full_green.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/drawable/bottom_navigation_item_colors.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/drawable/browncardviewlayout.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/drawable/call_gradient_bg.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/drawable/enable_disable_editetext_color.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/drawable/gradient_bg.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/drawable/gradient_bg_angle.xml" value="0.20833333333333334" />
@@ -71,10 +72,13 @@
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_otp1.xml" value="0.2" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_register.xml" value="0.22" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_register1.xml" value="0.25" />
-        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_register_merchant.xml" value="0.1921875" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_register_merchant.xml" value="0.16" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_splash.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_splash_new.xml" value="0.2" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_update_profile.xml" value="0.22" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_video_call.xml" value="0.1921875" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_view_cart.xml" value="0.25" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_voice_call.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_wallet.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/chat_my_layout.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/in_msg_audio_layout.xml" value="0.1921875" />
@@ -83,7 +87,7 @@
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/in_msg_discount_layout.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/in_msg_image_layout.xml" value="0.25" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/in_msg_layout.xml" value="0.1921875" />
-        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/in_msg_location_layout.xml" value="0.1921875" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/in_msg_location_layout.xml" value="0.25" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/in_msg_locationtype_layout.xml" value="0.22" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/in_msg_orderconfirmed_layout.xml" value="0.2" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/in_msg_product_layout.xml" value="0.1921875" />

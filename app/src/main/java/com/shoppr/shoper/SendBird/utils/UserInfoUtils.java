@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.sendbird.calls.User;
 import com.shoppr.shoper.R;
+import com.squareup.picasso.Picasso;
 
 /*
 public class UserInfoUtils {
@@ -37,7 +38,7 @@ public class UserInfoUtils {
             if (TextUtils.isEmpty(profileUrl)) {
                 imageViewProfile.setBackgroundResource(R.drawable.icon_avatar);
             } else {
-                ImageUtils.displayCircularImageFromUrl(context, user.getProfileUrl(), imageViewProfile);
+                Picasso.get().load(user.getProfileUrl()).into(imageViewProfile);
             }
         }
     }
@@ -59,14 +60,14 @@ public class UserInfoUtils {
         }
     }
 
-    public static void setNicknameOrUserId(User user, TextView textViewNickname) {
-        if (user != null && textViewNickname != null) {
+    public static void setNicknameOrUserId(User user) {
+        if (user != null) {
             String nickname = user.getNickname();
-            if (TextUtils.isEmpty(nickname)) {
+            /*if (TextUtils.isEmpty(nickname)) {
                 textViewNickname.setText(user.getUserId());
             } else {
                 textViewNickname.setText(nickname);
-            }
+            }*/
         }
     }
 
@@ -74,9 +75,9 @@ public class UserInfoUtils {
         String nicknameOrUserId = "";
         if (user != null) {
             nicknameOrUserId = user.getNickname();
-            if (TextUtils.isEmpty(nicknameOrUserId)) {
+           /* if (TextUtils.isEmpty(nicknameOrUserId)) {
                 nicknameOrUserId = user.getUserId();
-            }
+            }*/
         }
         return nicknameOrUserId;
     }

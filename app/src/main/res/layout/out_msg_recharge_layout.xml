@@ -21,6 +21,7 @@
             android:layout_margin="5dp"
             app:cmv_arrowPosition="right"
             android:layout_gravity="end">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,20 +30,20 @@
 
                 <TextView
                     android:id="@+id/rechargeMsgText"
+                    style="@style/userTextMsg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:elevation="2dp"
-                    style="@style/userTextMsg" />
+                    android:elevation="2dp" />
 
                 <TextView
                     android:id="@+id/rechargeDateText"
+                    style="@style/userTextTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:fontFamily="sans-serif"
-                    android:text="11:00 AM"
-                    style="@style/userTextTime"/>
+                    android:text="11:00 AM" />
             </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>
 

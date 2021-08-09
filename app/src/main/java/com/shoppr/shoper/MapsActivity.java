@@ -35,12 +35,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.AuthFailureError;
@@ -92,8 +92,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -264,6 +262,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
 
             alertDialog.show();
         }
+
+        registerBroadcast();
 
         navView.getMenu().getItem(0).setCheckable(false);
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -860,22 +860,22 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
 
         //MyPreferences.saveBoolean(MapsActivity.this, ConstantValue.KEY_IS_CHAT_PROGRESS, false);
         boolean isChatProgress = MyPreferences.getBoolean(MapsActivity.this, ConstantValue.KEY_IS_CHAT_PROGRESS);
-        BadgeDrawable badge = null;
+
         if (isChatProgress) {
-            badge = navView.getOrCreateBadge(R.id.navigation_chat);
+            BadgeDrawable badge = navView.getOrCreateBadge(R.id.navigation_chat);
             badge.setVisible(true);
             badge.setNumber(1);
         }
 
-        registerBroadcast(badge);
-
     }
 
-    private void registerBroadcast(BadgeDrawable badge) {
+    private void registerBroadcast() {
         mMessageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (badge != null) {
+                boolean isChatProgress = MyPreferences.getBoolean(MapsActivity.this, ConstantValue.KEY_IS_CHAT_PROGRESS);
+                if (!isChatProgress) {
+                    BadgeDrawable badge = navView.getOrCreateBadge(R.id.navigation_chat);
                     badge.setVisible(false);
                 }
             }
@@ -883,7 +883,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         IntentFilter i = new IntentFilter();
         i.addAction("message_subject_intent");
 
-        registerReceiver(mMessageReceiver, i);
+        LocalBroadcastManager.getInstance(MapsActivity.this).registerReceiver(mMessageReceiver, i);
 
     }
 
@@ -895,8 +895,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
             googleApiClient.disconnect();
         }
-        unregisterReceiver(mMessageReceiver);
+
     }
+
 
     private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
@@ -928,8 +929,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         /*Todo:- Location Manager*/
         @SuppressLint("MissingPermission") Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
-        location.setLatitude(28.566338);
-        location.setLongitude(77.238676);
+        //Lajpat Nagar III location
+        //location.setLatitude(28.566338);
+        //location.setLongitude(77.238676);
 
         if (location != null) {
             serviceMap(location);
@@ -1079,8 +1081,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
             onConnected(bundle);
             firstLocation = false;
         }
-        location.setLatitude(28.566338);
-        location.setLongitude(77.238676);
+        //Lajpat Nagar III location
+        //location.setLatitude(28.566338);
+        //location.setLongitude(77.238676);
+
         Log.d("ressssssssLoa", "" + location);
         if (location != null) {
             Geocoder geocoder = new Geocoder(MapsActivity.this);
@@ -1155,8 +1159,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-
-
     }
 
     private void showDialouge() {
@@ -1172,12 +1174,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
                         sessonManager.setCurrenttime(String.valueOf(savedMillistime));
                         Log.d("helloTimemills", String.valueOf(savedMillistime));
                     }
-
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
-
-
                     public void onClick(DialogInterface dialog, int which) {
                         savedMillistime = (int) System.currentTimeMillis();
                         sessonManager.setCurrenttime(String.valueOf(savedMillistime));
@@ -1200,7 +1199,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -1211,6 +1209,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onDestroy() {
         super.onDestroy();
         Log.d("lifecycle", "onDestroy");
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
     }
-
 }

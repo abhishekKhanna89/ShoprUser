@@ -35,10 +35,12 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/paymentBtn"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:text="Pay"
                     android:textColor="@color/white"
                     android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:layout_marginStart="@dimen/dimen_15dp"
                     android:fontFamily="sans-serif"
                     android:background="@drawable/rounded_gradient_button"/>
                 <LinearLayout

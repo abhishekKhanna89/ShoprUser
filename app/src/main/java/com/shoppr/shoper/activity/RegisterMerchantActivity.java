@@ -68,7 +68,7 @@ import retrofit2.Response;
 
 public class RegisterMerchantActivity extends AppCompatActivity {
     CircleImageView circleImage;
-    ImageView choseImage,getImageShow;
+    ImageView choseImage,getImageShow, imgZoomed;
     EditText editStoreName,editStoreType,editEmail,
     editMobile,editOpeningTime,editAboutStore,editAddress;
     SessonManager sessonManager;
@@ -97,6 +97,7 @@ public class RegisterMerchantActivity extends AppCompatActivity {
         /*todo:-Find id*/
         circleImage=findViewById(R.id.circleImage);
         choseImage=findViewById(R.id.choseImage);
+        imgZoomed=findViewById(R.id.imgZoomed);
         getImageShow=findViewById(R.id.getImageShow);
         /*Todo:- Image Choose*/
         choseImage.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +174,7 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                                 msgPrintText.setVisibility(View.VISIBLE);
                                 choseImage.setVisibility(View.GONE);
                                 circleImage.setVisibility(View.GONE);
+                                imgZoomed.setVisibility(View.GONE);
                                 getImageShow.setVisibility(View.VISIBLE);
                                 Picasso.get().load(getRegisterMerchantModel.getData().getApplication().getImage()).into(getImageShow);
                                 editStoreName.setText(getRegisterMerchantModel.getData().getApplication().getStoreName());
@@ -433,6 +435,7 @@ public class RegisterMerchantActivity extends AppCompatActivity {
             }
 
             circleImage.setImageBitmap(bitmap);
+            imgZoomed.setImageBitmap(bitmap);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -481,7 +484,7 @@ public class RegisterMerchantActivity extends AppCompatActivity {
                         cursor1.close();
 
                         circleImage.setImageBitmap(bitmap);
-
+                        imgZoomed.setImageBitmap(bitmap);
 
                     }
                 } else {
@@ -514,7 +517,7 @@ public class RegisterMerchantActivity extends AppCompatActivity {
 
                     cursor1.close();
                     circleImage.setImageBitmap(bitmap);
-
+                    imgZoomed.setImageBitmap(bitmap);
 
                 }
 

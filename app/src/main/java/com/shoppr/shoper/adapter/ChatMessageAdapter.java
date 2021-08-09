@@ -299,6 +299,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
 
 
         if (chat.getType().equalsIgnoreCase("image")) {
+            if (!chat.getFilePath().isEmpty())
             Picasso.get().load(chat.getFilePath()).into(holder.image);
             //Glide.with(context).load(chat.getFilePath()).into(holder.image);
             holder.imageText.setText(chat.getMessage());

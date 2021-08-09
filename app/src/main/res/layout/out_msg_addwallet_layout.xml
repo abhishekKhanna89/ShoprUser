@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,29 +32,31 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:elevation="2dp"
-                    android:fontFamily="sans-serif"
-                    android:textColor="#000"
+                    tools:text="Please add Rs. 100 to yout wallet"
+                    style="@style/userTextMsg"
                     android:textSize="18dp" />
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/addWalletBtn"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dimen_40dp"
                     android:text="Add Money"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:layout_marginStart="@dimen/dimen_15dp"
                     android:fontFamily="sans-serif"
-                    android:backgroundTint="@color/green"/>
+                    android:background="@drawable/rounded_gradient_button"/>
+
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_marginRight="5dp"
-                    android:gravity="end"
-                    android:orientation="horizontal">
+                    android:layout_marginRight="5dp">
 
                     <TextView
                         android:id="@+id/addwalletDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
                         android:text="11:00 AM"
                         style="@style/userTextTime"/>
                 </LinearLayout>

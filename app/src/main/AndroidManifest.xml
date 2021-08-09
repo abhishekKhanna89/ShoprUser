@@ -196,6 +196,10 @@
          </intent-filter>
      </service>
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="rn-push-notification-channel-id-4-default-300"/>
+
      <provider
          android:name="androidx.core.content.FileProvider"
          android:authorities="${applicationId}.provider"

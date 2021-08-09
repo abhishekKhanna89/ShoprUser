@@ -2,10 +2,8 @@ package com.shoppr.shoper.SendBird.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.sendbird.calls.DirectCallLog;
-import com.shoppr.shoper.SendBird.BaseApplication;
 
 
 public class BroadcastUtils {
@@ -15,7 +13,7 @@ public class BroadcastUtils {
 
     public static void sendCallLogBroadcast(Context context, DirectCallLog callLog) {
         if (context != null && callLog != null) {
-          //  Log.i(BaseApplication.TAG, "[BroadcastUtils] sendCallLogBroadcast()");
+            //  Log.i(BaseApplication.TAG, "[BroadcastUtils] sendCallLogBroadcast()");
 
             Intent intent = new Intent(INTENT_ACTION_ADD_CALL_LOG);
             intent.putExtra(INTENT_EXTRA_CALL_LOG, callLog);

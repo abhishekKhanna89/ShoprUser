@@ -163,6 +163,7 @@ public class MyAccount extends AppCompatActivity {
                                 textEmail.setText(myProfileModel.getData().getMobile());
                                 walletAmountText.setText("₹ " + String.valueOf(myProfileModel.getData().getBalance()));
                                 sessonManager.setMobileNo(myProfileModel.getData().getMobile());
+                                sessonManager.setProfilePic(myProfileModel.getData().getImage());
                             }
                         } else {
                             Toast.makeText(MyAccount.this, "" + myProfileModel.getMessage(), Toast.LENGTH_SHORT).show();

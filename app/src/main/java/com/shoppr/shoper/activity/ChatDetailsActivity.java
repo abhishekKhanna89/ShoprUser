@@ -93,7 +93,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
     ImageButton chooseImage, sendMsgBtn;
     /*Todo:- BroadCast Receiver*/
     BroadcastReceiver mMessageReceiver;
-    String body;
+    String shopperName="";
     List<ChatModel> msgDtoList;
     ChatAppMsgAdapter chatAppMsgAdapter;
     /*Todo:- Image Choose*/
@@ -467,7 +467,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                                 String savedCalleeId = PrefUtils.getCalleeId(ChatDetailsActivity.this);
 
                                 //CallService.dial(ChatDetailsActivity.this, savedCalleeId, true);
-                                ActivityUtils.startCallActivityAsCaller(ChatDetailsActivity.this, savedUserId, true);
+                                ActivityUtils.startCallActivityAsCaller(ChatDetailsActivity.this, savedUserId, "","",true);
 
 
 
@@ -501,7 +501,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                                 PrefUtils.setCalleeId(ChatDetailsActivity.this, savedUserId);
                                 String savedCalleeId = PrefUtils.getCalleeId(ChatDetailsActivity.this);
                                // CallService.dial(ChatDetailsActivity.this, savedCalleeId, false);
-                                ActivityUtils.startCallActivityAsCaller(ChatDetailsActivity.this, savedUserId, false);
+                                ActivityUtils.startCallActivityAsCaller(ChatDetailsActivity.this, savedUserId, "","",false);
 
                             }
                         }
@@ -540,8 +540,8 @@ public class ChatDetailsActivity extends AppCompatActivity {
             try {
                 rotateImage();
             } catch (Exception e) {
+                Log.e("TAG", "onActivityResult: "+e.getMessage() );
                 e.printStackTrace();
-
             }
 
 
@@ -559,6 +559,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                 //Log.d("checkexcesdp", String.valueOf(photoFile));
             } catch (Exception ex) {
                 ex.printStackTrace();
+                Log.e("TAG", "take camera: "+ex.getMessage() );;
                 //Log.d("checkexcep", ex.getMessage());
             }
             photoFile = createFile();

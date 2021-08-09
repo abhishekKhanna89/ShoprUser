@@ -127,6 +127,7 @@ public class ChatActivity extends AppCompatActivity {
     /*Todo:- UserDP*/
     CircleImageView userDp;
     TextView userName;
+    String shopperName="",shopperPic="";
 
     //String TAG="lakshmi";
 
@@ -430,6 +431,8 @@ public class ChatActivity extends AppCompatActivity {
                                 }
                                 Picasso.get().load(chatMessageModel.getData().getShoppr().getImage()).into(userDp);
                                 userName.setText(chatMessageModel.getData().getShoppr().getName());
+                                shopperName=chatMessageModel.getData().getShoppr().getName();
+                                shopperPic=chatMessageModel.getData().getShoppr().getImage();
                                 if (chatList.size() == 0) {
                                 } else {
                                     ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(ChatActivity.this, chatList);
@@ -630,6 +633,7 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<SendModel> call, Throwable t) {
                             //sessonManager.hideProgress();
+                            Log.e("TAG", "onFailure: on image upload ProfileUpdateAPI" );
                         }
                     });
         } else {
@@ -863,7 +867,8 @@ public class ChatActivity extends AppCompatActivity {
                                 String savedUserId = initiateVideoCallModel.getData().getUser_id();
                                 //PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
                                 //CallService.dial(ChatActivity.this, savedUserId, true);
-                                ActivityUtils.startCallActivityAsCaller(ChatActivity.this, savedUserId, true);
+                                ActivityUtils.startCallActivityAsCaller(ChatActivity.this,
+                                        savedUserId, shopperName, shopperPic, true);
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
 
                                 //bottomSheetDialog.dismiss();
@@ -899,7 +904,8 @@ public class ChatActivity extends AppCompatActivity {
                                 String savedUserId = initiateVideoCallModel.getData().getUser_id();
                                 // PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
 
-                                ActivityUtils.startCallActivityAsCaller(ChatActivity.this, savedUserId, false);
+                                ActivityUtils.startCallActivityAsCaller(ChatActivity.this,
+                                        savedUserId, shopperName,shopperPic, false);
                                 PrefUtils.setCalleeId(ChatActivity.this, savedUserId);
                                 // CallService.dial(ChatActivity.this, savedUserId, false);
                                 // SendBirdCall.Options.

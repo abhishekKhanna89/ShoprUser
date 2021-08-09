@@ -116,21 +116,7 @@ public class OtpActivity extends AppCompatActivity {
             }
         });
 
-        countDownTimer= new CountDownTimer(120000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                NumberFormat f = new DecimalFormat("00");
-                //long min = (millisUntilFinished / 60000) % 60;
-                long sec = (millisUntilFinished / 1000);
-                txtTimerCount.setText("Resend OTP in "+ f.format(sec)+" seconds.");
-            }
-
-            @Override
-            public void onFinish() {
-                txtTimerCount.setVisibility(View.GONE);
-                txtResendOtp.setVisibility(View.VISIBLE);
-            }
-        }.start();
+        startTimer();
     }
 
     private boolean isValid() {
@@ -280,6 +266,9 @@ public class OtpActivity extends AppCompatActivity {
                     ResendOtpModel resendOtpModel = response.body();
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
                         Toast.makeText(OtpActivity.this, resendOtpModel.getMessage(), Toast.LENGTH_SHORT).show();
+                        txtTimerCount.setVisibility(View.VISIBLE);
+                        txtResendOtp.setVisibility(View.GONE);
+                        startTimer();
                     } else {
                         Toast.makeText(OtpActivity.this, resendOtpModel.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -353,4 +342,21 @@ public class OtpActivity extends AppCompatActivity {
         }
     }
 
+    private void startTimer() {
+        countDownTimer= new CountDownTimer(120000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                NumberFormat f = new DecimalFormat("00");
+                //long min = (millisUntilFinished / 60000) % 60;
+                long sec = (millisUntilFinished / 1000);
+                txtTimerCount.setText("Resend OTP in "+ f.format(sec)+" seconds.");
+            }
+
+            @Override
+            public void onFinish() {
+                txtTimerCount.setVisibility(View.GONE);
+                txtResendOtp.setVisibility(View.VISIBLE);
+            }
+        }.start();
+    }
 }

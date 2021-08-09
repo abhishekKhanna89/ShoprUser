@@ -1,7 +1,5 @@
 package com.shoppr.shoper.notifications;
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -45,20 +43,27 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);*/
         sessonManager = new SessonManager(this);
+        Log.e("MyFirebaseMessaging notification: ", remoteMessage.getData().toString());
         if (SendBirdCall.handleFirebaseMessageData(remoteMessage.getData())) {
             Log.d("MyFirebaseMessaging ", remoteMessage.getData().toString());
         } else {
             /*  Log.i(BaseApplication.TAG, "[MyFirebaseMessagingService] onMessageReceived() => " + remoteMessage.getData().toString());*/
-            showNotification(
-                    remoteMessage.getNotification().getTitle(),
-                    remoteMessage.getNotification().getBody(),
-                    remoteMessage);
+            //
+            String type = remoteMessage.getData().get("type");
+            if (type.equalsIgnoreCase("chat-assigned"))
+                showNotiForOrderAssign(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage);
+            else if (type.equalsIgnoreCase("chat"))
+                showNotiForChat(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage);
+            else {
+                showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage);
+            }
+
+
+            if (remoteMessage.getNotification().getBody().contains("with the shopper has been terminated")) {
+                MyPreferences.saveBoolean(getApplicationContext(), ConstantValue.KEY_IS_CHAT_PROGRESS, false);
+            }
             Intent intent = new Intent("message_subject_intent");
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-            if (remoteMessage.getNotification().getBody().contains("with the shopper has been terminated")){
-                MyPreferences.saveBoolean(getApplicationContext(), ConstantValue.KEY_IS_CHAT_PROGRESS,false);
-            }
         }
     }
 
@@ -98,16 +103,55 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         intent.putExtra("chat_status", "1");
         intent.setAction(Intent.ACTION_MAIN);
 
-        String channel_id = "notification_channel";
+        String channel_id = "simple_notification";
 
-        PendingIntent pendingIntent
-                = PendingIntent.getActivity(
-                this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        try {
+            notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            //Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            //r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        NotificationCompat.Builder builder = new NotificationCompat
+                .Builder(getApplicationContext(), channel_id)
+                .setSmallIcon(R.drawable.splash)
+                .setAutoCancel(true)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .setOnlyAlertOnce(true)
+                .setSound(notification)
+                .setContentIntent(pendingIntent)
+                .setContent(getCustomDesign(title, message, remoteMessage))
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        // Create a Builder object using NotificationCompat
-        // class. This will allow control over all the flags
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Simple Notification", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
 
+        notificationManager.notify(0, builder.build());
+
+    }
+
+    public void showNotiForChat(String title, String message, RemoteMessage remoteMessage) {
+        JSONObject jsonObject = new JSONObject(remoteMessage.getData());
+        try {
+            chat_id = jsonObject.getString("chat_id");
+            type = jsonObject.getString("type");
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        intent = new Intent(FirebaseMessageReceiver.this, ChatActivity.class);
+        intent.putExtra("findingchatid", chat_id);
+        intent.putExtra("chat_status", "1");
+        intent.setAction(Intent.ACTION_MAIN);
+
+        String channel_id = "chat_notification";
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         try {
             notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             //Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
@@ -116,47 +160,70 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
             e.printStackTrace();
         }
 
-
-        @SuppressLint("WrongConstant") NotificationCompat.Builder builder
-                = new NotificationCompat
-                .Builder(getApplicationContext(),
-                channel_id)
+        NotificationCompat.Builder builder = new NotificationCompat
+                .Builder(getApplicationContext(), channel_id)
                 .setSmallIcon(R.drawable.splash)
                 .setAutoCancel(true)
-                .setVibrate(new long[]{1000, 1000, 1000,
-                        1000, 1000})
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setOnlyAlertOnce(true)
                 .setSound(notification)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setContentIntent(pendingIntent)
+                .setContent(getCustomDesign(title, message, remoteMessage))
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Chat Alert", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+        notificationManager.notify(2, builder.build());
+
+    }
+
+    public void showNotiForOrderAssign(String title, String message, RemoteMessage remoteMessage) {
+        JSONObject jsonObject = new JSONObject(remoteMessage.getData());
+        try {
+            chat_id = jsonObject.getString("chat_id");
+            type = jsonObject.getString("type");
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        intent = new Intent(FirebaseMessageReceiver.this, ChatActivity.class);
+        intent.putExtra("findingchatid", chat_id);
+        intent.putExtra("chat_status", "1");
+        intent.setAction(Intent.ACTION_MAIN);
+
+        String channel_id = "order_assign_notification";
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        try {
+            notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            //Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            //r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat
+                .Builder(getApplicationContext(), channel_id)
+                .setSmallIcon(R.drawable.splash)
+                .setAutoCancel(true)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .setOnlyAlertOnce(true)
+                .setSound(notification)
+                .setContent(getCustomDesign(title, message, remoteMessage))
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-
-        // A customized design for the notification can be
-        // set only for Android versions 4.1 and above. Thus
-        // condition for the same is checked here.
-        builder = builder.setContent(
-                getCustomDesign(title, message, remoteMessage));
-        // Create an object of NotificationManager class to
-        // notify the
-        // user of events that happen in the background.
-        NotificationManager notificationManager
-                = (NotificationManager) getSystemService(
-                Context.NOTIFICATION_SERVICE);
-        // Check if the Android Version is greater than Oreo
-        if (Build.VERSION.SDK_INT
-                >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel
-                    = new NotificationChannel(
-                    channel_id, "web_app",
-                    NotificationManager.IMPORTANCE_HIGH);
-            notificationManager.createNotificationChannel(
-                    notificationChannel);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Order Assign", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(notificationChannel);
         }
-        builder.setOngoing(true);
-        notificationManager.notify(0, builder.build());
 
-
+        notificationManager.notify(4, builder.build());
     }
 
 }
