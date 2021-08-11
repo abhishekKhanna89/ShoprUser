@@ -7,6 +7,7 @@
 
     <string name="Address">Plot No-M,03,Sector 18,Noida,Uttar Pradesh 201301</string>
 
+    <string name="google_maps_api_key">AIzaSyDRfMxo276l8NcTbDB1a7RbMT1IINGkT38</string>
     <string name="facebook_app_id">297800690726297</string>
     <string name="fb_login_protocol_scheme">fb297800690726297</string>
     <string name="please_check_network">Please check your internet connection</string>

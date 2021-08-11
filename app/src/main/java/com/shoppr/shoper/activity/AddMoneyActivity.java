@@ -70,16 +70,14 @@ public  class AddMoneyActivity extends AppCompatActivity implements PaymentResul
         TvOneThousnads.setText("+ " + "\u20B9 " + 300);
         TvTwoThousnads.setText("+ " + "\u20B9 " + 500);
         TvThreeThousnads.setText("+ " + "\u20B9 " + 1000);
+        selectedBalance.setText(" 300");
 
         btnsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String a=selectedBalance.getText().toString();
                 String aa=a.replace("₹ ","");
-
                 rechargeService(aa);
-
             }
         });
 

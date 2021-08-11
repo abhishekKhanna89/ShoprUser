@@ -241,11 +241,9 @@ public interface ApiService {
                                        @Query("location")String location,
                                        @Query("city")String city);
 
-
     @POST("check-availability")
     Call<CheckLocationModel>apiCheckLocation(@Header("Authorization") String token, @Query("location")String location,
                                              @Query("city")String city);
-
     @NonNull
     @GET("logout")
     Call<LogoutModel>apiLogoutStatus(@Header("Authorization") String token);

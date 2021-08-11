@@ -42,13 +42,8 @@
      tools:targetApi="n">
 
      <meta-data
-         android:name="com.google.android.geo.API_KEY"
-         android:value="${mapsApiKey}" />
-
-     <meta-data
          android:name="io.fabric.ApiKey"
          android:value="fabaabc4273e4e67d52a5410e9b2fa7a59088976" />
-
 
      <activity
          android:name=".SendBird.call.VideoCallActivity"
@@ -160,7 +155,7 @@
 
      <meta-data
          android:name="com.google.android.geo.API_KEY"
-         android:value="${mapsApiKey}" />
+         android:value="@string/google_maps_api_key" />
 
      <meta-data
          android:name="com.razorpay.ApiKey"

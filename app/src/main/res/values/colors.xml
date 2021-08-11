@@ -77,6 +77,8 @@
     <color name="menu_text_color">#8b8f98</color>
     <color name="call_light_color">#25a7db</color>
     <color name="call_dark_color">#1c567d</color>
+    <color name="call_light_green_color">#6fba2b</color>
+    <color name="call_dark_green_color">#4fa0a1</color>
 
 
 

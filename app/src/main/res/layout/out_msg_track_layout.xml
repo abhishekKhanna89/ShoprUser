@@ -18,7 +18,7 @@
             app:cmv_backgroundColor="@color/my_chat_color"
             app:cmv_backgroundColorPressed="#FFBABABA"
             app:cmv_cornerRadius="3dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_margin="5dp"
             app:cmv_arrowPosition="right"
             android:layout_gravity="end">

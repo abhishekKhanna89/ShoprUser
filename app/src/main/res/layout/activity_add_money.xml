@@ -131,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dimen_5dp"
                         android:fontFamily="@font/open_sans"
-                        android:text="500"
+                        tools:text="500"
                         android:textAllCaps="true"
                         android:textColor="@color/black"
                         android:textSize="17sp"

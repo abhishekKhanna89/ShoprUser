@@ -73,8 +73,10 @@
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_register.xml" value="0.22" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_register1.xml" value="0.25" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_register_merchant.xml" value="0.16" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_sotore_details.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_splash.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_splash_new.xml" value="0.2" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_track_loaction.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_update_profile.xml" value="0.22" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_video_call.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_view_cart.xml" value="0.25" />
@@ -99,6 +101,7 @@
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/layout_chats_list.xml" value="0.25" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/layout_my_order.xml" value="0.25" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/layout_service_not_avialable.xml" value="0.1921875" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/map_info_window.xml" value="0.25" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/nav_header.xml" value="0.18" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/notification_layout.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/out_msg_addwallet_layout.xml" value="0.25" />

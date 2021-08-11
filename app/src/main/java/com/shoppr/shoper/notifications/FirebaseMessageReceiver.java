@@ -59,7 +59,8 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
             }
 
 
-            if (remoteMessage.getNotification().getBody().contains("with the shopper has been terminated")) {
+            if (remoteMessage.getNotification().getBody().contains("with the shopper has been terminated")||
+                    remoteMessage.getNotification().getTitle().contains("Order Delivered")) {
                 MyPreferences.saveBoolean(getApplicationContext(), ConstantValue.KEY_IS_CHAT_PROGRESS, false);
             }
             Intent intent = new Intent("message_subject_intent");
@@ -121,6 +122,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                 .setOnlyAlertOnce(true)
                 .setSound(notification)
                 .setContentIntent(pendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContent(getCustomDesign(title, message, remoteMessage))
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
@@ -139,7 +141,6 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         try {
             chat_id = jsonObject.getString("chat_id");
             type = jsonObject.getString("type");
-
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -167,6 +168,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setOnlyAlertOnce(true)
                 .setSound(notification)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(pendingIntent)
                 .setContent(getCustomDesign(title, message, remoteMessage))
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -213,6 +215,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setOnlyAlertOnce(true)
                 .setSound(notification)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContent(getCustomDesign(title, message, remoteMessage))
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);

@@ -279,7 +279,6 @@ public class ViewCartActivity extends AppCompatActivity {
                         InitiatPaymentModel initiatPaymentModel = response.body();
                         Log.d("intiateresponse===", new Gson().toJson(response.body()));
 
-
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
 
                             if (initiatPaymentModel.getData().getPaymentDone().equalsIgnoreCase("No")) {
@@ -295,12 +294,8 @@ public class ViewCartActivity extends AppCompatActivity {
                                 email = initiatPaymentModel.getData().getEmail();
 
                                 total1 = String.valueOf(initiatPaymentModel.getData().getTotal());
-
-
                                 // lk changes here
                                 launchPayUMoneyFlow();
-
-
                             } else {
 
                                 startActivity(new Intent(ViewCartActivity.this, OrderConfirmActivity.class)
