@@ -222,10 +222,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d("soundAllowed=", String.valueOf(soundAllowed));
 
         bannerList = new ArrayList<>();
-        bannerList.add(R.drawable.interior_design1);
-        bannerList.add(R.drawable.interior_design2);
-        bannerList.add(R.drawable.interior_design3);
-        bannerList.add(R.drawable.interior_design4);
+        bannerList.add(R.drawable.banner1);
+        bannerList.add(R.drawable.banner2);
+        /*bannerList.add(R.drawable.interior_design3);
+        bannerList.add(R.drawable.interior_design4);*/
 
         if (RuntimePermission.checkRunTimePermission(this)) {
             proceedAfterPermission();

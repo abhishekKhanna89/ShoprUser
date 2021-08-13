@@ -58,7 +58,6 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                 showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage);
             }
 
-
             if (remoteMessage.getNotification().getBody().contains("with the shopper has been terminated")||
                     remoteMessage.getNotification().getTitle().contains("Order Delivered")) {
                 MyPreferences.saveBoolean(getApplicationContext(), ConstantValue.KEY_IS_CHAT_PROGRESS, false);
