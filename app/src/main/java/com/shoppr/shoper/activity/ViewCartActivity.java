@@ -368,7 +368,6 @@ public class ViewCartActivity extends AppCompatActivity {
                                     walletCardView.setVisibility(GONE);
                                 } else {
                                     cardOrderSummary.setVisibility(VISIBLE);
-                                    btn_cod.setVisibility(GONE);
                                     linrBottomOrder.setVisibility(VISIBLE);
                                     walletCardView.setVisibility(VISIBLE);
                                 }

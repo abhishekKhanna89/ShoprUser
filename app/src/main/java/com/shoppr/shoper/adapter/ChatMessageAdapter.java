@@ -49,6 +49,8 @@ import com.shoppr.shoper.activity.TrackLoactionActivity;
 import com.shoppr.shoper.activity.ViewCartActivity;
 import com.shoppr.shoper.requestdata.RatingsRequest;
 import com.shoppr.shoper.util.CommonUtils;
+import com.shoppr.shoper.util.ConstantValue;
+import com.shoppr.shoper.util.MyPreferences;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
@@ -330,19 +332,16 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
             holder.message_body.setText(chat.getMessage());
             holder.dateText.setText(chat.getCreatedAt());
             holder.textLayout.setVisibility(View.VISIBLE);
+            if (chat.getMessage().contains("with the shopper has been terminated")||chat.getMessage().contains("Order has been delivered")){
+                MyPreferences.saveBoolean(context, ConstantValue.KEY_IS_CHAT_PROGRESS, false);
+            }
         } else if (chat.getType().equalsIgnoreCase("discount")) {
             holder.message_body.setText(chat.getMessage());
             holder.dateText.setText(chat.getCreatedAt());
             //holder.textLayout.setVisibility(View.VISIBLE);
         }
 
-
-
-
-        /* else {
-            holder.textLayout.setVisibility(View.GONE);
-        }*/
-        else if (chat.getType().equalsIgnoreCase("product")) {
+        else if (chat.getType().equalsIgnoreCase("product")||chat.getType().equalsIgnoreCase("products")) {
             holder.productLayout.setVisibility(View.VISIBLE);
             if (chat.getFilePath().length() == 0) {
 
@@ -376,7 +375,6 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                 holder.rejectText.setVisibility(View.GONE);
                 holder.cancelText.setVisibility(View.GONE);
             }
-
 
             holder.acceptText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -778,7 +776,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                 return SELF_DISCOUNT_IN;
             } else if (message.getType().equalsIgnoreCase("image")) {
                 return SELF_IMAGE_IN;
-            } else if (message.getType().equalsIgnoreCase("product")) {
+            } else if (message.getType().equalsIgnoreCase("product")||message.getType().equalsIgnoreCase("products")) {
                 return SELF_PRODUCT_IN;
             } else if (message.getType().equalsIgnoreCase("rating")) {
                 Log.d("messagetype===", message.getType());

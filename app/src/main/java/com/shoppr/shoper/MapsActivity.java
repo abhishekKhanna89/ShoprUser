@@ -663,7 +663,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
                                             for (int i = 0; i < shoprListModel.getData().getShopper().size(); i++) {
                                                 String res = new Gson().toJson(shoprListModel.getData().getShopper().get(i).getShopprCount());
                                                 Log.d("resShopo", res);
-                                                shoprListText.setText("Active Shoppers : " + shoprListModel.getData().getShopper().get(i).getShopprCount());
+                                                shoprListText.setText("Active Riders : " + shoprListModel.getData().getShopper().get(i).getShopprCount());
 
                                                 if (shoprListModel.getData().getNotifications().equalsIgnoreCase("0")) {
                                                     noti_badge.setVisibility(View.GONE);
@@ -865,8 +865,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
             BadgeDrawable badge = navView.getOrCreateBadge(R.id.navigation_chat);
             badge.setVisible(true);
             badge.setNumber(1);
+        }else {
+            BadgeDrawable badge = navView.getOrCreateBadge(R.id.navigation_chat);
+            badge.setVisible(false);
         }
-
     }
 
     private void registerBroadcast() {
@@ -1197,12 +1199,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         } catch (android.content.ActivityNotFoundException anfe) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("lifecycle", "onStop");
     }
 
     @Override

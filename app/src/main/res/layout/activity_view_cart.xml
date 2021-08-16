@@ -45,9 +45,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/open_sans"
                         android:text="Order Summery"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/open_sans"
                         android:textSize="@dimen/dimen_15dp"
                         android:textStyle="bold" />
 
@@ -61,8 +61,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.9"
-                            android:text="Total"
                             android:fontFamily="@font/open_sans"
+                            android:text="Total"
                             android:textSize="14dp" />
 
                         <TextView
@@ -70,8 +70,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
-                            android:text="Total"
                             android:fontFamily="@font/open_sans"
+                            android:text="Total"
                             android:textSize="14dp" />
                     </LinearLayout>
 
@@ -84,17 +84,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.9"
-                            android:text="Service Charge"
                             android:fontFamily="@font/open_sans"
-                            android:textSize="14dp"  />
+                            android:text="Service Charge"
+                            android:textSize="14dp" />
 
                         <TextView
                             android:id="@+id/serviceChargeText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
-                            android:text="Total"
                             android:fontFamily="@font/open_sans"
+                            android:text="Total"
                             android:textSize="14dp" />
                     </LinearLayout>
 
@@ -109,18 +109,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.9"
-                            android:text="Discount"
                             android:fontFamily="@font/open_sans"
-                            android:textSize="14dp"  />
+                            android:text="Discount"
+                            android:textSize="14dp" />
 
                         <TextView
                             android:id="@+id/tv_discount_charge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
-                            android:text="12.20"
                             android:fontFamily="@font/open_sans"
-                            android:textSize="14dp"  />
+                            android:text="12.20"
+                            android:textSize="14dp" />
                     </LinearLayout>
 
                     <View
@@ -139,20 +139,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.9"
+                            android:fontFamily="@font/open_sans"
                             android:text="Grand Total"
                             android:textColor="@color/textColor"
-                            android:fontFamily="@font/open_sans"
-                            android:textSize="14dp"  />
+                            android:textSize="14dp" />
 
                         <TextView
                             android:id="@+id/groundTotalText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
+                            android:fontFamily="@font/open_sans"
                             android:text="Total"
                             android:textColor="@color/textColor"
-                            android:fontFamily="@font/open_sans"
-                            android:textSize="14dp"  />
+                            android:textSize="14dp" />
                     </LinearLayout>
 
 
@@ -180,8 +180,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:gravity="center"
                         android:fontFamily="sans-serif-light"
+                        android:gravity="center"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -192,23 +192,23 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_centerInParent="true"
-                        android:fontFamily="@font/open_sans"
                         android:layout_gravity="center"
-                        android:textSize="@dimen/dimen_15dp"
+                        android:fontFamily="@font/open_sans"
                         android:text="Use Wallet "
                         android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_15dp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:layout_toRightOf="@+id/useWT"
-                        android:text="(For Quick payment)"
                         android:layout_gravity="center"
+                        android:layout_toRightOf="@+id/useWT"
                         android:fontFamily="@font/open_sans"
-                        android:textSize="@dimen/dimen_12dp"
-                        android:textColor="@color/black" />
+                        android:text="(For Quick payment)"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_12dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>

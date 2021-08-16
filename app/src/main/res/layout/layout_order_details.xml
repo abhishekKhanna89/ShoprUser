@@ -9,32 +9,42 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardMaxElevation="4dp"
-        app:cardElevation="6dp"
+        app:cardUseCompatPadding="true"
         android:layout_margin="5dp"
+        app:cardElevation="@dimen/dimen_5dp"
         app:cardCornerRadius="8dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
-            <ImageView
-                android:id="@+id/productImage"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_launcher"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/llImage"
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"
+                app:cardCornerRadius="@dimen/dimen_10dp"
+                app:cardElevation="@dimen/dimen_0dp">
+
+                <ImageView
+                    android:id="@+id/productImage"
+                    android:layout_width="78dp"
+                    android:layout_height="82dp"
+                    android:scaleType="fitXY" />
+
+            </androidx.cardview.widget.CardView>
+
             <TextView
                 android:id="@+id/nameProductText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@id/llImage"
+                android:letterSpacing="0.1"
                 android:text="12dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:layout_toRightOf="@id/productImage"/>
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/priceProductText"
                 android:layout_width="match_parent"
@@ -46,7 +56,7 @@
                 android:layout_below="@id/nameProductText"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_toRightOf="@id/productImage"/>
+                android:layout_toRightOf="@id/llImage"/>
 
             <TextView
                 android:id="@+id/quantityProductText"
@@ -59,7 +69,7 @@
                 android:layout_below="@id/priceProductText"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_toRightOf="@id/productImage"/>
+                android:layout_toRightOf="@id/llImage"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

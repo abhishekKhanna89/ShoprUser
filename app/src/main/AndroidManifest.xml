@@ -37,9 +37,11 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:debuggable="true"
         android:theme="@style/Theme.Shoper"
 
-     tools:targetApi="n">
+     tools:targetApi="n"
+        tools:ignore="HardcodedDebugMode">
 
      <meta-data
          android:name="io.fabric.ApiKey"

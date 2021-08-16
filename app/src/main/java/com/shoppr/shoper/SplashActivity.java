@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
             newToken = instanceIdResult.getToken();
             sessonManager.setNotificationToken(newToken);
-            // Log.d("notificationToken",newToken);
+             Log.e("deviceId: ",newToken);
         });
 
         AuthenticationUtils.autoAuthenticate(this, userId -> {

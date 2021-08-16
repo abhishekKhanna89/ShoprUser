@@ -60,6 +60,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.gradient_bg));
+        getSupportActionBar().setTitle("Order Details");
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sessonManager=new SessonManager(this);
         int orderId=getIntent().getIntExtra("orderId",0);
@@ -207,10 +210,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 Picasso.get().load(detailList.get(position).getFilePath()).into(holder.productImage);
             }
 
-
-            holder.nameProductText.setText(detailList.get(position).getMessage());
-            holder.priceProductText.setText("\u20B9 "+detailList.get(position).getPrice());
-            holder.quantityProductText.setText(detailList.get(position).getQuantity());
+            holder.nameProductText.setText("Product: "+detailList.get(position).getMessage());
+            holder.priceProductText.setText("Price: \u20B9 "+detailList.get(position).getPrice());
+            holder.quantityProductText.setText("Qty: "+detailList.get(position).getQuantity());
         }
 
         @Override
