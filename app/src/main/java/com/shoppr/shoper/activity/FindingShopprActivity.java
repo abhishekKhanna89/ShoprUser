@@ -83,13 +83,13 @@ public class FindingShopprActivity extends AppCompatActivity {
     }
 
     private void startTimer() {
-       countDownTimer= new CountDownTimer(10000, 1000) {
+       countDownTimer= new CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 NumberFormat f = new DecimalFormat("00");
                 long min = (millisUntilFinished / 60000) % 60;
                 long sec = (millisUntilFinished / 1000) % 60;
-                textViewShowTime.setText("Connecting you with a shopper in \n"+f.format(min) + ":" + f.format(sec)+" seconds.");
+                textViewShowTime.setText("Connecting you with a rider in \n"+f.format(min) + ":" + f.format(sec)+" seconds.");
             }
 
             @Override

@@ -13,7 +13,7 @@ public class MyPreferences {
 
     public static void saveBoolean(Context context, String key, boolean value) {
         editor = context.getSharedPreferences(context.getPackageName(), MODE_PRIVATE).edit();
-        editor.putBoolean(key, value).commit();
+        editor.putBoolean(key, value).apply();
     }
 
     public static boolean getBoolean(Context context, String key) {
@@ -23,7 +23,7 @@ public class MyPreferences {
 
     public static void saveString(Context context, String key, String value) {
         editor = context.getSharedPreferences(context.getPackageName(), MODE_PRIVATE).edit();
-        editor.putString(key, value).commit();
+        editor.putString(key, value).apply();
     }
 
     public static String getSavedString(Context context, String key) {
@@ -33,7 +33,7 @@ public class MyPreferences {
 
     public static void clerPref(Context context) {
         preferences = context.getSharedPreferences(context.getPackageName(), MODE_PRIVATE);
-        preferences.edit().clear().commit();
+        preferences.edit().clear().apply();
 
     }
 

@@ -328,9 +328,8 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             String msgContent = editText.getText().toString();
+                            llSend.setEnabled(false);
                             if (!TextUtils.isEmpty(msgContent)) {
-
-
                                 Log.d("verfy===", String.valueOf(chat_id));
                                 if (CommonUtils.isOnline(ChatActivity.this)) {
                                     //sessonManager.showProgress(ChatActivity.this);
@@ -342,7 +341,7 @@ public class ChatActivity extends AppCompatActivity {
                                     call.enqueue(new Callback<SendModel>() {
                                         @Override
                                         public void onResponse(Call<SendModel> call, Response<SendModel> response) {
-
+                                            llSend.setEnabled(true);
                                             //sessonManager.hideProgress();
                                             if (response.body() != null) {
                                                 SendModel sendModel = response.body();
