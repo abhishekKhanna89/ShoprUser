@@ -37,11 +37,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     @Override
     public void
     onMessageReceived(RemoteMessage remoteMessage) {
-        // Logic to turn on the screen
-        /* getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);*/
+
         sessonManager = new SessonManager(this);
         Log.e("Firebase notification: ", remoteMessage.getData().toString());
         if (SendBirdCall.handleFirebaseMessageData(remoteMessage.getData())) {
@@ -132,7 +128,6 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         }
 
         notificationManager.notify(0, builder.build());
-
     }
 
     public void showNotiForChat(String title, String message, RemoteMessage remoteMessage) {

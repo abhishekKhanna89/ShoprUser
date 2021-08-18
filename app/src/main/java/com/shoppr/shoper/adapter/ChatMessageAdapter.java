@@ -362,6 +362,8 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                 //   holder.ratingLayout.setEnabled(false);
                 //  holder.ratingBar.setIsIndicator(true);
 
+                ((ChatActivity) context).hideTerminateButton();
+
             } else if (chat.getStatus().equalsIgnoreCase("rejected")) {
                 holder.closeRedLayout.setVisibility(View.VISIBLE);
                 holder.greenLayout.setVisibility(View.GONE);

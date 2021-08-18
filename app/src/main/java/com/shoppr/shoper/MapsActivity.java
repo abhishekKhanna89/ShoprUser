@@ -224,6 +224,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         bannerList = new ArrayList<>();
         bannerList.add(R.drawable.banner1);
         bannerList.add(R.drawable.banner2);
+        bannerList.add(R.drawable.banner3);
+        bannerList.add(R.drawable.banner4);
         /*bannerList.add(R.drawable.interior_design3);
         bannerList.add(R.drawable.interior_design4);*/
 
@@ -658,7 +660,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
                                     ShoprListModel shoprListModel = response.body();
                                     if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
 
-
                                         if (shoprListModel.getData() != null) {
                                             for (int i = 0; i < shoprListModel.getData().getShopper().size(); i++) {
                                                 String res = new Gson().toJson(shoprListModel.getData().getShopper().get(i).getShopprCount());
@@ -994,7 +995,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
                 longitude = String.valueOf(address.getLongitude());
                 setAddress(latitude, longitude);
             }
-
         }
     }
 

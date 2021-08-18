@@ -256,6 +256,13 @@ public class OtpActivity extends AppCompatActivity {
 
 
     public void resend(View view) {
+        etCode1.setText("");
+        etCode2.setText("");
+        etCode3.setText("");
+        etCode4.setText("");
+        etCode5.setText("");
+        etCode6.setText("");
+        otp="";
         progressbar.showProgress(OtpActivity.this);
         if (CommonUtils.isOnline(OtpActivity.this)) {
             Call<ResendOtpModel> call = ApiExecutor.getApiService(this).apiResendOtp(type, mobile);

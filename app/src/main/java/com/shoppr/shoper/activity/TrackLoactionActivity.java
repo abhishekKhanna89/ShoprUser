@@ -192,7 +192,7 @@ public class TrackLoactionActivity extends AppCompatActivity implements OnMapRea
                                     String location_addressD = addressD.getAddressLine(0);
                                     int heightD = 120;
                                     int widthD = 80;
-                                    BitmapDrawable bitmapdrawD = (BitmapDrawable) getResources().getDrawable(R.drawable.bike_icon);
+                                    BitmapDrawable bitmapdrawD = (BitmapDrawable) getResources().getDrawable(R.drawable.rider_iconn);
                                     Bitmap bD = bitmapdrawD.getBitmap();
                                     Bitmap smallMarkerD = Bitmap.createScaledBitmap(bD, widthD, heightD, false);
 

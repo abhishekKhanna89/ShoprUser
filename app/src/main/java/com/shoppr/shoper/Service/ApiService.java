@@ -34,6 +34,7 @@ import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
 import com.shoppr.shoper.Model.StartChat.StartChatModel;
 import com.shoppr.shoper.Model.StoreList.StoreListModel;
 import com.shoppr.shoper.Model.StoreListDetails.StoreListDetailsModel;
+import com.shoppr.shoper.Model.TerminateChat.TerminateChatModel;
 import com.shoppr.shoper.Model.TrackLoaction.TrackLoactionModel;
 import com.shoppr.shoper.Model.VerifyRechargeModel;
 import com.shoppr.shoper.Model.WalletHistory.WalletHistoryModel;
@@ -248,8 +249,11 @@ public interface ApiService {
     @GET("logout")
     Call<LogoutModel>apiLogoutStatus(@Header("Authorization") String token);
 
-
     @POST("resend-otp")
     Call<ResendOtpModel>apiResendOtp(@Query("type")String type,
                                      @Query("mobile")String mobile);
+    @NonNull
+    @GET("terminate-chat/{id}")
+    Call<TerminateChatModel> apiChatTerminate(@Header("Authorization") String token,
+                                              @Path("id") int id);
 }

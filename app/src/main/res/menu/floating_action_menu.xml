@@ -2,11 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/audioCall"
-        android:icon="@drawable/btn_call_voice"
-        android:title="Voice Call" />
-    <item
-        android:id="@+id/videoCall"
-        android:icon="@drawable/btn_call_video"
-        android:title="Video Call" />
+        android:id="@+id/fab_terminate"
+        android:icon="@drawable/chat_terminate"
+        android:title="Terminate Chat" />
+
 </menu>

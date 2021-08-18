@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/audioCall"
+        android:icon="@drawable/btn_call_voice"
+        android:title="Voice Call" />
+    <item
+        android:id="@+id/videoCall"
+        android:icon="@drawable/btn_call_video"
+        android:title="Video Call" />
+</menu>

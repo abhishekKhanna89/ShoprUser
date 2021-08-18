@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/USER/.gradle/caches/transforms-2/files-2.1/93b1a6773a7f0d7a3eb863dc14971646/jetified-record-view-2.0.1/res/drawable/recv_bg_mic.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/USER/.gradle/caches/transforms-2/files-2.1/93b1a6773a7f0d7a3eb863dc14971646/jetified-record-view-2.0.1/res/drawable/recv_ic_mic_white.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/USER/.gradle/caches/transforms-2/files-2.1/def1ecf0ad41711e5bc0a67070d66c33/jetified-plug-n-play-1.6.1/res/drawable/bg_rounded_grey_border.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/USER/.gradle/caches/transforms-2/files-2.1/fcfdb3ed429125aedf1c50c9b20fcc74/jetified-ChatVoicePlayer-1.0.7/res/drawable/play_pause_bg.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/drawable-hdpi/one_thansouns.xml" value="0.20833333333333334" />
@@ -58,9 +59,10 @@
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/font/open_sans_semibold.xml" value="0.22239583333333332" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/font/roboto_medium.xml" value="0.22239583333333332" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_add_money.xml" value="0.21" />
-        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_chat.xml" value="0.2" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_chat.xml" value="0.25" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_chat_details.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_chat_history.xml" value="0.22" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_edit_location.xml" value="0.12466216216216217" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_finding_shoppr.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/activity_login1.xml" value="0.2" />
@@ -125,11 +127,13 @@
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/out_msg_track_layout.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/layout/your_layout_screen.xml" value="0.1921875" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/menu/bottom_menu.xml" value="0.1921875" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/menu/fab_action_menu.xml" value="0.12466216216216217" />
+        <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/menu/floating_action_menu.xml" value="0.12466216216216217" />
         <entry key="..\:/Users/USER/StudioProjects/ShoprUser/app/src/main/res/menu/menu_main.xml" value="0.1921875" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

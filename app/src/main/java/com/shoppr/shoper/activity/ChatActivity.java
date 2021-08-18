@@ -23,6 +23,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -53,6 +54,7 @@ import com.shoppr.shoper.Model.ChatMessage.ChatMessageModel;
 import com.shoppr.shoper.Model.ChatModel;
 import com.shoppr.shoper.Model.InitiateVideoCall.InitiateVideoCallModel;
 import com.shoppr.shoper.Model.Send.SendModel;
+import com.shoppr.shoper.Model.TerminateChat.TerminateChatModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.SendBird.utils.ActivityUtils;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
@@ -84,6 +86,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -128,6 +132,7 @@ public class ChatActivity extends AppCompatActivity {
     CircleImageView userDp;
     TextView userName;
     String shopperName="",shopperPic="";
+    FabSpeedDial fabSpeedDial;
 
     //String TAG="lakshmi";
 
@@ -155,11 +160,8 @@ public class ChatActivity extends AppCompatActivity {
         permissionToDrawOverlays();
         chatRecyclerView = findViewById(R.id.chatRecyclerView);
         chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-        //chatRecyclerView.setHasFixedSize(false);
-        //chatRecyclerView.setItemViewCacheSize(1000);
-        //chatRecyclerView.setDrawingCacheEnabled(true);
-        //chatRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        //chatRecyclerView.setNestedScrollingEnabled(false);
+        chatRecyclerView.setHasFixedSize(false);
+        chatRecyclerView.setNestedScrollingEnabled(false);
 
         /*Todo:- Recording Library*/
         recordView = (RecordView) findViewById(R.id.record_view);
@@ -169,19 +171,11 @@ public class ChatActivity extends AppCompatActivity {
         checkPermissions();
         //Cancel Bounds is when the Slide To Cancel text gets before the timer . default is 8
         recordView.setCancelBounds(8);
-
         recordView.setSmallMicColor(Color.parseColor("#c2185b"));
-
         //prevent recording under one Second
         recordView.setLessThanSecondAllowed(false);
-
-
         recordView.setSlideToCancelText("Slide To Cancel");
-
-
         recordView.setCustomSounds(0, R.raw.record_finished, 0);
-
-
         recordView.setOnRecordListener(new OnRecordListener() {
             @Override
             public void onStart() {
@@ -223,7 +217,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String chat_status = getIntent().getStringExtra("chat_status");
@@ -248,8 +241,6 @@ public class ChatActivity extends AppCompatActivity {
                 //chatMessageList(chat_id);
                 //Log.d(TAG, "Key: " + "abcd" + " Value: " + value);
             }
-
-
         }
         if (chatList == null) {
             chatMessageList(chat_id);
@@ -261,15 +252,7 @@ public class ChatActivity extends AppCompatActivity {
             chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount());
             //chatRecyclerView.getLayoutManager().scrollToPosition(chatList.size()-1);
             chatMessageAdapter.notifyDataSetChanged();
-
         }
-        /*if (chatList.size()==0){
-
-        }else {
-            chatList.size();
-
-        }*/
-
 
         Log.d("ChatIdForTesting", "" + chat_id);
         /*Todo:- UserDP*/
@@ -280,11 +263,8 @@ public class ChatActivity extends AppCompatActivity {
         llSend = findViewById(R.id.llSend);
         chooseImage = findViewById(R.id.chooseImage);
 
-
-
         /*Todo:- Cart Count View*/
         cart_badge = findViewById(R.id.cart_badge);
-
 
         chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,6 +274,35 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         msgDtoList = new ArrayList<>();
+
+        fabSpeedDial = (FabSpeedDial) findViewById(R.id.fab_speed_dial);
+        fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.fab_terminate:
+                        new android.app.AlertDialog.Builder(ChatActivity.this)
+                                .setTitle("Are you sure want to terminate chat?")
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Continue with delete operation
+                                        terminate();
+                                    }
+                                })
+
+                                // A null listener allows the button to dismiss the dialog and take no further action.
+                                .setNegativeButton(android.R.string.no, null)
+                                .setIcon(R.drawable.splash_transparent)
+                                .show();
+
+                        break;
+                }
+                return false;
+            }
+        });
+
 
 
         mMessageReceiver = new BroadcastReceiver() {
@@ -376,8 +385,27 @@ public class ChatActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+    }
 
-
+    private void terminate() {
+        Call<TerminateChatModel> call = ApiExecutor.getApiService(this)
+                .apiChatTerminate("Bearer " + sessonManager.getToken(), chat_id);
+        call.enqueue(new Callback<TerminateChatModel>() {
+            @Override
+            public void onResponse(Call<TerminateChatModel> call, Response<TerminateChatModel> response) {
+                if (response.body() != null) {
+                    if (response.body().getStatus() != null && response.body().getStatus().equalsIgnoreCase("success")) {
+                        Toast.makeText(ChatActivity.this, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        chatMessageList(chat_id);
+                    } else {
+                        Toast.makeText(ChatActivity.this, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<TerminateChatModel> call, Throwable t) {
+            }
+        });
     }
 
 
@@ -639,6 +667,8 @@ public class ChatActivity extends AppCompatActivity {
             CommonUtils.showToastInCenter(ChatActivity.this, getString(R.string.please_check_network));
         }
     }
+
+
 
     public static class Utility {
         public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
@@ -958,6 +988,11 @@ public class ChatActivity extends AppCompatActivity {
     public void yourDesiredMethod() {
         chatMessageList(chat_id);
     }
+
+    public void hideTerminateButton() {
+        fabSpeedDial.setVisibility(View.GONE);
+    }
+
 
     public void permissionToDrawOverlays() {
         if (android.os.Build.VERSION.SDK_INT >= 23) {   //Android M Or Over

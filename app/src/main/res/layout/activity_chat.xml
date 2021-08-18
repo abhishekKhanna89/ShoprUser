@@ -174,6 +174,19 @@
             app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
             app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
             app:fastScrollVerticalTrackDrawable="@drawable/line_drawable" />
+
+        <io.github.yavski.fabspeeddial.FabSpeedDial
+            android:id="@+id/fab_speed_dial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="top|start"
+            app:fabGravity="bottom_end"
+            app:fabMenu="@menu/floating_action_menu"
+            app:miniFabBackgroundTint="@android:color/white"
+            app:miniFabDrawableTint="?attr/colorPrimaryDark"
+            app:miniFabTitleTextColor="?attr/colorPrimaryDark" />
     </RelativeLayout>
 
     <Chronometer
@@ -217,11 +230,12 @@
 
             <ImageButton
                 android:id="@+id/chooseImage"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/dimen_40dp"
+                android:layout_height="@dimen/dimen_40dp"
                 android:layout_gravity="center"
-                android:background="@drawable/ic_camera"
-                android:backgroundTint="@color/dark_grey"
+                android:padding="@dimen/dimen_8dp"
+                android:background="@drawable/recv_bg_mic"
+                android:src="@drawable/ic_camera"
                 android:scaleType="fitCenter" />
 
             <EditText
@@ -243,8 +257,8 @@
 
             <com.devlomi.record_view.RecordButton
                 android:id="@+id/record_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dimen_40dp"
+                android:layout_height="@dimen/dimen_40dp"
                 android:layout_gravity="end"
                 android:visibility="visible"
                 android:background="@drawable/recv_bg_mic"
