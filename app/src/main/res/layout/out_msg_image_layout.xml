@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,13 +43,31 @@
                     android:layout_height="wrap_content"
                     android:text="Location" />
 
-                <TextView
-                    android:id="@+id/dateImage"
-                    style="@style/userTextTime"
-                    android:layout_width="wrap_content"
+
+                <RelativeLayout
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="11:00 AM" />
+                    android:layout_marginRight="5dp">
+
+                    <TextView
+                        android:id="@+id/dateImage"
+                        style="@style/userTextTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="11:00 AM" />
+
+                    <ImageView
+                        android:id="@+id/read_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/ic_baseline_done_24"
+                        android:tint="@color/remoteBackground"
+                        tools:ignore="UseAppTint" />
+                </RelativeLayout>
+
 
             </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>

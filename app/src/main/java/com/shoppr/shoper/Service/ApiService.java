@@ -216,12 +216,10 @@ public interface ApiService {
     @GET("track-location/{message_id}")
     Call<TrackLoactionModel>apiTrackLocation(@Header("Authorization") String token,
                                              @Path("message_id")int message_id);
-
     @NonNull
     @GET("initiate-video-call/{chat_id}")
     Call<InitiateVideoCallModel>apiInitiateVideoCall(@Header("Authorization") String token,
                                                      @Path("chat_id")int chat_id);
-
     @NonNull
     @GET("notifications")
     Call<NotificationListModel>apiNotificationList(@Header("Authorization") String token,
@@ -234,6 +232,10 @@ public interface ApiService {
     @NonNull
     @GET("view-application")
     Call<GetRegisterMerchantModel>apiGetMerchantRegister(@Header("Authorization") String token);
+
+    @NonNull
+    @POST("notification-read")
+    Call<JsonObject>apiReadNotification(@HeaderMap Map<String, String> token);
 
     @NonNull
     @POST("auto-assign/{chat_id}")

@@ -49,15 +49,40 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
+
+            <ImageView
+                android:id="@+id/videoCall"
+                android:layout_width="@dimen/dimen_30dp"
+                android:layout_height="@dimen/dimen_30dp"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/audioCall"
+                android:onClick="initializationVideo"
+                android:src="@drawable/video_camera"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint" />
+
+
             <RelativeLayout
                 android:id="@+id/helpRelative"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_centerInParent="true"
-                android:layout_margin="10dp"
-                android:layout_toLeftOf="@+id/audioCall"
-                android:background="@drawable/shape_help"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toLeftOf="@+id/videoCall"
                 android:onClick="help">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+
+                    android:src="@drawable/help_whatsapp_circle"
+                    android:tint="@color/white"
+                    tools:ignore="UseAppTint" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -67,6 +92,7 @@
                     android:fontFamily="@font/monster"
                     android:gravity="center"
                     android:text="Help"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textSize="10sp"
                     android:textStyle="bold" />
@@ -146,19 +172,12 @@
                  android:layout_marginRight="10dp"
                  android:layout_centerInParent="true"
                  android:layout_toLeftOf="@+id/videoCall"
-                 android:src="@drawable/btn_call_voice"/>
+                 android:src="@drawable/btn_call_voice"/>-->
 
-             <ImageView
-                 android:id="@+id/videoCall"
-                 android:layout_width="40dp"
-                 android:layout_height="40dp"
-                 android:layout_centerInParent="true"
-                 android:onClick="initializationVideo"
-                 android:layout_marginRight="10dp"
-                 android:layout_alignParentRight="true"
-                 android:src="@drawable/btn_call_video"/>-->
+
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
+
 
     <RelativeLayout
         android:layout_width="match_parent"

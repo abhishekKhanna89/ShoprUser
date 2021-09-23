@@ -12,6 +12,7 @@
         android:layout_marginBottom="@dimen/dimen_50dp"
         android:textColor="@color/white"
         android:textSize="@dimen/dimen_15dp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

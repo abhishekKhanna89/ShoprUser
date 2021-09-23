@@ -19,6 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.shoppr.shoper.LoginActivity;
 import com.shoppr.shoper.MapsActivity;
 import com.shoppr.shoper.Model.AutoAssign.AutoAssignModel;
@@ -80,21 +81,25 @@ public class FindingShopprActivity extends AppCompatActivity {
         shopId = getIntent().getIntExtra("shopId", 0);
         viewStartChat1(shopId);
         startTimer();
+
+
     }
 
     private void startTimer() {
-       countDownTimer= new CountDownTimer(60000, 1000) {
+       countDownTimer= new CountDownTimer(30000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 NumberFormat f = new DecimalFormat("00");
-                long min = (millisUntilFinished / 60000) % 60;
+                long min = (millisUntilFinished / 30000) % 60;
                 long sec = (millisUntilFinished / 1000) % 60;
                 textViewShowTime.setText("Connecting you with a rider in \n"+f.format(min) + ":" + f.format(sec)+" seconds.");
             }
 
             @Override
             public void onFinish() {
-                autoAssign(chat_id);
+                startActivity(new Intent(FindingShopprActivity.this, MapsActivity.class));
+                finishAffinity();
+              //  autoAssign(chat_id);
                 //textViewShowTime.setText("Finished");
             }
         }.start();
@@ -124,6 +129,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<StartChatModel> call, Response<StartChatModel> response) {
                                 //sessonManager.hideProgress();
+                                System.out.println("ddddddddddddd"+new Gson().toJson(response.body()));
                                 if (response.body() != null) {
                                     StartChatModel startChatModel = response.body();
                                     countDownTimer.cancel();
@@ -139,6 +145,14 @@ public class FindingShopprActivity extends AppCompatActivity {
                                         }
                                     } else {
                                         Toast.makeText(FindingShopprActivity.this, "" + startChatModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                      /*  startActivity(new Intent(FindingShopprActivity.this, MapsActivity.class));
+                                        finishAffinity();
+*/
+                                        int chatId = MyPreferences.getInt(FindingShopprActivity.this, ConstantValue.KEY_CHAT_ID);
+                                        startActivity(new Intent(FindingShopprActivity.this, ChatActivity.class)
+                                                .putExtra("chat_status", "2").putExtra("findingchatid", chatId).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+
                                         if (response.body().getStatus().equalsIgnoreCase("failed")) {
                                             if (response.body().getMessage().equalsIgnoreCase("logout")) {
                                                 Call<LogoutModel> call1 = ApiExecutor.getApiService(FindingShopprActivity.this)
@@ -220,6 +234,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                         //sessonManager.showProgress(FindingShopprActivity.this);
                         Call<AutoAssignModel> call = ApiExecutor.getApiService(FindingShopprActivity.this)
                                 .apiAutoAssign("Bearer " + sessonManager.getToken(), chat_id, location, city);
+                       // System.out.println("test_response"+sessonManager.getToken()+","+chat_id);
                         call.enqueue(new Callback<AutoAssignModel>() {
                             @Override
                             public void onResponse(Call<AutoAssignModel> call, Response<AutoAssignModel> response) {
@@ -227,7 +242,6 @@ public class FindingShopprActivity extends AppCompatActivity {
                                 if (response.body() != null) {
                                     AutoAssignModel autoAssignModel = response.body();
                                     if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-
                                         if (autoAssignModel != null) {
                                             Toast.makeText(FindingShopprActivity.this, "" + autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(FindingShopprActivity.this, ChatActivity.class)
@@ -239,7 +253,7 @@ public class FindingShopprActivity extends AppCompatActivity {
                                             Toast.makeText(FindingShopprActivity.this, "" + autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
-                                        Toast.makeText(FindingShopprActivity.this, "" + autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                       // Toast.makeText(FindingShopprActivity.this, "" + autoAssignModel.getMessage(), Toast.LENGTH_SHORT).show();
                                         Dialog d = new Dialog(FindingShopprActivity.this);
                                         d.setContentView(R.layout.your_layout_screen);
                                         d.setCanceledOnTouchOutside(false);

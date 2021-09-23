@@ -4,6 +4,6 @@
     <item
         android:id="@+id/fab_terminate"
         android:icon="@drawable/chat_terminate"
-        android:title="Terminate Chat" />
+        android:title="End Your Order" />
 
 </menu>

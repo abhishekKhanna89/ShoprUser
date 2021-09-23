@@ -7,8 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -20,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,13 +29,14 @@ import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.rygelouv.audiosensei.player.AudioSenseiPlayerView;
-import com.rygelouv.audiosensei.player.OnPlayerViewClickListener;
 import com.shoppr.shoper.Model.AcceptModel;
 import com.shoppr.shoper.Model.CancelModel;
 import com.shoppr.shoper.Model.ChatMessage.Chat;
 import com.shoppr.shoper.Model.RatingsModel;
 import com.shoppr.shoper.Model.RejectedModel;
+import com.shoppr.shoper.Model.TerminateChat.TerminateChatModel;
 import com.shoppr.shoper.R;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.AddMoneyActivity;
@@ -54,19 +52,17 @@ import com.shoppr.shoper.util.MyPreferences;
 import com.shoppr.shoper.util.SessonManager;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.himanshusoni.chatmessageview.ChatMessageView;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class
-ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
+ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder> {
     private static final int IO_BUFFER_SIZE = 1;
     List<Chat> chatList;
     Context context;
@@ -300,9 +296,14 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
         LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver, i);
 
 
+        //String[] arrOfStr = chat.getFilePath().split("//", 3);
+
         if (chat.getType().equalsIgnoreCase("image")) {
             if (!chat.getFilePath().isEmpty())
-            Picasso.get().load(chat.getFilePath()).into(holder.image);
+                Picasso.get().load(chat.getFilePath()).into(holder.image);
+            //  Picasso.get().load("https://" + arrOfStr[2]).into(holder.image);
+
+
             //Glide.with(context).load(chat.getFilePath()).into(holder.image);
             holder.imageText.setText(chat.getMessage());
             holder.dateImage.setText(chat.getCreatedAt());
@@ -325,23 +326,59 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                 }
             });
 
+            try {
+                /*if (chat.getSeen_at() != null) {
+                    holder.read_status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_done_all_24));
+                    holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else {
+                    holder.read_status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_done_24));
+
+                }*/
+                if (chat.getSeen_at() != null) {
+                    final int sdk = android.os.Build.VERSION.SDK_INT;
+                    if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                    } else {
+                        holder.read_status.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                    }
+                    holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else {
+                    holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_24));
+                }
+
+            } catch (Exception e) {
+            }
         }/* else {
             holder.imageLayout.setVisibility(View.GONE);
 
         }*/ else if (chat.getType().equalsIgnoreCase("text")) {
-            holder.message_body.setText(chat.getMessage());
-            holder.dateText.setText(chat.getCreatedAt());
-            holder.textLayout.setVisibility(View.VISIBLE);
-            if (chat.getMessage().contains("with the shopper has been terminated")||chat.getMessage().contains("Order has been delivered")){
-                MyPreferences.saveBoolean(context, ConstantValue.KEY_IS_CHAT_PROGRESS, false);
+            try {
+                holder.message_body.setText(chat.getMessage());
+                holder.dateText.setText(chat.getCreatedAt());
+                if (chat.getSeen_at() != null) {
+                    final int sdk = android.os.Build.VERSION.SDK_INT;
+                    if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                    } else {
+                        holder.read_status.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                    }
+                    holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else {
+                    holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_24));
+
+                }
+                holder.textLayout.setVisibility(View.VISIBLE);
+                if (chat.getMessage().contains("with the shopper has been terminated") || chat.getMessage().contains("Order has been delivered")) {
+                    MyPreferences.saveBoolean(context, ConstantValue.KEY_IS_CHAT_PROGRESS, false);
+                }
+            } catch (Exception e) {
+
             }
         } else if (chat.getType().equalsIgnoreCase("discount")) {
             holder.message_body.setText(chat.getMessage());
             holder.dateText.setText(chat.getCreatedAt());
             //holder.textLayout.setVisibility(View.VISIBLE);
-        }
-
-        else if (chat.getType().equalsIgnoreCase("product")||chat.getType().equalsIgnoreCase("products")) {
+        } else if (chat.getType().equalsIgnoreCase("product") || chat.getType().equalsIgnoreCase("products")) {
             holder.productLayout.setVisibility(View.VISIBLE);
             if (chat.getFilePath().length() == 0) {
 
@@ -363,7 +400,6 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                 //  holder.ratingBar.setIsIndicator(true);
 
                 ((ChatActivity) context).hideTerminateButton();
-
             } else if (chat.getStatus().equalsIgnoreCase("rejected")) {
                 holder.closeRedLayout.setVisibility(View.VISIBLE);
                 holder.greenLayout.setVisibility(View.GONE);
@@ -377,7 +413,6 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                 holder.rejectText.setVisibility(View.GONE);
                 holder.cancelText.setVisibility(View.GONE);
             }
-
             holder.acceptText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -419,7 +454,6 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                     } else {
                         CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
                     }
-
                 }
             });
 
@@ -462,7 +496,6 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                     } else {
                         CommonUtils.showToastInCenter((Activity) context, context.getString(R.string.please_check_network));
                     }
-
                 }
             });
             holder.cancelText.setOnClickListener(new View.OnClickListener() {
@@ -524,8 +557,6 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                     dialog.show();
                 }
             });
-
-
             //
         }/* else {
             holder.productLayout.setVisibility(View.GONE);
@@ -590,6 +621,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                                             if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
                                                 Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                                 dialog.dismiss();
+                                                terminate(chat.getChatId());
                                                 if (context instanceof ChatActivity) {
                                                     ((ChatActivity) context).yourDesiredMethod();
                                                 }
@@ -618,9 +650,29 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
         } /*else {
             holder.ratingLayout.setVisibility(View.GONE);
         }*/ else if (chat.getType().equalsIgnoreCase("audio")) {
-
             holder.dateText11.setText(chat.getCreatedAt());
             holder.audio_player.setAudioTarget(chat.getFilePath());
+
+            try {
+
+                if (chat.getSeen_at() != null) {
+                    final int sdk = android.os.Build.VERSION.SDK_INT;
+                    if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                    } else {
+                        holder.read_status.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                    }
+                    holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                    //holder.read_status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_done_all_24));
+                    // holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else {
+                    holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_24));
+
+                    //  holder.read_status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_done_24));
+
+                }
+            } catch (Exception e) {
+            }
 
             holder.dateText11.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -666,6 +718,33 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                 holder.locationText.setText(a);
                 holder.location2Text.setVisibility(View.GONE);
                 holder.locationText.setVisibility(View.VISIBLE);
+
+               /* if (chat.getSeen_at() != null) {
+                    holder.read_status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_done_all_24));
+                    holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else {
+                    holder.read_status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_done_24));
+
+                }*/
+
+                if (chat.getSeen_at() != null) {
+                    final int sdk = android.os.Build.VERSION.SDK_INT;
+                    if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                    } else {
+                        holder.read_status.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                    }
+                    holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+
+
+                    //holder.read_status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_done_all_24));
+                    // holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else {
+                    holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_24));
+
+                    //  holder.read_status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_done_24));
+
+                }
                 //holder.location2Text.setText(b);
                 /// holder.locationText.setText(a);
             } catch (Exception e) {
@@ -704,6 +783,17 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
             //holder.addWalletLayout.setVisibility(View.VISIBLE);
             holder.addWalletMsgText.setText(chat.getMessage());
             holder.addwalletDate.setText(chat.getCreatedAt());
+            if (chat.getSeen_at() != null) {
+                final int sdk = android.os.Build.VERSION.SDK_INT;
+                if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                } else {
+                    holder.read_status.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                }
+                holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_24));
+            }
             /*Todo:-Add Wallet Listener*/
             holder.addWalletBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -722,6 +812,19 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
         } else if (chat.getType().equalsIgnoreCase("payment")) {
             holder.paymentLayout.setVisibility(View.VISIBLE);
             holder.paymentDate.setText(chat.getCreatedAt());
+
+            if (chat.getSeen_at() != null) {
+                final int sdk = android.os.Build.VERSION.SDK_INT;
+                if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                } else {
+                    holder.read_status.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_all_24));
+                }
+                holder.read_status.setColorFilter(ContextCompat.getColor(context, R.color.holo_blue_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                holder.read_status.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_done_24));
+            }
+
             holder.paymentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -758,6 +861,30 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
         } else return 0;
     }
 
+    private void terminate(final int chat_id) {
+        Call<TerminateChatModel> call = ApiExecutor.getApiService(context)
+                .apiChatTerminate("Bearer " + sessonManager.getToken(), chat_id);
+        call.enqueue(new Callback<TerminateChatModel>() {
+            @Override
+            public void onResponse(Call<TerminateChatModel> call, Response<TerminateChatModel> response) {
+                System.out.println("terminate_response" + chat_id + new Gson().toJson(response.body()));
+                if (response.body() != null) {
+                    if (response.body().getStatus() != null && response.body().getStatus().equalsIgnoreCase("success")) {
+                        Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TerminateChatModel> call, Throwable t) {
+            }
+        });
+    }
+
+
     @Override
     public int getItemViewType(int position) {
         //getting message object of current position
@@ -778,7 +905,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
                 return SELF_DISCOUNT_IN;
             } else if (message.getType().equalsIgnoreCase("image")) {
                 return SELF_IMAGE_IN;
-            } else if (message.getType().equalsIgnoreCase("product")||message.getType().equalsIgnoreCase("products")) {
+            } else if (message.getType().equalsIgnoreCase("product") || message.getType().equalsIgnoreCase("products")) {
                 return SELF_PRODUCT_IN;
             } else if (message.getType().equalsIgnoreCase("rating")) {
                 Log.d("messagetype===", message.getType());
@@ -853,6 +980,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
         ChatMessageView mapLayout;
         /*Todo:- Text*/
         TextView message_body, dateText;
+        ImageView read_status;
         ChatMessageView textLayout;
         /*Todo:- Product*/
         ImageView productImage;
@@ -912,6 +1040,7 @@ ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.Holder>{
             /*Todo:- Text*/
             message_body = itemView.findViewById(R.id.message_body);
             dateText = itemView.findViewById(R.id.dateText);
+            read_status = itemView.findViewById(R.id.read_status);
             textLayout = itemView.findViewById(R.id.textLayout);
             /*Todo:- Product*/
             productImage = itemView.findViewById(R.id.productImage);

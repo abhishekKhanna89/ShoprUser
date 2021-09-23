@@ -36,9 +36,7 @@ import java.util.TimerTask;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public abstract class CallActivity extends AppCompatActivity {
-
     public static boolean sIsRunning;
-
     private static final String TAG = "CallActivity";
 
     static final int ENDING_TIME_MS = 1000;
@@ -58,7 +56,7 @@ public abstract class CallActivity extends AppCompatActivity {
     private Timer mEndingTimer;
 
     STATE mState;
-    String mCalleeId, calleeName="", callerPic="";
+    String mCalleeId, calleeName = "", callerPic = "";
     boolean mIsVideoCall;
     DirectCall mDirectCall;
     boolean mIsAudioEnabled = true;
@@ -84,8 +82,11 @@ public abstract class CallActivity extends AppCompatActivity {
 
     //+ abstract methods
     protected abstract int getLayoutResourceId();
+
     protected abstract String[] getMandatoryPermissions();
+
     protected abstract void audioDeviceChanged(DirectCall call, AudioDevice currentAudioDevice, Set<AudioDevice> availableAudioDevices);
+
     protected abstract void startCall(boolean amICallee);
     //- abstract methods
 
@@ -105,22 +106,31 @@ public abstract class CallActivity extends AppCompatActivity {
 
         initViews();
         setViews();
+        try {
 
-        mIncomingCallId = getIntent().getStringExtra(ActivityUtils.EXTRA_INCOMING_CALL_ID);
-        if (mIncomingCallId != null) {  // as callee
-            mDirectCall = SendBirdCall.getCall(mIncomingCallId);
-            mCalleeId = mDirectCall.getCallee().getUserId();
-            mIsVideoCall = mDirectCall.isVideoCall();
-            setListener(mDirectCall);
-        } else {    // as caller
-            mCalleeId = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_ID);
-            calleeName = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_NAME);
-            callerPic = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_PIC);
-            mIsVideoCall = getIntent().getBooleanExtra(ActivityUtils.EXTRA_IS_VIDEO_CALL, false);
-        }
+            mIncomingCallId = getIntent().getStringExtra(ActivityUtils.EXTRA_INCOMING_CALL_ID);
+            System.out.println("mIncomingCallIdmIncomingCallId@"+mIncomingCallId);
 
-        if (setInitialState()) {
-            checkAuthenticate();
+            if (mIncomingCallId != null) {  // as callee
+                mDirectCall = SendBirdCall.getCall(mIncomingCallId);
+                mCalleeId = mDirectCall.getCallee().getUserId();
+                mIsVideoCall = mDirectCall.isVideoCall();
+                setListener(mDirectCall);
+            } else {    // as caller
+                mCalleeId = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_ID);
+                calleeName = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_NAME);
+                callerPic = getIntent().getStringExtra(ActivityUtils.EXTRA_CALLEE_PIC);
+                mIsVideoCall = getIntent().getBooleanExtra(ActivityUtils.EXTRA_IS_VIDEO_CALL, false);
+            }
+            System.out.println("STATE.STATE_INCOMINGSTATE.STATE_INCOMING1" + STATE.STATE_INCOMING + "," + mState);
+
+
+            if (setInitialState()) {
+                checkAuthenticate();
+            }
+        } catch (Exception e) {
+            System.out.println("STATE.STATE_INCOMINGSTATE.STATE_INCOMING1" + STATE.STATE_INCOMING + "," + mState+e.getMessage());
+
         }
     }
 
@@ -257,7 +267,6 @@ public abstract class CallActivity extends AppCompatActivity {
     private boolean setInitialState() {
         if (mIncomingCallId != null) {
             Log.d(TAG, "setInitialState() => (mIncomingCallId != null)");
-
             if (mDirectCall.isEnded()) {
                 Log.d(TAG, "setInitialState() => (mDirectCall.isEnded() == true)");
                 setState(STATE.STATE_ENDED, mDirectCall);
@@ -268,11 +277,12 @@ public abstract class CallActivity extends AppCompatActivity {
         } else {
             setState(STATE.STATE_OUTGOING, mDirectCall);
         }
+        System.out.println("STATE.STATE_INCOMINGSTATE.STATE_INCOMING" + STATE.STATE_INCOMING);
         return true;
     }
 
     private void checkAuthenticate() {
-        if (SendBirdCall.getCurrentUser() == null)  {
+        if (SendBirdCall.getCurrentUser() == null) {
             AuthenticationUtils.autoAuthenticate(mContext, userId -> {
                 if (userId == null) {
                     finishWithEnding("autoAuthenticate() failed.");
@@ -392,7 +402,7 @@ public abstract class CallActivity extends AppCompatActivity {
 
             case STATE_ENDED: {
                 mLinearLayoutInfo.setVisibility(View.VISIBLE);
-                mImageViewProfile.setVisibility(View.VISIBLE);
+                //  mImageViewProfile.setVisibility(View.VISIBLE);
                 mLinearLayoutRemoteMute.setVisibility(View.GONE);
                 mRelativeLayoutRingingButtons.setVisibility(View.GONE);
                 mLinearLayoutConnectingButtons.setVisibility(View.GONE);
@@ -407,14 +417,15 @@ public abstract class CallActivity extends AppCompatActivity {
     }
 
     protected void setInfo(DirectCall call, String status) {
-        /*DirectCallUser remoteUser = (call != null ? call.getRemoteUser() : null);
+        DirectCallUser remoteUser = (call != null ? call.getRemoteUser() : null);
         if (remoteUser != null) {
             UserInfoUtils.setProfileImage(mContext, remoteUser, mImageViewProfile);
         } else {
             Picasso.get().load(callerPic).into(mImageViewProfile);
-        }*/
-        mTextViewUserId.setText(calleeName);
-        Picasso.get().load(callerPic).into(mImageViewProfile);
+        }
+        //   mTextViewUserId.setText(calleeName);
+        mTextViewUserId.setText("ShopR Calling");
+        //Picasso.get().load(callerPic).into(mImageViewProfile);
 
         mTextViewStatus.setVisibility(View.VISIBLE);
         if (status != null) {
@@ -499,10 +510,10 @@ public abstract class CallActivity extends AppCompatActivity {
             mEndingTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                runOnUiThread(() -> {
-                    Log.d(TAG, "finish()");
-                    finish();
-                });
+                    runOnUiThread(() -> {
+                        Log.d(TAG, "finish()");
+                        finish();
+                    });
                 }
             }, ENDING_TIME_MS);
         }

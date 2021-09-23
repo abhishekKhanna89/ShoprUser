@@ -15,7 +15,7 @@
         android:layout_marginRight="24dp"
         android:gravity="center_horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+       <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_view_profile"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans"
             android:textSize="24sp"
-            tools:text="User Name"
+            tools:text="ShopR Calling"
             android:textColor="#e1ffffff"
             android:gravity="center_horizontal"
             android:layout_marginBottom="8dp" />
@@ -85,15 +85,15 @@
             android:id="@+id/image_view_decline"
             android:layout_width="@dimen/dimen_50dp"
             android:layout_height="@dimen/dimen_50dp"
-            android:background="@drawable/btn_call_end"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_call_end" />
 
         <ImageView
             android:id="@+id/image_view_accept"
             android:layout_width="@dimen/dimen_50dp"
             android:layout_height="@dimen/dimen_50dp"
-            android:background="@drawable/btn_call_voice_accept"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_call_voice_accept" />
 
     </RelativeLayout>
 

@@ -136,6 +136,7 @@ public  class AddMoneyActivity extends AppCompatActivity implements PaymentResul
     }
 
     private void rechargeService(String aa) {
+        System.out.println("chat_idchat_idchat_id"+chat_id);
         if (CommonUtils.isOnline(AddMoneyActivity.this)) {
             sessonManager.showProgress(AddMoneyActivity.this);
             RechargeRequest rechargeRequest=new RechargeRequest();

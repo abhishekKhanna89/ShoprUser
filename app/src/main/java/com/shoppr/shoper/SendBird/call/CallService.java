@@ -49,7 +49,6 @@ public class CallService extends Service {
             return CallService.this;
         }
     }
-
     static class ServiceData {
         boolean isHeadsUpNotification;
         String remoteNicknameOrUserId;

@@ -51,15 +51,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_marginRight="5dp">
+                    android:visibility="gone"
+                   >
+
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    >
 
                     <TextView
                         android:id="@+id/addwalletDate"
+                        style="@style/userTextTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="11:00 AM"
-                        style="@style/userTextTime"/>
-                </LinearLayout>
+                        android:text="11:00 AM" />
+
+                    <ImageView
+                        android:id="@+id/read_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:tint="@color/remoteBackground"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/ic_baseline_done_24"
+                        tools:ignore="UseAppTint" />
+
+                </RelativeLayout>
+
+
             </LinearLayout>
         </me.himanshusoni.chatmessageview.ChatMessageView>
 

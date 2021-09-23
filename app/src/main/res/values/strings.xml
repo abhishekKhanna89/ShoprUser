@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name">Shoppr</string>
+    <string name="app_name">Getter</string>
+    <string name="red">red</string>
+    <string name="blue">blue</string>
+    <string name="green">red</string>
+    <string name="black">red</string>
     <string name="appshopdescription">We shop and deliver anything from your local market</string>
     <string name="appsecdescription">your local market</string>
     <string name="title_activity_maps">Map</string>
@@ -98,4 +102,10 @@
     <string name="enter_phone1">Please enter your number, we will send you OTP to verify later</string>
     <string name="enter_phone2">Please enter your number and name, we will send you OTP to verify later</string>
     <string name="enter_otp">Enter OTP Code</string>
+
+    <string name="step1"><b>Step-1: </b>Create your account using your mobile number and verify with an OTP</string>
+    <string name="step2"><b>Step-2: </b>Simply click on “Upload Shopping List”</string>
+    <string name="step3"><b>Step-3: </b>Just chat with our rider to shop anything from the market. He will send you pictures and videos for your reference and approvals!</string>
+    <string name="step4"><b>Step-4: </b>After connect with rider you can start chating</string>
+
 </resources>

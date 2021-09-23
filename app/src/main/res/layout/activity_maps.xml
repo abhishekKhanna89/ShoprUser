@@ -31,12 +31,64 @@
                     android:layout_marginBottom="5dp"
                     android:src="@drawable/ic_baseline_menu" />
 
-                <ImageView
+               <!-- <ImageView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:src="@drawable/logo1" />-->
 
-                    android:src="@drawable/logo1" />
+                <ImageView
+                    android:id="@+id/name"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:tint="@color/white"
+                    android:src="@drawable/splash_transparent"
+                    tools:ignore="UseAppTint" />
+
+                <FrameLayout
+                    android:id="@+id/HelpToAdmin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/frameLayoutNoti">
+
+                    <RelativeLayout
+                        android:id="@+id/helpRelative"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toLeftOf="@+id/videoCall"
+                        >
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            android:layout_marginRight="4dp"
+                            android:src="@drawable/help_whatsapp_circle"
+                            android:tint="@color/white"
+                            tools:ignore="UseAppTint" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/monster"
+                            android:gravity="center"
+                            android:text="Help"
+                            android:visibility="gone"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                </FrameLayout>
 
                 <FrameLayout
                     android:id="@+id/frameLayoutNoti"
@@ -66,7 +118,6 @@
                         android:textColor="@android:color/white"
                         android:textSize="10sp"
                         android:visibility="gone" />
-
                 </FrameLayout>
 
                 <androidx.appcompat.widget.AppCompatButton

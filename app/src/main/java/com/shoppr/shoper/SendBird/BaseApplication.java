@@ -51,9 +51,7 @@ public class BaseApplication extends Application {
                 @Override
                 public void onRinging(DirectCall call) {
                     int ongoingCallCount = SendBirdCall.getOngoingCallCount();
-
                     Log.i(BaseApplication.TAG, "[BaseApplication] onRinging() => callId: " + call.getCallId() + ", getOngoingCallCount(): " + ongoingCallCount);
-
                     if (ongoingCallCount >= 2) {
                         call.end();
                         return;

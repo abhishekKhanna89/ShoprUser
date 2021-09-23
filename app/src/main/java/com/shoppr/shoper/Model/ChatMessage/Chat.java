@@ -51,6 +51,10 @@ public class Chat {
     @Expose
     private Integer order_id;
 
+    @SerializedName("seen_at")
+    @Expose
+    private String seen_at;
+
     public Integer getId() {
         return id;
     }
@@ -169,5 +173,13 @@ public class Chat {
 
     public void setOrder_id(Integer order_id) {
         this.order_id = order_id;
+    }
+
+    public String getSeen_at() {
+        return seen_at;
+    }
+
+    public void setSeen_at(String seen_at) {
+        this.seen_at = seen_at;
     }
 }

@@ -155,11 +155,11 @@ public class OtpActivity extends AppCompatActivity {
                     progressbar.hideProgress();
 
                     Log.d("lsdkjfksdgf", new Gson().toJson(response.body()));
+                    System.out.println("lsdkjfksdgf"+new Gson().toJson(response.body()));
 
                     if (response.body() != null) {
                         OtpVerifyModel otpVerifyModel = response.body();
                         if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
-
                             Log.d("ressOtp", response.body().getStatus());
                             String userId = otpVerifyModel.getUser_id();
                             String sendbird_token = otpVerifyModel.getSendbird_token();
@@ -168,6 +168,8 @@ public class OtpActivity extends AppCompatActivity {
                             if ((!otp.isEmpty())) {
                                 Log.d("dszhfjdsvv", otp);
                                 sessonManager.setToken(response.body().getToken());
+                                sessonManager.setUserId(response.body().getUserid());
+                                sessonManager.setisFistTime("yes");
                                 if (((BaseApplication) getApplication()).initSendBirdCall(savedAppId)) {
                                     AuthenticationUtils.authenticate(OtpActivity.this, userId, sendbird_token, isSuccess -> {
                                         if (isSuccess) {

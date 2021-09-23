@@ -71,21 +71,21 @@
                 android:id="@+id/audioCall"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:onClick="initializationVoice"
-                android:layout_marginRight="10dp"
                 android:layout_centerInParent="true"
+                android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/videoCall"
-                android:src="@drawable/btn_call_voice"/>
+                android:onClick="initializationVoice"
+                android:src="@drawable/btn_call_voice" />
 
             <ImageView
                 android:id="@+id/videoCall"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                android:onClick="initializationVideo"
-                android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/btn_call_video"/>
+                android:layout_centerInParent="true"
+                android:layout_marginRight="10dp"
+                android:onClick="initializationVideo"
+                android:src="@drawable/btn_call_video" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
     <RelativeLayout

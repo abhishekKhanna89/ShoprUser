@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
+import com.shoppr.shoper.activity.GetStartedActivity;
 import com.shoppr.shoper.util.SessonManager;
 
 
@@ -40,12 +41,16 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (sessonManager.getToken().isEmpty()) {
-                    Log.d("resSession", sessonManager.getToken());
-                    sessonManager.getNotificationToken();
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
+                    Log.d("resSession", sessonManager.getToken()+",,,,,"+sessonManager.getisFistTime());
+                    if (sessonManager.getisFistTime().equals("yes")) {
+                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(SplashActivity.this, GetStartedActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
                     sessonManager.getNotificationToken();
                     Intent intent = new Intent(SplashActivity.this, MapsActivity.class);
@@ -54,6 +59,7 @@ public class SplashActivity extends AppCompatActivity {
                     finish();
 
                 }
+
 
 
             }

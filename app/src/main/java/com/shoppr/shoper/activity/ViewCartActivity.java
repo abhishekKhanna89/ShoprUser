@@ -108,6 +108,7 @@ public class ViewCartActivity extends AppCompatActivity {
     private AppPreference mAppPreference;
     private boolean isDisableExitConfirmation = false;
     //BaseApplicationpay BaseApplicationpay;
+    int total_pay_amount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +180,7 @@ public class ViewCartActivity extends AppCompatActivity {
                             progressbar.hideProgress();
                             if (response.body() != null) {
                                 InitiatOrderModel initiatOrderModel = response.body();
+                                System.out.println("apiInitiateOrder_payment" + new Gson().toJson(response.body()));
                                 if (response.body().getStatus() != null && response.body().getStatus().equals("success")) {
 
                                     int orderId = initiatOrderModel.getData().getOrderId();
@@ -250,7 +252,7 @@ public class ViewCartActivity extends AppCompatActivity {
             progressbar.showProgress(ViewCartActivity.this);
             InitiatePaymentRequest initiatePaymentRequest = new InitiatePaymentRequest();
             initiatePaymentRequest.setType(type);
-            initiatePaymentRequest.setUse_balance(value);
+            initiatePaymentRequest.setUse_balance(total_pay_amount);
          /*   Call<JsonObject> call = ApiExecutor.getApiService(this).apiInitiatePayment("Bearer "+sessonManager.getToken(),orderId,type);;
             call.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -334,6 +336,7 @@ public class ViewCartActivity extends AppCompatActivity {
                 public void onResponse(Call<CartViewModel> call, Response<CartViewModel> response) {
 
                     Log.d("cartresponse=", String.valueOf(response));
+                    System.out.println("cartresponse" + chatId+","+sessonManager.getToken()+",,,,,,,,,,,,,,,,,,,,"+new Gson().toJson(response.body()));
 
                     progressbar.hideProgress();
                     if (response.body() != null) {
@@ -343,6 +346,7 @@ public class ViewCartActivity extends AppCompatActivity {
                                 totalAmountText.setText("₹ " + cartViewModel.getData().getTotal());
                                 serviceChargeText.setText("₹ " + cartViewModel.getData().getServiceCharge());
                                 groundTotalText.setText("₹ " + cartViewModel.getData().getGrandTotal());
+                                total_pay_amount=cartViewModel.getData().getGrandTotal();
                                 tv_discount_charge.setText("₹ " + cartViewModel.getData().getDiscount());
                                 if (cartViewModel.getData().getWallet_balance() > 0) {
                                     walletCardView.setVisibility(VISIBLE);

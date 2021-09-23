@@ -39,13 +39,30 @@
                 style="@style/userTextMsg"
                 tools:text="This is my message" />
 
-            <TextView
-                android:id="@+id/dateText"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:text="11:00 AM"
-                style="@style/userTextTime" />
+                android:orientation="horizontal"
+                android:layout_gravity="end"
+                >
+                <TextView
+                    android:id="@+id/dateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11:00 AM"
+                    style="@style/riderTextTime" />
+
+                <ImageView
+                    android:id="@+id/read_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/ic_baseline_done_24"
+                    android:tint="@color/remoteBackground"
+                    tools:ignore="UseAppTint" />
+            </LinearLayout>
+
+
         </LinearLayout>
     </me.himanshusoni.chatmessageview.ChatMessageView>
 

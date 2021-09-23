@@ -51,7 +51,7 @@
         android:layout_marginRight="24dp"
         android:gravity="center_horizontal">
 
-        <ImageView
+       <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_view_profile"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -116,15 +116,15 @@
 
         <ImageView
             android:id="@+id/image_view_decline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:background="@drawable/btn_call_end"
             android:layout_alignParentLeft="true" />
 
         <ImageView
             android:id="@+id/image_view_accept"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:background="@drawable/btn_call_video_accept"
             android:layout_alignParentRight="true" />
 
@@ -147,24 +147,24 @@
 
             <ImageView
                 android:id="@+id/image_view_audio_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_audio_image_view"
-                android:layout_alignParentLeft="true" />
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/selector_audio_image_view" />
 
             <ImageView
                 android:id="@+id/image_view_video_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_video_image_view"
-                android:layout_centerHorizontal="true" />
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/selector_video_image_view" />
 
             <ImageView
                 android:id="@+id/image_view_bluetooth"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:background="@drawable/selector_bluetooth_image_view"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selector_bluetooth_image_view" />
 
         </RelativeLayout>
 
@@ -174,8 +174,8 @@
 
             <ImageView
                 android:id="@+id/image_view_end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:background="@drawable/btn_call_end"
                 android:layout_centerHorizontal="true" />
 

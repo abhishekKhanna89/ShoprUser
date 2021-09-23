@@ -12,12 +12,13 @@ import com.shoppr.shoper.R;
 
 
 public class SessonManager {
-
     private static SessonManager pref;
     private final SharedPreferences sharedPreference;
     private final SharedPreferences.Editor editor;
     public static final String NAME = "MY_PREFERENCES";
     public static final String Token = "token";
+    public static final String UserId = "UserId";
+    public static final String FistTime = "FistTime";
     public static final String house_detailsEt = "house_detailsEt";
     public static final String landMarkEt = "landMarkEt";
 
@@ -39,6 +40,7 @@ public class SessonManager {
     public static final String CHAT_ID="chat_id";
 
     public static final String strList="sList";
+    public static final String bannerPopUp="bannerPopUp";
 
     public static final String CURRENTTIME="current_time";
 
@@ -101,6 +103,37 @@ public class SessonManager {
         editor.putString(Token, token);
         editor.commit();
     }
+
+    public String getUserId() {
+        return sharedPreference.getString(UserId, "");
+    }
+
+    public void setUserId(String user_id) {
+        //   Log.d("sssss", token);
+        editor.putString(UserId, user_id);
+        editor.commit();
+    }
+    public String getisFistTime() {
+        return sharedPreference.getString(FistTime, "");
+    }
+
+    public void setisFistTime(String isFistTime) {
+        editor.putString(FistTime, isFistTime);
+        editor.commit();
+    }
+
+
+    public String getBannerPopUp() {
+        return sharedPreference.getString(bannerPopUp, "");
+    }
+
+    public void setBannerPopUp(String banner) {
+        editor.putString(bannerPopUp, banner);
+        editor.commit();
+    }
+
+
+
 
 
 

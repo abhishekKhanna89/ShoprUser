@@ -76,13 +76,27 @@
                 tools:text="This is my message"
                 style="@style/riderTextMsg" />
 
-            <TextView
-                android:id="@+id/dateText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="11:00 AM"
-                style="@style/riderTextTime" />
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:layout_gravity="end"
+               >
+               <TextView
+                   android:id="@+id/dateText"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="11:00 AM"
+                   style="@style/riderTextTime" />
+
+               <ImageView
+                   android:id="@+id/read_status"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:visibility="gone"
+                   android:src="@drawable/ic_baseline_done_all_24"
+                   />
+           </LinearLayout>
 
         </LinearLayout>
     </me.himanshusoni.chatmessageview.ChatMessageView>

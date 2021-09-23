@@ -17,6 +17,11 @@ public class OtpVerifyModel {
     @SerializedName("user_id")
     @Expose
     private String user_id;
+
+    @SerializedName("userid")
+    @Expose
+    private String userid;
+
     @SerializedName("sendbird_token")
     @Expose
     private String sendbird_token;
@@ -50,6 +55,14 @@ public class OtpVerifyModel {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getSendbird_token() {

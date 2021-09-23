@@ -23,19 +23,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class VoiceCallActivity extends CallActivity {
-
     private static final String TAG = "VoiceCallActivity";
-
     private static final String[] MANDATORY_PERMISSIONS = {
         Manifest.permission.RECORD_AUDIO
     };
-
     private Timer mCallDurationTimer;
-
     //+ Views
     private ImageView mImageViewSpeakerphone;
     //- Views
-
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_voice_call;
@@ -48,6 +43,7 @@ public class VoiceCallActivity extends CallActivity {
 
     @Override
     protected void initViews() {
+
         super.initViews();
         Log.d(TAG, "initViews()");
 
@@ -56,6 +52,7 @@ public class VoiceCallActivity extends CallActivity {
 
     @Override
     protected void setViews() {
+
         super.setViews();
 
         mImageViewSpeakerphone.setOnClickListener(view -> {

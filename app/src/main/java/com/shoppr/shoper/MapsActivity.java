@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,11 +63,21 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
+import com.sendbird.calls.DirectCall;
+import com.sendbird.calls.SendBirdCall;
+import com.sendbird.calls.handler.DirectCallListener;
+import com.sendbird.calls.handler.SendBirdCallListener;
 import com.shoppr.shoper.Model.CheckLocation.CheckLocationModel;
 import com.shoppr.shoper.Model.Logout.LogoutModel;
 import com.shoppr.shoper.Model.MyProfile.MyProfileModel;
 import com.shoppr.shoper.Model.ShoprList.ShoprListModel;
+import com.shoppr.shoper.SendBird.BaseApplication;
+import com.shoppr.shoper.SendBird.call.CallService;
+import com.shoppr.shoper.SendBird.call.VideoCallActivity;
+import com.shoppr.shoper.SendBird.call.VoiceCallActivity;
+import com.shoppr.shoper.SendBird.utils.ActivityUtils;
 import com.shoppr.shoper.SendBird.utils.AuthenticationUtils;
+import com.shoppr.shoper.SendBird.utils.BroadcastUtils;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
 import com.shoppr.shoper.activity.ChatActivity;
@@ -75,11 +87,11 @@ import com.shoppr.shoper.activity.FindingShopprActivity;
 import com.shoppr.shoper.activity.MyAccount;
 import com.shoppr.shoper.activity.MyOrderActivity;
 import com.shoppr.shoper.activity.NotificationListActivity;
-import com.shoppr.shoper.activity.RegisterMerchantActivity;
 import com.shoppr.shoper.activity.WalletActivity;
 import com.shoppr.shoper.adapter.BannerAdapter;
 import com.shoppr.shoper.util.CommonUtils;
 import com.shoppr.shoper.util.ConstantValue;
+import com.shoppr.shoper.util.CustomPopUp;
 import com.shoppr.shoper.util.MyPreferences;
 import com.shoppr.shoper.util.Progressbar;
 import com.shoppr.shoper.util.RuntimePermission;
@@ -100,6 +112,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -113,7 +126,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView shoprListText, addressText, txtUserName, txtUserMobile, noti_badge, txtChangeLocation;
     CircleImageView userProfilePic;
     LinearLayout llMyAccount, llWallet, llChat, llMyOrders, llHelp, llShareApp, llLogout;
-    FrameLayout frameLayoutNoti;
+    FrameLayout frameLayoutNoti, HelpToAdmin;
     BottomNavigationView navView;
     ImageView navMenu, imgClose;
     public FusedLocationProviderClient fusedLocationClient;
@@ -158,12 +171,17 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
     String cityName;
     String urlString;
 
+    boolean flag_banner = false;
+
+  public  static   String call_id="";
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //git---->abhishek.khanna89@gmail.com<------->shopr@123
 
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -177,6 +195,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         addressText = findViewById(R.id.addressText);
         txtChangeLocation = findViewById(R.id.txtChangeLocation);
         navMenu = findViewById(R.id.navMenu);
+        System.out.println("TokenResponse" + sessonManager.getToken());
         //countText = findViewById(R.id.countText);
         /*Todo:- ConstraintLayout Screen Layout*/
         mainPage = findViewById(R.id.mainPage);
@@ -185,9 +204,27 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         updateLocation = findViewById(R.id.updateLocation);
         navView = findViewById(R.id.navView);
         drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        RelativeLayout helpRelative = (RelativeLayout) findViewById(R.id.helpRelative);
+        helpRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String number = "+919315957968";
+                String url = "https://api.whatsapp.com/send?phone=" + number;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer_layout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer_layout.addDrawerListener(toggle);
+
+        //ActivityUtils.startApplicationInformationActivity(MapsActivity.this);
+        if (sessonManager.getBannerPopUp().equals("yes")) {
+        } else {
+            sessonManager.setBannerPopUp("yes");
+            CustomPopUp.showBanner(MapsActivity.this);
+        }
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
@@ -209,6 +246,17 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
 
         btnMerchantRegister = findViewById(R.id.btnMerchantRegister);
         frameLayoutNoti = findViewById(R.id.frameLayoutNoti);
+        HelpToAdmin = findViewById(R.id.HelpToAdmin);
+        HelpToAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String number = "+919315957968";
+                String url = "https://api.whatsapp.com/send?phone=" + number;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
         Log.d("notifiallowed=", String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()));
 
@@ -217,6 +265,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             importance = manager.getImportance();
         }
+
         boolean soundAllowed = importance < 0 || importance >= NotificationManager.IMPORTANCE_DEFAULT;
 
         Log.d("soundAllowed=", String.valueOf(soundAllowed));
@@ -227,8 +276,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         bannerList.add(R.drawable.banner3);
         bannerList.add(R.drawable.banner4);
         /*bannerList.add(R.drawable.interior_design3);
+        /*bannerList.add(R.drawable.interior_design3);
         bannerList.add(R.drawable.interior_design4);*/
-
         if (RuntimePermission.checkRunTimePermission(this)) {
             proceedAfterPermission();
         }
@@ -246,7 +295,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
                                 intent.putExtra(Settings.EXTRA_APP_PACKAGE, MapsActivity.this.getPackageName());
-                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            }
+                          else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                 intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
                                 intent.putExtra("app_package", MapsActivity.this.getPackageName());
                                 intent.putExtra("app_uid", MapsActivity.this.getApplicationInfo().uid);
@@ -295,9 +345,11 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
 
                     case R.id.navigation_local_shop:
                         item.setCheckable(true);
-                        startActivity(new Intent(MapsActivity.this, StorelistingActivity.class).putExtra("address", sessonManager.getEditaddress())
+                       /* startActivity(new Intent(MapsActivity.this, StorelistingActivity.class).putExtra("address", sessonManager.getEditaddress())
                                 .putExtra("city", sessonManager.getCityName())
-                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));*/
+                        Toast.makeText(MapsActivity.this, "In Progress", Toast.LENGTH_SHORT).show();
+
                         break;
                 }
                 return true;
@@ -388,9 +440,102 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         llLogout.setOnClickListener(this);
         frameLayoutNoti.setOnClickListener(this);
         imgClose.setOnClickListener(this);
-
         //Log.d("newToken", getActivity().getPreferences(Context.MODE_PRIVATE).getString("fb", "empty :("));
+       // initSendBirdCall(BaseApplication.APP_ID);
+/*
+       try {
+           Bundle extras = getIntent().getExtras();
+           if (extras != null) {
+               String chat_status = getIntent().getStringExtra("chat_status");
+                call_id = getIntent().getStringExtra("call_id");
+               if (chat_status != null && chat_status.equalsIgnoreCase("5")) {
+                   initSendBirdCall(PrefUtils.getAppId(getApplicationContext()));
+               }
+               else {
+                   String value = String.valueOf(getIntent().getExtras().get("chat_status"));
+                   //Log.d(TAG, "Key: " + "abcd" + " Value: " + value);
+               }
+           }
+         //  initSendBirdCall(call_id);
+         //  ActivityUtils.startCallActivityAsCallee(MapsActivity.this, call_id.toString());
+
+
+        *//* Intent  intent = new Intent(MapsActivity.this, VoiceCallActivity.class);
+
+
+           intent.putExtra(ActivityUtils.EXTRA_CALLEE_ID, "Shoppr-27");
+           intent.putExtra(ActivityUtils.EXTRA_CALLEE_NAME, "Subhash");
+           intent.putExtra(ActivityUtils.EXTRA_CALLEE_PIC, "https://shoppr-bucket.s3.ap-south-1.amazonaws.com/shopper/27/284_Square_Pic1614872802852.png");
+           intent.putExtra(ActivityUtils.EXTRA_IS_VIDEO_CALL, "ye");
+           intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+           MapsActivity.this.startActivity(intent);*//*
+       }
+       catch (Exception e)
+       {}*/
     }
+   /* public boolean initSendBirdCall(String appId) {
+        Log.i(BaseApplication.TAG, "[BaseApplication] initSendBirdCall(appId: " + appId + ")");
+        Context context = getApplicationContext();
+
+        if (TextUtils.isEmpty(appId)) {
+            appId = BaseApplication.APP_ID;
+        }
+
+        if (SendBirdCall.init(context, appId)) {
+            SendBirdCall.removeAllListeners();
+            SendBirdCall.addListener(UUID.randomUUID().toString(), new SendBirdCallListener() {
+                @Override
+                public void onRinging(DirectCall call) {
+                    int ongoingCallCount = SendBirdCall.getOngoingCallCount();
+
+                    Log.i(BaseApplication.TAG, "[BaseApplication] onRinging() => callId: " + call.getCallId() + ", getOngoingCallCount(): " + ongoingCallCount);
+
+                    if (ongoingCallCount >= 2) {
+                        call.end();
+                        return;
+                    }
+
+                    call.setListener(new DirectCallListener() {
+                        @Override
+                        public void onConnected(DirectCall call) {
+                        }
+
+                        @Override
+                        public void onEnded(DirectCall call) {
+                            int ongoingCallCount = SendBirdCall.getOngoingCallCount();
+                            Log.i(BaseApplication.TAG, "[BaseApplication] onEnded() => callId: " + call.getCallId() + ", getOngoingCallCount(): " + ongoingCallCount);
+
+                            BroadcastUtils.sendCallLogBroadcast(context, call.getCallLog());
+
+
+                            if (ongoingCallCount == 0) {
+                                CallService.stopService(context);
+                            }
+                        }
+                        // ActivityUtils.startCallActivityAsCallee(context, call);
+
+                        //prefUtils.start
+                        // PrefUtils.startCallActivityAsCallee(context, call);
+                    });
+
+
+                    //PrefUtils.startCallActivityAsCallee(context, call);
+                    // CallService.onRinging(context, call);
+                    ActivityUtils.startCallActivityAsCallee(context, call);
+
+                    // PrefUtils.startCallActivityAsCallee(context, call);
+                }
+            });
+
+            SendBirdCall.Options.addDirectCallSound(SendBirdCall.SoundType.DIALING, R.raw.dialing);
+            SendBirdCall.Options.addDirectCallSound(SendBirdCall.SoundType.RINGING, R.raw.ringing);
+            SendBirdCall.Options.addDirectCallSound(SendBirdCall.SoundType.RECONNECTING, R.raw.reconnecting);
+            SendBirdCall.Options.addDirectCallSound(SendBirdCall.SoundType.RECONNECTED, R.raw.reconnected);
+
+            return true;
+        }
+        return false;
+    }*/
 
     private void proceedAfterPermission() {
         if (!isLocationEnabled()) {
@@ -421,6 +566,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void setUpBanner() {
+
         BannerAdapter myCustomPagerAdapter = new BannerAdapter(MapsActivity.this, bannerList);
         viewPager.setAdapter(myCustomPagerAdapter);
         viewPager.requestFocus();
@@ -511,7 +657,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
                 break;
 
             case R.id.btnMerchantRegister:
-                startActivity(new Intent(MapsActivity.this, RegisterMerchantActivity.class));
+                Toast.makeText(MapsActivity.this, "In Progress", Toast.LENGTH_SHORT).show();
+                // startActivity(new Intent(MapsActivity.this, RegisterMerchantActivity.class));
                 drawer_layout.closeDrawer(GravityCompat.START);
                 break;
 
@@ -753,9 +900,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onRestart() {
         super.onRestart();
-
         Log.d("lakshmi===", "lakshmi");
-
         Log.d("lakshmi", String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()));
 
         if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false")) {
@@ -767,7 +912,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
                         public void onClick(DialogInterface dialog, int which) {
 
                             if (String.valueOf(NotificationManagerCompat.from(MapsActivity.this).areNotificationsEnabled()).equals("false")) {
-
                                 Intent intent = new Intent();
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
@@ -836,7 +980,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
         }
-
         return true;
     }
 
@@ -866,10 +1009,11 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
             BadgeDrawable badge = navView.getOrCreateBadge(R.id.navigation_chat);
             badge.setVisible(true);
             badge.setNumber(1);
-        }else {
+        } else {
             BadgeDrawable badge = navView.getOrCreateBadge(R.id.navigation_chat);
             badge.setVisible(false);
         }
+        viewListShopr();
     }
 
     private void registerBroadcast() {
@@ -1133,6 +1277,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.C
                     if (status.equals("success")) {
                         JSONObject jsonObject1 = jsonObject.getJSONObject("data");
                         String androidversion = jsonObject1.getString("customer_version");
+                        System.out.println("androidversion" + androidversion);
                         if (androidversion.equalsIgnoreCase(sCurrentVersion)) {
 
                         } else {

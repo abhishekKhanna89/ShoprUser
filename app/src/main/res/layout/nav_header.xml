@@ -101,6 +101,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingTop="@dimen/dimen_10dp"
+        android:visibility="gone"
         android:paddingBottom="@dimen/dimen_10dp"
         android:foreground="?android:attr/selectableItemBackground">
 

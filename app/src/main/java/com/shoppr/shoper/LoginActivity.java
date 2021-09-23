@@ -36,6 +36,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.gson.Gson;
 import com.shoppr.shoper.Model.LoginModel;
 import com.shoppr.shoper.SendBird.utils.PrefUtils;
 import com.shoppr.shoper.Service.ApiExecutor;
@@ -123,9 +124,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         e.printStackTrace();
                     }
 
-                    Address address = list.get(0);
-                    //String localitys = address.getLocality();
-                    location_address = address.getAddressLine(0);
+                 try {
+                     Address address = list.get(0);
+                     //String localitys = address.getLocality();
+                     location_address = address.getAddressLine(0);
+                 }
+                 catch (Exception e)
+                 {
+
+                 }
                 }
 
                 //do something when location is changed
@@ -240,6 +247,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                     sessonManager.hideProgress();
                     LoginModel loginModel=response.body();
+                   // System.out.println("Login_response"+new Gson().toJson(response.body()));
                     if (response.body()!=null){
                         if (response.body().getStatus()!= null && response.body().getStatus().equals("success")){
                             Toast.makeText(LoginActivity.this, loginModel.getMessage(), Toast.LENGTH_SHORT).show();
